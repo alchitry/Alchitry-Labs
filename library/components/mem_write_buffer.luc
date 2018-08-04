@@ -1,0 +1,70 @@
+/******************************************************************************
+   
+   The MIT License (MIT)
+   
+   Copyright (c) 2015 Embedded Micro
+   
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+   
+   *****************************************************************************
+   
+   This is a FIFO style write buffer for the memory interface. It will hold
+   up to DEPTH-1 writes and issue them as fast as possible to the memory device
+   it is connected to. This is helpful if your writing patterns are bursty
+   or you need to deal with the occasional refresh cycles of SDRAM.
+*/
+
+module mem_write_buffer #(
+    DEPTH = 8 : DEPTH == $pow(2,$clog2(DEPTH)) // DEPTH is a power of 2
+  )(
+    input clk,                                 // clock
+    input rst,                                 // reset
+    
+    input<Memory.master> devIn,                // writer interface
+    output<Memory.slave> devOut,
+    
+    input<Memory.slave> memIn,                 // memory interface
+    output<Memory.master> memOut
+  ) {
+  
+  // FIFO to store the write commands
+  async_fifo fifo (#DEPTH(DEPTH), #SIZE(23+32), .rclk(clk), .rrst(rst), .wclk(clk), .wrst(rst));
+
+  always {
+    devOut.busy = fifo.full;                   // busy when FIFO is full
+    devOut.valid = 0;                          // reads are never valid
+    devOut.data = 32bx;                        // don't care (not used)
+    
+    fifo.wput = devIn.valid & devIn.write;     // only writes
+    fifo.din = c{devIn.addr,devIn.data};       // data and address are all we need to save
+    
+    memOut.data = fifo.dout[31:0];             // data output of fifo
+    memOut.write = 1;                          // always writes
+    memOut.addr = fifo.dout[32+:23];           // address output of fifo
+    
+    fifo.rget = 0;                             // default to not reading
+    memOut.valid = 0;                          // default to no command
+    
+    if (!fifo.empty & !memIn.busy) {           // if fifo isn't empty and we can issue a command
+      memOut.valid = 1;                        // issue command
+      fifo.rget = 1;                           // move to next entry
+    }
+    
+  }
+}

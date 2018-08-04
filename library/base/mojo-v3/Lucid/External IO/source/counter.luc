@@ -1,0 +1,26 @@
+module counter (
+    input clk,       // clock
+    input rst,       // reset
+    input button,    // button input
+    output count[8]  // press counter
+  ) {
+  
+  .clk(clk) {
+    edge_detector edge_detector(#RISE(1), #FALL(0)); // detect rising edges
+    
+    button_conditioner button_cond;     // button input conditioner
+    
+    .rst(rst) {
+       dff ctr[8]; // our lovely counter
+    }
+  }
+
+  always {
+    button_cond.in = button;            // raw button input
+    edge_detector.in = button_cond.out; // input to the edge_detector
+    count = ctr.q;                      // output the counter
+    
+    if (edge_detector.out)              // if edge detected
+      ctr.d = ctr.q + 1;                // add one to the counter
+  }
+}

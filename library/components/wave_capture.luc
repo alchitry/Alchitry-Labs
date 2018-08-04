@@ -1,0 +1,163 @@
+/******************************************************************************
+   
+   The MIT License (MIT)
+   
+   Copyright (c) 2015 Embedded Micro
+   
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+   
+   *****************************************************************************
+   
+   This module allows you to debug up to 32 signals by feeding them into "data".
+   These signals can be viewed using the Mojo IDE's Wave Capture tool.
+   
+   This module plugs into the reg_interface module to communicate with your
+   computer. It takes up addresses BASE_ADDR through BASE_ADDR + 15.
+*/
+
+module wave_capture #(
+    DATA_WIDTH = 8 : DATA_WIDTH > 0,                          // number of signals to capture
+    CAPTURE_DEPTH = 256 : CAPTURE_DEPTH > 0,                  // number of samples to capture
+    BASE_ADDR = 32hfffffff0 : BASE_ADDR <= 32hfffffff0,       // base address
+    NONCE = 0 : NONCE.WIDTH <= 32                             // project nonce
+  )(
+    input clk,                                                // clock
+    input rst,                                                // reset
+    input<Register.master> regIn,                             // register interface inputs
+    output<Register.slave> regOut,                            // register interface outputs
+    input data [DATA_WIDTH]                                   // data to capture
+  ) {
+  
+  const VERSION = 32d2;                                       // version of this module
+  const SUB_SECTIONS = $cdiv(DATA_WIDTH, 32);                 // number of 32 bit blocks per sample
+  
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {IDLE, ARMED, FIRED, CAPTURED};             // states
+    }
+    dff raddr [$clog2(CAPTURE_DEPTH)];                        // read address
+    dff waddr [$clog2(CAPTURE_DEPTH)];                        // write address
+    dff data_old[DATA_WIDTH];                                 // old data for edge detection
+    dff trigger_type[DATA_WIDTH][4];                          // trigger type storage
+    dff trigger_index[$clog2(DATA_WIDTH)];                    // index into trigger types
+    dff sub_idx[SUB_SECTIONS > 1 ? $clog2(SUB_SECTIONS) : 1]; // sub section index for reads
+  }
+  
+  // RAM used to capture the data
+  simple_dual_ram ram (#SIZE(DATA_WIDTH), #DEPTH(CAPTURE_DEPTH), .rclk(clk), .wclk(clk));
+  
+  var i;
+  sig triggered; // used to start a capture
+  
+  always {
+    ram.waddr = waddr.q;                                      // connect RAM ports
+    ram.raddr = raddr.q;
+    ram.write_data = data;
+    ram.write_en = 0;                                         // default to not writing
+    
+    regOut.data = 32bx;                                       // don't care if drdy = 0
+    regOut.drdy = 0;                                          // default to not ready
+    
+    data_old.d = data;
+    
+    case (state.q) {
+      state.ARMED:                                            // armed and waiting for a trigger
+        triggered = 1;                                        // assume triggered
+        
+        // Check if each signal meets trigger requirements, if any don't triggered is set to 0
+        for (i = 0; i < DATA_WIDTH; i++){
+          triggered = triggered & (
+            (trigger_type.q[i][0] && data_old.q[i] == 0 && data[i] == 1) || // rise
+            (trigger_type.q[i][1] && data_old.q[i] == 1 && data[i] == 0) || // fall
+            (trigger_type.q[i][2] && data[i] == 0) ||                       // low
+            (trigger_type.q[i][3] && data[i] == 1) ||                       // high
+            trigger_type.q[i] == 4b0);                                      // no trigger
+        }
+        
+        if (triggered) {                                      // if a trigger occured
+          ram.write_en = 1;                                   // capture the current data
+          state.d = state.FIRED;                              // switch to FIRED state
+          waddr.d = waddr.q + 1;                              // advance the write address
+        }
+      
+      state.FIRED:                                            // capturing data
+        waddr.d = waddr.q + 1;                                // advance the write address
+        ram.write_en = 1;                                     // capture the current data
+        if (waddr.q == CAPTURE_DEPTH - 1) {                   // if we are at the last sample
+          state.d = state.CAPTURED;                           // switch to CAPTURED state
+        }
+    }
+    
+    if (regIn.new_cmd) {                                      // if new reg_interface command
+      if (regIn.write) {                                      // command is a write
+        case (regIn.address) {
+          BASE_ADDR:                                          // status address
+            if (regIn.data == 32h1) {                         // 1 signals normal start (wait for trigger)
+              state.d = state.ARMED;
+              waddr.d = 0;
+              raddr.d = 0;
+            } else if (regIn.data == 32h2) {                  // 2 signals forced start (don't wait for trigger)
+              state.d = state.FIRED;
+              waddr.d = 0;
+              raddr.d = 0;
+            }
+          BASE_ADDR + 4:                                      // trigger index address
+            trigger_index.d = regIn.data[0+:trigger_index.WIDTH];
+          BASE_ADDR + 5:                                      // trigger type address
+            trigger_type.d[trigger_index.q] = regIn.data[3:0];
+        }
+      } else {                                                // read
+        regOut.drdy = 1;                                      // default to data ready
+        case (regIn.address) {
+          BASE_ADDR:                                          // status address
+            regOut.data = c{raddr.q == CAPTURE_DEPTH,         // status bits
+              state.q == state.CAPTURED,
+              state.q == state.FIRED,
+              state.q == state.ARMED};
+          BASE_ADDR + 1:                                      // sample data address
+            if (SUB_SECTIONS > 1){
+              regOut.data = ram.read_data[sub_idx.q*32+:32];  // send the current sample
+              sub_idx.d = sub_idx.q + 1;
+              if (sub_idx.q == SUB_SECTIONS - 1) {
+                sub_idx.d = 0;
+                raddr.d = raddr.q + 1;                        // increment the address
+              }
+            } else {
+              regOut.data = ram.read_data;
+              raddr.d = raddr.q + 1;
+            }
+          BASE_ADDR + 2:                                      // data width info address
+            regOut.data = DATA_WIDTH;
+          BASE_ADDR + 3:                                      // capture depth info address
+            regOut.data = CAPTURE_DEPTH;
+          BASE_ADDR + 4:                                      // trigger index address
+            regOut.data = trigger_index.q;
+          BASE_ADDR + 5:                                      // trigger type address
+            regOut.data = trigger_type.q[trigger_index.q];
+          BASE_ADDR + 14:                                     // project nonce
+            regOut.data = NONCE;
+          BASE_ADDR + 15:                                     // version info address
+            regOut.data = VERSION;
+          default:                                            // unknown address
+            regOut.drdy = 0;                                  // no data to send
+        }
+      }
+    }
+  }
+}

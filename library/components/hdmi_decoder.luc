@@ -1,0 +1,73 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+module hdmi_decoder (
+    input rst,  // reset
+    output pclk,
+    input tmds[4],
+    input tmdsb[4],
+    output active,
+    output x[11],
+    output y[10],
+    output red[8],
+    output green[8],
+    output blue[8]
+  ) {
+  
+  dvi_decoder decoder (.rst(rst));
+  
+  .clk(decoder.pclk) {
+    dff x_ctr[11];
+    dff y_ctr[10];
+    edge_detector hedge (#RISE(1), #FALL(0));
+  }
+
+  always {
+    decoder.tmds = tmds;
+    decoder.tmdsb = tmdsb;
+    
+    pclk = decoder.pclk;
+    active = decoder.de;
+    x = x_ctr.q;
+    y = y_ctr.q;
+    red = decoder.red;
+    green = decoder.green;
+    blue = decoder.blue;
+    
+    hedge.in = decoder.hsync;
+    
+    if (decoder.de) {
+      x_ctr.d = x_ctr.q + 1;
+      if (hedge.out)
+        y_ctr.d = y_ctr.q + 1;
+    }
+    
+    if (decoder.vsync) {
+      x_ctr.d = 0;
+      y_ctr.d = 0;
+    }
+  }
+}

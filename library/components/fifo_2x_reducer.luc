@@ -1,0 +1,62 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+module fifo_2x_reducer #(
+    DATA_IN_SIZE = 30 : DATA_IN_SIZE > 0 && DATA_IN_SIZE[0] == 0
+  )(
+    input rst,
+    input clk,
+    input clkx2,
+    input data_in[DATA_IN_SIZE],
+    output data_out[DATA_IN_SIZE/2]
+  ) {
+  
+  async_fifo fifo (#SIZE(DATA_IN_SIZE), #DEPTH(16), .wclk(clk), .rclk(clkx2), .wrst(rst), .rrst(rst));
+  
+  .clk(clkx2) {
+    dff flag;
+    dff word[DATA_IN_SIZE];
+  }
+  
+  
+  always {
+    fifo.din = data_in;
+    fifo.wput = 1;
+    
+    fifo.rget = 0;
+    
+    if (!flag.q && !fifo.empty) {
+      fifo.rget = 1;
+      flag.d = 1;
+      word.d = fifo.dout;
+    }
+    
+    if (flag.q) 
+      flag.d = 0;
+    
+    data_out = !flag.q ? word.q[DATA_IN_SIZE/2+:DATA_IN_SIZE/2] : word.q[0+:DATA_IN_SIZE/2];
+  }
+}

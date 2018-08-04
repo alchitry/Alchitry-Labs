@@ -1,0 +1,139 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************
+
+   Please note that this requires the latest firmware. If you haven't already,
+   go to Tools->Flash Firmware... to update. */
+
+module avr_interface #(
+    CLK_FREQ = 50000000 : CLK_FREQ > 0,            // clock frequency
+    BAUD = 500000 : BAUD > 0 && BAUD < CLK_FREQ/4  // baud rate
+  )(
+    input clk,
+    input rst,
+    
+    // cclk, or configuration clock is used when the FPGA is begin configured.
+    // The AVR will hold cclk high when it has finished initializing.
+    // It is important not to drive the lines connecting to the AVR
+    // until cclk is high for a short period of time to avoid contention.
+    input cclk,
+    
+    // AVR SPI Signals
+    output spi_miso,           // connect to spi_miso
+    input spi_mosi,            // connect to spi_mosi
+    input spi_sck,             // connect to spi_sck
+    input spi_ss,              // connect to spi_ss
+    output spi_channel[4],     // connect to spi_channel
+    
+    // AVR Serial Signals
+    output tx,                 // connect to avr_rx (note that tx->rx)
+    input rx,                  // connect to avr_tx (note that rx->tx)
+    
+    // ADC Interface Signals
+    input channel[4],          // ADC channel to read from, use hF to disable ADC
+    output new_sample,         // new ADC sample flag
+    output sample[10],         // ADC sample data
+    output sample_channel[4],  // channel of the new sample
+    
+    // Serial TX User Interface
+    input tx_data[8],          // data to send
+    input new_tx_data,         // new data flag (1 = new data)
+    output tx_busy,            // transmitter is busy flag (1 = busy)
+    input tx_block,            // block the transmitter (1 = block) connect to avr_rx_busy
+    
+    // Serial Rx User Interface
+    output rx_data[8],         // data received
+    output new_rx_data         // new data flag (1 = new data)
+  ) {
+  
+  sig n_rdy;
+  
+  .clk(clk){
+    cclk_detector cclk_detector(#CLK_FREQ(CLK_FREQ), .rst(rst));
+    .rst(n_rdy) {
+      spi_slave spi_slave(#CPOL(0), #CPHA(0));
+      uart_rx uart_rx(#CLK_FREQ(CLK_FREQ), #BAUD(BAUD));
+      uart_tx uart_tx(#CLK_FREQ(CLK_FREQ), #BAUD(BAUD));
+      
+      dff newSampleReg, sampleReg[10], sampleChannelReg[4];
+      dff byteCt[2];
+    }
+    dff block[4];
+    dff busy;
+  }
+  
+  always {
+    // AVR not ready flag
+    n_rdy = ~cclk_detector.ready;
+    
+    //inputs
+    cclk_detector.cclk = cclk;
+    spi_slave.sck = spi_sck;
+    spi_slave.mosi = spi_mosi;
+    spi_slave.data_in = hff;
+    spi_slave.ss = spi_ss;
+    uart_rx.rx = rx;
+    uart_tx.data = tx_data;
+    uart_tx.new_data = new_tx_data;
+    uart_tx.block = busy.q;
+    block.d = c{block.q[2:0], tx_block};
+    
+    // outputs
+    new_sample = newSampleReg.q;
+    sample = sampleReg.q;
+    sample_channel = sampleChannelReg.q;
+    
+    tx_busy = uart_tx.busy;
+    rx_data = uart_rx.data;
+    new_rx_data = uart_rx.new_data;
+    
+    spi_channel = cclk_detector.ready ? channel : bzzzz;
+    spi_miso = cclk_detector.ready && !spi_ss ? spi_slave.miso : bz;
+    tx = cclk_detector.ready ? uart_tx.tx : bz;
+    
+    newSampleReg.d = 0; // default to 0
+    
+    if (block.q[3] ^ block.q[2])
+      busy.d = 0;
+    
+    if (!uart_tx.busy && new_tx_data)
+      busy.d = 1;
+    
+    if (spi_ss)     // device is not selected
+      byteCt.d = 0; // reset byte count
+    
+    if (spi_slave.done) {                         // sent/received data from SPI
+      if (byteCt.q == 0) {
+        sampleReg.d[7:0] = spi_slave.data_out;        // first byte is the 8 LSB of the sample
+        byteCt.d = 1;
+      } else if (byteCt.q == 1) {
+        sampleReg.d[9:8] = spi_slave.data_out[1:0];   // second byte is the channel 2 MSB of the sample
+        sampleChannelReg.d = spi_slave.data_out[7:4]; // and the channel that was sampled
+        byteCt.d = 2;                             // slave-select must be brought high before the next transfer
+        newSampleReg.d = 1;                       // signal we have new data
+      }
+    }
+  }
+}

@@ -1,0 +1,744 @@
+<library>
+  <category name="Spartan 6 Primitives">
+
+    <!-- ODDR2 -->
+    <primitive name="ODDR2">
+      <param name="DDR_ALIGNMENT" type="string">
+        <option>NONE</option>
+        <option>C0</option>
+        <option>C1</option>
+      </param>
+      <param name="INIT" type="integer">
+        <range>
+          <min>0</min>
+          <max>1</max>
+        </range>
+      </param>
+      <param name="SRTYPE" type="string">
+        <option>ASYNC</option>
+        <option>SYNC</option>
+      </param>
+      <port name="D0" direction="input" width="1"></port>
+      <port name="D1" direction="input" width="1"></port>
+      <port name="C0" direction="input" width="1"></port>
+      <port name="C1" direction="input" width="1"></port>
+      <port name="CE" direction="input" width="1"></port>
+      <port name="R" direction="input" width="1"></port>
+      <port name="S" direction="input" width="1"></port>
+      <port name="Q" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- IDDR2 -->
+    <primitive name="IDDR2">
+      <param name="DDR_ALIGNMENT" type="string">
+        <option>NONE</option>
+        <option>C0</option>
+        <option>C1</option>
+      </param>
+      <param name="INIT_Q0" type="integer">
+        <range>
+          <min>0</min>
+          <max>1</max>
+        </range>
+      </param>
+      <param name="INIT_Q1" type="integer">
+        <range>
+          <min>0</min>
+          <max>1</max>
+        </range>
+      </param>
+      <param name="SRTYPE" type="string">
+        <option>ASYNC</option>
+        <option>SYNC</option>
+      </param>
+      <port name="D" direction="input" width="1"></port>
+      <port name="C0" direction="input" width="1"></port>
+      <port name="C1" direction="input" width="1"></port>
+      <port name="CE" direction="input" width="1"></port>
+      <port name="R" direction="input" width="1"></port>
+      <port name="S" direction="input" width="1"></port>
+      <port name="Q0" direction="output" width="1"></port>
+      <port name="Q1" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- IODELAY2 -->
+    <primitive name="IODELAY2">
+      <param name="IDELAY_VALUE" type="integer">
+        <range>
+          <min>0</min>
+          <max>255</max>
+        </range>
+      </param>
+      <param name="IDELAY2_VALUE" type="integer">
+        <range>
+          <min>0</min>
+          <max>255</max>
+        </range>
+      </param>
+      <param name="IDELAY_MODE" type="string">
+        <option>NORMAL</option>
+        <option>PCI</option>
+      </param>
+      <param name="ODELAY_VALUE" type="integer">
+        <range>
+          <min>0</min>
+          <max>255</max>
+        </range>
+      </param>
+      <param name="IDELAY_TYPE" type="string">
+        <option>FIXED</option>
+        <option>DEFAULT</option>
+        <option>VARIABLE_FROM_ZERO</option>
+        <option>VARIABLE_FROM_HALF_MAX</option>
+        <option>DIFF_PHASE_DETECTOR</option>
+      </param>
+      <param name="COUNTER_WRAPAROUND" type="string">
+        <option>STAY_AT_LIMIT</option>
+        <option>WRAPAROUND</option>
+      </param>
+      <param name="DELAY_SRC" type="string">
+        <option>IO</option>
+        <option>ODATAIN</option>
+        <option>IDATAIN</option>
+      </param>
+      <param name="SERDES_MODE" type="string">
+        <option>NONE</option>
+        <option>MASTER</option>
+        <option>SLAVE</option>
+      </param>
+      <param name="SIM_TAP_DELAY" type="integer">
+        <range>
+          <min>20</min>
+          <max>100</max>
+        </range>
+      </param>
+      <param name="DATA_RATE" type="string">
+        <option>SDR</option>
+        <option>DDR</option>
+      </param>
+      <port name="IDATAIN"  direction="input"  width="1"></port>
+      <port name="T"        direction="input"  width="1"></port>
+      <port name="ODATAIN"  direction="input"  width="1"></port>
+      <port name="CAL"      direction="input"  width="1"></port>
+      <port name="IOCLK0"   direction="input"  width="1"></port>
+      <port name="IOCLK1"   direction="input"  width="1"></port>
+      <port name="CLK"      direction="input"  width="1"></port>
+      <port name="INC"      direction="input"  width="1"></port>
+      <port name="CE"       direction="input"  width="1"></port>
+      <port name="RST"      direction="input"  width="1"></port>
+      <port name="BUSY"     direction="output" width="1"></port>
+      <port name="DATAOUT"  direction="output" width="1"></port>
+      <port name="DATAOUT2" direction="output" width="1"></port>
+      <port name="TOUT"     direction="output" width="1"></port>
+      <port name="DOUT"     direction="output" width="1"></port>
+    </primitive>
+
+    <!-- OBUFDS -->
+    <primitive name="OBUFDS">
+      <param name="IOSTANDARD" type="string">
+        <option>LVDS_25</option>
+        <option>LVDS_33</option>
+        <option>BLVDS</option>
+        <option>DISPLAY_PORT</option>
+        <option>Mini_LVDS</option>
+        <option>RSDS</option>
+        <option>TMDS</option>
+        <option>PPDS</option>
+      </param>
+      <port name="I" direction="input" width="1"></port>
+      <port name="O" direction="output" width="1"></port>
+      <port name="OB" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- IBUFDS -->
+    <primitive name="IBUFDS">
+      <param name="IOSTANDARD" type="string">
+        <option>LVDS_25</option>
+        <option>LVDS_33</option>
+        <option>BLVDS</option>
+        <option>DISPLAY_PORT</option>
+        <option>Mini_LVDS</option>
+        <option>RSDS</option>
+        <option>TMDS</option>
+        <option>PPDS</option>
+      </param>
+      <param name="DIFF_TERM" type="string">
+        <option>TRUE</option>
+        <option>FALSE</option>
+      </param>
+      <port name="I" direction="input" width="1"></port>
+      <port name="IB" direction="input" width="1"></port>
+      <port name="O" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- BUFG -->
+    <primitive name="BUFG">
+      <port name="I" direction="input"  width="1"></port>
+      <port name="O" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- IBUFG -->
+    <primitive name="IBUFG">
+      <param name="IOSTANDARD" type="string">
+        <option>LVTTL</option>
+        <option>LVCMOS</option>
+        <option>LVCMOS_JEDEC</option>
+        <option>PCI</option>
+        <option>I2C</option>
+        <option>SMBUS</option>
+        <option>SDIO</option>
+        <option>MOBILE_DDR</option>
+        <option>SSTL3</option>
+        <option>SSTL2</option>
+        <option>SSTL18</option>
+        <option>SSTL15</option>
+      </param>
+      <port name="I" direction="input"  width="1"></port>
+      <port name="O" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- IBUFGDS -->
+    <primitive name="IBUFGDS">
+      <param name="IOSTANDARD" type="string">
+        <option>LVDS_25</option>
+        <option>LVDS_33</option>
+        <option>BLVDS</option>
+        <option>DISPLAY_PORT</option>
+        <option>Mini_LVDS</option>
+        <option>RSDS</option>
+        <option>TMDS</option>
+        <option>PPDS</option>
+      </param>
+      <port name="I" direction="input"  width="1"></port>
+      <port name="IB" direction="input"  width="1"></port>
+      <port name="O" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- BUFIO2 -->
+    <primitive name="BUFIO2">
+      <param name="DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>1</max>
+        </range>
+        <range>
+          <min>3</min>
+          <max>8</max>
+        </range>
+      </param>
+      <param name="DIVIDE_BYPASS" type="string">
+        <option>TRUE</option>
+        <option>FALSE</option>
+      </param>
+      <param name="I_INVERT" type="string">
+        <option>TRUE</option>
+        <option>FALSE</option>
+      </param>
+      <param name="USE_DOUBLER" type="string">
+        <option>TRUE</option>
+        <option>FALSE</option>
+      </param>
+      <port name="I" direction="input" width="1"></port>
+      <port name="IOCLK" direction="output" width="1"></port>
+      <port name="DIVCLK" direction="output" width="1"></port>
+      <port name="SERDESSTROBE" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- BUFPLL -->
+    <primitive name="BUFPLL">
+      <param name="DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>8</max>
+        </range>
+      </param>
+      <param name="ENABLE_SYNC" type="string">
+        <option>TRUE</option>
+        <option>FALSE</option>
+      </param>
+      <port name="PLLIN"        direction="input"  width="1"></port>
+      <port name="GCLK"         direction="input"  width="1"></port>
+      <port name="LOCKED"       direction="input"  width="1"></port>
+      <port name="IOCLK"        direction="output" width="1"></port>
+      <port name="SERDESSTROBE" direction="output" width="1"></port>
+      <port name="LOCK"         direction="output" width="1"></port>
+    </primitive>
+
+    <!-- PLL_ADV -->
+    <primitive name="PLL_ADV">
+      <param name="COMPENSATION" type="string">
+        <option>SYSTEM_SYNCHRONOUS</option>
+        <option>SOURCE_SYNCHRONOUS</option>
+        <option>EXTERNAL</option>
+        <option>INTERNAL</option>
+        <option>DCM2PLL</option>
+        <option>PLL2DCM</option>
+      </param>
+      <param name="BANDWIDTH" type="string">
+        <option>HIGH</option>
+        <option>LOW</option>
+        <option>OPTIMIZED</option>
+      </param>
+      <param name="CLKOUT0_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT1_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT2_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT3_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT4_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT5_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT0_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT1_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT2_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT3_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT4_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT5_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT0_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT1_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT2_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT3_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT4_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT5_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKFBOUT_MULT" type="integer">
+        <range>
+          <min>1</min>
+          <max>64</max>
+        </range>
+      </param>
+      <param name="DIVCLK_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>52</max>
+        </range>
+      </param>
+      <param name="CLKFBOUT_PHASE" type="real">
+        <range>
+          <min>0.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="REF_JITTER" type="real">
+        <range>
+          <min>0.000</min>
+          <max>0.999</max>
+        </range>
+      </param>
+      <param name="CLKIN1_PERIOD" type="real">
+        <range>
+          <min>1.408</min>
+          <max>52.630</max>
+        </range>
+      </param>
+      <param name="CLKIN2_PERIOD" type="real">
+        <range>
+          <min>1.408</min>
+          <max>52.630</max>
+        </range>
+      </param>
+      <param name="CLK_FEEDBACK" type="string">
+        <option>CLKFBOUT</option>
+        <option>CLKOUT0</option>
+      </param>
+      <param name="RESET_ON_LOSS_OF_LOCK" type="string">
+        <option>FALSE</option>
+      </param>
+      <port name="CLKIN1" direction="input" width="1"></port>
+      <port name="CLKIN2" direction="input" width="1"></port>
+      <port name="CLKFBIN" direction="input" width="1"></port>
+      <port name="RST" direction="input" width="1"></port>
+      <port name="CLKINSEL" direction="input" width="1"></port>
+      <port name="DADDR" direction="input" width="5"></port>
+      <port name="DI" direction="input" width="16"></port>
+      <port name="DWE" direction="input" width="1"></port>
+      <port name="DEN" direction="input" width="1"></port>
+      <port name="DCLK" direction="input" width="1"></port>
+      <port name="REL" direction="input" width="1"></port>
+      <port name="CLKOUT0" direction="output" width="1"></port>
+      <port name="CLKOUT1" direction="output" width="1"></port>
+      <port name="CLKOUT2" direction="output" width="1"></port>
+      <port name="CLKOUT3" direction="output" width="1"></port>
+      <port name="CLKOUT4" direction="output" width="1"></port>
+      <port name="CLKOUT5" direction="output" width="1"></port>
+      <port name="CLKFBOUT" direction="output" width="1"></port>
+      <port name="CLKOUTDCM0" direction="output" width="1"></port>
+      <port name="CLKOUTDCM1" direction="output" width="1"></port>
+      <port name="CLKOUTDCM2" direction="output" width="1"></port>
+      <port name="CLKOUTDCM3" direction="output" width="1"></port>
+      <port name="CLKOUTDCM4" direction="output" width="1"></port>
+      <port name="CLKOUTDCM5" direction="output" width="1"></port>
+      <port name="CLKFBDCM" direction="output" width="1"></port>
+      <port name="LOCKED" direction="output" width="1"></port>
+      <port name="DO" direction="output" width="16"></port>
+      <port name="DRDY" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- PLL_BASE -->
+    <primitive name="PLL_BASE">
+      <param name="COMPENSATION" type="string">
+        <option>SYSTEM_SYNCHRONOUS</option>
+        <option>SOURCE_SYNCHRONOUS</option>
+        <option>EXTERNAL</option>
+        <option>INTERNAL</option>
+        <option>DCM2PLL</option>
+        <option>PLL2DCM</option>
+      </param>
+      <param name="BANDWIDTH" type="string">
+        <option>HIGH</option>
+        <option>LOW</option>
+        <option>OPTIMIZED</option>
+      </param>
+      <param name="CLKOUT0_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT1_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT2_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT3_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT4_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT5_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>128</max>
+        </range>
+      </param>
+      <param name="CLKOUT0_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT1_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT2_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT3_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT4_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT5_PHASE" type="real">
+        <range>
+          <min>-360.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="CLKOUT0_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT1_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT2_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT3_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT4_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKOUT5_DUTY_CYCLE" type="real">
+        <range>
+          <min>0.01</min>
+          <max>0.99</max>
+        </range>
+      </param>
+      <param name="CLKFBOUT_MULT" type="integer">
+        <range>
+          <min>1</min>
+          <max>64</max>
+        </range>
+      </param>
+      <param name="DIVCLK_DIVIDE" type="integer">
+        <range>
+          <min>1</min>
+          <max>52</max>
+        </range>
+      </param>
+      <param name="CLKFBOUT_PHASE" type="real">
+        <range>
+          <min>0.0</min>
+          <max>360.0</max>
+        </range>
+      </param>
+      <param name="REF_JITTER" type="real">
+        <range>
+          <min>0.000</min>
+          <max>0.999</max>
+        </range>
+      </param>
+      <param name="CLKIN_PERIOD" type="real">
+        <range>
+          <min>1.408</min>
+          <max>52.630</max>
+        </range>
+      </param>
+      <param name="CLK_FEEDBACK" type="string">
+        <option>CLKFBOUT</option>
+        <option>CLKOUT0</option>
+      </param>
+      <param name="RESET_ON_LOSS_OF_LOCK" type="string">
+        <option>FALSE</option>
+      </param>
+      <port name="CLKIN" direction="input" width="1"></port>
+      <port name="CLKFBIN" direction="input" width="1"></port>
+      <port name="RST" direction="input" width="1"></port>
+      <port name="CLKOUT0" direction="output" width="1"></port>
+      <port name="CLKOUT1" direction="output" width="1"></port>
+      <port name="CLKOUT2" direction="output" width="1"></port>
+      <port name="CLKOUT3" direction="output" width="1"></port>
+      <port name="CLKOUT4" direction="output" width="1"></port>
+      <port name="CLKOUT5" direction="output" width="1"></port>
+      <port name="CLKFBOUT" direction="output" width="1"></port>
+      <port name="LOCKED" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- ISERDES2 -->
+    <primitive name="ISERDES2">
+      <param name="DATA_RATE" type="string">
+        <option>SDR</option>
+        <option>DDR</option>
+      </param>
+      <param name="DATA_WIDTH" type="integer">
+        <range>
+          <min>2</min>
+          <max>8</max>
+        </range>
+      </param>
+      <param name="BITSLIP_ENABLE" type="string">
+        <option>TRUE</option>
+        <option>FALSE</option>
+      </param>
+      <param name="SERDES_MODE" type="string">
+        <option>NONE</option>
+        <option>MASTER</option>
+        <option>SLAVE</option>
+      </param>
+      <param name="INTERFACE_TYPE" type="string">
+        <option>NETWORKING</option>
+        <option>NETWORKING_PIPELINED</option>
+        <option>RETIMED</option>
+      </param>
+      <port name="CLK0" direction="input" width="1"></port>
+      <port name="CLK1" direction="input" width="1"></port>
+      <port name="CLKDIV" direction="input" width="1"></port>
+      <port name="CE0" direction="input" width="1"></port>
+      <port name="BITSLIP" direction="input" width="1"></port>
+      <port name="D" direction="input" width="1"></port>
+      <port name="RST" direction="input" width="1"></port>
+      <port name="IOCE" direction="input" width="1"></port>
+      <port name="SHIFTIN" direction="input" width="1"></port>
+      <port name="CFB0" direction="output" width="1"></port>
+      <port name="CFB1" direction="output" width="1"></port>
+      <port name="DFB" direction="output" width="1"></port>
+      <port name="SHIFTOUT" direction="output" width="1"></port>
+      <port name="FABRICOUT" direction="output" width="1"></port>
+      <port name="Q1" direction="output" width="1"></port>
+      <port name="Q2" direction="output" width="1"></port>
+      <port name="Q3" direction="output" width="1"></port>
+      <port name="Q4" direction="output" width="1"></port>
+      <port name="VALID" direction="output" width="1"></port>
+      <port name="INCDEC" direction="output" width="1"></port>
+    </primitive>
+
+    <!-- OSERDES2 -->
+    <primitive name="OSERDES2">
+      <param name="DATA_RATE_OQ" type="string">
+        <option>SDR</option>
+        <option>DDR</option>
+      </param>
+      <param name="DATA_RATE_OT" type="string">
+        <option>SDR</option>
+        <option>DDR</option>
+        <option>BUF</option>
+      </param>
+      <param name="DATA_WIDTH" type="integer">
+        <range>
+          <min>2</min>
+          <max>8</max>
+        </range>
+      </param>
+      <param name="OUTPUT_MODE" type="string">
+        <option>SINGLE_ENDED</option>
+        <option>DIFFERENTIAL</option>
+      </param>
+      <param name="SERDES_MODE" type="string">
+        <option>NONE</option>
+        <option>MASTER</option>
+        <option>SLAVE</option>
+      </param>
+      <param name="TRAIN_PATTERN" type="integer">
+        <range>
+          <min>0</min>
+          <max>15</max>
+        </range>
+      </param>
+      <port name="CLK0" direction="input" width="1"></port>
+      <port name="CLK1" direction="input" width="1"></port>
+      <port name="CLKDIV" direction="input" width="1"></port>
+      <port name="IOCE" direction="input" width="1"></port>
+      <port name="D1" direction="input" width="1"></port>
+      <port name="D2" direction="input" width="1"></port>
+      <port name="D3" direction="input" width="1"></port>
+      <port name="D4" direction="input" width="1"></port>
+      <port name="OCE" direction="input" width="1"></port>
+      <port name="RST" direction="input" width="1"></port>
+      <port name="T1" direction="input" width="1"></port>
+      <port name="T2" direction="input" width="1"></port>
+      <port name="T3" direction="input" width="1"></port>
+      <port name="T4" direction="input" width="1"></port>
+      <port name="TCE" direction="input" width="1"></port>
+      <port name="SHIFTIN1" direction="input" width="1"></port>
+      <port name="SHIFTIN2" direction="input" width="1"></port>
+      <port name="SHIFTIN3" direction="input" width="1"></port>
+      <port name="SHIFTIN4" direction="input" width="1"></port>
+      <port name="TRAIN" direction="input" width="1"></port>
+      <port name="OQ" direction="output" width="1"></port>
+      <port name="TQ" direction="output" width="1"></port>
+      <port name="SHIFTOUT1" direction="output" width="1"></port>
+      <port name="SHIFTOUT2" direction="output" width="1"></port>
+      <port name="SHIFTOUT3" direction="output" width="1"></port>
+      <port name="SHIFTOUT4" direction="output" width="1"></port>
+    </primitive>
+  </category>
+</library>

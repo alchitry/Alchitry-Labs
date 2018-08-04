@@ -1,0 +1,250 @@
+<library>
+  <category name="Interfaces">
+    <module file="avr_interface.luc" name="AVR Interface">
+      <description>Interface to the AVR (for the default firmware). This give you access to the USB port and analog pins on the Mojo.</description>
+      <depends>UART TX</depends>
+      <depends>UART RX</depends>
+      <depends>SPI Slave</depends>
+      <depends>CCLK Detector</depends>
+    </module>
+    <module file="reg_interface.luc" name="Register Interface">
+      <description>Turn a basic serial interface into an register (address) based interface. This can allow you to easily connect various parts of your design to the serial port by mapping them to different regions in the address space.</description>
+    </module>
+  </category>
+  <category name="Protocols">
+    <module file="uart_tx.luc" name="UART TX">
+      <description>UART (Serial) transmitter with configurable baud rate.</description>
+    </module>
+    <module file="uart_rx.luc" name="UART RX">
+      <description>UART (Serial) receiver with configurable baud rate.</description>
+    </module>
+    <module file="spi_master.luc" name="SPI Master">
+      <description>SPI master. It has configurable CPOL and CPHA as well as a configurable clock divider.</description>
+    </module>
+    <module file="spi_slave.luc" name="SPI Slave">
+      <description>SPI slave. It has configurable CPOL and CPHA. It's used to interface with the AVR on the Mojo.</description>
+    </module>
+    <module file="i2c_master.luc" name="I2C Master">
+      <description>I2C master that can be used to talk to I2C devices. It has a configurable clock divider.</description>
+    </module>
+    <module file="i2c_slave.luc" name="I2C Slave">
+      <description>I2C slave that can be used to interface with an I2C master. It has a configurable devices ID. After a byte is read, you need to tell the module if it should respond with a byte or wait for more bytes to be read. See the EDID ROM module in the Video category for an example use case.</description>
+    </module>
+    <module file="sccb.luc" name="SCCB">
+      <description>Serial Camera Control Bus. This module allows you to write to a camera's registers using the SCCB protocol. It currently only supports writes.</description>
+    </module>
+  </category>
+  <category name="Controllers">
+    <module file="sdram.luc" name="SDRAM Controller">
+      <description>An SDRAM controller for interfacing with the SDRAM Shield which uses the MT48LC32M8A2P-7E:G SDRAM chip. This module assumes that the clock is 100MHz and the SDRAM Shield is connected directly to the Mojo (first in the stack).</description>
+      <depends>Memory Bus</depends>
+    </module>
+    <module file="servo.luc" name="Servo Controller">
+      <description>A fully customizable servo controller. It offers glitch-free operation of PWM servos with parameters to easily adjust the neutral, minimum, and maximum pulse widths.</description>
+    </module>
+  </category>
+  <category name="LED Effects">
+    <module file="pwm.luc" name="Pulse Width Modulator">
+      <description>PWM module with glitch free updates. Offers a configurable clock divider, max value, and resolution</description>
+      <depends>Counter</depends>
+    </module>
+    <module file="wave.luc" name="PWM Wave">
+      <description>Fancy wave effect for 8 LEDs. This is the default effect that ships on the Mojo.</description>
+    </module>
+  </category>
+  <category name="Memory">
+    <module file="simple_ram.v" name="Simple RAM">
+      <description>Simple single port RAM with configurable size and depth.</description>
+    </module>
+    <module file="simple_dual_ram.v" name="Simple Dual-port RAM">
+      <description>Simple dual port RAM with configurable size and depth. These are useful when you need to be able to read and write independently.</description>
+    </module>
+    <module file="async_fifo.luc" name="Asynchronous FIFO">
+      <description>A FIFO (First In First Out) with independent clocks for writing and reading. These are useful for crossing clock domains.</description>
+      <depends>Simple Dual-port RAM</depends>
+    </module>
+    <module file="mem_write_buffer.luc" name="Memory Write Buffer">
+      <description>A FIFO style write buffer that can be used to pad bursty write patterns to memory or to deal with the occasional delay from SDRAM refresh cycles.</description>
+      <depends>Asynchronous FIFO</depends>
+      <depends>Memory Bus</depends>
+    </module>
+    <module file="memory_arbiter.luc" name="Memory Arbiter">
+      <description>This module allows you to connect multiple clients to a single memory interface (the interface used by the SDRAM controller). It uses a simple priority scheme where each client gets a unique priority (lower IDs = higher priority). This means it is possible for high priority clients to starve out low priority clients.</description>
+      <depends>Memory Bus</depends>
+    </module>
+  </category>
+  <category name="Math">
+    <module file="pn_gen.luc" name="Pseudo-random Number Generator">
+      <description>This is a pseudo-random number generator using the Xorshift algorithm (https://en.wikipedia.org/wiki/Xorshift). It generates 32 bit "random" numbers that should be random enough for most purposes, but shouldn't be used for any crypto applications. A seed can be provided to dynamically change the set of random numbers generated after a reset.</description>
+    </module>
+  </category>
+  <category name="Image">
+    <module file="ov2640.luc" name="OV2640 Interface">
+      <description>This is an interface for the OV2640 camera. It will automatically configure the camera on power up and start sending image data to your design. This modules requires that one of the configuration ROMs below be included in your project. The different ROMs will determine the resolution that the images are captured at.</description>
+      <depends>SCCB</depends>
+      <depends>Reset Conditioner</depends>
+      <depends>Asynchronous FIFO</depends>
+    </module>
+    <module file="ov2640_uxga_config.luc" name="OV2640 UXGA Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take UXGA (1600x1200) size images at 15FPS.</description>
+    </module>
+    <module file="ov2640_sxga_config.luc" name="OV2640 SXGA Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take SXGA (1280x1024) size images at 15FPS.</description>
+    </module>
+    <module file="ov2640_xga_config.luc" name="OV2640 XGA Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take XGA (1024x768) size images at 15FPS.</description>
+    </module>
+    <module file="ov2640_svga_config.luc" name="OV2640 SVGA Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take SVGA (800x600) size images at 15FPS.</description>
+    </module>
+    <module file="ov2640_vga_config.luc" name="OV2640 VGA Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take VGA (640x480) size images at 15FPS.</description>
+    </module>
+    <module file="ov2640_cif_config.luc" name="OV2640 CIF Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take CIF (352x288) size images at 15FPS.</description>
+    </module>
+    <module file="ov2640_qvga_config.luc" name="OV2640 QVGA Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take QVGA (320x240) size images at 15FPS.</description>
+    </module>
+    <module file="ov2640_qcif_config.luc" name="OV2640 QCIF Configuration ROM">
+      <description>This a ROM containing the configuration data for the OV2640 to get it to take QCIF (176x144) size images at 15FPS.</description>
+    </module>
+  </category>
+  <category name="Video">
+    <module file="hdmi_encoder.luc" name="HDMI Encoder">
+      <description>This module can encode video data for an HDMI stream. You can set the resolution through its parameters.</description>
+      <depends>DVI Encoder</depends>
+    </module>
+    <module file="hdmi_decoder.luc" name="HDMI Decoder">
+      <description>This module will recover HDMI data and the associated clock.</description>
+      <depends>DVI Decoder</depends>
+      <depends>Edge Detector</depends>
+    </module>
+    <module file="hdmi_passthru.luc" name="HDMI Passthru">
+      <description>This module can be used to edit an HDMI video stream. It decodes the data, allows you to edit it, then encodes it again. You can define the number of cycles you need to edit the stream through its parameters.</description>
+      <depends>DVI Encoder</depends>
+      <depends>DVI Decoder</depends>
+      <depends>Edge Detector</depends>
+      <depends>Pipeline</depends>
+    </module>
+    <module file="edid_rom.luc" name="EDID ROM">
+      <description>Example EDID ROM for use with HDMI Decoder. This ROM will tell a source that the Mojo is a 720p60 capable monitor.</description>
+      <depends>I2C Slave</depends>
+    </module>
+    <module file="dvi_encoder.luc" name="DVI Encoder">
+      <description>Encodes video data into a DVI stream. You most likely should be using the HDMI Encoder module instead of this directly.</description>
+      <depends>Serdes N to 1</depends>
+      <depends>TMDS Encoder</depends>
+      <depends>FIFO 2x Reducer</depends>
+    </module>
+    <module file="dvi_decoder.luc" name="DVI Decoder">
+      <description>Decodes a DVI stream into video data. You most likely should be using the HDMI Decoder module instead of this directly.</description>
+      <depends>TMDS Decoder</depends>
+    </module>
+    <module file="serdes_n_to_1.luc" name="Serdes N to 1">
+      <description>Serializer from 1-8 to 1 bit.</description>
+    </module>
+    <module file="tmds_encoder.luc" name="TMDS Encoder">
+      <description>Encodes 8 bits of data into 10 bits of TMDS data.</description>
+      <depends>DVI Globals</depends>
+    </module>
+    <module file="dvi_globals.luc" name="DVI Globals">
+      <description>DVI global constants.</description>
+    </module>
+    <module file="fifo_2x_reducer.luc" name="FIFO 2x Reducer">
+      <description>Crosses from a clock domain of FREQ to a clock domain of 2*FREQ by halving the data width.</description>
+      <depends>Asynchronous FIFO</depends>
+    </module>
+    <module file="tmds_decoder.luc" name="TMDS Decoder">
+      <description>Decodes 10 bit TMDS data into the original 8 bits.</description>
+      <depends>DVI Globals</depends>
+      <depends>Serdes 1 to 5</depends>
+      <depends>Channel Align</depends>
+      <depends>Bit Align</depends>
+    </module>
+    <module file="serdes_1_to_5.luc" name="Serdes 1 to 5">
+      <description>Deserializer from 1 bit to 5. Input data is a differential signal and supports bit slips to align 5 bit packets.</description>
+    </module>
+    <module file="channel_align.luc" name="Channel Align">
+      <description>Aligns data across multiple TMDS channels.</description>
+      <depends>DVI Globals</depends>
+      <depends>Asynchronous FIFO</depends>
+    </module>
+    <module file="bit_align.luc" name="Bit Align">
+      <description>Aligns TMDS bits from a deserializer.</description>
+      <depends>DVI Globals</depends>
+    </module>
+  </category>
+  <category name="Debugging">
+    <module file="reg_interface_debug.luc" name="Register Interface (Debug)">
+      <description>Turn a basic serial interface into an register (address) based interface. This can allow you to easily connect various parts of your design to the serial port by mapping them to different regions in the address space. The debug version allows your to add use the IDE's built-in Wave Capture tool to view signals in the FPGA.</description>
+      <depends>Register Interface</depends>
+      <depends>Wave Capture</depends>
+    </module>
+    <module file="wave_capture.luc" name="Wave Capture">
+      <description>Plugs into the Register Interface and allows you to capture and view signals inside the FPGA using the IDE's built-in Wave Capture tool. You generally should use "Register Interface (Debug)" instead of using this component directly.</description>
+      <depends>Simple Dual-port RAM</depends>
+    </module>
+  </category>
+  <category name="Miscellaneous">
+    <module file="counter.luc" name="Counter">
+      <description>Configurable counter module. It can count up or down and has an adjustable size, max value, and clock divider.</description>
+    </module>
+    <module file="pipeline.luc" name="Pipeline">
+      <description>Pipeline with configurable depth. It will delay a signal for a specified number of clock cycles. It's also useful to synchronizing external inputs.</description>
+    </module>
+    <module file="edge_detector.luc" name="Edge Detector">
+      <description>An edge detector that can be configured to detect rising, falling, or both types of edges.</description>
+    </module>
+    <module file="decoder.luc" name="Decoder">
+      <description>Binary to 1-hot decoder with a configurable input width.</description>
+    </module>
+    <module file="encoder.luc" name="Encoder">
+      <description>1-hot to binary encoder with a configurable input width.</description>
+    </module>
+    <module file="arbiter.luc" name="Arbiter">
+      <description>Basic arbiter that takes an input and outputs a 1 where the most-significant 1 is in the input. For example, an input of 0110 would create an output of 0100.</description>
+    </module>
+    <module file="cclk_detector.luc" name="CCLK Detector">
+      <description>Detects when the CCLK signal has been high long enough to ensure the AVR is ready.</description>
+    </module>
+    <module file="button_conditioner.luc" name="Button Conditioner">
+      <description>This module will clean up an input from a button. It will both synchronize and debounce the signal. The debounce timeout is configurable as well as the length of the synchronizer.</description>
+      <depends>Pipeline</depends>
+    </module>
+    <module file="reset_conditioner.luc" name="Reset Conditioner">
+      <description>This will take an asynchronous reset input (such as a button) and synchronize the falling edge to the clock. This is important to ensure that the entire FPGA comes out of reset at the same time.</description>
+    </module>
+    <module file="bin_to_dec.luc" name="Binary to Decimal">
+      <description>This module converts a binary number into a series of decimal numbers. This is helpful for displaying a binary number on seven-segment displays or printing it to the USB port.</description>
+    </module>
+  </category>
+  <category name="Definitions">
+    <module file="memory_bus.luc" name="Memory Bus">
+      <description>Memory bus for the interfacing with the SDRAM controller.</description>
+    </module>
+  </category>
+  <category name="Constraints">
+    <constraint file="mojo.ucf" name="Mojo">
+      <description>This file contains the core constraints for the Mojo V2 and V3.</description>
+    </constraint>
+    <constraint file="sdram_shield.ucf" name="SDRAM Shield">
+      <description>Pin definitions for the SDRAM Shield.</description>
+    </constraint>
+    <constraint file="io_shield.ucf" name="IO Shield">
+      <description>Pin definitions for the IO Shield.</description>
+    </constraint>
+    <constraint file="servo_shield.ucf" name="Servo Shield">
+      <description>Pin definitions for the Servo Shield.</description>
+    </constraint>
+    <constraint file="clock_shield.ucf" name="Clock Shield">
+      <description>Pin definitions for the Clock Shield.</description>
+    </constraint>
+    <constraint file="camera_shield.ucf" name="Camera Shield">
+      <description>Pin definitions for the Camera Shield.</description>
+    </constraint>
+    <constraint file="hdmi.ucf" name="HDMI Shield">
+      <description>Pin definitions for the HDMI Shield.</description>
+    </constraint>
+  </category>
+</library>

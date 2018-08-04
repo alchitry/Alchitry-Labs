@@ -1,0 +1,140 @@
+module mojo_top (
+    input clk,                    // 50MHz clock
+    input rst_n,                  // reset button (active low)
+    output led [8],               // 8 user controllable LEDs
+    input cclk,                   // configuration clock, AVR ready when high
+    output spi_miso,              // AVR SPI MISO
+    input spi_ss,                 // AVR SPI Slave Select
+    input spi_mosi,               // AVR SPI MOSI
+    input spi_sck,                // AVR SPI Clock
+    output spi_channel [4],       // AVR general purpose pins (used by default to select ADC channel)
+    input avr_tx,                 // AVR TX (FPGA RX)
+    output avr_rx,                // AVR RX (FPGA TX)
+    input avr_rx_busy,            // AVR RX buffer full
+    output<Sdram.out> sdramOut,   // SDRAM outputs
+    inout<Sdram.inOut> sdramInOut,// SDRAM inouts
+    output camera_scl,            // camera sccb clock
+    inout camera_sda,             // camera sccb data
+    output camera_xclk,           // camera main clock
+    input camera_pclk,            // camera pixel clock
+    input camera_href,            // camera href signal
+    input camera_vsync,           // camera vsync signal
+    input camera_data [8],        // camera pixel data
+    output camera_rst,            // camera reset (active low)
+    output camera_pwdn            // camera power down (active high)
+  ) {
+  
+  sig rst;  // reset signal
+  sig fclk; // 100MHz clock
+  
+  // boost clock to 100MHz
+  clk_wiz clk_wiz;
+  always {
+    clk_wiz.CLK_IN = clk;   // 50MHz in
+    fclk = clk_wiz.CLK_OUT; // 100MHz out (it's like magic!)
+  }
+  
+  .clk(fclk) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    reset_conditioner reset_cond;
+    
+    .rst(rst) {
+      // inouts need to be connected at instantiation and directly to an inout of the module
+      sdram sdram (.sdramInOut(sdramInOut));
+      
+      // interface to the camera (OV2640)
+      ov2640 cam (#CLK_FREQ(100000000), .sda(camera_sda));
+      
+      // toggle to show frame captures
+      dff frame_toggle;
+      
+      // interface to the AVR (and PC indirectly)
+      avr_interface avr (#CLK_FREQ(100000000));
+      
+      // serial port to register interface
+      reg_interface reg_int (#CLK_FREQ(100000000));
+      
+      // memory arbiter to connect multiple devices to SDRAM
+      memory_arbiter mem_arb (#DEVICES(2));
+      
+      // module to capture an image and save it to SDRAM
+      img_capture img_capture;
+    }
+  }
+  
+  // adapter to give read-only access to the SDRAM over the USB port
+  ram_to_reg rtr;
+  
+  always {
+    reset_cond.in = ~rst_n;                 // input raw inverted reset signal
+    rst = reset_cond.out;                   // conditioned reset
+    
+    // avr interface connections
+    avr.cclk = cclk;
+    spi_miso = avr.spi_miso;
+    avr.spi_mosi = spi_mosi;
+    avr.spi_sck = spi_sck;
+    avr.spi_ss = spi_ss;
+    spi_channel = avr.spi_channel;
+    
+    // serial port connections
+    avr_rx = avr.tx;
+    avr.rx = avr_tx;
+    
+    avr.channel = hf; // disabled
+    
+    // avr to register interface connections
+    avr.tx_block = avr_rx_busy;
+    reg_int.rx_data = avr.rx_data;
+    reg_int.new_rx_data = avr.new_rx_data;
+    reg_int.tx_busy = avr.tx_busy;
+    avr.tx_data = reg_int.tx_data;
+    avr.new_tx_data = reg_int.new_tx_data;
+    
+    // default to no capture
+    img_capture.start = 0;
+    
+    // if new write command to address 0
+    if (reg_int.regOut.new_cmd && reg_int.regOut.write && reg_int.regOut.address == 32d0)
+      img_capture.start = 1;                // start image capture
+    
+    if (cam.image.end_frame)                // if frame over
+      frame_toggle.d = ~frame_toggle.q;     // toggle frame_toggle
+    
+    led = 0;                                // default to off
+    led[0] = frame_toggle.q;                // toggle led[0] with each image captured
+    led[7] = ~img_capture.idle;             // show when image is being captured
+    
+    // arbiter to memory connections
+    mem_arb.memIn = sdram.memOut;
+    sdram.memIn = mem_arb.memOut;
+    
+    img_capture.img = cam.image;            // image feed
+    
+    // image capture to memory arbiter connection
+    mem_arb.devIn[0] = img_capture.memOut;
+    img_capture.memIn = mem_arb.devOut[0];
+    
+    // register interface to register adapter connections
+    rtr.regIn = reg_int.regOut;
+    reg_int.regIn = rtr.regOut;
+    
+    // register adapter to memory connections
+    rtr.memIn = mem_arb.devOut[1];
+    mem_arb.devIn[1] = rtr.memOut;    
+    
+    sdramOut = sdram.sdramOut;              // connect controller to SDRAM
+    
+    // camera connection
+    cam.cam_clk = clk_wiz.CAM_CLK;          // 24MHz
+    cam.data = camera_data;
+    camera_scl = cam.scl;
+    camera_xclk = cam.xclk;
+    cam.pclk = camera_pclk;
+    cam.href = camera_href;
+    cam.vsync = camera_vsync;
+    camera_rst = cam.rst_cm;
+    camera_pwdn = cam.pwdn;
+  }
+}

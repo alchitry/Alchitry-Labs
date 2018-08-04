@@ -1,0 +1,100 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+module dvi_encoder (
+    input pclk,
+    input pclkx2,
+    input pclkx10,
+    input strobe,
+    input rst,
+    input red[8],
+    input green[8],
+    input blue[8],
+    input hsync,
+    input vsync,
+    input de,
+    output tmds[4],
+    output tmdsb[4]
+  ) {
+  
+  .clk(pclkx2), .rst(rst) {
+    dff toggle;
+  }
+  
+  serdes_n_to_1 clkser (#FACTOR(5), .ioclk(pclkx10), .strobe(strobe), .gclk(pclkx2), .rst(rst));
+  xil_OBUFDS clkbuf (.I(clkser.iob_out));
+  
+  tmds_encoder enc_blue (.clk(pclk), .rst(rst));
+  tmds_encoder enc_green (.clk(pclk), .rst(rst));
+  tmds_encoder enc_red (.clk(pclk), .rst(rst));
+  
+  fifo_2x_reducer fifo (#DATA_IN_SIZE(30), .rst(rst), .clk(pclk), .clkx2(pclkx2));
+  
+  serdes_n_to_1 redser (#FACTOR(5), .ioclk(pclkx10), .strobe(strobe), .gclk(pclkx2), .rst(rst));
+  serdes_n_to_1 greenser (#FACTOR(5), .ioclk(pclkx10), .strobe(strobe), .gclk(pclkx2), .rst(rst));
+  serdes_n_to_1 blueser (#FACTOR(5), .ioclk(pclkx10), .strobe(strobe), .gclk(pclkx2), .rst(rst));
+  
+  xil_OBUFDS redbuf (.I(redser.iob_out));
+  xil_OBUFDS greenbuf (.I(greenser.iob_out));
+  xil_OBUFDS bluebuf (.I(blueser.iob_out));
+  
+  always {
+    toggle.d = ~toggle.q;
+    clkser.data = 5x{~toggle.q};
+    tmds[3] = clkbuf.O;
+    tmdsb[3] = clkbuf.OB;
+    
+    enc_red.data_in = red;
+    enc_green.data_in = green;
+    enc_blue.data_in = blue;
+    
+    enc_red.c0 = hsync;
+    enc_red.c1 = vsync;
+    enc_red.de = de;
+    
+    enc_green.c0 = hsync;
+    enc_green.c1 = vsync;
+    enc_green.de = de;
+    
+    enc_blue.c0 = hsync;
+    enc_blue.c1 = vsync;
+    enc_blue.de = de;
+    
+    fifo.data_in = c{enc_red.data_out[9:5], enc_green.data_out[9:5], enc_blue.data_out[9:5],
+      enc_red.data_out[4:0], enc_green.data_out[4:0], enc_blue.data_out[4:0]};
+    
+    redser.data = fifo.data_out[14:10];
+    greenser.data = fifo.data_out[9:5];
+    blueser.data = fifo.data_out[4:0];
+    
+    tmds[0] = bluebuf.O;
+    tmdsb[0] = bluebuf.OB;
+    tmds[1] = greenbuf.O;
+    tmdsb[1] = greenbuf.OB;
+    tmds[2] = redbuf.O;
+    tmdsb[2] = redbuf.OB;
+  }
+}

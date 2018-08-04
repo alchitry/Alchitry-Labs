@@ -1,0 +1,241 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+global OV2640_config {
+  const ENTRIES = 195;
+  const HRES = 176;
+  const VRES = 144;
+  const IMG_SIZE = HRES * VRES;
+}
+
+module ov2640_config (
+    input addr [8],  // address
+    output reg_addr [8],
+    output value [8]
+  ) {
+  
+  always {
+    reg_addr = 8hxx;
+    value = 8hxx;
+    case (addr) {
+      0: reg_addr = 8hff; value = 8h1;
+      1: reg_addr = 8h12; value = 8h80;
+      2: reg_addr = 8hff; value = 8h0;
+      3: reg_addr = 8h2c; value = 8hff;
+      4: reg_addr = 8h2e; value = 8hdf;
+      5: reg_addr = 8hff; value = 8h1;
+      6: reg_addr = 8h3c; value = 8h32;
+      7: reg_addr = 8h11; value = 8h0;
+      8: reg_addr = 8h9; value = 8h2;
+      9: reg_addr = 8h4; value = 8h28;
+      10: reg_addr = 8h13; value = 8he5;
+      11: reg_addr = 8h14; value = 8h48;
+      12: reg_addr = 8h2c; value = 8hc;
+      13: reg_addr = 8h33; value = 8h78;
+      14: reg_addr = 8h3a; value = 8h33;
+      15: reg_addr = 8h3b; value = 8hfb;
+      16: reg_addr = 8h3e; value = 8h0;
+      17: reg_addr = 8h43; value = 8h11;
+      18: reg_addr = 8h16; value = 8h10;
+      19: reg_addr = 8h39; value = 8h2;
+      20: reg_addr = 8h35; value = 8h88;
+      21: reg_addr = 8h22; value = 8ha;
+      22: reg_addr = 8h37; value = 8h40;
+      23: reg_addr = 8h23; value = 8h0;
+      24: reg_addr = 8h34; value = 8ha0;
+      25: reg_addr = 8h6; value = 8h2;
+      26: reg_addr = 8h6; value = 8h88;
+      27: reg_addr = 8h7; value = 8hc0;
+      28: reg_addr = 8hd; value = 8hb7;
+      29: reg_addr = 8he; value = 8h1;
+      30: reg_addr = 8h4c; value = 8h0;
+      31: reg_addr = 8h4a; value = 8h81;
+      32: reg_addr = 8h21; value = 8h99;
+      33: reg_addr = 8h24; value = 8h40;
+      34: reg_addr = 8h25; value = 8h38;
+      35: reg_addr = 8h26; value = 8h82;
+      36: reg_addr = 8h5c; value = 8h0;
+      37: reg_addr = 8h63; value = 8h0;
+      38: reg_addr = 8h46; value = 8h22;
+      39: reg_addr = 8hc; value = 8h3a;
+      40: reg_addr = 8h5d; value = 8h55;
+      41: reg_addr = 8h5e; value = 8h7d;
+      42: reg_addr = 8h5f; value = 8h7d;
+      43: reg_addr = 8h60; value = 8h55;
+      44: reg_addr = 8h61; value = 8h70;
+      45: reg_addr = 8h62; value = 8h80;
+      46: reg_addr = 8h7c; value = 8h5;
+      47: reg_addr = 8h20; value = 8h80;
+      48: reg_addr = 8h28; value = 8h30;
+      49: reg_addr = 8h6c; value = 8h0;
+      50: reg_addr = 8h6d; value = 8h80;
+      51: reg_addr = 8h6e; value = 8h0;
+      52: reg_addr = 8h70; value = 8h2;
+      53: reg_addr = 8h71; value = 8h94;
+      54: reg_addr = 8h73; value = 8hc1;
+      55: reg_addr = 8h3d; value = 8h34;
+      56: reg_addr = 8h12; value = 8h4;
+      57: reg_addr = 8h5a; value = 8h57;
+      58: reg_addr = 8h4f; value = 8hbb;
+      59: reg_addr = 8h50; value = 8h9c;
+      60: reg_addr = 8hff; value = 8h0;
+      61: reg_addr = 8he5; value = 8h7f;
+      62: reg_addr = 8hf9; value = 8hc0;
+      63: reg_addr = 8h41; value = 8h24;
+      64: reg_addr = 8he0; value = 8h14;
+      65: reg_addr = 8h76; value = 8hff;
+      66: reg_addr = 8h33; value = 8ha0;
+      67: reg_addr = 8h42; value = 8h20;
+      68: reg_addr = 8h43; value = 8h18;
+      69: reg_addr = 8h4c; value = 8h0;
+      70: reg_addr = 8h87; value = 8hd0;
+      71: reg_addr = 8h88; value = 8h3f;
+      72: reg_addr = 8hd7; value = 8h3;
+      73: reg_addr = 8hd9; value = 8h10;
+      74: reg_addr = 8hd3; value = 8h82;
+      75: reg_addr = 8hc8; value = 8h8;
+      76: reg_addr = 8hc9; value = 8h80;
+      77: reg_addr = 8h7c; value = 8h0;
+      78: reg_addr = 8h7d; value = 8h0;
+      79: reg_addr = 8h7c; value = 8h3;
+      80: reg_addr = 8h7d; value = 8h48;
+      81: reg_addr = 8h7d; value = 8h48;
+      82: reg_addr = 8h7c; value = 8h8;
+      83: reg_addr = 8h7d; value = 8h20;
+      84: reg_addr = 8h7d; value = 8h10;
+      85: reg_addr = 8h7d; value = 8he;
+      86: reg_addr = 8h90; value = 8h0;
+      87: reg_addr = 8h91; value = 8he;
+      88: reg_addr = 8h91; value = 8h1a;
+      89: reg_addr = 8h91; value = 8h31;
+      90: reg_addr = 8h91; value = 8h5a;
+      91: reg_addr = 8h91; value = 8h69;
+      92: reg_addr = 8h91; value = 8h75;
+      93: reg_addr = 8h91; value = 8h7e;
+      94: reg_addr = 8h91; value = 8h88;
+      95: reg_addr = 8h91; value = 8h8f;
+      96: reg_addr = 8h91; value = 8h96;
+      97: reg_addr = 8h91; value = 8ha3;
+      98: reg_addr = 8h91; value = 8haf;
+      99: reg_addr = 8h91; value = 8hc4;
+      100: reg_addr = 8h91; value = 8hd7;
+      101: reg_addr = 8h91; value = 8he8;
+      102: reg_addr = 8h91; value = 8h20;
+      103: reg_addr = 8h92; value = 8h0;
+      104: reg_addr = 8h93; value = 8h6;
+      105: reg_addr = 8h93; value = 8he3;
+      106: reg_addr = 8h93; value = 8h3;
+      107: reg_addr = 8h93; value = 8h3;
+      108: reg_addr = 8h93; value = 8h0;
+      109: reg_addr = 8h93; value = 8h2;
+      110: reg_addr = 8h93; value = 8h0;
+      111: reg_addr = 8h93; value = 8h0;
+      112: reg_addr = 8h93; value = 8h0;
+      113: reg_addr = 8h93; value = 8h0;
+      114: reg_addr = 8h93; value = 8h0;
+      115: reg_addr = 8h93; value = 8h0;
+      116: reg_addr = 8h93; value = 8h0;
+      117: reg_addr = 8h96; value = 8h0;
+      118: reg_addr = 8h97; value = 8h8;
+      119: reg_addr = 8h97; value = 8h19;
+      120: reg_addr = 8h97; value = 8h2;
+      121: reg_addr = 8h97; value = 8hc;
+      122: reg_addr = 8h97; value = 8h24;
+      123: reg_addr = 8h97; value = 8h30;
+      124: reg_addr = 8h97; value = 8h28;
+      125: reg_addr = 8h97; value = 8h26;
+      126: reg_addr = 8h97; value = 8h2;
+      127: reg_addr = 8h97; value = 8h98;
+      128: reg_addr = 8h97; value = 8h80;
+      129: reg_addr = 8h97; value = 8h0;
+      130: reg_addr = 8h97; value = 8h0;
+      131: reg_addr = 8ha4; value = 8h0;
+      132: reg_addr = 8ha8; value = 8h0;
+      133: reg_addr = 8hc5; value = 8h11;
+      134: reg_addr = 8hc6; value = 8h51;
+      135: reg_addr = 8hbf; value = 8h80;
+      136: reg_addr = 8hc7; value = 8h10;
+      137: reg_addr = 8hb6; value = 8h66;
+      138: reg_addr = 8hb8; value = 8ha5;
+      139: reg_addr = 8hb7; value = 8h64;
+      140: reg_addr = 8hb9; value = 8h7c;
+      141: reg_addr = 8hb3; value = 8haf;
+      142: reg_addr = 8hb4; value = 8h97;
+      143: reg_addr = 8hb5; value = 8hff;
+      144: reg_addr = 8hb0; value = 8hc5;
+      145: reg_addr = 8hb1; value = 8h94;
+      146: reg_addr = 8hb2; value = 8hf;
+      147: reg_addr = 8hc4; value = 8h5c;
+      148: reg_addr = 8ha6; value = 8h0;
+      149: reg_addr = 8ha7; value = 8h20;
+      150: reg_addr = 8ha7; value = 8hd8;
+      151: reg_addr = 8ha7; value = 8h1b;
+      152: reg_addr = 8ha7; value = 8h31;
+      153: reg_addr = 8ha7; value = 8h0;
+      154: reg_addr = 8ha7; value = 8h18;
+      155: reg_addr = 8ha7; value = 8h20;
+      156: reg_addr = 8ha7; value = 8hd8;
+      157: reg_addr = 8ha7; value = 8h19;
+      158: reg_addr = 8ha7; value = 8h31;
+      159: reg_addr = 8ha7; value = 8h0;
+      160: reg_addr = 8ha7; value = 8h18;
+      161: reg_addr = 8ha7; value = 8h20;
+      162: reg_addr = 8ha7; value = 8hd8;
+      163: reg_addr = 8ha7; value = 8h19;
+      164: reg_addr = 8ha7; value = 8h31;
+      165: reg_addr = 8ha7; value = 8h0;
+      166: reg_addr = 8ha7; value = 8h18;
+      167: reg_addr = 8h7f; value = 8h0;
+      168: reg_addr = 8he5; value = 8h1f;
+      169: reg_addr = 8he1; value = 8h77;
+      170: reg_addr = 8hdd; value = 8h7f;
+      171: reg_addr = 8hc2; value = 8he;
+      172: reg_addr = 8hff; value = 8h0;
+      173: reg_addr = 8he0; value = 8h4;
+      174: reg_addr = 8hc0; value = 8hc8;
+      175: reg_addr = 8hc1; value = 8h96;
+      176: reg_addr = 8h86; value = 8h3d;
+      177: reg_addr = 8h51; value = 8h90;
+      178: reg_addr = 8h52; value = 8h2c;
+      179: reg_addr = 8h53; value = 8h0;
+      180: reg_addr = 8h54; value = 8h0;
+      181: reg_addr = 8h55; value = 8h88;
+      182: reg_addr = 8h57; value = 8h0;
+      183: reg_addr = 8h50; value = 8h9b;
+      184: reg_addr = 8h5a; value = 8h2c;
+      185: reg_addr = 8h5b; value = 8h24;
+      186: reg_addr = 8h5c; value = 8h0;
+      187: reg_addr = 8hd3; value = 8h4;
+      188: reg_addr = 8he0; value = 8h0;
+      189: reg_addr = 8hff; value = 8h0;
+      190: reg_addr = 8h5; value = 8h0;
+      191: reg_addr = 8hda; value = 8h8;
+      192: reg_addr = 8hd7; value = 8h3;
+      193: reg_addr = 8he0; value = 8h0;
+      194: reg_addr = 8h5; value = 8h0;
+    }
+  }
+}

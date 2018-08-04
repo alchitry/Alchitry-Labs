@@ -1,0 +1,115 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+module hdmi_encoder #(
+    PCLK_DIV = 1 : PCLK_DIV >= 1 && PCLK_DIV < 12,
+    Y_RES = 720 : Y_RES > 0,
+    X_RES = 1280 : X_RES > 0,
+    Y_FRAME = 750 : Y_FRAME >= Y_RES + 15,
+    X_FRAME = 1667 : X_FRAME >= X_RES + 30
+  )(
+    input clk,  // clock
+    input rst,  // reset
+    output pclk,
+    output tmds[4],
+    output tmdsb[4],
+    output active,
+    output x[11],
+    output y[10],
+    input red[8],
+    input green[8],
+    input blue[8]
+  ) {
+  
+  sig clkfbin;
+  
+  xil_PLL_BASE pll_oserdes (
+    #CLKIN_PERIOD(10),
+    #CLKFBOUT_MULT(10), //set VCO to 10x of CLKIN
+    #CLKOUT0_DIVIDE(1 * PCLK_DIV),
+    #CLKOUT1_DIVIDE(10 * PCLK_DIV),
+    #CLKOUT2_DIVIDE(5 * PCLK_DIV),
+    #COMPENSATION("SOURCE_SYNCHRONOUS"),
+    .CLKFBIN(clkfbin),
+    .CLKIN(clk),
+    .RST(0)
+  );
+  
+  xil_BUFG clkfb_buf (.I(pll_oserdes.CLKFBOUT));
+  always clkfbin = clkfb_buf.O;
+  
+  xil_BUFG pclkx2_buf (.I(pll_oserdes.CLKOUT2));
+  
+  xil_BUFG pclk_buf(.I(pll_oserdes.CLKOUT1));
+  
+  xil_BUFPLL ioclk_buf (
+    #DIVIDE(5),
+    .PLLIN(pll_oserdes.CLKOUT0),
+    .GCLK(pclkx2_buf.O),
+    .LOCKED(pll_oserdes.LOCKED)
+  );
+  
+  .clk(pclk_buf.O) {
+    .rst(rst) {
+      dff ctrX[11];
+      dff ctrY[10];
+    }
+  }
+  
+  sig hSync, vSync, drawArea;
+  
+  dvi_encoder dvi (
+    .pclk(pclk_buf.O),
+    .pclkx2(pclkx2_buf.O),
+    .pclkx10(ioclk_buf.IOCLK),
+    .strobe(ioclk_buf.SERDESSTROBE),
+    .rst(~ioclk_buf.LOCK),
+    .blue(blue),
+    .green(green),
+    .red(red),
+    .hsync(hSync),
+    .vsync(vSync),
+    .de(drawArea)
+  );
+  
+  
+  always {
+    ctrX.d = (ctrX.q == X_FRAME-1) ? 0 : ctrX.q + 1;
+    if (ctrX.q == X_FRAME-1)
+      ctrY.d = (ctrY.q == Y_FRAME-1) ? 0 : ctrY.q + 1;
+    pclk = pclk_buf.O;
+    hSync = (ctrX.q >= X_RES + 10) && (ctrX.q < X_RES + 20);
+    vSync = (ctrY.q >= Y_RES + 10) && (ctrY.q < Y_RES + 12);
+    drawArea = (ctrX.q < X_RES) && (ctrY.q < Y_RES);
+    
+    active = drawArea;
+    x = ctrX.q;
+    y = ctrY.q;
+    
+    tmds = dvi.tmds;
+    tmdsb = dvi.tmdsb;
+  }
+}

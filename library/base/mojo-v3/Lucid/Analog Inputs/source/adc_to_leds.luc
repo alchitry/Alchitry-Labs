@@ -1,0 +1,38 @@
+module adc_to_leds (
+    input clk,               // clock
+    input rst,               // reset
+    output channel[4],       // channel we want to sample
+    input sample[10],        // sample value
+    input sample_channel[4], // channel the sample is from
+    input new_sample,        // 1 = new sample
+    output leds[8]           // output to leds
+  ) {
+  
+  // This is used to convert 0 to 7 to its corresponding channel 0 to 1 and 4 to 9
+  const LED_TO_CHANNEL = {4d9,4d8,4d7,4d6,4d5,4d4,4d1,4d0};
+
+  // This is used to convert the sample channel to the corresponding LED
+  // Most channels are invalid and will never be seen so we use 'x' as don't cares
+  const CHANNEL_TO_LED = {4bx,4bx,4bx,4bx,4bx,4bx,4d7,4d6,4d5,4d4,4d3,4d2,4bx,4bx,4d1,4d0};
+  
+  .clk(clk), .rst(rst) {
+    pwm pwm[8](#WIDTH(10));                           // 10bit PWM to show ADC value
+    dff ch[4];                                        // channel counter
+  }
+  
+  always {
+    channel = LED_TO_CHANNEL[ch.q];                   // set the channel to sample
+    
+    pwm.value = 8x{{sample}};                         // all PWM values are from sample
+    pwm.update = 8b0;                                 // default to not updating
+    
+    if (new_sample) {                                 // when there is a new sample
+      pwm.update[CHANNEL_TO_LED[sample_channel]] = 1; // update the corresponding PWM channel
+      ch.d = ch.q + 1;                                // increment the channel we are sampling
+      if (ch.q == 7)                                  // there are only 8 channels (0 to 7)
+        ch.d = 0;                                     // restart at 0
+    }
+    
+    leds = pwm.pulse;                                 // send PWM signals to all LEDs
+  }
+}

@@ -1,0 +1,164 @@
+/******************************************************************************
+   
+   The MIT License (MIT)
+   
+   Copyright (c) 2015 Embedded Micro
+   
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+   
+   *****************************************************************************
+
+   This module implements the Serial Camera Control Bus (SCCB) protocol and can
+   be used to write to a camera's registers to configure it. This module currently
+   only supports writing to the device. The WRITE_ADDR parameter will be unique
+   to each type of camera. The default of 8h60 is for the OV2640 camera.
+*/
+
+module sccb #(
+    CLK_DIV_SIZE = 10 : CLK_DIV_SIZE > 2,                      // clock divider size
+    WRITE_ADDR = 8h60 : WRITE_ADDR.WIDTH == 8                  // device's write address
+  )(
+    input clk,                                                 // clock
+    input rst,                                                 // reset
+    
+    // sccb interface
+    output scl,                                                // clock
+    inout sda,                                                 // data
+    
+    // fpga interface
+    input addr [8],                                            // address
+    input value [8],                                           // value to write
+    input write,                                               // write flag (1 = start write)
+    output ack,                                                // acknowledged flag (0 = ack)
+    output busy                                                // busy flag (1 = busy)
+  ) {
+  
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {IDLE, START, DEV_ADDR, REG_ADDR, REG_WRITE, STOP, DELAY, SEND_DATA};
+    }
+    
+    dff next_state [state.WIDTH];                              // next state storage
+    dff clk_div_ct [CLK_DIV_SIZE];                             // clock divider counter
+    dff bit_ctr [4];                                           // bit counter
+    dff value_reg [8];                                         // value to write
+    dff addr_reg [8];                                          // address to write
+    dff data [8];                                              // data to send
+    
+    dff sda_reg;                                               // sda buffer
+    dff scl_reg;                                               // scl buffer
+    dff ack_reg;                                               // ack bit
+  }
+  
+  always {
+    busy = state.q != state.IDLE;                              // busy if not idle (duh!)
+    
+    sda.enable = 1;                                            // enable output by default
+    sda.write = sda_reg.q;                                     // connect sda buffer
+    scl = scl_reg.q;                                           // connect scl buffer
+    ack = ack_reg.q;                                           // connect ack output
+    
+    case (state.q) {
+      state.IDLE:
+        clk_div_ct.d = 0;                                      // reset clock counter
+        sda_reg.d = 1;                                         // idle bus high
+        scl_reg.d = 1;                                         // idle clock high
+        bit_ctr.d = 0;                                         // reset bit counter
+        ack_reg.d = 0;                                         // reset ack bit
+        if (write) {                                           // if new command
+          value_reg.d = value;                                 // save value
+          addr_reg.d = addr;                                   // save address
+          state.d = state.START;                               // start the transfer
+        }
+        
+      state.START:
+        clk_div_ct.d = clk_div_ct.q + 1;                       // increment clock divider
+        if (clk_div_ct.q == 1 << (clk_div_ct.WIDTH-1))         // if half full
+          sda_reg.d = 0;                                       // pull sda down (start signal)
+        if (&clk_div_ct.q) {                                   // if full
+          scl_reg.d = 0;                                       // pull scl down
+          state.d = state.DEV_ADDR;                            // switch state
+        }
+        
+      state.DEV_ADDR:
+        data.d = WRITE_ADDR;                                   // need to send the device write address
+        next_state.d = state.REG_ADDR;                         // next state is REG_ADDR
+        state.d = state.SEND_DATA;                             // send the data
+        
+      state.REG_ADDR:
+        sda_reg.d = addr_reg.q[7];                             // output MSB (prepping for send)
+        data.d = addr_reg.q;                                   // send address to write
+        next_state.d = state.REG_WRITE;                        // next state is REG_WRITE
+        state.d = state.SEND_DATA;                             // send the data
+        
+      state.REG_WRITE:
+        sda_reg.d = value_reg.q[7];                            // output MSB (prepping for send)
+        data.d = value_reg.q;                                  // send value to write
+        next_state.d = state.STOP;                             // next state is STOP
+        state.d = state.SEND_DATA;                             // send the data
+        
+      state.STOP:
+        sda_reg.d = 0;                                         // pull sda low
+        clk_div_ct.d = clk_div_ct.q + 1;                       // increment clock divider
+        if (clk_div_ct.q == 1 << (clk_div_ct.WIDTH-1))         // if half full
+          scl_reg.d = 1;                                       // pull scl high
+        if (&clk_div_ct.q) {                                   // if full
+          sda_reg.d = 1;                                       // pull sda high (stop signal)
+          state.d = state.DELAY;                               // switch to DELAY state
+        }
+        
+      state.DELAY:
+        clk_div_ct.d = clk_div_ct.q + 1;                       // increment clock divider
+        if (&clk_div_ct.q)                                     // if full
+          state.d = state.IDLE;                                // return to IDLE
+        
+      state.SEND_DATA:
+        clk_div_ct.d = clk_div_ct.q + 1;                       // increment clock divider
+        scl_reg.d = clk_div_ct.q[clk_div_ct.WIDTH-1];          // output MSB of clk_div_ct on scl
+        
+        if (clk_div_ct.q[clk_div_ct.WIDTH-1] && !scl_reg.q) {  // if rising edge of clock
+          if (bit_ctr.q[3])                                    // if 9th bit
+            ack_reg.d = sda.read | ack_reg.q;                  // read acknowledge bit
+        }
+        
+        if (!clk_div_ct.q[clk_div_ct.WIDTH-1] && scl_reg.q) {  // if falling edge of clock
+          bit_ctr.d = bit_ctr.q + 1;                           // increase bit counter
+          if (bit_ctr.q[3]) {                                  // if 9th bit
+            state.d = next_state.q;                            // switch to next state
+            bit_ctr.d = 0;                                     // reset bit counter
+            clk_div_ct.d= 0;                                   // reset clock divider
+            scl_reg.d = 0;                                     // set clock low
+          }
+        }
+        
+        if (clk_div_ct.q == 1 << (clk_div_ct.WIDTH-2)) {       // if 1/4 full (right before rising edge)
+          if (!bit_ctr.q[3]){                                  // if not the 9th bit
+            sda_reg.d = data.q[7];                             // output MSB of data
+            data.d = data.q << 1;                              // shift data
+          } 
+        }
+        
+        if (bit_ctr.q[3])                                      // if 9th bit
+          sda.enable = 0;                                      // release the bus so ack can be driven
+        
+      default:
+        state.d = state.IDLE;                                  // shouldn't get here
+    }
+  }
+}

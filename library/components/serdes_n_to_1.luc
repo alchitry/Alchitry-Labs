@@ -1,0 +1,80 @@
+module serdes_n_to_1 #(
+    FACTOR = 8 : FACTOR > 0 && FACTOR < 9
+  )(
+    input ioclk,
+    input strobe,
+    input rst,
+    input gclk,
+    input data[FACTOR],
+    output iob_out
+  ) {
+  
+  sig padded_data[8];
+  var i;
+  
+  xil_OSERDES2 mserdes (
+    #DATA_WIDTH(FACTOR),
+    #DATA_RATE_OQ("SDR"),
+    #DATA_RATE_OT("SDR"),
+    #SERDES_MODE("MASTER"),
+    #OUTPUT_MODE("DIFFERENTIAL"),
+    .CLK0(ioclk),
+    .CLK1(0),
+    .RST(rst),
+    .CLKDIV(gclk)
+  );
+  
+  xil_OSERDES2 sserdes (
+    #DATA_WIDTH(FACTOR),
+    #DATA_RATE_OQ("SDR"),
+    #DATA_RATE_OT("SDR"),
+    #SERDES_MODE("SLAVE"),
+    #OUTPUT_MODE("DIFFERENTIAL"),
+    .CLK0(ioclk),
+    .CLK1(0),
+    .RST(rst),
+    .CLKDIV(gclk)
+  );
+  
+  always {
+    padded_data = 8h00;
+    for (i = 0; i < FACTOR; i++)
+      padded_data[i] = data[i];
+    
+    mserdes.OCE = 1;
+    mserdes.IOCE = strobe;
+    mserdes.D4 = padded_data[7];
+    mserdes.D3 = padded_data[6];
+    mserdes.D2 = padded_data[5];
+    mserdes.D1 = padded_data[4];
+    mserdes.T1 = 0;
+    mserdes.T2 = 0;
+    mserdes.T3 = 0;
+    mserdes.T4 = 0;
+    mserdes.TRAIN = 0;
+    mserdes.TCE = 1;
+    mserdes.SHIFTIN1 = 1;
+    mserdes.SHIFTIN2 = 1;
+    mserdes.SHIFTIN3 = sserdes.SHIFTOUT3;
+    mserdes.SHIFTIN4 = sserdes.SHIFTOUT4;
+    
+    sserdes.OCE = 1;
+    sserdes.IOCE = strobe;
+    sserdes.D4 = padded_data[3];
+    sserdes.D3 = padded_data[2];
+    sserdes.D2 = padded_data[1];
+    sserdes.D1 = padded_data[0];
+    sserdes.T1 = 0;
+    sserdes.T2 = 0;
+    sserdes.T3 = 0;
+    sserdes.T4 = 0;
+    sserdes.TRAIN = 0;
+    sserdes.TCE = 1;
+    sserdes.SHIFTIN1 = mserdes.SHIFTOUT1;
+    sserdes.SHIFTIN2 = mserdes.SHIFTOUT2;
+    sserdes.SHIFTIN3 = 1;
+    sserdes.SHIFTIN4 = 1;
+    
+    iob_out = mserdes.OQ;
+  }
+}

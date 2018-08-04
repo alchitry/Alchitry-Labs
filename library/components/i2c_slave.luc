@@ -1,0 +1,159 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+module i2c_slave #(
+    DEVICE_ID = 7h50 : DEVICE_ID.WIDTH == 7
+  )(
+    input clk,  // clock
+    input rst,  // reset
+    inout sda,
+    input scl,
+    output start,
+    output stop,
+    output write,
+    output rx_data[8],
+    output rx_valid,
+    output next,
+    input tx_enable,
+    input tx_data[8],
+    output ack,
+    output enabled
+  ) {
+  
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {IDLE, WAIT_ID, WAIT_STOP, READ_BYTE, WRITE_BYTE, ACK, ACK_WAIT, READ_ACK, READ_ACK_WAIT};
+    }
+    dff sda_sync[3];
+    dff scl_sync[3];
+    dff bit_ctr[3];
+    dff data[8];
+    dff tx_flag;
+    dff valid;
+    dff capture_tx;
+  }
+  
+  sig clk_rise, clk_fall;
+  
+  always {
+    // defaults
+    start = 0;
+    stop = 0;
+    write = 0;
+    rx_data = data.q;
+    rx_valid = valid.q;
+    next = 0;
+    ack = 0;
+    sda.enable = 0;
+    sda.write = 0;
+    valid.d = 0;
+    
+    enabled = 0;
+    
+    sda_sync.d = c{sda_sync.q[1:0], sda.read};
+    scl_sync.d = c{scl_sync.q[1:0], scl};
+    
+    clk_rise = scl_sync.q[1] && !scl_sync.q[2];
+    clk_fall = !scl_sync.q[1] && scl_sync.q[2];
+    
+    case (state.q) {
+      state.WAIT_ID:
+        if (clk_rise) {
+          data.d = c{data.q[6:0], sda_sync.q[2]};
+          bit_ctr.d = bit_ctr.q + 1;
+          if (bit_ctr.q == 7) {
+            if (data.q[6:0] == DEVICE_ID){
+              start = 1;
+              capture_tx.d = 1;
+              write = ~sda_sync.q[2];
+              state.d = state.ACK;
+            } else {
+              state.d = state.WAIT_STOP;
+            }
+          }
+        }
+      state.ACK:
+        if (clk_fall)
+          state.d = state.ACK_WAIT;
+      state.ACK_WAIT:
+        if (clk_fall)
+          state.d = tx_flag.q ? state.WRITE_BYTE : state.READ_BYTE;
+        sda.enable = 1;
+        enabled = 1;
+      state.READ_BYTE:
+        if (clk_rise) {
+          data.d = c{data.q[6:0], sda_sync.q[2]};
+          bit_ctr.d = bit_ctr.q + 1;
+          if (bit_ctr.q == 7) {
+            state.d = state.ACK;
+            next = 1;
+            capture_tx.d = 1;
+            valid.d = 1;
+          }
+        }
+      state.WRITE_BYTE:
+        sda.enable = ~data.q[7];
+        enabled = ~data.q[7];
+        if (clk_fall) {
+          bit_ctr.d = bit_ctr.q + 1;
+          data.d = c{data.q[6:0], 1bx};
+          if (bit_ctr.q == 7) {
+            state.d = state.READ_ACK;
+          }
+        }
+      state.READ_ACK:
+        if (clk_rise){
+          ack = sda_sync.q[2];
+          next = 1;
+          capture_tx.d = 1;
+          state.d = state.READ_ACK_WAIT;
+        }
+      state.READ_ACK_WAIT:
+        if (clk_fall)
+          state.d = tx_flag.q ? state.WRITE_BYTE : state.READ_BYTE;
+      
+    }
+    
+    if (capture_tx.q) {
+      capture_tx.d = 0;
+      tx_flag.d = tx_enable;
+      if (tx_enable)
+        data.d = tx_data;
+    }
+    
+    if (scl_sync.q[2]) {
+      if (sda_sync.q[2] && !sda_sync.q[1]) { // falling edge
+        // start condition
+        state.d = state.WAIT_ID;
+        bit_ctr.d = 0;
+      } else if (!sda_sync.q[2] && sda_sync.q[1]) { // rising edge
+        // stop condition
+        state.d = state.IDLE;
+        stop = 1;
+      }
+    }
+  }
+}

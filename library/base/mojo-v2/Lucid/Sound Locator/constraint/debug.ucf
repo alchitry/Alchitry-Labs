@@ -1,0 +1,1 @@
+NET "debug" LOC = P30 | IOSTANDARD = LVTTL;

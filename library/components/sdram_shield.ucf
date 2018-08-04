@@ -1,0 +1,33 @@
+NET "sdramOut<0>" LOC = P5 | IOSTANDARD = LVTTL | SLEW = FAST;     # clk
+NET "sdramOut<1>" LOC = P2 | IOSTANDARD = LVTTL | SLEW = FAST;     # cle
+NET "sdramOut<6>" LOC = P6 | IOSTANDARD = LVTTL | SLEW = FAST;     # dqm
+NET "sdramOut<2>" LOC = P115 | IOSTANDARD = LVTTL | SLEW = FAST;   # cs
+NET "sdramOut<5>" LOC = P111 | IOSTANDARD = LVTTL | SLEW = FAST;   # we
+NET "sdramOut<3>" LOC = P112 | IOSTANDARD = LVTTL | SLEW = FAST;   # cas
+NET "sdramOut<4>" LOC = P114 | IOSTANDARD = LVTTL | SLEW = FAST;   # ras
+
+NET "sdramOut<7>" LOC = P116 | IOSTANDARD = LVTTL | SLEW = FAST;   # bank[0]
+NET "sdramOut<8>" LOC = P117 | IOSTANDARD = LVTTL | SLEW = FAST;   # bank[1]
+
+NET "sdramOut<9>" LOC = P118 | IOSTANDARD = LVTTL | SLEW = FAST;   # addr[0]
+NET "sdramOut<10>" LOC = P119 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[1]
+NET "sdramOut<11>" LOC = P120 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[2]
+NET "sdramOut<12>" LOC = P121 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[3]
+NET "sdramOut<13>" LOC = P138 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[4]
+NET "sdramOut<14>" LOC = P139 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[5]
+NET "sdramOut<15>" LOC = P140 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[6]
+NET "sdramOut<16>" LOC = P141 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[7]
+NET "sdramOut<17>" LOC = P142 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[8]
+NET "sdramOut<18>" LOC = P143 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[9]
+NET "sdramOut<19>" LOC = P137 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[10]
+NET "sdramOut<20>" LOC = P144 | IOSTANDARD = LVTTL | SLEW = FAST;  # addr[11]
+NET "sdramOut<21>" LOC = P1 | IOSTANDARD = LVTTL | SLEW = FAST;    # addr[12]
+
+NET "sdramInOut<0>" LOC = P101 | IOSTANDARD = LVTTL | SLEW = FAST; # dq[0]
+NET "sdramInOut<1>" LOC = P102 | IOSTANDARD = LVTTL | SLEW = FAST; # dq[1]
+NET "sdramInOut<2>" LOC = P104 | IOSTANDARD = LVTTL | SLEW = FAST; # dq[2]
+NET "sdramInOut<3>" LOC = P105 | IOSTANDARD = LVTTL | SLEW = FAST; # dq[3]
+NET "sdramInOut<4>" LOC = P7 | IOSTANDARD = LVTTL | SLEW = FAST;   # dq[4]
+NET "sdramInOut<5>" LOC = P8 | IOSTANDARD = LVTTL | SLEW = FAST;   # dq[5]
+NET "sdramInOut<6>" LOC = P9 | IOSTANDARD = LVTTL | SLEW = FAST;   # dq[6]
+NET "sdramInOut<7>" LOC = P10 | IOSTANDARD = LVTTL | SLEW = FAST;  # dq[7]

@@ -1,0 +1,58 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************
+   
+   Memory Bus: This is an interface for use with the SDRAM Shield. The slave 
+   is typically the SDRAM controller and the master is the rest of the design
+   that generates read and write commands. 
+   
+   To perform a read, set "write" to 0, provide the address you want to read 
+   on "addr", and set master.valid to 1. When the data has been read, 
+   slave.valid will be 1 and the data will be available on slave.data.
+   
+   To perform a write, set "write to 1, provide the address on "addr" and
+   data on master.data. Then set master.valid to 1 to start the write.
+   
+   Before issuing a command, ensure that slave.busy is not 1 or the command
+   will be ignored.
+*/
+
+// Generic Memory Interface
+global Memory {
+  // Memory slave outputs/master inputs
+  struct slave {
+    data [32],     // data read
+    valid,         // data valid
+    busy           // device busy
+  }
+  
+  // Memory master outputs/slave inputs
+  struct master {
+    data [32],     // data to write
+    valid,         // data valid
+    addr [23],     // address to write/read
+    write          // 1 = write, 0 = read
+  }
+}

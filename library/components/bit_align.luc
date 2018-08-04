@@ -1,0 +1,91 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+module bit_align #(
+    CLK_FREQ = 75000000 : CLK_FREQ > 0,
+    TOKEN_CTR_SIZE = 7 : TOKEN_CTR_SIZE > 0
+  )(
+    input clk,  // clock
+    input rst,  // reset
+    input data[10],
+    output flip,
+    output bitslip,
+    output aligned
+  ) {
+  
+  sig blank;
+  
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {INIT, SEARCH, BITSLIP, RX_TOKEN, ALIGNED};
+    }
+    
+    dff ctrl_rx[2];
+    dff search_ctr[$clog2(CLK_FREQ/100)];
+    dff token_ctr[TOKEN_CTR_SIZE];
+    dff bitslip_ctr[3];
+  }
+  
+  always {
+    flip = bitslip_ctr.q[2];
+    bitslip = 0;
+    aligned = state.q == state.ALIGNED;
+    
+    ctrl_rx.d[0] = (data == Dvi.CTRLTOKEN0) || (data == Dvi.CTRLTOKEN1) || (data == Dvi.CTRLTOKEN2) || (data == Dvi.CTRLTOKEN3);
+    ctrl_rx.d[1] = ctrl_rx.q[0];
+    blank = ctrl_rx.q == 2b01; // rising edge
+    
+    search_ctr.d = search_ctr.q + 1;
+    token_ctr.d = 0;
+    
+    case (state.q) {
+      state.INIT:
+        bitslip_ctr.d = 0;
+        if (&search_ctr.q)
+          state.d = state.SEARCH;
+      state.SEARCH:
+        if (blank)
+          state.d = state.RX_TOKEN;
+        else if (&search_ctr.q)
+          state.d = state.BITSLIP;
+      state.BITSLIP:
+        bitslip = 1;
+        bitslip_ctr.d = bitslip_ctr.q + 1;
+        
+        search_ctr.d = 0;
+        state.d = state.SEARCH;
+      state.RX_TOKEN:
+        token_ctr.d = token_ctr.q + 1;
+        if (ctrl_rx.q[0]) {
+          if (&token_ctr.q)
+            state.d = state.ALIGNED;
+        } else {
+          search_ctr.d = 0;
+          state.d = state.SEARCH;
+        }
+    }
+  }
+}

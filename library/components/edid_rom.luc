@@ -1,0 +1,247 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************/
+
+module edid_rom (
+    input clk,  // clock
+    input rst,  // reset
+    inout sda,
+    input scl
+  ) {
+  
+  .clk(clk) {
+    .rst(rst) {
+      i2c_slave i2c(.sda(sda), .scl(scl));
+      dff addr[8];
+      dff tx_enable;
+    }
+  }
+  
+  always {
+    if (i2c.start) {
+      tx_enable.d = !i2c.write;
+    }
+    if (i2c.next) {
+      addr.d = addr.q + 1;
+    }
+    if (i2c.rx_valid) {
+      addr.d = i2c.rx_data[6:0];
+    }
+    i2c.tx_enable = tx_enable.q;
+    i2c.tx_data = 8hff;
+    
+    case (addr.q){
+      /* Fixed header */
+      8d0: i2c.tx_data = 8h0;
+      8d1: i2c.tx_data = 8hff;
+      8d2: i2c.tx_data = 8hff;
+      8d3: i2c.tx_data = 8hff;
+      8d4: i2c.tx_data = 8hff;
+      8d5: i2c.tx_data = 8hff;
+      8d6: i2c.tx_data = 8hff;
+      8d7: i2c.tx_data = 8h0;
+        
+      /* EISA manufacture code */
+      8d8: i2c.tx_data = 8h4;
+      8d9: i2c.tx_data = 8h69;
+        
+      /* Product code, LSB first */
+      8d10: i2c.tx_data = 8ha3;
+      8d11: i2c.tx_data = 8h28;
+        
+      /* 32-bit serial number */
+      8d12: i2c.tx_data = 8h4c;
+      8d13: i2c.tx_data = 8h0;
+      8d14: i2c.tx_data = 8h1;
+      8d15: i2c.tx_data = 8h0;
+        
+      /* Week of manufacture */
+      8d16: i2c.tx_data = 8h18;
+        
+      /* Year of manufacture */
+      8d17: i2c.tx_data = 8h18;
+        
+      /* EDID Version */
+      8d18: i2c.tx_data = 8h1; // 1.x
+      8d19: i2c.tx_data = 8h3; // x.3
+      
+      /* Video input parameters */
+      8d20: i2c.tx_data = 8ha5;
+        
+      /* Max horizontal image size in cm */
+      8d21: i2c.tx_data = 8h3e;
+        
+      /* Max vertical image size in cm */
+      8d22: i2c.tx_data = 8h22;
+        
+      /* Display gamma, value = (gamma * 100) - 100 */
+      8d23: i2c.tx_data = 8h78;
+        
+      /* Supported features (DPMS) bitmap */
+      8d24: i2c.tx_data = 8h3a;
+      
+      /* Red / Green low bits, 7-6 red x, 5-4 red y, 3-2 green x, 1-0 green y */
+      8d25: i2c.tx_data = 8h1c;
+        
+      /* Blue / White low bits, 7-6 blue x, 5-4 blue y, 3-2 white x, 1-0 white y */
+      8d26: i2c.tx_data = 8hb5;
+        
+      /* Red x MSBs */
+      8d27: i2c.tx_data = 8ha3;
+        
+      /* Red y MSBs */
+      8d28: i2c.tx_data = 8h57;
+        
+      /* Green x MSBs */
+      8d29: i2c.tx_data = 8h4f;
+        
+      /* Green y MSBs */
+      8d30: i2c.tx_data = 8ha0;
+        
+      /* Blue x MSBs */
+      8d31: i2c.tx_data = 8h27;
+        
+      /* Blue y MSBs */
+      8d32: i2c.tx_data = 8h0d;
+        
+      /* White x MSBs */
+      8d33: i2c.tx_data = 8h50;
+        
+      /* White y MSBs */
+      8d34: i2c.tx_data = 8h54;
+        
+      /* Established timing bitmap */
+      8d35: i2c.tx_data = 8h0;
+      8d36: i2c.tx_data = 8h0;
+      8d37: i2c.tx_data = 8h0;
+        
+      /* Standard timing info (8 2 byte fields, 0x0101 = unused) */
+      8d38: i2c.tx_data = 8h81; // 1280 width (720p)
+      8d39: i2c.tx_data = 8hc0; // 16:9 ratio and 60Hz
+      8d40: i2c.tx_data = 8h1;
+      8d41: i2c.tx_data = 8h1;
+      8d42: i2c.tx_data = 8h1;
+      8d43: i2c.tx_data = 8h1;
+      8d44: i2c.tx_data = 8h1;
+      8d45: i2c.tx_data = 8h1;
+      8d46: i2c.tx_data = 8h1;
+      8d47: i2c.tx_data = 8h1;
+      8d48: i2c.tx_data = 8h1;
+      8d49: i2c.tx_data = 8h1;
+      8d50: i2c.tx_data = 8h1;
+      8d51: i2c.tx_data = 8h1;
+      8d52: i2c.tx_data = 8h1;
+      8d53: i2c.tx_data = 8h1;
+        
+      /* bytes 54-125 are discriptor blocks */
+        
+      /* Dummy text block (unused block) */
+      8d54: i2c.tx_data = 8h0; 
+      8d55: i2c.tx_data = 8h0; 
+      8d56: i2c.tx_data = 8h0; 
+      8d57: i2c.tx_data = 8hfe; // ascii text (dummy)
+      8d58: i2c.tx_data = 8h0; 
+      8d59: i2c.tx_data = "D"; 
+      8d60: i2c.tx_data = "u";
+      8d61: i2c.tx_data = "m";
+      8d62: i2c.tx_data = "m";
+      8d63: i2c.tx_data = "y";
+      8d64: i2c.tx_data = " ";
+      8d65: i2c.tx_data = "T";
+      8d66: i2c.tx_data = "e";
+      8d67: i2c.tx_data = "x";
+      8d68: i2c.tx_data = "t";
+      8d69: i2c.tx_data = 8h0a;
+      8d70: i2c.tx_data = 8h20;
+      8d71: i2c.tx_data = 8h20;
+      
+      /* Serial number */
+      8d72: i2c.tx_data = 8h0;
+      8d73: i2c.tx_data = 8h0;
+      8d74: i2c.tx_data = 8h0;
+      8d75: i2c.tx_data = 8hff;
+      8d76: i2c.tx_data = 8h0;
+      8d77: i2c.tx_data = 8h41;
+      8d78: i2c.tx_data = 8h53;
+      8d79: i2c.tx_data = 8h55;
+      8d80: i2c.tx_data = 8h53;
+      8d81: i2c.tx_data = 8h20;
+      8d82: i2c.tx_data = 8h50;
+      8d83: i2c.tx_data = 8h42;
+      8d84: i2c.tx_data = 8h32;
+      8d85: i2c.tx_data = 8h38;
+      8d86: i2c.tx_data = 8h37;
+      8d87: i2c.tx_data = 8h51;
+      8d88: i2c.tx_data = 8h0a;
+      8d89: i2c.tx_data = 8h20;
+      
+      /* Monitor Range Limits */
+      8d90: i2c.tx_data = 8h0;
+      8d91: i2c.tx_data = 8h0;
+      8d92: i2c.tx_data = 8h0;
+      8d93: i2c.tx_data = 8hfd;
+      8d94: i2c.tx_data = 8h0;
+      8d95: i2c.tx_data = 8h1e; // min vertical field rate
+      8d96: i2c.tx_data = 8h50; // max vertical field rate
+      8d97: i2c.tx_data = 8h18; // min horizontal line rate
+      8d98: i2c.tx_data = 8ha0; // max horizontal line rate
+      8d99: i2c.tx_data = 8h09; // max pclk rounded up to 10 MHz multiples
+      8d100: i2c.tx_data = 8h0; // Extended timing info
+      8d101: i2c.tx_data = 8h0a;
+      8d102: i2c.tx_data = 8h20;
+      8d103: i2c.tx_data = 8h20;
+      8d104: i2c.tx_data = 8h20;
+      8d105: i2c.tx_data = 8h20;
+      8d106: i2c.tx_data = 8h20;
+      8d107: i2c.tx_data = 8h20;
+      
+      /* Monitor Name */
+      8d108: i2c.tx_data = 8h0;
+      8d109: i2c.tx_data = 8h0;
+      8d110: i2c.tx_data = 8h0;
+      8d111: i2c.tx_data = 8hfc;
+      8d112: i2c.tx_data = 8h0;
+      8d113: i2c.tx_data = "M";
+      8d114: i2c.tx_data = "o";
+      8d115: i2c.tx_data = "j";
+      8d116: i2c.tx_data = "o";
+      8d117: i2c.tx_data = " ";
+      8d118: i2c.tx_data = "M";
+      8d119: i2c.tx_data = "o";
+      8d120: i2c.tx_data = "n";
+      8d121: i2c.tx_data = "i";
+      8d122: i2c.tx_data = "t";
+      8d123: i2c.tx_data = "o";
+      8d124: i2c.tx_data = "r";
+      8d125: i2c.tx_data = 8h0a;
+      
+      /* number of extensions to follow */
+      8d126: i2c.tx_data = 8h0;
+        
+      /* checksum, all bytes must add to 0 mod 256 */
+      8d127: i2c.tx_data = 8hfa;                
+    }
+  }
+}

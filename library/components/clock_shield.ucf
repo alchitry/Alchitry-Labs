@@ -1,0 +1,87 @@
+NET "clock_speaker" LOC = P140 | IOSTANDARD = LVTTL;
+
+NET "clock_mic_data" LOC = P137 | IOSTANDARD = LVTTL;
+NET "clock_mic_clk" LOC = P138 | IOSTANDARD = LVTTL;
+
+NET "clock_rtc_sclk" LOC = P116 | IOSTANDARD = LVTTL;
+NET "clock_rtc_cs" LOC = P117 | IOSTANDARD = LVTTL;
+NET "clock_rtc_mosi" LOC = P118 | IOSTANDARD = LVTTL;
+NET "clock_rtc_miso" LOC = P119 | IOSTANDARD = LVTTL;
+NET "clock_rtc_32khz" LOC = P120 | IOSTANDARD = LVTTL;
+NET "clock_rtc_int" LOC = P121 | IOSTANDARD = LVTTL;
+
+NET "clock_up" LOC = P139 | IOSTANDARD = LVTTL;
+NET "clock_down" LOC = P142 | IOSTANDARD = LVTTL;
+NET "clock_select" LOC = P141 | IOSTANDARD = LVTTL;
+
+NET "clock_d1_c<0>" LOC = P143 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_c<1>" LOC = P144 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_c<2>" LOC = P1 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_c<3>" LOC = P2 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_c<4>" LOC = P51 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_c<5>" LOC = P50 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_c<6>" LOC = P41 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_c<7>" LOC = P40 | IOSTANDARD = LVTTL | DRIVE = 16;
+
+NET "clock_d2_c<0>" LOC = P29 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_c<1>" LOC = P30 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_c<2>" LOC = P26 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_c<3>" LOC = P27 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_c<4>" LOC = P35 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_c<5>" LOC = P34 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_c<6>" LOC = P33 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_c<7>" LOC = P32 | IOSTANDARD = LVTTL | DRIVE = 16;
+
+NET "clock_d1_b<0>" LOC = P58 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_b<1>" LOC = P57 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_b<2>" LOC = P67 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_b<3>" LOC = P66 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_b<4>" LOC = P75 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_b<5>" LOC = P74 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_b<6>" LOC = P79 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_b<7>" LOC = P78 | IOSTANDARD = LVTTL | DRIVE = 16;
+
+NET "clock_d2_b<0>" LOC = P114 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_b<1>" LOC = P115 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_b<2>" LOC = P111 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_b<3>" LOC = P112 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_b<4>" LOC = P104 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_b<5>" LOC = P105 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_b<6>" LOC = P101 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_b<7>" LOC = P102 | IOSTANDARD = LVTTL | DRIVE = 16;
+
+NET "clock_d1_g<0>" LOC = P11 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_g<1>" LOC = P12 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_g<2>" LOC = P9 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_g<3>" LOC = P10 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_g<4>" LOC = P7 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_g<5>" LOC = P8 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_g<6>" LOC = P5 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d1_g<7>" LOC = P6 | IOSTANDARD = LVTTL | DRIVE = 16;
+
+NET "clock_d2_g<0>" LOC = P15 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_g<1>" LOC = P14 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_g<2>" LOC = P17 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_g<3>" LOC = P16 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_g<4>" LOC = P22 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_g<5>" LOC = P21 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_g<6>" LOC = P24 | IOSTANDARD = LVTTL | DRIVE = 16;
+NET "clock_d2_g<7>" LOC = P23 | IOSTANDARD = LVTTL | DRIVE = 16;
+
+NET "clock_d1_r<0>" LOC = P81 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d1_r<1>" LOC = P80 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d1_r<2>" LOC = P83 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d1_r<3>" LOC = P82 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d1_r<4>" LOC = P85 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d1_r<5>" LOC = P84 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d1_r<6>" LOC = P88 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d1_r<7>" LOC = P87 | IOSTANDARD = LVTTL | DRIVE = 2;
+
+NET "clock_d2_r<0>" LOC = P99 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d2_r<1>" LOC = P100 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d2_r<2>" LOC = P97 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d2_r<3>" LOC = P98 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d2_r<4>" LOC = P94 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d2_r<5>" LOC = P95 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d2_r<6>" LOC = P92 | IOSTANDARD = LVTTL | DRIVE = 2;
+NET "clock_d2_r<7>" LOC = P93 | IOSTANDARD = LVTTL | DRIVE = 2;

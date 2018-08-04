@@ -1,0 +1,99 @@
+/******************************************************************************
+   
+   The MIT License (MIT)
+   
+   Copyright (c) 2015 Embedded Micro
+   
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+   
+   *****************************************************************************
+   
+   This module provides a standardized way to interface with your design over
+   the USB (virtual serial) port on the Mojo. It allows you to issue read and
+   write commands to 32 bit addresses with 32 bits of data. The addresses can be
+   used to index various parts of your design or even give access to actual
+   memory.
+   
+   It also allows you to debug up to 32 signals by feeding them into "debug".
+   These signals can be viewed using the Mojo IDE's Wave Capture tool.
+   
+   When using the _debug version of reg_interface, addresses 0xfffffff0 through
+   0xffffffff can't be used by your design. They are used by the tools to talk
+   to the wave_capture module.
+*/
+
+module reg_interface_debug  #(
+    CLK_FREQ = 50000000 : CLK_FREQ > 0,                  // clock frequency
+    DATA_WIDTH = 8 : DATA_WIDTH > 0,                     // number of signals to capture
+    CAPTURE_DEPTH = 256 : CAPTURE_DEPTH > 0,             // samples per capture
+    NONCE = 0 : NONCE.WIDTH <= 32                        // project nonce
+  )(
+    input clk,                                           // clock
+    input rst,                                           // reset
+    
+    // Serial RX Interface
+    input rx_data[8],                                    // data received
+    input new_rx_data,                                   // new data flag (1 = new data)
+    
+    // Serial Tx Interface
+    output tx_data[8],                                   // data to send
+    output new_tx_data,                                  // new data flag (1 = new data)
+    input tx_busy,                                       // transmitter is busy flag (1 = busy)
+    
+    // Register Interface
+    output<Register.master> regOut,                      // register outputs
+    input<Register.slave> regIn,                         // register inputs
+    
+    // Debug inputs
+    input debug[DATA_WIDTH]                              // signals to capture
+  ) {
+  
+  const BASE_ADDR = 32hfffffff0;                         // base address for wave_capture
+  
+  .clk(clk) {
+    .rst(rst) {
+      reg_interface reg_interface (#CLK_FREQ(CLK_FREQ));
+      wave_capture wave_capture (#DATA_WIDTH(DATA_WIDTH), #CAPTURE_DEPTH(CAPTURE_DEPTH), #BASE_ADDR(BASE_ADDR), #NONCE(NONCE));
+    }
+  }
+  
+  sig<Register.master> regOutMod;
+
+  always {
+    wave_capture.regIn = reg_interface.regOut;
+    wave_capture.data = debug;
+    
+    regOutMod = reg_interface.regOut;
+    
+    // Commands to these addresses are used by wave_capture so hide them
+    if (regOutMod.address >= 32hfffffff0)
+      regOutMod.new_cmd = 0;
+    
+    // connect reg_interface with IO ports
+    reg_interface.rx_data = rx_data;
+    reg_interface.new_rx_data = new_rx_data;
+    tx_data = reg_interface.tx_data;
+    new_tx_data = reg_interface.new_tx_data;
+    reg_interface.tx_busy = tx_busy;
+    regOut = regOutMod;
+    
+    // If wave_capture has data, send that. Otherwise, forward user data
+    reg_interface.regIn = wave_capture.regOut.drdy ? wave_capture.regOut : regIn;
+  }
+}

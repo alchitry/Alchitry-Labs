@@ -1,0 +1,30 @@
+NET "servo_en<0>" LOC = P29; # enable for servo[7:0]
+NET "servo_en<1>" LOC = P27; # enable for servo[15:8]
+NET "servo_en<2>" LOC = P30; # enable for servo[23:16]
+
+NET "servo<0>" LOC = P79;
+NET "servo<1>" LOC = P78;
+NET "servo<2>" LOC = P75;
+NET "servo<3>" LOC = P74;
+NET "servo<4>" LOC = P67;
+NET "servo<5>" LOC = P66;
+NET "servo<6>" LOC = P58;
+NET "servo<7>" LOC = P57;
+
+NET "servo<8>" LOC = P33;
+NET "servo<9>" LOC = P32;
+NET "servo<10>" LOC = P35;
+NET "servo<11>" LOC = P34;
+NET "servo<12>" LOC = P41;
+NET "servo<13>" LOC = P40;
+NET "servo<14>" LOC = P51;
+NET "servo<15>" LOC = P50;
+
+NET "servo<16>" LOC = P80;
+NET "servo<17>" LOC = P81;
+NET "servo<18>" LOC = P82;
+NET "servo<19>" LOC = P83;
+NET "servo<20>" LOC = P84;
+NET "servo<21>" LOC = P85;
+NET "servo<22>" LOC = P87;
+NET "servo<23>" LOC = P88;

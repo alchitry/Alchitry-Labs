@@ -1,0 +1,55 @@
+module mojo_top (
+    input clk,                    // 50MHz clock
+    input rst_n,                  // reset button (active low)
+    output led [8],               // 8 user controllable LEDs
+    input cclk,                   // configuration clock, AVR ready when high
+    output spi_miso,              // AVR SPI MISO
+    input spi_ss,                 // AVR SPI Slave Select
+    input spi_mosi,               // AVR SPI MOSI
+    input spi_sck,                // AVR SPI Clock
+    output spi_channel [4],       // AVR general purpose pins (used by default to select ADC channel)
+    input avr_tx,                 // AVR TX (FPGA RX)
+    output avr_rx,                // AVR RX (FPGA TX)
+    input avr_rx_busy,            // AVR RX buffer full
+    output<Sdram.out> sdramOut,   // SDRAM outputs
+    inout<Sdram.inOut> sdramInOut // SDRAM inouts
+  ) {
+  
+  sig rst;  // reset signal
+  sig fclk; // 100MHz clock
+  
+  // boost clock to 100MHz
+  clk_wiz clk_wiz;
+  always {
+    clk_wiz.CLK_IN = clk;   // 50MHz in
+    fclk = clk_wiz.CLK_OUT; // 100MHz out (it's like magic!)
+  }
+  
+  .clk(fclk) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    reset_conditioner reset_cond;
+    
+    .rst(rst) {
+      // inouts need to be connected at instantiation and directly to an inout of the module
+      sdram sdram (.sdramInOut(sdramInOut));
+      ram_test ram_test;
+    }
+  }
+  
+  always {
+    reset_cond.in = ~rst_n;        // input raw inverted reset signal
+    rst = reset_cond.out;          // conditioned reset
+    
+    spi_miso = bz;                 // not using SPI
+    spi_channel = bzzzz;           // not using flags
+    avr_rx = bz;                   // not using serial port
+    
+    led = ram_test.leds;           // connect LEDs to ram_test
+    
+    sdram.memIn = ram_test.memOut; // connect ram_test to controller
+    ram_test.memIn = sdram.memOut; // connect controller to ram_test
+    
+    sdramOut = sdram.sdramOut;     // connect controller to SDRAM
+  }
+}

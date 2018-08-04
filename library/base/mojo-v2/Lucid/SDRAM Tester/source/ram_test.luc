@@ -1,0 +1,107 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************
+   
+   RAM Test: This module continuously fills the RAM with pseudo-random numbers
+   and then reads them back to make sure the conents stayed intact. The set of
+   random numbers is changed on each iteration by providing a different seed to
+   the number generator. If any errors are detected they are displayed on the 
+   7 LSBs of the LEDs. The MSB of the LEDs shows what state the tester is in 
+   (reading or writing). This can be used to benchmark the performance of 
+   sequential reads/writes of the SDRAM controller.
+*/
+
+module ram_test (
+    input clk,                         // clock
+    input rst,                         // reset
+    output<Memory.master> memOut,      // memory interface
+    input<Memory.slave> memIn,
+    output leds [8]                    // status LEDs
+  ) {
+  
+  .clk(clk){ .rst(rst) {
+      fsm state = {WRITE, READ};       // states
+      
+      dff addr [23];                   // current address
+      dff error [7];                   // number of errors
+      dff seed [32];                   // seed for each run
+    }
+    pn_gen pn_gen;                     // pseudo-random number generator
+  }
+  
+  always {
+    // Show the state and number of errors on the LEDs
+    leds = c{state.q == state.READ, error.q};
+    
+    pn_gen.seed = seed.q;              // use seed.q as the seed
+    pn_gen.next = 0;                   // don't generate new numbers
+    pn_gen.rst = rst;                  // connect rst by default
+    
+    memOut.addr = addr.q;              // use addr.q as the address
+    memOut.write = 1bx;                // don't care
+    memOut.data = pn_gen.num;          // use the pseudo-random number as data
+    memOut.valid = 0;                  // invalid
+    
+    case (state.q) {
+      state.WRITE:
+        if (!memIn.busy) {             // if RAM isn't busy
+          pn_gen.next = 1;             // generate a new number
+          addr.d = addr.q + 1;         // increment the address
+          memOut.write = 1;            // perform a write
+          memOut.valid = 1;            // command is valid
+          if (addr.q == 23x{1}) {      // if address is maxed
+            addr.d = 0;                // reset to 0
+            state.d = state.READ;      // switch states
+            pn_gen.rst = 1;            // reset the number generator
+          }
+        }
+      state.READ:
+        if (!memIn.busy) {             // if RAM isn't busy
+          addr.d = addr.q + 1;         // increment the address
+          memOut.valid = 1;            // command is valid
+          memOut.write = 0;            // perform a read
+          if (addr.q == 23x{1}-1)      // if address is almost max
+            seed.d = seed.q + 1;       // generate a new seed
+          if (addr.q == 23x{1}) {      // if address is maxed
+            addr.d = 0;                // reset to 0
+            state.d = state.WRITE;     // switch state
+            pn_gen.rst = 1;            // reset the number generator
+          }
+        }
+        
+        if (memIn.valid) {             // if new data
+          pn_gen.next = 1;             // go to the next number
+          
+          // if the data doesn't match the random number and the
+          // error counter isn't maxed out
+          if (memIn.data != pn_gen.num && !&error.q)
+            error.d = error.q + 1;     // increment the error counter
+        }
+        
+      default:                         // should never get here
+        state.d = state.WRITE;         // get to a known state
+    }
+  }
+}

@@ -1,0 +1,139 @@
+module mojo_top (
+    input clk,              // 50MHz clock
+    input rst_n,            // reset button (active low)
+    output led [8],         // 8 user controllable LEDs
+    input cclk,             // configuration clock, AVR ready when high
+    output spi_miso,        // AVR SPI MISO
+    input spi_ss,           // AVR SPI Slave Select
+    input spi_mosi,         // AVR SPI MOSI
+    input spi_sck,          // AVR SPI Clock
+    output spi_channel [4], // AVR general purpose pins (used by default to select ADC channel)
+    input avr_tx,           // AVR TX (FPGA RX)
+    output avr_rx,          // AVR RX (FPGA TX)
+    input avr_rx_busy,      // AVR RX buffer full
+    inout<Sdram.inOut> sdramInOut,
+    output<Sdram.out> sdramOut,
+    output hdmi1_tmds[4],
+    output hdmi1_tmdsb[4],
+    output camera_scl,            // camera sccb clock
+    inout camera_sda,             // camera sccb data
+    output camera_xclk,           // camera main clock
+    input camera_pclk,            // camera pixel clock
+    input camera_href,            // camera href signal
+    input camera_vsync,           // camera vsync signal
+    input camera_data [8],        // camera pixel data
+    output camera_rst,            // camera reset (active low)
+    output camera_pwdn            // camera power down (active high)
+  ) {
+  
+  sig rst;                  // reset signal
+  
+  clk_gen clk_gen(.CLK_IN(clk)); // generates 100MHz for the system and RAM, 60MHz for the pixel clock, and 24MHz for the camera
+  
+  const X_RES = 640;
+  const Y_RES = 480;
+  
+  .rst(0){
+    hdmi_encoder hdmi_enc (.clk(clk_gen.CLK_PX), #X_RES(X_RES), #Y_RES(Y_RES), #X_FRAME(1000), #Y_FRAME(500), #PCLK_DIV(4));
+  }
+  
+  .clk(clk_gen.CLK_100) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    reset_conditioner reset_cond;
+    
+    .rst(rst){
+      sdram sdram (.sdramInOut(sdramInOut));
+      memory_arbiter memarb (#DEVICES(2));
+      
+      ov2640 cam (#CLK_FREQ(100000000), .sda(camera_sda));
+      
+      img_capture img_capture (#X_RES(X_RES), #Y_RES(Y_RES));
+      
+      dff write_frame[2] (#INIT(1));
+      dff read_frame[2];
+      
+      dff frame_toggle;
+    }
+  }
+  
+  sig next_frame_read[2];
+  sig next_frame_write[2];
+  
+  mem_to_hdmi mem_to_hdmi (.clk(clk_gen.CLK_100), .pclk(hdmi_enc.pclk), .rst(rst), #X_RES(X_RES), #Y_RES(Y_RES));
+  
+  always {
+    sdramOut = sdram.sdramOut;
+    
+    reset_cond.in = ~rst_n;            // input raw inverted reset signal
+    rst = reset_cond.out;              // conditioned reset
+    
+    // camera connection
+    cam.cam_clk = clk_gen.CLK_CAM;          // 24MHz
+    cam.data = camera_data;
+    camera_scl = cam.scl;
+    camera_xclk = cam.xclk;
+    cam.pclk = camera_pclk;
+    cam.href = camera_href;
+    cam.vsync = camera_vsync;
+    camera_rst = cam.rst_cm;
+    camera_pwdn = cam.pwdn;
+    
+    spi_miso = bx;
+    spi_channel = 4hx;
+    avr_rx = bx;
+    
+    hdmi1_tmds = hdmi_enc.tmds;
+    hdmi1_tmdsb = hdmi_enc.tmdsb;
+    
+    hdmi_enc.red = mem_to_hdmi.red;
+    hdmi_enc.green = mem_to_hdmi.green;
+    hdmi_enc.blue = mem_to_hdmi.blue;
+    
+    sdram.memIn = memarb.memOut;
+    memarb.memIn = sdram.memOut;
+    
+    mem_to_hdmi.memIn = memarb.devOut[0];
+    memarb.devIn[0] = mem_to_hdmi.memOut;
+    
+    mem_to_hdmi.active = hdmi_enc.active;
+    mem_to_hdmi.x = hdmi_enc.x;
+    mem_to_hdmi.y = hdmi_enc.y;
+    
+    img_capture.img = cam.image;            // image feed
+    
+    frame_toggle.d = frame_toggle.q ^ cam.image.end_frame;
+    
+    // image capture to memory arbiter connection
+    memarb.devIn[1] = img_capture.memOut;
+    img_capture.memIn = memarb.devOut[1];
+    
+    // output is triple buffered, actively displayed frame, active writing frame, and a frame keep prevent waiting
+    next_frame_read = read_frame.q + 1;
+    next_frame_write = write_frame.q + 1;
+    
+    if (next_frame_read == 3)
+      next_frame_read = 0;
+    if (next_frame_write == 3)
+      next_frame_write = 0;
+    
+    img_capture.next_frame = write_frame.q;
+    mem_to_hdmi.next_frame = read_frame.q;
+    img_capture.start = 0;
+    
+    // if camera is idle and we have a free frame to write to
+    if (img_capture.idle && (next_frame_write != mem_to_hdmi.current_frame)) {
+      // start the capture and advance to the free frame
+      img_capture.start = 1;
+      img_capture.next_frame = next_frame_write;
+      write_frame.d = next_frame_write;
+    }
+    
+    // if the current frame has been dispalyed and the next frame is ready, advance
+    if ((mem_to_hdmi.current_frame == read_frame.q) && (next_frame_read != img_capture.current_frame)) {
+      read_frame.d = next_frame_read;
+    }
+    
+    led = c{frame_toggle.q, !sdram.memOut.busy, img_capture.idle, 1b0, write_frame.q, read_frame.q};
+  }
+}

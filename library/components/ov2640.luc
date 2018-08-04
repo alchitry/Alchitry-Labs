@@ -1,0 +1,183 @@
+/******************************************************************************
+   
+   The MIT License (MIT)
+   
+   Copyright (c) 2015 Embedded Micro
+   
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+   
+   *****************************************************************************
+
+   This module is used to interface with the OV2640 camera module. You need to 
+   also include one of the ov2640 config ROMs in order for this to work. The
+   different ROMs allow you to choose different image resolutions. 
+*/
+
+global Camera {
+  // structure for storing the image data
+  struct image_data {
+    end_frame,        // end of frame reached (active high)
+    end_line,         // end of line reached (active high)
+    new_pixel,        // new pixel (active high)
+    pixel [16]        // pixel data (valid when new_pixel = 1)
+  }
+}
+
+module ov2640 #(
+    CLK_FREQ = 50000000 : CLK_FREQ > $pow(2,18) // clock frequency
+  )(
+    input clk,        // main clock, must be CLK_FREQ
+    input cam_clk,    // camera clock, typically 24MHz
+    input rst,        // reset
+    
+    // SCCB Interface
+    output scl,       // clock
+    inout sda,        // data
+    
+    // Main camera interface
+    output xclk,      // clock output to camera
+    input pclk,       // pixel clock from camera
+    input href,       // href flag
+    input vsync,      // vsync flag
+    input data [8],   // pixel data
+    output rst_cm,    // reset camera (active low)
+    output pwdn,      // power down camera (active high)
+    
+    // FPGA interface
+    output<Camera.image_data> image // image data
+  ) {
+  
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {WAIT_RESET, RESET_CAMERA, WAIT_SETUP, PROG_CAMERA, DONE};        // main fsm
+      dff rom_addr [$clog2(OV2640_config.ENTRIES)];                                 // ROM address
+      dff cam_delay [$clog2(CLK_FREQ)-9];                                           // delay counter
+      sccb sccb (#CLK_DIV_SIZE($clog2(CLK_FREQ)-17), #WRITE_ADDR(8h60), .sda(sda)); // sccb interface
+    }
+    dff<Camera.image_data> img;  // output buffer
+    dff href_old, vsync_old;     // vsync/href edge detectors
+    dff byte_ct;                 // pixel byte counter
+  }
+  
+  ov2640_config reg_rom;         // configuration ROM
+  
+  xil_ODDR2 oddr (#DDR_ALIGNMENT("NONE"), #INIT(0), #SRTYPE("SYNC")); // ODDR to output cam_clk to xclk
+  always {
+    oddr.C0 = cam_clk;
+    oddr.C1 = ~cam_clk;
+    oddr.CE = 1;
+    oddr.D0 = 1;
+    oddr.D1 = 0;
+    oddr.R = 0;
+    oddr.S = 0;
+    xclk = oddr.Q;
+    rst_cm = 1; // active low
+    pwdn = 0;   // active high
+  }
+  
+  // subsignals from fifo buffer
+  sig sync_href, sync_vsync, sync_data[8];
+  
+  // reset conditioner for pclk clock domain
+  reset_conditioner wrst_cond (.clk(pclk), .in(rst));
+  
+  // asyncronous fifo for crossing clock domains (pclk to clk)
+  async_fifo fifo (#SIZE(10), #DEPTH(8), .wclk(pclk), .rclk(clk), .wrst(wrst_cond.out), .rrst(rst));
+  
+  always {
+    // defaults
+    cam_delay.d = 0;
+    reg_rom.addr = rom_addr.q;
+    sccb.addr = reg_rom.reg_addr;
+    sccb.value = reg_rom.value;
+    sccb.write = 0;
+    scl = sccb.scl;
+    
+    
+    case (state.q) {
+      state.WAIT_RESET:
+        cam_delay.d = cam_delay.q + 1;                  // wait power on
+        if (&cam_delay.q)                               // if timer elapsed
+          state.d = state.RESET_CAMERA;                 // switch states
+      state.RESET_CAMERA:
+        if (!sccb.busy) {                               // if not busy
+          if (rom_addr.q != 2) {                        // if not second command
+            rom_addr.d = rom_addr.q + 1;                // increment command address
+            sccb.write = 1;                             // write command
+          } else {
+            state.d = state.WAIT_SETUP;                 // reset command sent, need to wait for it
+          }
+        }
+      state.WAIT_SETUP:
+        cam_delay.d = cam_delay.q + 1;                  // wait for camera to come back up
+        if (&cam_delay.q)
+          state.d = state.PROG_CAMERA;                  // start configuring the registers
+      state.PROG_CAMERA:
+        if (!sccb.busy) {                               // if sccb bus isn't busy
+          if (rom_addr.q != OV2640_config.ENTRIES) {    // if there are more registers to write
+            rom_addr.d = rom_addr.q + 1;                // increment address
+            sccb.write = 1;                             // write the register
+          } else {                                      // otherwise...
+            state.d = state.DONE;                       // configuration is done
+          }
+        }
+      state.DONE:
+        state.d = state.DONE;                           // do nothing but stay here
+      default:
+        state.d = state.WAIT_RESET;                     // shouldn't reach here
+    }
+    
+    // defaults
+    fifo.wput = 1;                                      // always put data into the fifo
+    fifo.rget = 1;                                      // always get data from the fifo
+    fifo.din = c{href, vsync, data};                    // connect camera data into fifo
+    sync_href = fifo.dout[9];                           // href out of the fifo
+    sync_vsync = fifo.dout[8];                          // vsync out of the fifo
+    sync_data = fifo.dout[7:0];                         // pixel data out of the fifo
+    
+    image = img.q;                                      // output img.q
+    
+    // defaults
+    img.d.end_frame = 0;
+    img.d.end_line = 0;
+    img.d.new_pixel = 0;
+    
+    // if new fifo data and camera is configured
+    if (!fifo.empty && state.q == state.DONE) {
+      href_old.d = sync_href;                           // save href
+      vsync_old.d = sync_vsync;                         // save vsync
+      
+      if (vsync_old.q && !sync_vsync)                   // if vsync fell
+        img.d.end_frame = 1;                            // signal end of frame
+      
+      if (href_old.q && !sync_href)                     // if href fell
+        img.d.end_line = 1;                             // signal end of line
+      
+      if (!sync_href || !sync_vsync)                    // if invalid
+        byte_ct.d = 0;                                  // reset byte_ct
+      
+      if (sync_href && sync_vsync) {                    // if valid
+        img.d.pixel = c{img.q.pixel[7:0], sync_data};   // shift in pixel data
+        byte_ct.d = ~byte_ct.q;                         // flip byte counter
+        if (byte_ct.q)                                  // if both bytes read
+          img.d.new_pixel = 1;                          // flag we have a new pixel
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************
+
+   The AVR may still be sending the last bits of configuration data
+   when the FPGA fires up. The pins that are used to configure the
+   FPGA are used after for communication after. We don't want to drive
+   these lines if the AVR is still driving them. The AVR will set
+   cclk high when it has configured its ports to talk to the FGPA.
+   This module detects when cclk has been high long enough to be sure
+   the AVR is ready.
+*/
+
+module cclk_detector #(
+    CLK_FREQ = 50000000 : CLK_FREQ > 0
+  )(
+    input clk,
+    input rst,
+    input cclk,  // cclk input from AVR
+    output ready // when 1, the AVR is ready
+  ) {
+  
+  const CTR_SIZE = $clog2(CLK_FREQ/5000); // need to wait about 200uS
+  
+  .clk(clk), .rst(rst) {
+    dff ctr[CTR_SIZE];
+  }
+  
+  // ready should only go high once cclk has been high for a while
+  // if cclk ever falls, ready should go low again
+  always {
+    ready = &ctr.q; // max value
+    
+    if (cclk == 0) { // cclk low
+      ctr.d = 0; // reset counter
+    } else if (!&ctr.q) { // cclk high and ctr isn't maxed
+      ctr.d = ctr.q + 1;
+    }
+  }
+}

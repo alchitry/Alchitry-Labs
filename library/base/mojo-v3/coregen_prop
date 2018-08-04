@@ -1,0 +1,10 @@
+SET devicefamily=spartan6
+SET device=xc6slx9
+SET package=tqg144
+SET speedgrade=-2
+SET designentry=Verilog
+SET vhdlsim=False
+SET verilogsim=True
+SET simulationfiles=Behavioral
+SET implementationfiletype=Ngc
+

@@ -1,0 +1,392 @@
+/******************************************************************************
+
+   The MIT License (MIT)
+
+   Copyright (c) 2015 Embedded Micro
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+
+   *****************************************************************************
+
+   SDRAM Controller: This module is intended to work with the MT48LC32M8A2P-7E:G
+   SDRAM chip. It features a simple 32bit interface for reading and write 4 bytes
+   at a time for increased efficiency. The module also assumes a 100MHz clock and that
+   the SDRAM Shield is connected directly to the Mojo (the first board in a stack).
+   Using a different clock or moving the shield further away can result in data
+   errors.
+*/
+
+// Interface to the SDRAM chip
+global Sdram {
+  // Outputs
+  struct out {
+    clk,           // clock
+    cle,           // clock enable
+    cs,            // chip select
+    cas,           // column address strobe
+    ras,           // row address strobe
+    we,            // write enable
+    dqm,           // data tri-state mask
+    bank [2],      // bank address
+    addr [13]      // column/row address
+  }
+  
+  // Inouts
+  struct inOut {
+    dq [8]         // data bus
+  }
+}
+
+module sdram #(
+    ODELAY_VALUE = 75 : ODELAY_VALUE >= 0 && ODELAY_VALUE < 256
+  )(
+    input clk,  // clock
+    input rst,  // reset
+    
+    // SDRAM interface
+    inout<Sdram.inOut> sdramInOut,
+    output<Sdram.out> sdramOut,
+    
+    // Memory interface
+    input<Memory.master> memIn,
+    output<Memory.slave> memOut
+  ) {
+  
+  // Commands for the SDRAM
+  //const CMD_UNSELECTED    = 4b1000; // Unused
+  const CMD_NOP           = 4b0111;   // No operation
+  const CMD_ACTIVE        = 4b0011;   // Activate a row
+  const CMD_READ          = 4b0101;   // Start a read
+  const CMD_WRITE         = 4b0100;   // Start a write
+  //const CMD_TERMINATE     = 4b0110; // Unused
+  const CMD_PRECHARGE     = 4b0010;   // Precharge a row
+  const CMD_REFRESH       = 4b0001;   // Perform a refresh
+  const CMD_LOAD_MODE_REG = 4b0000;   // Load mode register
+  
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {
+        INIT,            // Initial state
+        WAIT,            // Generic wait state
+        PRECHARGE_INIT,  // Start initial precharge
+        REFRESH_INIT_1,  // Perform first refresh
+        REFRESH_INIT_2,  // Perform second refresh
+        LOAD_MODE_REG,   // Load mode register
+        IDLE,            // Main idle state
+        REFRESH,         // Perform a refresh
+        ACTIVATE,        // Activate a row
+        READ,            // Start a read
+        READ_RES,        // Read results
+        WRITE,           // Perform a write
+        PRECHARE         // Precharge bank(s)
+      }; 
+    }
+    
+    // DFF to store the next state to go into after WAIT state
+    dff next_state[state.WIDTH];
+    
+    // IO buffer flip-flops are important for timing
+    // The #IOB parameter tells the tools to pack the
+    // dff into the IO buffer which is important for
+    // consistant timing.
+    dff cle (#IOB(1));       // clock enable
+    dff dqm (#IOB(1));       // data mask
+    dff cmd [4] (#IOB(1));   // command (we, cas, ras, cs)
+    dff bank [2] (#IOB(1));  // bank select
+    dff a [13] (#IOB(1));    // address
+    dff dq [8] (#IOB(1));    // data output
+    dff dqi [8] (#IOB(1));   // data input
+    dff dq_en;               // data bus output enable
+    
+    dff addr [23];           // operation address
+    dff data [32];           // operation data
+    dff rw_op;               // operation read/write flag
+    
+    dff out_valid;           // output valid
+    
+    dff delay_ctr [16];      // delay counter
+    dff byte_ctr [2];        // byte counter
+    
+    dff refresh_ctr [10];    // refresh counter
+    dff refresh_flag;        // refresh counter expired flag
+    
+    dff ready;               // controller ready flag
+    dff saved_rw;            // saved command read/write flag
+    dff saved_addr [23];     // saved command address
+    dff saved_data [32];     // saved command data
+    
+    dff row_open [4];        // row in bank open flags
+    dff row_addr [4][13];    // open row addresses
+    
+    dff precharge_bank [3];  // bank(s) to precharge
+  }
+  
+  // xil_XXX modules aren't real modules but rather
+  // hardware primitives inside the FPGA.
+  
+  // The OODR2 is used to output the FPGA clock to
+  // an output pin because a clock can't be directly
+  // routed as an output.
+  xil_ODDR2 oddr (
+    #DDR_ALIGNMENT("NONE"),
+    #INIT(0),
+    #SRTYPE("SYNC")
+  );
+  
+  // The IODELAY2 is used to delay the clock a bit
+  // in order to align the data with the clock edge.
+  // These settings assume a 100MHz clock and the
+  // SDRAM Shield being stacked next to the Mojo.
+  xil_IODELAY2 iodelay (
+    #IDELAY_VALUE(0),
+    #IDELAY_MODE("NORMAL"),
+    #ODELAY_VALUE(ODELAY_VALUE),
+    #IDELAY_TYPE("FIXED"),
+    #DELAY_SRC("ODATAIN"),
+    #DATA_RATE("DDR")
+  );
+  
+  // Connections
+  always {
+    // Connect the dffs to the outputs
+    sdramOut.cle = cle.q;
+    sdramOut.cs = cmd.q[3];
+    sdramOut.ras = cmd.q[2];
+    sdramOut.cas = cmd.q[1];
+    sdramOut.we = cmd.q[0];
+    sdramOut.dqm = dqm.q;
+    sdramOut.bank = bank.q;
+    sdramOut.addr = a.q;
+    sdramOut.clk = iodelay.DOUT;    // delayed clock
+    sdramInOut.enable.dq = dq_en.q;
+    sdramInOut.write.dq = dq.q;
+    
+    memOut.data = data.q;
+    memOut.busy = !ready.q;
+    memOut.valid = out_valid.q;
+    
+    // Connections for the IODELAY2
+    iodelay.ODATAIN = oddr.Q; // use the ODDR2 output as the source
+    iodelay.IDATAIN = 0;
+    iodelay.T = 0;
+    iodelay.CAL = 0;
+    iodelay.IOCLK0 = clk;
+    iodelay.IOCLK1 = ~clk;
+    iodelay.CLK = clk;
+    iodelay.INC = 0;
+    iodelay.CE = 0;
+    iodelay.RST = 0;
+    
+    // Connections for the ODDR2
+    oddr.C0 = clk;
+    oddr.C1 = ~clk;
+    oddr.CE = 1;
+    oddr.D0 = 0; // using 0 for D0 and 1 for D1 inverts the clock
+    oddr.D1 = 1; // because D0 is output on the rising edge of C0
+    oddr.R = 0;
+    oddr.S = 0;
+  }
+  
+  // Logic
+  always {
+    // default values
+    dqi.d = sdramInOut.read.dq;
+    dq_en.d = 0;
+    cmd.d = CMD_NOP;
+    dqm.d = 0;
+    bank.d = 0;
+    a.d = 0;
+    out_valid.d = 0;
+    byte_ctr.d = 0;
+    
+    // Continuously increment the refresh counter
+    // If it reaches 750, 7.5us has elapsed and a refresh needs to happen
+    // The maximum delay is 7.813us
+    refresh_ctr.d = refresh_ctr.q + 1;
+    if (refresh_ctr.q > 750) {
+      refresh_ctr.d = 0;  // reset the timer
+      refresh_flag.d = 1; // set the refresh flag
+    }
+    
+    // If we are ready for a new command and we get one...
+    if (ready.q && memIn.valid) {
+      saved_rw.d = memIn.write;  // save the type
+      saved_data.d = memIn.data; // save the data
+      saved_addr.d = memIn.addr; // save the address
+      ready.d = 0;               // don't accept new commands
+    }
+    
+    case (state.q) {
+      ///// INTIALIZE /////
+      state.INIT:
+        ready.d = 0;                          // not ready while initializing
+        row_open.d = 0;                       // no rows open yet 
+        cle.d = 1;                            // enable the clock
+        state.d = state.WAIT;                 // need to wait
+        delay_ctr.d = 10100;                  // for 101us (100us minimum)
+        next_state.d = state.PRECHARGE_INIT;  // move to PRECHARGE_INIT after
+      
+      state.WAIT:
+        delay_ctr.d = delay_ctr.q - 1;        // decrement counter
+        if (delay_ctr.q == 0) {               // if 0
+          state.d = next_state.q;             // go to the next state
+          if (next_state.q == state.WRITE) {  // if it's WRITE
+            dq_en.d = 1;                      // enable the data bus
+            dq.d = data.q[7:0];               // and output the first byte
+          }
+        }
+      
+      state.PRECHARGE_INIT:
+        cmd.d = CMD_PRECHARGE;                // need to precharge all banks
+        a.d[10] = 1;                          // all banks
+        state.d = state.WAIT;                 // need to wait after
+        next_state.d = state.REFRESH_INIT_1;  // move to REFRESH_INIT_1 after
+        delay_ctr.d = 0;                      // delay 20ns (min 15ns)
+      
+      state.REFRESH_INIT_1:
+        cmd.d = CMD_REFRESH;                  // need to perform two refreshes
+        state.d = state.WAIT;                 // need to wait after a refresh
+        next_state.d = state.REFRESH_INIT_2;  // move to REFRESH_INIT_2 after
+        delay_ctr.d = 7;                      // delay 90ns (min 66ns)
+      
+      state.REFRESH_INIT_2:
+        cmd.d = CMD_REFRESH;                  // need to perform two refreshes
+        state.d = state.WAIT;                 // need to wait after a refresh
+        next_state.d = state.LOAD_MODE_REG;   // move to LOAD_MODE_REG after
+        delay_ctr.d = 7;                      // delay 90ns (min 66ns)
+      
+      state.LOAD_MODE_REG:
+        cmd.d = CMD_LOAD_MODE_REG;            // load the mode register
+        
+        // Reserved, Burst Access, Standard Op, CAS = 2, Sequential, Burst = 4
+        a.d = c{3b000, 1b0, 2b00, 3b010, 1b0, 3b010};
+        
+        state.d = state.WAIT;                 // need to wait 
+        next_state.d = state.IDLE;            // move to IDLE after
+        delay_ctr.d = 1;                      // delay 30ns (min 2 clock cycles)
+        refresh_flag.d = 0;                   // don't need refresh
+        refresh_ctr.d = 1;                    // reset the counter
+        ready.d = 1;                          // we can now accept commands
+      
+      ///// IDLE STATE /////
+      state.IDLE:
+        if (refresh_flag.q) {                 // if we need to perform a refresh
+          state.d = state.PRECHARE;           // first precharge everything
+          next_state.d = state.REFRESH;       // then refresh
+          precharge_bank.d = 3b100;           // precharge all banks
+          refresh_flag.d = 0;                 // refresh was taken care of
+        } else if (!ready.q) {                // if we have a waiting command
+          ready.d = 1;                        // we can accept another now
+          rw_op.d = saved_rw.q;               // save the command type
+          addr.d = saved_addr.q;              // save the address
+          
+          if (saved_rw.q)                     // if write
+            data.d = saved_data.q;            // save the data
+          
+          // if there is already an open row
+          if (row_open.q[saved_addr.q[9:8]]) {
+            // if the row is the one we want
+            if (row_addr.q[saved_addr.q[9:8]] == saved_addr.q[22:10]) {
+              // the row is already open so just perform the operation
+              if (saved_rw.q)
+                state.d = state.WRITE;
+              else
+                state.d = state.READ;
+            } else {                          // need to open the row
+              state.d = state.PRECHARE;       // first need to close current one
+              precharge_bank.d = c{1b0, saved_addr.q[9:8]}; // row to close
+              next_state.d = state.ACTIVATE;  // then open the correct one
+            }
+          } else {                            // nothing is already open
+            state.d = state.ACTIVATE;         // so just open the row
+          }
+        }
+      
+      ///// REFRESH /////
+      state.REFRESH:
+        cmd.d = CMD_REFRESH;                  // send refresh command
+        state.d = state.WAIT;                 // need to wait
+        next_state.d = state.IDLE;            // go back to IDLE after
+        delay_ctr.d = 6;                      // wait 8 cycles, 80ns (min 66ns)
+        
+      ///// ACTIVATE /////
+      state.ACTIVATE:
+        cmd.d = CMD_ACTIVE;                   // activate command
+        a.d = addr.q[22:10];                  // row address
+        bank.d = addr.q[9:8];                 // bank select
+        delay_ctr.d = 0;                      // delay 20ns (15ns min)
+        state.d = state.WAIT;                 // need to wait
+        
+        // set the next state based on the command
+        next_state.d = rw_op.q ? state.WRITE : state.READ;
+        
+        row_open.d[addr.q[9:8]] = 1;          // row is now open 
+        row_addr.d[addr.q[9:8]] = addr.q[22:10]; // address of row
+        
+      ///// READ /////
+      state.READ:
+        cmd.d = CMD_READ;                     // read command
+        a.d = c{2b0, 1b0, addr.q[7:0], 2b0};  // address of column
+        bank.d = addr.q[9:8];                 // bank select
+        state.d = state.WAIT;                 // need to wait
+        next_state.d = state.READ_RES;        // go to READ_RES after
+        delay_ctr.d = 2;                      // wait 3 cycles
+        
+      state.READ_RES:
+        byte_ctr.d = byte_ctr.q + 1;          // count 4 bytes
+        data.d = c{dqi.q, data.q[31:8]};      // shift in each byte
+        if (byte_ctr.q == 3) {                // if we read all 4 bytes
+          out_valid.d = 1;                    // output is valid
+          state.d = state.IDLE;               // return to IDLE
+        }
+        
+      ///// WRITE /////
+      state.WRITE:
+        byte_ctr.d = byte_ctr.q + 1;          // count 4 bytes
+        
+        if (byte_ctr.q == 0)                  // first byte is write command
+          cmd.d = CMD_WRITE;                  // send command
+        
+        dq.d = data.q[7:0];                   // output the data
+        data.d = data.q >> 8;                 // shift data
+        dq_en.d = 1;                          // enable data bus output
+        a.d = c{2b0, 1b0, addr.q[7:0], 2b0};  // column address
+        bank.d = addr.q[9:8];                 // bank select
+        
+        if (byte_ctr.q == 3)                  // if we wrote all 4 bytes
+          state.d = state.IDLE;               // return to IDLE
+        
+      ///// PRECHARGE /////
+      state.PRECHARE:
+        cmd.d = CMD_PRECHARGE;                // precharge command
+        a.d[10] = precharge_bank.q[2];        // all banks flag
+        bank.d = precharge_bank.q[1:0];       // single bank select
+        state.d = state.WAIT;                 // need to wait
+        delay_ctr.d = 0;                      // delay 20ns (15ns min)
+        
+        if (precharge_bank.q[2])              // if all banks flag
+          row_open.d = 0;                     // they are all closed
+        else                                  // otherwise
+          row_open.d[precharge_bank.q[1:0]] = 0; // only selected was closed
+        
+      default:                                // shouldn't be here
+        state.d = state.INIT;                 // restart the FSM
+    }
+  }
+}

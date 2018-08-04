@@ -1,0 +1,20 @@
+NET "camera_pclk" TNM_NET = camera_pclk;
+TIMESPEC TS_pclk = PERIOD "camera_pclk" 36 MHz HIGH 50%;
+
+NET "camera_scl" LOC = P99 | IOSTANDARD = LVTTL;
+NET "camera_sda" LOC = P100 | IOSTANDARD = LVTTL;
+NET "camera_xclk" LOC = P95 | IOSTANDARD = LVTTL;
+NET "camera_pclk" LOC = P94 | IOSTANDARD = LVTTL;
+NET "camera_href" LOC = P98 | IOSTANDARD = LVTTL;
+NET "camera_vsync" LOC = P97 | IOSTANDARD = LVTTL;
+NET "camera_rst" LOC = P92 | IOSTANDARD = LVTTL;
+NET "camera_pwdn" LOC = P93 | IOSTANDARD = LVTTL;
+
+NET "camera_data<0>" LOC = P14 | IOSTANDARD = LVTTL;
+NET "camera_data<1>" LOC = P15 | IOSTANDARD = LVTTL;
+NET "camera_data<2>" LOC = P16 | IOSTANDARD = LVTTL;
+NET "camera_data<3>" LOC = P17 | IOSTANDARD = LVTTL;
+NET "camera_data<4>" LOC = P21 | IOSTANDARD = LVTTL;
+NET "camera_data<5>" LOC = P22 | IOSTANDARD = LVTTL;
+NET "camera_data<6>" LOC = P23 | IOSTANDARD = LVTTL;
+NET "camera_data<7>" LOC = P24 | IOSTANDARD = LVTTL;

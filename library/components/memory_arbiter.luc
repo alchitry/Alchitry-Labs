@@ -1,0 +1,114 @@
+/******************************************************************************
+   
+   The MIT License (MIT)
+   
+   Copyright (c) 2015 Embedded Micro
+   
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+   THE SOFTWARE.
+   
+   *****************************************************************************
+   
+   This module is used to give multiple devices access to a single memory
+   interface. The devices connected to lower device numbers have priority
+   over higher numbered devices. For example, device 0 will always have its
+   messages handled first. A consequence of this is that low priority
+   devices can be starved if a high priority device saturates the bus.
+*/
+
+module memory_arbiter #(
+    DEVICES = 2 : DEVICES > 0                               // number of devices to arbitrate
+  )(
+    input clk,                                              // clock
+    input rst,                                              // reset
+    input<Memory.slave> memIn,                              // memory inputs
+    output<Memory.master> memOut,                           // memory outputs
+    input<Memory.master> devIn[DEVICES],                    // devices inputs
+    output<Memory.slave> devOut[DEVICES]                    // devices outputs
+  ) {
+  
+  // simple structure to hold pending commands
+  struct command {
+    valid,                                                  // valid flag (1 = valid)
+    write,                                                  // write/read flag (1 = write)
+    addr[23],                                               // address to read/write
+    data[32]                                                // data for writes
+  }
+  
+  .clk(clk), .rst(rst) {
+    dff<command> commands[DEVICES];                         // buffer for pending commands
+    dff device[$clog2(DEVICES)];                            // device waiting for a read
+    fsm state = {IDLE, WAIT_READ};                          // current state
+    dff activeDev[$clog2(DEVICES)];                         // highest priority device with pending command
+  }
+  
+  var i;
+  
+  always {
+    // defaults
+    memOut.data = 32bx;
+    memOut.valid = 0;
+    memOut.addr = 23bx;
+    memOut.write = 1bx;
+    
+    for (i = 0; i < DEVICES; i++) {
+      devOut[i].busy = commands.q[i].valid;                 // if the command isn't valid we can take a new one
+      devOut[i].data = 32bx;                                // don't care
+      devOut[i].valid = 0;                                  // not valid
+      
+      // if not busy and new command issued
+      if (!commands.q[i].valid && devIn[i].valid) {
+        commands.d[i].valid = 1;                            // command pending
+        commands.d[i].write = devIn[i].write;               // save the command type
+        commands.d[i].addr = devIn[i].addr;                 // save the address
+        commands.d[i].data = devIn[i].data;                 // save the data
+      }
+      
+      // set activeDev to the lowest index with a pending command
+      if (commands.q[DEVICES-1-i].valid)
+        activeDev.d = DEVICES-1-i;
+    }
+    
+    case (state.q) {
+      state.IDLE:
+        
+        // if the memory bus isn't busy and we have a pending command
+        if (!memIn.busy && commands.q[activeDev.q].valid) {
+          memOut.data = commands.q[activeDev.q].data;       // command data
+          memOut.addr = commands.q[activeDev.q].addr;       // command address
+          memOut.write = commands.q[activeDev.q].write;     // command type (r/w)
+          memOut.valid = 1;                                 // new command
+          commands.d[activeDev.q].valid = 0;                // command has been processed
+          if (!commands.q[activeDev.q].write) {             // if it is a read
+            device.d = activeDev.q;                         // save active device
+            state.d = state.WAIT_READ;                      // wait for the result
+          }
+        }
+      
+      state.WAIT_READ:
+        if (memIn.valid) {                                  // if we have the result
+          devOut[device.q].data = memIn.data;               // send it to the waiting device
+          devOut[device.q].valid = 1;
+          state.d = state.IDLE;                             // go back to IDLE
+        }
+      
+      default:
+        state.d = state.IDLE;
+    }
+  }
+}
