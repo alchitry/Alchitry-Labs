@@ -44,7 +44,6 @@ import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
 import com.alchitry.labs.hardware.MojoFlasher;
-import com.alchitry.labs.hardware.MojoLoader;
 import com.alchitry.labs.lucid.Constant;
 import com.alchitry.labs.project.CoreGen;
 import com.alchitry.labs.project.Project;
@@ -74,7 +73,6 @@ public class MainWindow {
 	private int bottomHeight, oldBottomWeight;
 	private ArrayList<TabChild> tabs;
 	private CustomConsole console;
-	private MojoLoader loader;
 	private MojoFlasher flasher;
 	private SerialMonitor monitor;
 	private ImageCapture imgCapture;
@@ -95,8 +93,7 @@ public class MainWindow {
 	 * @wbp.parser.entryPoint
 	 */
 	public static void main(String[] args) {
-		if (parseCommand(args))
-			return;
+		parseCommand(args);
 
 		Util.isGUI = true;
 		try {
@@ -132,8 +129,6 @@ public class MainWindow {
 		return shlAlchitryLabs;
 	}
 
-
-
 	private void saveOnCrash() {
 		if (filesModified()) {
 			Shell shell = new Shell(display);
@@ -153,14 +148,7 @@ public class MainWindow {
 		display.dispose();
 	}
 
-	private static boolean parseCommand(String[] args) {
-		boolean term = false;
-		String port = null;
-		String binFile = null;
-		boolean flash = false;
-		boolean verify = false;
-		boolean stopGUI = false;
-
+	private static void parseCommand(String[] args) {
 		if (args.length > 0) {
 			switch (args[0]) {
 			case "lin32":
@@ -180,250 +168,6 @@ public class MainWindow {
 				break;
 			}
 		}
-
-		for (int i = Util.ideType == Util.UNKNOWN ? 0 : 1; i < args.length; i++) {
-			if (args[i].endsWith(".mojo")) {
-				projToOpen = args[i];
-			} else {
-				switch (args[i]) {
-				case "-t":
-					term = true;
-					break;
-				case "-p":
-					if (args.length - 1 > i) {
-						port = args[++i];
-						Settings.pref.put(Settings.MOJO_PORT, port);
-						try {
-							Settings.pref.flush();
-						} catch (BackingStoreException e) {
-							System.err.println("Failed to save port value!");
-							System.exit(2);
-						}
-					} else {
-						System.err.println("Port value missing after -p!");
-						System.exit(2);
-					}
-					break;
-				case "-b":
-					if (args.length - 1 > i) {
-						binFile = args[++i];
-					} else {
-						System.err.println("Bin file missing after -b!");
-						System.exit(2);
-					}
-					break;
-				case "-f":
-					flash = true;
-					break;
-				case "-v":
-					verify = true;
-					break;
-				case "-u":
-					if (args.length - 1 > i) {
-						try {
-							UpdateChecker.copyLibrary(args[++i]);
-						} catch (IOException e) {
-							System.exit(1);
-						}
-						System.exit(0);
-					} else {
-						System.err.println("Library value missing after -u!");
-						System.exit(2);
-					}
-					break;
-				case "-project":
-					stopGUI = true;
-					if (args.length - 1 > i) {
-						mainWindow = new MainWindow();
-						mainWindow.headlessInit();
-						try {
-							mainWindow.openProjectSilent(args[++i]);
-						} catch (ParseException | IOException e) {
-							System.err.println("Failed to open project file: " + args[i]);
-							System.exit(3);
-						}
-					} else {
-						System.err.println("Project missing after -project!");
-						System.exit(2);
-					}
-					break;
-				case "-check":
-					if (mainWindow != null && getOpenProject() != null) {
-						mainWindow.checkProject();
-					} else {
-						System.err.println("Project must be opened before checking syntax!");
-						System.exit(2);
-					}
-					break;
-				case "-build":
-					if (mainWindow != null && getOpenProject() != null) {
-						mainWindow.buildProject();
-					} else {
-						System.err.println("Project must be opened before buildling!");
-						System.exit(2);
-					}
-					break;
-				case "-load":
-					if (mainWindow != null && getOpenProject() != null) {
-						mainWindow.programProject(true, false);
-					} else {
-						System.err.println("Project must be opened before loading!");
-						System.exit(2);
-					}
-					break;
-				case "-temp":
-					if (mainWindow != null && getOpenProject() != null) {
-						mainWindow.programProject(false, false);
-					} else {
-						System.err.println("Project must be opened before loading!");
-						System.exit(2);
-					}
-					break;
-				case "-new-project":
-					stopGUI = true;
-					if (args.length - 1 > i) {
-						String projArgs[] = args[++i].split(";");
-						String projName = null;
-						String workspace = Util.getWorkspace();
-						String board = "Mojo V3";
-						String language = "Lucid";
-						String example = "Base Project";
-
-						for (String arg : projArgs) {
-							String pair[] = arg.split(":");
-							switch (pair[0]) {
-							case "name":
-								projName = pair[1];
-								break;
-							case "workspace":
-								workspace = pair[1];
-								break;
-							case "board":
-								board = pair[1];
-								break;
-							case "language":
-								language = pair[1];
-								break;
-							case "example":
-								example = pair[1];
-								break;
-							default:
-								System.err.println("Invalid project parameter: " + pair[0]);
-								System.exit(2);
-							}
-						}
-						mainWindow = new MainWindow();
-						mainWindow.headlessInit();
-						Project p = NewProjectDialog.createProject(projName, workspace, board, language, example);
-						if (p == null) {
-							System.err.println("Failed to create new project!");
-							System.exit(2);
-						}
-						try {
-							mainWindow.openProjectSilent(p.getProjectFile());
-						} catch (ParseException | IOException e) {
-							System.err.println("Failed to open project file: " + p.getProjectFile());
-							System.exit(3);
-						}
-
-					} else {
-						System.err.println("Project missing after -project!");
-						System.exit(2);
-					}
-					System.out.println("Created project!");
-					break;
-				case "-new":
-					if (args.length - 1 > i) {
-						if (mainWindow != null && getOpenProject() != null) {
-							String fileName = args[++i];
-							if (fileName.endsWith(".ucf"))
-								getOpenProject().addNewConstraintFile(fileName);
-							else
-								getOpenProject().addNewSourceFile(fileName);
-							try {
-								getOpenProject().saveXML();
-							} catch (IOException e) {
-								System.err.println("Failed to save project file!");
-								System.exit(2);
-							}
-						} else {
-							System.err.println("Project must be opened before adding files!");
-							System.exit(2);
-						}
-					} else {
-						System.err.println("File name missing after -new!");
-						System.exit(2);
-					}
-					break;
-				case "-import":
-					if (args.length - 1 > i) {
-						if (mainWindow != null && getOpenProject() != null) {
-							getOpenProject().importFile(args[++i]);
-							try {
-								getOpenProject().saveXML();
-							} catch (IOException e) {
-								System.err.println("Failed to save project file!");
-								System.exit(2);
-							}
-						} else {
-							System.err.println("Project must be opened before importing files!");
-							System.exit(2);
-						}
-					} else {
-						System.err.println("File name missing after -import!");
-						System.exit(2);
-					}
-					break;
-				case "-remove":
-					if (args.length - 1 > i) {
-						if (mainWindow != null && getOpenProject() != null) {
-							String fileName = args[++i];
-							boolean success = false;
-							if (fileName.endsWith(".ucf"))
-								success = getOpenProject().removeConstaintFile(fileName);
-							else
-								success = getOpenProject().removeSourceFile(fileName);
-
-							if (!success) {
-								System.err.println("Failed to remove file " + fileName);
-							}
-							try {
-								getOpenProject().saveXML();
-							} catch (IOException e) {
-								System.err.println("Failed to save project file!");
-								System.exit(2);
-							}
-						} else {
-							System.err.println("Project must be opened before removing files!");
-							System.exit(2);
-						}
-					} else {
-						System.err.println("File name missing after -remove!");
-						System.exit(2);
-					}
-					break;
-				default:
-					System.err.println("Invalid command: " + args[i]);
-					System.exit(2);
-					break;
-				}
-			}
-		}
-		if (term) {
-			if (port == null) {
-				System.err.println("You must specify a port using the -p flag!");
-				return true;
-			}
-			if (binFile == null) {
-				System.err.println("You must specify a bin file using the -b flag!");
-				return true;
-			}
-
-			MojoLoader loader = new MojoLoader(null, null);
-			loader.sendBin(port, binFile, flash, verify);
-			stopGUI = true;
-		}
-		return stopGUI;
 	}
 
 	public void setBuilding(final boolean building) {
@@ -816,12 +560,8 @@ public class MainWindow {
 					Util.showError("A project must be opened before you can build it!");
 					return;
 				}
-				if (project.isBuilding()) {
-					Util.showError("Can't debug project while building!");
-					return;
-				}
-				if (loader.isLoading()) {
-					Util.showError("You can't debug your project while the Mojo is being programmed!");
+				if (project.isBusy()) {
+					Util.showError("Can't debug while operation is in progress!");
 					return;
 				}
 				if (!saveAll(false)) {
@@ -867,16 +607,11 @@ public class MainWindow {
 		erasebtn.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				if (loader.isLoading()) {
-					Util.showError("The board is already being programmed!");
+				if (project.isBusy()) {
+					Util.showError("Operation already in progress!");
 					return;
 				}
-				String port = Settings.pref.get(Settings.MOJO_PORT, null);
-				if (port == null) {
-					Util.showError("You need to select the serial port the board is connected to in the settings menu.");
-					return;
-				}
-				loader.clearFlash(port);
+				project.erase();
 			}
 		});
 
@@ -992,7 +727,6 @@ public class MainWindow {
 		leftWidth = Settings.pref.getInt(Settings.FILE_LIST_WIDTH, 200);
 		bottomHeight = Settings.pref.getInt(Settings.CONSOLE_HEIGHT, 200);
 
-		loader = new MojoLoader(display, console);
 		flasher = new MojoFlasher();
 
 		coreGen = new CoreGen();
@@ -1002,7 +736,6 @@ public class MainWindow {
 
 	public void headlessInit() {
 		project = new Project();
-		loader = new MojoLoader();
 		flasher = new MojoFlasher();
 		coreGen = new CoreGen();
 	}
@@ -1012,25 +745,12 @@ public class MainWindow {
 			Util.showError("A project must be opened before you can load it!");
 			return;
 		}
-		if (project.isBuilding()) {
-			Util.showError("You must wait for your design to finish building before loading it.");
+		if (project.isBusy()) {
+			Util.showError("Operation already in progress!");
 			return;
 		}
-		if (loader.isLoading()) {
-			Util.showError("The board is already being programmed!");
-			return;
-		}
-		String binFile = project.getBinFile();
-		if (binFile == null) {
-			Util.showError("Could not find the bin file! Make sure the project is built.");
-			return;
-		}
-		String port = Settings.pref.get(Settings.MOJO_PORT, null);
-		if (port == null) {
-			Util.showError("You need to select the serial port the board is connected to in the settings menu.");
-			return;
-		}
-		loader.sendBin(port, binFile, flash, verify);
+		
+		project.load(flash, verify);
 	}
 
 	public void checkProject() {
@@ -1038,8 +758,8 @@ public class MainWindow {
 			Util.showError("A project must be opened before you can check it!");
 			return;
 		}
-		if (project.isBuilding()) {
-			Util.showError("You must wait for the project to finish building.");
+		if (project.isBusy()) {
+			Util.showError("Operation in progress!");
 			return;
 		}
 		if (Util.isGUI && !saveAll(false)) {
@@ -1064,8 +784,8 @@ public class MainWindow {
 			project.stopBuild();
 			return;
 		}
-		if (loader.isLoading()) {
-			Util.showError("You can't build your project while the board is being programmed!");
+		if (project.isBusy()) {
+			Util.showError("Operation already in progress!");
 			return;
 		}
 		if (Util.isGUI && !saveAll(false)) {
@@ -1308,8 +1028,8 @@ public class MainWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (monitor == null || monitor.isDisposed()) {
-					if (loader.isLoading()) {
-						Util.showError("You must wait for your board to finish programming.");
+					if (project.isBusy()) {
+						Util.showError("Operation already in progress!");
 					} else {
 						if (!display.isDisposed())
 							monitor = new SerialMonitor(display);

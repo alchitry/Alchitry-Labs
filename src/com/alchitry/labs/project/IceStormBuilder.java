@@ -3,7 +3,6 @@ package com.alchitry.labs.project;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
@@ -28,11 +27,12 @@ public class IceStormBuilder extends ProjectBuilder {
 		ArrayList<String> yosysCommand = new ArrayList<>();
 		yosysCommand.add(Util.getYosysCommand());
 		yosysCommand.add("-p");
-		yosysCommand.add("synth_ice40 -top mojo_top_0 -blif " + workFolder + File.separator + "alchitry.blif");
+		yosysCommand.add("synth_ice40 -top alchitry_top_0 -blif " + workFolder + File.separator + "alchitry.blif");
 		for (String file : vFiles)
 			yosysCommand.add(srcFolder + File.separatorChar + file);
 
-		runCommand(yosysCommand, "Yosys");
+		builder = Util.runCommand(yosysCommand);
+		builder.waitFor();
 		
 		Util.println("");
 		Util.println("Finished synthesis.");
@@ -59,7 +59,8 @@ public class IceStormBuilder extends ProjectBuilder {
 		}
 		arachneCommand.add(workFolder + File.separator + "alchitry.blif");
 
-		runCommand(arachneCommand, "Arachne");
+		builder = Util.runCommand(arachneCommand);
+		builder.waitFor();
 		
 		Util.println("");
 		Util.println("Finished placement.");
@@ -71,27 +72,10 @@ public class IceStormBuilder extends ProjectBuilder {
 		icepacCommand.add(workFolder + File.separator + "alchitry.txt");
 		icepacCommand.add(workFolder + File.separator + "alchitry.bin");
 		
-		runCommand(icepacCommand, "IcePac");
+		builder = Util.runCommand(icepacCommand);
+		builder.waitFor();
 
 		Util.println("");
 		Util.println("Finished building project.");
 	}
-
-	private void runCommand(List<String> cmd, String name) throws InterruptedException {
-		ProcessBuilder pb = new ProcessBuilder(cmd);
-
-		try {
-			builder = pb.start();
-		} catch (Exception e) {
-			Util.log.severe("Couldn't start " + cmd.get(0));
-			Util.showError("Could not start " + name + "! Please check the location for " + name + " is correctly set in the settings menu.");
-			return;
-		}
-
-		startStreamPrinter(builder.getInputStream(), false);
-		startStreamPrinter(builder.getErrorStream(), true);
-
-		builder.waitFor();
-	}
-
 }

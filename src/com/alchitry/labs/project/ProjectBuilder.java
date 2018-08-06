@@ -1,10 +1,7 @@
 package com.alchitry.labs.project;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,8 +36,12 @@ public abstract class ProjectBuilder {
 
 	}
 
+	public boolean isBuilding() {
+		return builder != null && builder.isAlive();
+	}
+
 	public void stopBuild() {
-		if (builder != null && builder.isAlive()) {
+		if (isBuilding()) {
 			try {
 				builder.getOutputStream().close();
 				builder.getInputStream().close();
@@ -113,7 +114,7 @@ public abstract class ProjectBuilder {
 			if (project.checkForErrors()) {
 				return;
 			}
-			
+
 			if (debug) {
 				File debugDir = new File(workFolder + File.separatorChar + "debug");
 				if (!debugDir.exists() || !debugDir.isDirectory()) {
@@ -132,12 +133,12 @@ public abstract class ProjectBuilder {
 			}
 
 			projectBuilder();
-			
+
 		} catch (Exception e) {
 			Util.print(e);
 			Util.log.log(Level.SEVERE, "Exception with project builder!", e);
 		} finally {
-			
+
 			MainWindow.mainWindow.setBuilding(false);
 		}
 	}
@@ -305,26 +306,4 @@ public abstract class ProjectBuilder {
 
 		return debugSource;
 	}
-
-	protected void startStreamPrinter(final InputStream s, final boolean red) {
-		Thread printer = new Thread() {
-			public void run() {
-				BufferedReader errorStream = new BufferedReader(new InputStreamReader(s));
-				String line;
-				try {
-					while ((line = errorStream.readLine()) != null) {
-						Util.println(line, red);
-					}
-				} catch (IOException e) {
-				} finally {
-					try {
-						errorStream.close();
-					} catch (IOException e) {
-					}
-				}
-			}
-		};
-		printer.start();
-	}
-
 }

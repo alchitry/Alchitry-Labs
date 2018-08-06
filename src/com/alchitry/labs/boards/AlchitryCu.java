@@ -1,6 +1,8 @@
 package com.alchitry.labs.boards;
 
-import com.alchitry.labs.Util;
+import com.alchitry.labs.hardware.CopperLoader;
+import com.alchitry.labs.hardware.ProjectLoader;
+import com.alchitry.labs.project.IceStormBuilder;
 import com.alchitry.labs.project.ProjectBuilder;
 
 public class AlchitryCu extends Board {
@@ -32,13 +34,17 @@ public class AlchitryCu extends Board {
 
 	@Override
 	public ProjectBuilder getBuilder() {
-		Util.showError("There is no builder for Alchitry Au yet!");
-		return null;
+		return getOpenBuilder();
 	}
 
 	@Override
 	public ProjectBuilder getOpenBuilder() {
-		return null;
+		return new IceStormBuilder();
+	}
+
+	@Override
+	public ProjectLoader getLoader() {
+		return new CopperLoader();
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.alchitry.labs.boards;
 
+import com.alchitry.labs.hardware.MojoLoader;
+import com.alchitry.labs.hardware.ProjectLoader;
 import com.alchitry.labs.project.ISEBuilder;
 import com.alchitry.labs.project.ProjectBuilder;
 
@@ -38,6 +40,11 @@ public class MojoV2 extends Board {
 	@Override
 	public ProjectBuilder getOpenBuilder() {
 		return null;
+	}
+
+	@Override
+	public ProjectLoader getLoader() {
+		return new MojoLoader();
 	}
 
 }

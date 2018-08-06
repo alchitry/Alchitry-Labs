@@ -2,6 +2,7 @@ package com.alchitry.labs.boards;
 
 import java.util.ArrayList;
 
+import com.alchitry.labs.hardware.ProjectLoader;
 import com.alchitry.labs.project.ProjectBuilder;
 
 public abstract class Board {
@@ -21,6 +22,7 @@ public abstract class Board {
 	public abstract String getHexFile();
 	public abstract ProjectBuilder getBuilder();
 	public abstract ProjectBuilder getOpenBuilder();
+	public abstract ProjectLoader getLoader();
 	
 	public static Board getFromName(String board) {
 		for (Board b : boards){

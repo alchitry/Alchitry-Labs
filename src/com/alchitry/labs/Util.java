@@ -103,6 +103,10 @@ public class Util {
 	public static void setConsole(CustomConsole console) {
 		Util.console = console;
 	}
+	
+	public static CustomConsole getConsole() {
+		return console;
+	}
 
 	private static class QuestionRunnable implements Runnable {
 		public boolean result;
@@ -469,4 +473,44 @@ public class Util {
 			}
 		}
 	};
+	
+	public static void startStreamPrinter(final InputStream s, final boolean red) {
+		Thread printer = new Thread() {
+			public void run() {
+				BufferedReader errorStream = new BufferedReader(new InputStreamReader(s));
+				String line;
+				try {
+					while ((line = errorStream.readLine()) != null) {
+						Util.println(line, red);
+					}
+				} catch (IOException e) {
+				} finally {
+					try {
+						errorStream.close();
+					} catch (IOException e) {
+					}
+				}
+			}
+		};
+		printer.start();
+	}
+	
+	public static Process runCommand(List<String> cmd) throws InterruptedException {
+		ProcessBuilder pb = new ProcessBuilder(cmd);
+		
+		Process process;
+
+		try {
+			process = pb.start();
+		} catch (Exception e) {
+			Util.log.severe("Couldn't start " + cmd.get(0));
+			Util.showError("Could not start " + cmd.get(0) + "! Please check the location for " + cmd.get(0) + " is correctly set in the settings menu.");
+			return null;
+		}
+
+		startStreamPrinter(process.getInputStream(), false);
+		startStreamPrinter(process.getErrorStream(), true);
+		
+		return process;
+	}
 }

@@ -9,9 +9,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.logging.Level;
 
+import org.apache.commons.io.FileUtils;
+
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.style.ParseException;
 
 public class ISEBuilder extends ProjectBuilder {
@@ -60,21 +61,25 @@ public class ISEBuilder extends ProjectBuilder {
 		if (!Util.isIseUpdated()) // only ISE 14.7 supported
 			if (!Util.askQuestion("ISE is Out of Date", "Only version 14.7 of ISE is supported. Continue anyway?"))
 				return;
+		
+		ArrayList<String> cmd = new ArrayList<>();
+		cmd.add(planAhead);
+		cmd.add("-nojournal");
+		cmd.add("-nolog");
+		cmd.add("-mode");
+		cmd.add("batch");
+		cmd.add("-source");
+		cmd.add(tclScript);
 
-		ProcessBuilder pb = new ProcessBuilder(planAhead, "-nojournal", "-nolog", "-mode", "batch", "-source", tclScript);
-
-		try {
-			builder = pb.start();
-		} catch (Exception e) {
-			Util.log.severe("Couldn't start PlanAhead. Tried " + planAhead);
-			Util.showError("Could not start PlanAhead! Please check the location for ISE is correctly set in the settings menu.");
-			return;
-		}
-
-		startStreamPrinter(builder.getInputStream(), false);
-		startStreamPrinter(builder.getErrorStream(), true);
+		builder = Util.runCommand(cmd);
 
 		builder.waitFor();
+		
+		File binFile = new File(workFolder + File.separatorChar + "planAhead" + File.separatorChar + project.getProjectName() + File.separatorChar
+				+ project.getProjectName() + ".runs" + File.separatorChar + "impl_1" + File.separatorChar + project.getTop().split("\\.")[0] + "_0.bin");
+		if (binFile.exists()) {
+			FileUtils.copyFile(binFile, new File(workFolder + File.separatorChar + "alchitry.bin"));
+		}
 
 		Util.println("");
 		Util.println("Finished building project.");

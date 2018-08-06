@@ -1,6 +1,7 @@
 package com.alchitry.labs.boards;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.hardware.ProjectLoader;
 import com.alchitry.labs.project.ProjectBuilder;
 
 public class AlchitryAu extends Board {
@@ -38,6 +39,12 @@ public class AlchitryAu extends Board {
 
 	@Override
 	public ProjectBuilder getOpenBuilder() {
+		return null;
+	}
+
+	@Override
+	public ProjectLoader getLoader() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

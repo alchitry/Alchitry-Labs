@@ -68,10 +68,10 @@ import com.alchitry.labs.verilog.tools.VerilogErrorChecker;
 import com.alchitry.labs.verilog.tools.VerilogLucidModuleFixer;
 import com.alchitry.labs.verilog.tools.VerilogModuleListener;
 import com.alchitry.labs.widgets.CustomTree;
-import com.alchitry.labs.widgets.TabChild;
 import com.alchitry.labs.widgets.CustomTree.TreeElement;
 import com.alchitry.labs.widgets.CustomTree.TreeLeaf;
 import com.alchitry.labs.widgets.CustomTree.TreeNode;
+import com.alchitry.labs.widgets.TabChild;
 
 public class Project {
 	public static final String SOURCE_PARENT = "Source";
@@ -107,7 +107,7 @@ public class Project {
 	private Menu treeMenu;
 	private ProjectBuilder builder;
 	private DebugInfo debugInfo;
-	
+
 	private Thread thread;
 
 	private enum FileType {
@@ -122,7 +122,7 @@ public class Project {
 		projectFile = name + ".mojo";
 		language = lang;
 		open = true;
-		
+
 	}
 
 	public Project() {
@@ -179,8 +179,7 @@ public class Project {
 	}
 
 	public String getBinFile() {
-		File binFile = new File(projectFolder + File.separatorChar + "work" + File.separatorChar + "planAhead" + File.separatorChar + projectName + File.separatorChar
-				+ projectName + ".runs" + File.separatorChar + "impl_1" + File.separatorChar + topSource.split("\\.")[0] + "_0.bin");
+		File binFile = new File(projectFolder + File.separatorChar + "work" + File.separatorChar + "alchitry.bin");
 		if (binFile.exists())
 			return binFile.getAbsolutePath();
 		return null;
@@ -1230,7 +1229,7 @@ public class Project {
 		};
 		thread.start();
 	}
-	
+
 	private boolean checkforErrors(String folder, String file, boolean printErrors) throws IOException {
 		boolean hasErrors = false;
 
@@ -1257,14 +1256,13 @@ public class Project {
 		}
 		return hasErrors;
 	}
-	
+
 	private boolean checkForIMErrors(InstModule im, List<Module> modules, List<InstModule> instModules) {
 		String fullPath = new File(im.getType().getFolder() + File.separatorChar + im.getType().getFileName()).getAbsolutePath();
 		List<SyntaxError> errors = VerilogLucidModuleFixer.getErrors(im, fullPath, modules, instModules);
 		return addErrors(errors, im.getType().getFileName(), true);
 	}
 
-	
 	public boolean checkForErrors() throws IOException {
 		updateGlobals();
 		String folder = getSourceFolder();
@@ -1285,7 +1283,7 @@ public class Project {
 
 		return hasErrors;
 	}
-	
+
 	private void addError(final String text, final int type) {
 		Color color = Theme.editorForegroundColor;
 		switch (type) {
@@ -1304,7 +1302,7 @@ public class Project {
 		}
 		Util.print(text, color);
 	}
-	
+
 	private boolean addErrors(List<SyntaxError> errors, String file, boolean printErrors) {
 		boolean hasErrors = false;
 		boolean hasWarnings = false;
@@ -1345,7 +1343,7 @@ public class Project {
 		}
 		return hasErrors;
 	}
-	
+
 	public InstModule getLucidSourceTree() throws IOException {
 		updateGlobals();
 		String folder = getSourceFolder();
@@ -1361,8 +1359,13 @@ public class Project {
 
 		return list.get(0); // top level IM
 	}
-	
+
 	public void build(final boolean debug) {
+		if (isBusy()) {
+			Util.showError("Operation already in progress!");
+			return;
+		}
+
 		if (Util.isGUI) {
 			thread = new Thread() {
 				public void run() {
@@ -1380,14 +1383,60 @@ public class Project {
 			builder.build(Project.this, debug);
 		}
 	}
-	
+
 	public boolean isBuilding() {
+		return isBusy() && builder.isBuilding();
+	}
+
+	public boolean isBusy() {
 		return thread != null && thread.isAlive();
 	}
 
 	public void stopBuild() {
-		if (isBuilding()) {
+		if (isBusy() && builder.isBuilding()) {
 			builder.stopBuild();
+		}
+	}
+
+	public void load(final boolean flash, final boolean verify) {
+		if (isBusy()) {
+			Util.showError("Operation already in progress!");
+			return;
+		}
+
+		final String binFile = getBinFile();
+		if (binFile == null) {
+			Util.showError("Could not find the bin file! Make sure the project is built.");
+			return;
+		}
+
+		if (Util.isGUI) {
+			thread = new Thread() {
+				public void run() {
+					boardType.getLoader().load(binFile, flash, verify);
+				}
+			};
+			thread.start();
+		} else {
+			boardType.getLoader().load(binFile, flash, verify);
+		}
+	}
+
+	public void erase() {
+		if (isBusy()) {
+			Util.showError("Operation already in progress!");
+			return;
+		}
+
+		if (Util.isGUI) {
+			thread = new Thread() {
+				public void run() {
+					boardType.getLoader().erase();
+				}
+			};
+			thread.start();
+		} else {
+			boardType.getLoader().erase();
 		}
 	}
 }

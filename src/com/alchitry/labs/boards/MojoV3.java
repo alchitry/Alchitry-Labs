@@ -1,7 +1,8 @@
 package com.alchitry.labs.boards;
 
+import com.alchitry.labs.hardware.MojoLoader;
+import com.alchitry.labs.hardware.ProjectLoader;
 import com.alchitry.labs.project.ISEBuilder;
-import com.alchitry.labs.project.IceStormBuilder;
 import com.alchitry.labs.project.ProjectBuilder;
 
 public class MojoV3 extends Board {
@@ -33,12 +34,17 @@ public class MojoV3 extends Board {
 
 	@Override
 	public ProjectBuilder getBuilder() {
-		return new IceStormBuilder();
+		return new ISEBuilder();
 	}
 
 	@Override
 	public ProjectBuilder getOpenBuilder() {
 		return null;
+	}
+	
+	@Override
+	public ProjectLoader getLoader() {
+		return new MojoLoader();
 	}
 	
 }
