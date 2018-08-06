@@ -1,5 +1,8 @@
 package com.alchitry.labs.boards;
 
+import com.alchitry.labs.project.ISEBuilder;
+import com.alchitry.labs.project.ProjectBuilder;
+
 public class MojoV2 extends Board {
 
 	@Override
@@ -25,6 +28,16 @@ public class MojoV2 extends Board {
 	@Override
 	public String getHexFile() {
 		return "mojo-v2-loader.hex";
+	}
+
+	@Override
+	public ProjectBuilder getBuilder() {
+		return new ISEBuilder();
+	}
+
+	@Override
+	public ProjectBuilder getOpenBuilder() {
+		return null;
 	}
 
 }

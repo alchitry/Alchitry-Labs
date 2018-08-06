@@ -30,6 +30,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -48,6 +49,7 @@ import com.alchitry.labs.Util;
 import com.alchitry.labs.boards.Board;
 import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.Param;
@@ -62,6 +64,8 @@ import com.alchitry.labs.project.Primitive.Parameter;
 import com.alchitry.labs.project.Primitive.Port;
 import com.alchitry.labs.style.ParseException;
 import com.alchitry.labs.style.SyntaxError;
+import com.alchitry.labs.verilog.tools.VerilogErrorChecker;
+import com.alchitry.labs.verilog.tools.VerilogLucidModuleFixer;
 import com.alchitry.labs.verilog.tools.VerilogModuleListener;
 import com.alchitry.labs.widgets.CustomTree;
 import com.alchitry.labs.widgets.TabChild;
@@ -83,8 +87,8 @@ public class Project {
 	public static final String LANG_VERILOG = "Verilog";
 
 	private HashSet<String> sourceFiles;
-	private HashSet<String> ucfFiles;
-	private HashMap<String, Boolean> ucfLib;
+	private HashSet<String> constraintFiles;
+	private HashMap<String, Boolean> constraintLib;
 	private HashSet<String> componentFiles;
 	private HashSet<IPCore> ipCores;
 	private HashSet<Primitive> primitives;
@@ -101,7 +105,10 @@ public class Project {
 	private Shell shell;
 	private LucidGlobalExtractor globalExtractor = new LucidGlobalExtractor();
 	private Menu treeMenu;
+	private ProjectBuilder builder;
 	private DebugInfo debugInfo;
+	
+	private Thread thread;
 
 	private enum FileType {
 		SOURCE, CONSTRAINT, COMPONENT, CORE
@@ -111,10 +118,11 @@ public class Project {
 		this();
 		projectName = name;
 		projectFolder = folder;
-		boardType = Board.getFromName(board);
+		setBoardType(board);
 		projectFile = name + ".mojo";
 		language = lang;
 		open = true;
+		
 	}
 
 	public Project() {
@@ -124,8 +132,8 @@ public class Project {
 	public Project(Shell shell) {
 		this.shell = shell;
 		sourceFiles = new HashSet<>();
-		ucfFiles = new HashSet<>();
-		ucfLib = new HashMap<>();
+		constraintFiles = new HashSet<>();
+		constraintLib = new HashMap<>();
 		componentFiles = new HashSet<>();
 		ipCores = new HashSet<>();
 		primitives = new HashSet<>();
@@ -149,8 +157,8 @@ public class Project {
 	public void close() {
 		open = false;
 		sourceFiles.clear();
-		ucfFiles.clear();
-		ucfLib.clear();
+		constraintFiles.clear();
+		constraintLib.clear();
 		componentFiles.clear();
 		ipCores.clear();
 		primitives.clear();
@@ -210,14 +218,14 @@ public class Project {
 	}
 
 	public boolean removeConstaintFile(String fileName) {
-		if (Boolean.TRUE.equals(ucfLib.get(fileName))) {
-			ucfLib.remove(fileName);
-			boolean ret = ucfFiles.remove(fileName);
+		if (Boolean.TRUE.equals(constraintLib.get(fileName))) {
+			constraintLib.remove(fileName);
+			boolean ret = constraintFiles.remove(fileName);
 			updateTree();
 			return ret;
 		}
 
-		return removeFile(fileName, ucfFiles, CONSTRAINTS_FOLDER);
+		return removeFile(fileName, constraintFiles, CONSTRAINTS_FOLDER);
 	}
 
 	private boolean removeFile(String fileName, HashSet<String> list, String folder) {
@@ -311,7 +319,7 @@ public class Project {
 			}
 		}
 
-		if (fileName.endsWith(".ucf") && !ucfFiles.contains(fileName)) {
+		if (fileName.endsWith(".ucf") && !constraintFiles.contains(fileName)) {
 			addExistingUCFFile(fileName, false);
 		} else if ((fileName.endsWith(".v") || fileName.endsWith(".luc")) && !sourceFiles.contains(fileName)) {
 			addExistingSourceFile(fileName);
@@ -335,8 +343,8 @@ public class Project {
 	}
 
 	public String addNewConstraintFile(String fileName) {
-		ucfLib.put(fileName, Boolean.FALSE);
-		return addFile(fileName, CONSTRAINTS_FOLDER, ucfFiles);
+		constraintLib.put(fileName, Boolean.FALSE);
+		return addFile(fileName, CONSTRAINTS_FOLDER, constraintFiles);
 	}
 
 	public String getSourceFolder() {
@@ -376,8 +384,8 @@ public class Project {
 	}
 
 	public void addExistingUCFFile(String file, boolean lib) {
-		ucfLib.put(file, Boolean.valueOf(lib));
-		ucfFiles.add(file);
+		constraintLib.put(file, Boolean.valueOf(lib));
+		constraintFiles.add(file);
 	}
 
 	public void addExistingComponentFile(String file) {
@@ -404,14 +412,14 @@ public class Project {
 
 	public HashSet<String> getConstraintFiles(boolean lib) {
 		HashSet<String> hs = new HashSet<>();
-		for (String s : ucfFiles)
-			if (Boolean.valueOf(lib).equals(ucfLib.get(s)))
+		for (String s : constraintFiles)
+			if (Boolean.valueOf(lib).equals(constraintLib.get(s)))
 				hs.add(s);
 		return hs;
 	}
 
 	public boolean isConstraintFromLib(String c) {
-		return Boolean.TRUE.equals(ucfLib.get(c));
+		return Boolean.TRUE.equals(constraintLib.get(c));
 	}
 
 	public HashSet<String> getComponentFiles(boolean debug) {
@@ -453,6 +461,7 @@ public class Project {
 
 	public void setBoardType(String type) {
 		boardType = Board.getFromName(type);
+		builder = boardType.getBuilder();
 	}
 
 	public void setProjectFolder(String folder) {
@@ -760,7 +769,7 @@ public class Project {
 			TreeNode ucfBranch = (TreeNode) projectNodes.get(categoryIdx++);
 			List<TreeElement> ucfLeafs = ucfBranch.getChildren();
 
-			files = new ArrayList<String>(ucfFiles);
+			files = new ArrayList<String>(constraintFiles);
 			Collections.sort(files, new SortIgnoreCase());
 			for (int i = 0; i < files.size(); i++) {
 				String ucf = files.get(i);
@@ -771,7 +780,7 @@ public class Project {
 				}
 			}
 
-			while (ucfFiles.size() < ucfLeafs.size())
+			while (constraintFiles.size() < ucfLeafs.size())
 				ucfBranch.remove(ucfLeafs.size() - 1);
 
 			while (projectNodes.size() > categoryIdx) { // remove extras
@@ -819,7 +828,7 @@ public class Project {
 		if (brdType == null) {
 			throw new ParseException("Board type is missing");
 		}
-		boardType = Board.getFromName(brdType.getValue());
+		setBoardType(brdType.getValue());
 
 		Attribute langType = project.getAttribute(Tags.Attributes.language);
 		if (langType == null)
@@ -848,8 +857,8 @@ public class Project {
 						break;
 					case Tags.ucf:
 						att = file.getAttribute(Tags.Attributes.library);
-						ucfLib.put(file.getText(), Boolean.valueOf(att != null && att.getValue().equals("true")));
-						ucfFiles.add(file.getText());
+						constraintLib.put(file.getText(), Boolean.valueOf(att != null && att.getValue().equals("true")));
+						constraintFiles.add(file.getText());
 						break;
 					case Tags.component:
 						componentFiles.add(file.getText());
@@ -1139,9 +1148,9 @@ public class Project {
 			source.addContent(ele);
 		}
 
-		for (String ucfFile : ucfFiles) {
+		for (String ucfFile : constraintFiles) {
 			Element ele = new Element(Tags.ucf).setText(ucfFile);
-			if (Boolean.TRUE.equals(ucfLib.get(ucfFile)))
+			if (Boolean.TRUE.equals(constraintLib.get(ucfFile)))
 				ele.setAttribute(new Attribute(Tags.Attributes.library, "true"));
 			source.addContent(ele);
 		}
@@ -1205,5 +1214,180 @@ public class Project {
 
 	public DebugInfo getDebugInfo() {
 		return debugInfo;
+	}
+
+	public void checkProject() {
+		Thread thread = new Thread() {
+			public void run() {
+				Util.clearConsole();
+				try {
+					if (!checkForErrors()) {
+						Util.println("No errors detected.");
+					}
+				} catch (IOException e) {
+				}
+			}
+		};
+		thread.start();
+	}
+	
+	private boolean checkforErrors(String folder, String file, boolean printErrors) throws IOException {
+		boolean hasErrors = false;
+
+		if (file.endsWith(".luc") || file.endsWith(".v")) {
+			List<SyntaxError> errors = null;
+			String fullPath = new File(folder + File.separatorChar + file).getAbsolutePath();
+			if (file.endsWith(".luc")) {
+				LucidErrorChecker errorChecker = new LucidErrorChecker(null);
+				errors = errorChecker.getErrors(fullPath);
+			} else if (file.endsWith(".v")) {
+				VerilogErrorChecker errorChecker = new VerilogErrorChecker();
+				errors = errorChecker.getErrors(fullPath);
+			}
+
+			List<SyntaxError> ge = getGlobalErrors(fullPath);
+
+			if (ge != null)
+				if (errors == null && ge.size() > 0)
+					errors = ge;
+				else
+					errors.addAll(ge);
+			hasErrors = addErrors(errors, file, printErrors);
+
+		}
+		return hasErrors;
+	}
+	
+	private boolean checkForIMErrors(InstModule im, List<Module> modules, List<InstModule> instModules) {
+		String fullPath = new File(im.getType().getFolder() + File.separatorChar + im.getType().getFileName()).getAbsolutePath();
+		List<SyntaxError> errors = VerilogLucidModuleFixer.getErrors(im, fullPath, modules, instModules);
+		return addErrors(errors, im.getType().getFileName(), true);
+	}
+
+	
+	public boolean checkForErrors() throws IOException {
+		updateGlobals();
+		String folder = getSourceFolder();
+		List<Module> modules = getModules(null);
+		List<InstModule> list = getModuleList(modules, true, null);
+		boolean hasErrors = false;
+		for (String file : getSourceFiles()) {
+			hasErrors = hasErrors | checkforErrors(folder, file, true);
+		}
+		for (InstModule im : list)
+			if (!im.getType().isPrimitive() && im.getType().getFileName().endsWith(".v"))
+				hasErrors = hasErrors | checkForIMErrors(im, modules, list);
+
+		folder = Locations.COMPONENTS;
+		for (String file : getComponentFiles(false)) {
+			hasErrors = hasErrors | checkforErrors(folder, file, true);
+		}
+
+		return hasErrors;
+	}
+	
+	private void addError(final String text, final int type) {
+		Color color = Theme.editorForegroundColor;
+		switch (type) {
+		case SyntaxError.ERROR:
+			color = Theme.errorTextColor;
+			break;
+		case SyntaxError.WARNING:
+			color = Theme.warningTextColor;
+			break;
+		case SyntaxError.INFO:
+			color = Theme.infoTextColor;
+			break;
+		case SyntaxError.DEBUG:
+			color = Theme.debugTextColor;
+			break;
+		}
+		Util.print(text, color);
+	}
+	
+	private boolean addErrors(List<SyntaxError> errors, String file, boolean printErrors) {
+		boolean hasErrors = false;
+		boolean hasWarnings = false;
+		boolean hasInfo = false;
+		if (errors != null) {
+			for (SyntaxError se : errors) {
+				switch (se.type) {
+				case SyntaxError.ERROR:
+					hasErrors = true;
+					break;
+				case SyntaxError.WARNING:
+					hasWarnings = true;
+					break;
+				case SyntaxError.INFO:
+					hasInfo = true;
+					break;
+				}
+			}
+
+			if ((hasErrors || hasWarnings || hasInfo) && printErrors) {
+
+				if (hasErrors)
+					addError(String.format("Errors in file %s:%s", file, System.lineSeparator()), SyntaxError.ERROR);
+				else if (hasWarnings)
+					addError(String.format("Warnings in file %s:%s", file, System.lineSeparator()), SyntaxError.WARNING);
+				else
+					addError(String.format("Info in file %s:%s", file, System.lineSeparator()), SyntaxError.INFO);
+
+				for (SyntaxError se : errors) {
+					if (se.type != SyntaxError.DEBUG)
+						addError(String.format("    Line %d, Column %d : %s%s", se.line, se.column, se.message, System.lineSeparator()), se.type);
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+		return hasErrors;
+	}
+	
+	public InstModule getLucidSourceTree() throws IOException {
+		updateGlobals();
+		String folder = getSourceFolder();
+		List<Module> modules = getModules(null);
+		List<InstModule> list = getModuleList(modules, false, null);
+
+		for (String file : getSourceFiles())
+			checkforErrors(folder, file, false);
+
+		folder = Locations.COMPONENTS;
+		for (String file : getComponentFiles(true))
+			checkforErrors(folder, file, false);
+
+		return list.get(0); // top level IM
+	}
+	
+	public void build(final boolean debug) {
+		if (Util.isGUI) {
+			thread = new Thread() {
+				public void run() {
+					try {
+						builder.build(Project.this, debug);
+					} catch (Exception e) {
+						Util.print(e);
+						Util.log.log(Level.SEVERE, "Exception with project builder!", e);
+					}
+				}
+			};
+
+			thread.start();
+		} else {
+			builder.build(Project.this, debug);
+		}
+	}
+	
+	public boolean isBuilding() {
+		return thread != null && thread.isAlive();
+	}
+
+	public void stopBuild() {
+		if (isBuilding()) {
+			builder.stopBuild();
+		}
 	}
 }

@@ -48,7 +48,6 @@ import com.alchitry.labs.hardware.MojoLoader;
 import com.alchitry.labs.lucid.Constant;
 import com.alchitry.labs.project.CoreGen;
 import com.alchitry.labs.project.Project;
-import com.alchitry.labs.project.ProjectBuilder;
 import com.alchitry.labs.project.SourceFile;
 import com.alchitry.labs.style.ParseException;
 import com.alchitry.labs.widgets.CustomButton;
@@ -75,7 +74,6 @@ public class MainWindow {
 	private int bottomHeight, oldBottomWeight;
 	private ArrayList<TabChild> tabs;
 	private CustomConsole console;
-	private ProjectBuilder projectBuilder;
 	private MojoLoader loader;
 	private MojoFlasher flasher;
 	private SerialMonitor monitor;
@@ -818,7 +816,7 @@ public class MainWindow {
 					Util.showError("A project must be opened before you can build it!");
 					return;
 				}
-				if (projectBuilder.isBuilding()) {
+				if (project.isBuilding()) {
 					Util.showError("Can't debug project while building!");
 					return;
 				}
@@ -836,7 +834,7 @@ public class MainWindow {
 						return;
 					}
 				}
-				projectBuilder.buildProject(project, true);
+				project.build(true);
 			}
 		});
 
@@ -994,7 +992,6 @@ public class MainWindow {
 		leftWidth = Settings.pref.getInt(Settings.FILE_LIST_WIDTH, 200);
 		bottomHeight = Settings.pref.getInt(Settings.CONSOLE_HEIGHT, 200);
 
-		projectBuilder = new ProjectBuilder();
 		loader = new MojoLoader(display, console);
 		flasher = new MojoFlasher();
 
@@ -1005,7 +1002,6 @@ public class MainWindow {
 
 	public void headlessInit() {
 		project = new Project();
-		projectBuilder = new ProjectBuilder();
 		loader = new MojoLoader();
 		flasher = new MojoFlasher();
 		coreGen = new CoreGen();
@@ -1016,7 +1012,7 @@ public class MainWindow {
 			Util.showError("A project must be opened before you can load it!");
 			return;
 		}
-		if (projectBuilder.isBuilding()) {
+		if (project.isBuilding()) {
 			Util.showError("You must wait for your design to finish building before loading it.");
 			return;
 		}
@@ -1042,7 +1038,7 @@ public class MainWindow {
 			Util.showError("A project must be opened before you can check it!");
 			return;
 		}
-		if (projectBuilder.isBuilding()) {
+		if (project.isBuilding()) {
 			Util.showError("You must wait for the project to finish building.");
 			return;
 		}
@@ -1056,7 +1052,7 @@ public class MainWindow {
 				return;
 			}
 		}
-		projectBuilder.checkProject(project);
+		project.checkProject();
 	}
 
 	public void buildProject() {
@@ -1064,8 +1060,8 @@ public class MainWindow {
 			Util.showError("A project must be opened before you can build it!");
 			return;
 		}
-		if (projectBuilder.isBuilding()) {
-			projectBuilder.stopBuild();
+		if (project.isBuilding()) {
+			project.stopBuild();
 			return;
 		}
 		if (loader.isLoading()) {
@@ -1082,7 +1078,7 @@ public class MainWindow {
 				return;
 			}
 		}
-		projectBuilder.buildProject(project, false);
+		project.build(false);
 	}
 
 	public void addNewFile() {
