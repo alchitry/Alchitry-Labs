@@ -358,6 +358,22 @@ public class Util {
 		}
 		return path.getAbsolutePath();
 	}
+	
+	public static String getYosysCommand() {
+		return "yosys";
+	}
+	
+	public static String getArachneCommand() {
+		return "arachne-pnr";
+	}
+	
+	public static String getIcePackCommand() {
+		return "icepack";
+	}
+	
+	public static String getIceProgCommand() {
+		return "iceprog";
+	}
 
 	public static <T extends Named> boolean removeByName(Collection<T> list, String name) {
 		T t = getByName(list, name);

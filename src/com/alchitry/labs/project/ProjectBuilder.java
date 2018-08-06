@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.SignalSelectionDialog;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.ProjectSignal;
@@ -31,7 +33,7 @@ public abstract class ProjectBuilder {
 	protected int samples;
 	protected List<File> debugSource;
 
-	protected abstract void projectBuilder(final boolean debug);
+	protected abstract void projectBuilder() throws Exception;
 
 	public ProjectBuilder() {
 
@@ -53,9 +55,91 @@ public abstract class ProjectBuilder {
 	}
 
 	public void build(Project project, boolean debug) {
-		this.project = project;
-		workFolder = project.getFolder() + File.separatorChar + "work";
-		projectBuilder(debug);
+		try {
+			MainWindow.mainWindow.setBuilding(true);
+			this.project = project;
+			workFolder = project.getFolder() + File.separatorChar + "work";
+
+			Util.clearConsole();
+			InstModule top = null;
+			if (debug) {
+				if (!Util.isGUI) {
+					Util.showError("Debug builds only work in GUI mode!");
+					return;
+				}
+
+				final InstModule ftop = project.getLucidSourceTree();
+				top = ftop;
+				boolean hasRegInt = false;
+				boolean hasDebugRegInt = false;
+				for (InstModule im : ftop.getChildren()) {
+					if (im.getType().getName().equals("reg_interface"))
+						hasRegInt = true;
+					else if (im.getType().getName().equals("reg_interface_debug"))
+						hasDebugRegInt = true;
+				}
+				if (hasDebugRegInt) {
+					Util.showError("Your project can't contain the reg_interface_debug module!");
+					return;
+				}
+				if (!hasRegInt) {
+					Util.showError("Your project must contain the reg_interface module in mojo_top!");
+					return;
+				}
+				Util.syncExec(new Runnable() {
+					@Override
+					public void run() {
+						SignalSelectionDialog dialog = new SignalSelectionDialog(MainWindow.mainWindow.getShell());
+						debugSignals = dialog.open(ftop);
+						samples = dialog.getSamples();
+					}
+				});
+
+				if (debugSignals == null)
+					return;
+			}
+
+			File destDir = new File(workFolder);
+			if (destDir.exists())
+				FileUtils.deleteDirectory(destDir);
+			if (!destDir.exists() || !destDir.isDirectory()) {
+				boolean success = destDir.mkdir();
+				if (!success) {
+					Util.showError("Could not create project folder!");
+					return;
+				}
+			}
+
+			if (project.checkForErrors()) {
+				return;
+			}
+			
+			if (debug) {
+				File debugDir = new File(workFolder + File.separatorChar + "debug");
+				if (!debugDir.exists() || !debugDir.isDirectory()) {
+					boolean success = debugDir.mkdir();
+					if (!success) {
+						Util.showError("Could not create debug folder!");
+						return;
+					}
+				}
+
+				if ((debugSource = createDebugFiles(debugDir, top)) == null)
+					return;
+			} else {
+				debugSignals = null;
+				debugSource = null;
+			}
+
+			projectBuilder();
+			
+		} catch (Exception e) {
+			Util.print(e);
+			Util.log.log(Level.SEVERE, "Exception with project builder!", e);
+		} finally {
+			
+			MainWindow.mainWindow.setBuilding(false);
+		}
 	}
 
 	private String getVerilogFile(String folder, String file, String srcFolder, List<Module> modules, InstModule im, List<InstModule> list) throws IOException {
