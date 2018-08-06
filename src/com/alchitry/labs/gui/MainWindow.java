@@ -943,7 +943,7 @@ public class MainWindow {
 				if (p != null) {
 					try {
 						project.saveAsXML(p.getProjectFolder(), p.getProjectName());
-						openProject(p.getProjectFolder() + File.separatorChar + p.getProjectName() + ".mojo");
+						openProject(p.getProjectFolder() + File.separatorChar + p.getProjectName() + ".alp");
 					} catch (IOException e1) {
 						Util.showError("Failed to clone project!");
 						e1.printStackTrace();
@@ -1193,7 +1193,7 @@ public class MainWindow {
 
 	public void openProject() {
 		FileDialog dialog = new FileDialog(shlAlchitryLabs, SWT.OPEN);
-		dialog.setFilterExtensions(new String[] { "*.mojo", "*" });
+		dialog.setFilterExtensions(new String[] { "*.alp", "*" });
 		dialog.setFilterPath(Util.getWorkspace());
 		String path = dialog.open();
 		if (path != null)

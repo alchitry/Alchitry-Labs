@@ -291,7 +291,7 @@ public class NewProjectDialog extends Dialog {
 		String[] projFiles = destDir.list(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.endsWith(".mojo");
+				return name.endsWith(".alp");
 			}
 		});
 
@@ -301,7 +301,7 @@ public class NewProjectDialog extends Dialog {
 		}
 
 		File projFile = new File(destDir.getAbsolutePath() + File.separator + projFiles[0]);
-		File newProjFile = new File(destDir.getAbsolutePath() + File.separator + projectName + ".mojo");
+		File newProjFile = new File(destDir.getAbsolutePath() + File.separator + projectName + ".alp");
 
 		if (!projFile.renameTo(newProjFile)) {
 			Util.showError("Could not rename project file!");

@@ -9,10 +9,10 @@ public abstract class Board {
 	public final static ArrayList<Board> boards = new ArrayList<>();
 	
 	static {
+		boards.add(new AlchitryCu());
+		boards.add(new AlchitryAu());
 		boards.add(new MojoV3());
 		boards.add(new MojoV2());
-		boards.add(new AlchitryAu());
-		boards.add(new AlchitryCu());
 	}
 	
 	public abstract String getFPGAName();

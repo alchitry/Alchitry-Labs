@@ -119,7 +119,7 @@ public class Project {
 		projectName = name;
 		projectFolder = folder;
 		setBoardType(board);
-		projectFile = name + ".mojo";
+		projectFile = name + ".alp";
 		language = lang;
 		open = true;
 
@@ -1107,7 +1107,7 @@ public class Project {
 		String oldFolder = projectFolder;
 		String oldFile = projectFile;
 
-		projectFile = name + ".mojo";
+		projectFile = name + ".alp";
 		projectFolder = folder;
 
 		File srcDir = new File(oldFolder);
