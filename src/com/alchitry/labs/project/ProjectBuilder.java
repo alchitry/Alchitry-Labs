@@ -204,7 +204,8 @@ public abstract class ProjectBuilder {
 		List<Module> modules = project.getModules(debugSource);
 		Module topModule = null;
 		for (Module m : modules) {
-			if (Objects.equals(m.getFileName(), "mojo_top_0_debug.luc")) {
+			String fileName = m.getFileName();
+			if (fileName != null && fileName.endsWith("_0_debug.luc")) {
 				topModule = m;
 				break;
 			}

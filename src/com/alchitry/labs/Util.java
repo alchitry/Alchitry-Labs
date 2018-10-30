@@ -63,6 +63,9 @@ public class Util {
 	public static final int ECLIPSE = 4;
 	public static int ideType = UNKNOWN;
 
+	public static String[] constraintSuffixes = new String[] { ".ucf" };
+	public static String[] sourceSuffixes = new String[] { ".v", ".luc" };
+
 	static {
 		String os = System.getProperty("os.name");
 		isWindows = os.startsWith("Windows");
@@ -103,7 +106,7 @@ public class Util {
 	public static void setConsole(CustomConsole console) {
 		Util.console = console;
 	}
-	
+
 	public static CustomConsole getConsole() {
 		return console;
 	}
@@ -126,7 +129,7 @@ public class Util {
 			result = confirm.open() == SWT.YES;
 		}
 	}
-	
+
 	public static boolean askQuestion(String message) {
 		return askQuestion("Question?", message);
 	}
@@ -362,21 +365,49 @@ public class Util {
 		}
 		return path.getAbsolutePath();
 	}
-	
+
+	public static String getVivadoCommand() {
+		File path = null;
+		if (isWindows)
+			path = new File("C:\\Xilinx\\Vivado");
+		else
+			path = new File("/opt/Xilinx/Vivado");
+
+		if (!path.isDirectory())
+			return null;
+		File[] subs = path.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY);
+		for (File f : subs) {
+			try {
+				Float.parseFloat(f.getName());
+				path = f;
+				break;
+			} catch (NumberFormatException e) {
+
+			}
+		}
+		return path.getAbsolutePath();
+	}
+
 	public static String getYosysCommand() {
 		return "yosys";
 	}
-	
+
 	public static String getArachneCommand() {
 		return "arachne-pnr";
 	}
-	
+
 	public static String getIcePackCommand() {
 		return "icepack";
 	}
-	
+
 	public static String getIceProgCommand() {
 		return "iceprog";
+	}
+	
+	public static String getAuLoaderCommand() {
+		if (ideType == ECLIPSE)
+			return "tools/linux/bin/auloader";
+		return "auloader";
 	}
 
 	public static <T extends Named> boolean removeByName(Collection<T> list, String name) {
@@ -448,7 +479,7 @@ public class Util {
 
 		SerialPort serialPort = new SerialPort(portName);
 		serialPort.openPort();
-		serialPort.setParams(115200, 8, 1, 0);
+		serialPort.setParams(1000000, 8, 1, 0);
 
 		return serialPort;
 	}
@@ -473,7 +504,7 @@ public class Util {
 			}
 		}
 	};
-	
+
 	public static void startStreamPrinter(final InputStream s, final boolean red) {
 		Thread printer = new Thread() {
 			public void run() {
@@ -494,10 +525,10 @@ public class Util {
 		};
 		printer.start();
 	}
-	
+
 	public static Process runCommand(List<String> cmd) throws InterruptedException {
 		ProcessBuilder pb = new ProcessBuilder(cmd);
-		
+
 		Process process;
 
 		try {
@@ -510,7 +541,25 @@ public class Util {
 
 		startStreamPrinter(process.getInputStream(), false);
 		startStreamPrinter(process.getErrorStream(), true);
-		
+
 		return process;
+	}
+
+	private static boolean endsWithSuffixList(String testString, String[] suffixList) {
+		if (testString == null)
+			return false;
+		for (String suffix : suffixList) {
+			if (testString.endsWith(suffix))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isConstraintFile(String fileName) {
+		return endsWithSuffixList(fileName, constraintSuffixes);
+	}
+
+	public static boolean isSourceFile(String fileName) {
+		return endsWithSuffixList(fileName, sourceSuffixes);
 	}
 }

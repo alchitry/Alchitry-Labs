@@ -134,7 +134,7 @@ public class SerialMonitor {
 			port = new SerialPort(p);
 			try {
 				port.openPort();
-				port.setParams(115200, 8, 1, 0);
+				port.setParams(1000000, 8, 1, 0);
 				port.addEventListener(new SerialPortEventListener() {
 					@Override
 					public void serialEvent(SerialPortEvent event) {

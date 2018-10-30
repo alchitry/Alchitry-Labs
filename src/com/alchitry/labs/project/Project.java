@@ -296,9 +296,9 @@ public class Project {
 		File dest = null;
 		File src = new File(filePath);
 		String fileName = src.getName();
-		if (fileName.endsWith(".ucf")) {
+		if (Util.isConstraintFile(fileName)) {
 			dest = new File(getConstraintFolder() + File.separator + fileName);
-		} else if (fileName.endsWith(".v") || fileName.endsWith(".luc")) {
+		} else if (Util.isSourceFile(fileName)) {
 			dest = new File(getSourceFolder() + File.separator + fileName);
 		} else {
 			return false;
@@ -318,9 +318,9 @@ public class Project {
 			}
 		}
 
-		if (fileName.endsWith(".ucf") && !constraintFiles.contains(fileName)) {
-			addExistingUCFFile(fileName, false);
-		} else if ((fileName.endsWith(".v") || fileName.endsWith(".luc")) && !sourceFiles.contains(fileName)) {
+		if (Util.isConstraintFile(fileName) && !constraintFiles.contains(fileName)) {
+			addExistingConstraintFile(fileName, false);
+		} else if (Util.isSourceFile(fileName) && !sourceFiles.contains(fileName)) {
 			addExistingSourceFile(fileName);
 		}
 
@@ -382,7 +382,7 @@ public class Project {
 		sourceFiles.add(file);
 	}
 
-	public void addExistingUCFFile(String file, boolean lib) {
+	public void addExistingConstraintFile(String file, boolean lib) {
 		constraintLib.put(file, Boolean.valueOf(lib));
 		constraintFiles.add(file);
 	}
@@ -854,7 +854,7 @@ public class Project {
 						}
 						sourceFiles.add(file.getText());
 						break;
-					case Tags.ucf:
+					case Tags.constraint:
 						att = file.getAttribute(Tags.Attributes.library);
 						constraintLib.put(file.getText(), Boolean.valueOf(att != null && att.getValue().equals("true")));
 						constraintFiles.add(file.getText());
@@ -1148,7 +1148,7 @@ public class Project {
 		}
 
 		for (String ucfFile : constraintFiles) {
-			Element ele = new Element(Tags.ucf).setText(ucfFile);
+			Element ele = new Element(Tags.constraint).setText(ucfFile);
 			if (Boolean.TRUE.equals(constraintLib.get(ucfFile)))
 				ele.setAttribute(new Attribute(Tags.Attributes.library, "true"));
 			source.addContent(ele);
@@ -1233,7 +1233,7 @@ public class Project {
 	private boolean checkforErrors(String folder, String file, boolean printErrors) throws IOException {
 		boolean hasErrors = false;
 
-		if (file.endsWith(".luc") || file.endsWith(".v")) {
+		if (Util.isSourceFile(file)) {
 			List<SyntaxError> errors = null;
 			String fullPath = new File(folder + File.separatorChar + file).getAbsolutePath();
 			if (file.endsWith(".luc")) {
@@ -1242,6 +1242,9 @@ public class Project {
 			} else if (file.endsWith(".v")) {
 				VerilogErrorChecker errorChecker = new VerilogErrorChecker();
 				errors = errorChecker.getErrors(fullPath);
+			} else {
+				Util.println("Unknown source file extension " + file + "!", true);
+				return false;
 			}
 
 			List<SyntaxError> ge = getGlobalErrors(fullPath);

@@ -1,6 +1,6 @@
 package com.alchitry.labs.boards;
 
-import com.alchitry.labs.hardware.CopperLoader;
+import com.alchitry.labs.hardware.CuLoader;
 import com.alchitry.labs.hardware.ProjectLoader;
 import com.alchitry.labs.project.IceStormBuilder;
 import com.alchitry.labs.project.ProjectBuilder;
@@ -44,7 +44,7 @@ public class AlchitryCu extends Board {
 
 	@Override
 	public ProjectLoader getLoader() {
-		return new CopperLoader();
+		return new CuLoader();
 	}
 
 }

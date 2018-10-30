@@ -39,7 +39,7 @@ public class ComponentsDialog extends Dialog {
 
 	public static final String CATEGORY_TAG = "category";
 	public static final String MODULE_TAG = "module";
-	public static final String UCF_TAG = "constraint";
+	public static final String CONSTRAINT_TAG = "constraint";
 	public static final String DEPENDS_TAG = "depends";
 	public static final String DESCRIP_TAG = "description";
 	public static final String INPUT_TAG = "input";
@@ -214,8 +214,8 @@ public class ComponentsDialog extends Dialog {
 				Util.showError("The component " + file + " could not be found!");
 				return;
 			}
-			if (file.endsWith(".ucf"))
-				project.addExistingUCFFile(file,true);
+			if (file.endsWith(".ucf") || file.endsWith(".pcf"))
+				project.addExistingConstraintFile(file,true);
 			else
 				project.addExistingComponentFile(file);
 		}

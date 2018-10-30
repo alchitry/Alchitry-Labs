@@ -295,7 +295,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	private SignalWidth convertToFixed(SignalWidth sw) {
 		return convertToFixed(sw, paramsProvider, constParser);
 	}
-	
+
 	public static SignalWidth convertToFixed(SignalWidth sw, ConstProvider paramsProvider, ConstProvider constParser) {
 		if (sw.isFixed())
 			return sw;

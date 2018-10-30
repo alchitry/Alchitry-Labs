@@ -41,6 +41,7 @@ public class Theme {
 	public static Color toolBarClickColor;
 	public static Color consoleBackgroundColor;
 	public static Color consoleForegoundColor;
+	public static Color successTextColor;
 	public static Color errorTextColor;
 	public static Color warningTextColor;
 	public static Color infoTextColor;
@@ -98,6 +99,7 @@ public class Theme {
 			toolBarClickColor = darkAccentColor;
 			consoleBackgroundColor = editorBackgroundColor;
 			consoleForegoundColor = editorForegroundColor;
+			successTextColor = new Color(display, 25, 255, 25);
 			errorTextColor = new Color(display, 255, 25, 25);
 			warningTextColor = new Color(display, 222, 175, 0);
 			debugTextColor = new Color(display, 128, 255, 0);
@@ -151,6 +153,7 @@ public class Theme {
 			toolBarClickColor = darkAccentColor;
 			consoleBackgroundColor = editorBackgroundColor;
 			consoleForegoundColor = editorForegroundColor;
+			successTextColor = new Color(display, 25, 255, 25);
 			errorTextColor = new Color(display, 255, 25, 25);
 			warningTextColor = new Color(display, 255, 255, 25);
 			infoTextColor = new Color(display, 0, 189, 255);
@@ -208,6 +211,7 @@ public class Theme {
 		toolBarClickColor.dispose();
 		consoleBackgroundColor.dispose();
 		consoleForegoundColor.dispose();
+		successTextColor.dispose();
 		errorTextColor.dispose();
 		warningTextColor.dispose();
 		infoTextColor.dispose();

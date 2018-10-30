@@ -4,7 +4,7 @@ public class Tags {
 	public final static String project = "project";
 	public final static String files = "files";
 	public final static String source = "src";
-	public final static String ucf = "ucf";
+	public final static String constraint = "constraint";
 	public final static String component = "component";
 	public final static String core = "core";
 	

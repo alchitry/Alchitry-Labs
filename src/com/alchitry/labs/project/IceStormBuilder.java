@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.ParseException;
 
 public class IceStormBuilder extends ProjectBuilder {
@@ -23,17 +24,21 @@ public class IceStormBuilder extends ProjectBuilder {
 			Util.showError("Error building the project", "Error with getting list of Verilog files!");
 		}
 		String srcFolder = workFolder + File.separatorChar + "verilog";
+		
+		String escapedWorkFolder = workFolder.replace(" ", "\\ ");
 
 		ArrayList<String> yosysCommand = new ArrayList<>();
 		yosysCommand.add(Util.getYosysCommand());
 		yosysCommand.add("-p");
-		yosysCommand.add("synth_ice40 -top alchitry_top_0 -blif " + workFolder + File.separator + "alchitry.blif");
+		yosysCommand.add("synth_ice40 -top alchitry_top_0 -blif " + escapedWorkFolder + File.separator + "alchitry.blif");
 		for (String file : vFiles)
 			yosysCommand.add(srcFolder + File.separatorChar + file);
+		
+		Util.println(yosysCommand.toString());
 
 		builder = Util.runCommand(yosysCommand);
 		builder.waitFor();
-		
+
 		Util.println("");
 		Util.println("Finished synthesis.");
 		Util.println("");
@@ -61,21 +66,27 @@ public class IceStormBuilder extends ProjectBuilder {
 
 		builder = Util.runCommand(arachneCommand);
 		builder.waitFor();
-		
+
 		Util.println("");
 		Util.println("Finished placement.");
-		Util.println("");
 
 		ArrayList<String> icepacCommand = new ArrayList<>();
 
 		icepacCommand.add(Util.getIcePackCommand());
 		icepacCommand.add(workFolder + File.separator + "alchitry.txt");
 		icepacCommand.add(workFolder + File.separator + "alchitry.bin");
-		
+
 		builder = Util.runCommand(icepacCommand);
 		builder.waitFor();
 
-		Util.println("");
-		Util.println("Finished building project.");
+		File binFile = new File(workFolder + File.separator + "alchitry.bin");
+
+		if (binFile.exists()) {
+			Util.println("");
+			Util.println("Finished building project.", Theme.successTextColor);
+		} else {
+			Util.println("");
+			Util.println("Bin file (" + binFile.getAbsolutePath() + ") could not be found! The build probably failed.", true);
+		}
 	}
 }

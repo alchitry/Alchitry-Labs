@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.ParseException;
 
 public class ISEBuilder extends ProjectBuilder {
@@ -61,7 +62,7 @@ public class ISEBuilder extends ProjectBuilder {
 		if (!Util.isIseUpdated()) // only ISE 14.7 supported
 			if (!Util.askQuestion("ISE is Out of Date", "Only version 14.7 of ISE is supported. Continue anyway?"))
 				return;
-		
+
 		ArrayList<String> cmd = new ArrayList<>();
 		cmd.add(planAhead);
 		cmd.add("-nojournal");
@@ -74,15 +75,17 @@ public class ISEBuilder extends ProjectBuilder {
 		builder = Util.runCommand(cmd);
 
 		builder.waitFor();
-		
-		File binFile = new File(workFolder + File.separatorChar + "planAhead" + File.separatorChar + project.getProjectName() + File.separatorChar
-				+ project.getProjectName() + ".runs" + File.separatorChar + "impl_1" + File.separatorChar + project.getTop().split("\\.")[0] + "_0.bin");
+
+		File binFile = new File(workFolder + File.separatorChar + projectDir + File.separatorChar + project.getProjectName() + File.separatorChar + project.getProjectName()
+				+ ".runs" + File.separatorChar + "impl_1" + File.separatorChar + project.getTop().split("\\.")[0] + "_0.bin");
 		if (binFile.exists()) {
 			FileUtils.copyFile(binFile, new File(workFolder + File.separatorChar + "alchitry.bin"));
+			Util.println("");
+			Util.println("Finished building project.", Theme.successTextColor);
+		} else {
+			Util.println("");
+			Util.println("Bin file (" + binFile.getAbsolutePath() + ") could not be found! The build probably failed.", true);
 		}
-
-		Util.println("");
-		Util.println("Finished building project.");
 	}
 
 	private String getSpacedList(Collection<String> list, String prefix) {

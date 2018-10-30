@@ -1,0 +1,21 @@
+module alchitry_top (
+    input clk,              // 50MHz clock
+    input rst_n,            // reset button (active low)
+    output led [8]          // 8 user controllable LEDs
+  ) {
+  
+  sig rst;                  // reset signal
+  
+  .clk(clk) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    reset_conditioner reset_cond;
+  }
+  
+  always {
+    reset_cond.in = ~rst_n; // input raw inverted reset signal
+    rst = reset_cond.out;   // conditioned reset
+    
+    led = 8h00;             // turn LEDs off
+  }
+}

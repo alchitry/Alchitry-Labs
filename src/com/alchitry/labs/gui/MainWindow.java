@@ -892,7 +892,7 @@ public class MainWindow {
 					return;
 				}
 				FileDialog dialog = new FileDialog(shlAlchitryLabs, SWT.MULTI);
-				dialog.setFilterExtensions(new String[] { "*.luc;*.v;*.ucf", "*" });
+				dialog.setFilterExtensions(new String[] { "*.luc;*.v;*.ucf",".pcf", "*" });
 				String path = dialog.open();
 				if (path != null) {
 					String[] files = dialog.getFileNames();
@@ -1245,6 +1245,13 @@ public class MainWindow {
 			return true;
 		}
 		return false;
+	}
+	
+	public void openSVG() {
+		ConstraintsEditor svg = new ConstraintsEditor(tabFolder);
+		tabs.add(svg);
+		svg.grabFocus();
+		tabFolder.opened = true;
 	}
 
 	public boolean openWave() {

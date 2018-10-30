@@ -1,14 +1,17 @@
 package com.alchitry.labs.boards;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.hardware.AuLoader;
 import com.alchitry.labs.hardware.ProjectLoader;
 import com.alchitry.labs.project.ProjectBuilder;
+import com.alchitry.labs.project.VivadoBuilder;
 
 public class AlchitryAu extends Board {
 
 	@Override
 	public String getFPGAName() {
-		return "xc7a35t-1ftg256c";
+		return "xc7a35tftg256-1";
 	}
 
 	@Override
@@ -33,8 +36,7 @@ public class AlchitryAu extends Board {
 
 	@Override
 	public ProjectBuilder getBuilder() {
-		Util.showError("There is no builder for Alchitry Au yet!");
-		return null;
+		return new VivadoBuilder();
 	}
 
 	@Override
@@ -44,8 +46,7 @@ public class AlchitryAu extends Board {
 
 	@Override
 	public ProjectLoader getLoader() {
-		// TODO Auto-generated method stub
-		return null;
+		return new AuLoader();
 	}
 
 }
