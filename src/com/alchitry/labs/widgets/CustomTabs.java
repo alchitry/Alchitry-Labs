@@ -39,7 +39,7 @@ import com.alchitry.labs.gui.Theme;
 public class CustomTabs extends Composite implements Listener {
 	private ArrayList<CustomTab> tabs;
 	private ArrayList<CustomTab> hiddenTabs;
-	private ArrayList<TabChild> editors;
+	private ArrayList<TabChild> contents;
 	private Canvas canvas;
 	private MainWindow mainWindow;
 	public boolean opened = false;
@@ -54,7 +54,7 @@ public class CustomTabs extends Composite implements Listener {
 
 		tabs = new ArrayList<CustomTab>();
 		hiddenTabs = new ArrayList<CustomTab>();
-		editors = new ArrayList<>();
+		contents = new ArrayList<>();
 		selected = -1;
 
 		setBackground(Theme.windowBackgroundColor);
@@ -123,14 +123,14 @@ public class CustomTabs extends Composite implements Listener {
 							Integer idx = (Integer) event.data;
 							TabChild tab = mainWindow.getTabChild(idx);
 
-							int tabIndex = editors.indexOf(tab);
+							int tabIndex = contents.indexOf(tab);
 							if (tabIndex >= 0) {
 								moveTab(tabIndex, event.x, event.y);
 							} else {
 								tab.switchFolder(CustomTabs.this);
 							}
 
-							if (!opened && !editors.get(0).isModified())
+							if (!opened && !contents.get(0).isModified())
 								close(0);
 
 							opened = true;
@@ -209,7 +209,7 @@ public class CustomTabs extends Composite implements Listener {
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				getDisplay().removeFilter(SWT.FocusIn, focusListener);
-				for (TabChild c : editors)
+				for (TabChild c : contents)
 					c.dispose();
 				for (CustomTab t : tabs)
 					t.dispose();
@@ -290,11 +290,11 @@ public class CustomTabs extends Composite implements Listener {
 	}
 
 	public List<TabChild> getTabChildren() {
-		return editors;
+		return contents;
 	}
 
 	public TabChild getTabChild(int idx) {
-		return editors.get(idx);
+		return contents.get(idx);
 	}
 
 	private int getTab(Point p) {
@@ -317,7 +317,7 @@ public class CustomTabs extends Composite implements Listener {
 
 	private void moveTab(int fromIdx, int toIdx) {
 		move(tabs, fromIdx, toIdx);
-		move(editors, fromIdx, toIdx);
+		move(contents, fromIdx, toIdx);
 		if (toIdx > fromIdx)
 			toIdx--;
 		if (selected == fromIdx)
@@ -346,7 +346,7 @@ public class CustomTabs extends Composite implements Listener {
 		tab.addListener(SWT.Selection, this);
 		tab.addListener(SWT.Close, this);
 		tabs.add(tab);
-		editors.add(e);
+		contents.add(e);
 		resize();
 		if (selected == -1)
 			setSelection(tabs.size() - 1);
@@ -399,11 +399,11 @@ public class CustomTabs extends Composite implements Listener {
 			}
 
 			for (int i = 0; i < tabs.size(); i++) {
-				TabChild e = editors.get(i);
+				TabChild e = contents.get(i);
 				Point p = getSize();
 				e.setBounds(0, h, p.x, p.y - h);
 
-				if (selected >= 0 && editors.get(selected) == e) {
+				if (selected >= 0 && contents.get(selected) == e) {
 					e.setVisible(true);
 				} else {
 					e.setVisible(false);
@@ -438,11 +438,11 @@ public class CustomTabs extends Composite implements Listener {
 	private void updateTabs() {
 		TabChild sel = null;
 		if (selected >= 0) {
-			sel = editors.get(selected);
+			sel = contents.get(selected);
 		}
 
-		for (int i = 0; i < editors.size(); i++) {
-			TabChild c = editors.get(i);
+		for (int i = 0; i < contents.size(); i++) {
+			TabChild c = contents.get(i);
 			CustomTab t = tabs.get(i);
 			t.setIndex(i);
 			if (c == sel) {
@@ -475,7 +475,7 @@ public class CustomTabs extends Composite implements Listener {
 		case SWT.Close:
 			for (int i = 0; i < tabs.size(); i++) {
 				if (tabs.get(i) == event.widget) {
-					TabChild control = editors.get(i);
+					TabChild control = contents.get(i);
 					close(control);
 					break;
 				}
@@ -487,12 +487,12 @@ public class CustomTabs extends Composite implements Listener {
 	public TabChild getSelectedControl() {
 		if (selected < 0)
 			return null;
-		return editors.get(selected);
+		return contents.get(selected);
 	}
 
 	public void setSelection(Control c) {
-		for (int i = 0; i < editors.size(); i++) {
-			if (editors.get(i).equals(c)) {
+		for (int i = 0; i < contents.size(); i++) {
+			if (contents.get(i).equals(c)) {
 				setSelection(i);
 				break;
 			}
@@ -503,7 +503,7 @@ public class CustomTabs extends Composite implements Listener {
 		selected = (selected + 1) % tabs.size();
 		updateTabs();
 		redraw();
-		editors.get(selected).forceFocus();
+		contents.get(selected).forceFocus();
 	}
 
 	public void prevTab() {
@@ -512,7 +512,7 @@ public class CustomTabs extends Composite implements Listener {
 			selected = tabs.size() - 1;
 		updateTabs();
 		redraw();
-		editors.get(selected).forceFocus();
+		contents.get(selected).forceFocus();
 	}
 
 	public void setSelection(int i) {
@@ -522,8 +522,8 @@ public class CustomTabs extends Composite implements Listener {
 	}
 
 	public void setText(Control c, String text) {
-		for (int i = 0; i < editors.size(); i++) {
-			if (editors.get(i) == c) {
+		for (int i = 0; i < contents.size(); i++) {
+			if (contents.get(i) == c) {
 				tabs.get(i).setText(text);
 				tabs.get(i).redraw();
 				break;
@@ -534,8 +534,8 @@ public class CustomTabs extends Composite implements Listener {
 	}
 
 	public String getText(Control c) {
-		for (int i = 0; i < editors.size(); i++) {
-			if (editors.get(i).equals(c)) {
+		for (int i = 0; i < contents.size(); i++) {
+			if (contents.get(i).equals(c)) {
 				return tabs.get(i).getText();
 			}
 		}
@@ -543,20 +543,20 @@ public class CustomTabs extends Composite implements Listener {
 	}
 
 	public void remove(TabChild e) {
-		int idx = editors.indexOf(e);
+		int idx = contents.indexOf(e);
 		if (idx >= 0)
 			remove(idx);
 	}
 
 	public void remove(int i) {
-		editors.remove(i);
+		contents.remove(i);
 		tabs.get(i).dispose();
 		tabs.remove(i);
 
 		if (selected == i) {
 			if (selected > 0)
 				setSelection(selected - 1);
-			else if (editors.size() > 0)
+			else if (contents.size() > 0)
 				setSelection(0);
 			else
 				setSelection(-1);
@@ -565,7 +565,7 @@ public class CustomTabs extends Composite implements Listener {
 		}
 		Composite p = getParent();
 		Composite pp = p.getParent();
-		if (editors.size() == 0 && !mainWindow.isSideSash(p)) {
+		if (contents.size() == 0 && !mainWindow.isSideSash(p)) {
 			int[] weights = ((SashForm) pp).getWeights();
 			dispose();
 			for (Control c : p.getChildren())
@@ -581,7 +581,7 @@ public class CustomTabs extends Composite implements Listener {
 
 			mainWindow.setDefaultFolder();
 		} else {
-			if (editors.size() == 0) {
+			if (contents.size() == 0) {
 				this.opened = false;
 				final StyledCodeEditor codeEditor = new StyledCodeEditor(this, SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL, null, true);
 				mainWindow.addEditor(codeEditor);
@@ -594,12 +594,12 @@ public class CustomTabs extends Composite implements Listener {
 	public void close() {
 		if (selected < tabs.size()) {
 			close(selected);
-			editors.get(selected).forceFocus();
+			contents.get(selected).forceFocus();
 		}
 	}
 
 	public void close(int i) {
-		TabChild e = editors.get(i);
+		TabChild e = contents.get(i);
 		if (mainWindow.closeTab(e)) {
 			e.dispose();
 			remove(i);
@@ -609,13 +609,13 @@ public class CustomTabs extends Composite implements Listener {
 
 	public void close(TabChild c) {
 
-		int idx = editors.indexOf(c);
+		int idx = contents.indexOf(c);
 		if (idx >= 0)
 			close(idx);
 	}
 
 	public void setTabTextColor(Control c, Color tabTextColor) {
-		int idx = editors.indexOf(c);
+		int idx = contents.indexOf(c);
 		if (idx < 0 || idx > tabs.size())
 			return;
 		tabs.get(idx).setForeground(tabTextColor);

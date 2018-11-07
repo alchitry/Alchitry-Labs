@@ -1,0 +1,990 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="65mm" height="45mm" version="1.1" viewBox="0 0 65 45" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <g shape-rendering="auto">
+   <path d="m1.5002 1.6456e-4 -1.5002 1.5002v42l1.5002 1.4996h62l1.5002-1.4996v-42l-1.5002-1.5002zm0.99994 1.3999a1.1 1.1 0 0 1 1.0997 1.1002 1.1 1.1 0 0 1-1.0997 1.0997 1.1 1.1 0 0 1-1.1002-1.0997 1.1 1.1 0 0 1 1.1002-1.1002zm60 0a1.1 1.1 0 0 1 1.1002 1.1002 1.1 1.1 0 0 1-1.1002 1.0997 1.1 1.1 0 0 1-1.1002-1.0997 1.1 1.1 0 0 1 1.1002-1.1002zm-60.496 20.574a0.49003 0.49003 0 0 1 0.48989 0.49041 0.49003 0.49003 0 0 1-0.48989 0.48989 0.49003 0.49003 0 0 1-0.48989-0.48989 0.49003 0.49003 0 0 1 0.48989-0.49041zm0 2.5487a0.49003 0.49003 0 0 1 0.48989 0.49041 0.49003 0.49003 0 0 1-0.48989 0.48989 0.49003 0.49003 0 0 1-0.48989-0.48989 0.49003 0.49003 0 0 1 0.48989-0.49041zm0.49558 16.877a1.1 1.1 0 0 1 1.0997 1.1002 1.1 1.1 0 0 1-1.0997 1.0997 1.1 1.1 0 0 1-1.1002-1.0997 1.1 1.1 0 0 1 1.1002-1.1002zm60 0a1.1 1.1 0 0 1 1.1002 1.1002 1.1 1.1 0 0 1-1.1002 1.0997 1.1 1.1 0 0 1-1.1002-1.0997 1.1 1.1 0 0 1 1.1002-1.1002z" color="#000000" color-rendering="auto" fill="#141414" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <g fill="#cfcfcf">
+    <path d="m2.0047 4.8469s-0.66856 0-0.66856 0.66856 0.66856 0.66856 0.66856 0.66856h1.2848s0.66856-2e-7 0.66856-0.66856c2e-7 -0.66856-0.66856-0.66856-0.66856-0.66856z" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <path d="m2.0047 13.463s-0.66856 0-0.66856 0.66856 0.66856 0.66856 0.66856 0.66856h1.2848s0.66856 0 0.66856-0.66856c2e-7 -0.66856-0.66856-0.66856-0.66856-0.66856z" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <path d="m7.4872 4.9783s-0.53716 0-0.53716 0.53716c0 0.53716 0.53716 0.53716 0.53716 0.53716h1.0323s0.53716-2e-7 0.53716-0.53716c3e-7 -0.53716-0.53716-0.53716-0.53716-0.53716z" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <path d="m7.4872 13.595s-0.53716 0-0.53716 0.53716 0.53716 0.53716 0.53716 0.53716h1.0323s0.53716 0 0.53716-0.53716c3e-7 -0.53716-0.53716-0.53716-0.53716-0.53716z" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="12.586" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="12.09" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="11.599" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="11.099" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="10.604" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="10.099" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="9.0772" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="8.5817" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="8.0905" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="7.5906" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="7.095" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="8.0173" y="6.5906" width=".80527" height=".4336" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+  </g>
+  <text x="1.2771896" y="29.380743" fill="#ffffff" font-family="Ubuntu" font-size="1.4048px" letter-spacing="0px" stroke-width=".1317px" word-spacing="0px" style="line-height:3.2924006px" xml:space="preserve"><tspan x="1.2771896" y="29.380743" fill="#ffffff" stroke-width=".1317px">Done</tspan></text>
+  <text x="59.014763" y="28.043375" fill="#ffffff" font-family="Ubuntu" font-size="1.8696px" letter-spacing="0px" stroke-width=".17527px" word-spacing="0px" style="line-height:4.38184786px" xml:space="preserve"><tspan x="59.014763" y="28.043375" fill="#ffffff" stroke-width=".17527px">Reset</tspan></text>
+  <g shape-rendering="auto">
+   <g fill="#fff">
+    <rect x="3.4712" y="24.866" width="1.2765" height=".295" ry=".1475" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="3.4822" y="22.265" width="1.2765" height=".295" ry=".1475" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect transform="rotate(-90)" x="-23.051" y="3.9729" width="1.2765" height=".295" ry=".1475" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+   <rect x=".12282" y="5.2916" width="8.4934" height="9.0667" color="#000000" color-rendering="auto" fill="#e6e6e6" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </g>
+  <g transform="translate(.81411 .24777)" fill="#5f5f5f" shape-rendering="auto">
+   <rect x="5.1148" y="6.7543" width="1.1858" height="1.9822" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="5.1148" y="10.418" width="1.1858" height="1.9822" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </g>
+  <g transform="matrix(.49342 0 0 .77902 3.7055 2.3641)" fill="#e6e6e6" shape-rendering="auto">
+   <rect x="5.1148" y="6.7543" width="1.1858" height="1.9822" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="5.1148" y="10.418" width="1.1858" height="1.9822" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </g>
+  <g fill="#cfcfcf" shape-rendering="auto">
+   <rect x="9.2559" y="33.324" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="10.506" y="33.324" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="11.806" y="33.324" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="13.056" y="33.324" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="9.2559" y="38.574" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="10.506" y="38.574" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="11.806" y="38.574" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="13.056" y="38.574" width=".68818" height="2.0524" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="22.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="23.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="23.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="24.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="24.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="25.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="25.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="26.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="26.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="27.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="27.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="8.275" y="28.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="22.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="23.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="23.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="24.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="24.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="25.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="25.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="26.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="26.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="27.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="27.55" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="15.275" y="28.05" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="9.0633" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="9.5721" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="10.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="10.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="11.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="11.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="12.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="12.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="13.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="13.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="14.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-22.225" y="14.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="9.0633" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="9.5721" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="10.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="10.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="11.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="11.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="12.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="12.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="13.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="13.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="14.072" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect transform="rotate(-90)" x="-29.225" y="14.572" width=".45" height=".4" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="49.175" y="25.85" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="49.175" y="27.1" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="49.175" y="28.4" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="49.175" y="29.65" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="56.225" y="25.85" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="56.225" y="27.1" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="56.225" y="28.4" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="56.225" y="29.65" width="1.75" height=".5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </g>
+  <g transform="translate(-8.1688e-8 -1.8618e-5)" shape-rendering="auto">
+   <g fill="#cfcfcf">
+    <rect x="20.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="20.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="20.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="20.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+   <path d="m18.835 2.4601 3.49e-4 1.264 0.23117 0.23152v1.1326l-0.23117 0.22213v1.2295h15.33v-4.0798z" color="#000000" color-rendering="auto" fill="#fef9eb" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="19.974" y="3.0221" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="19.974" y="5.0221" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <g fill="#fcd950">
+    <rect x="20.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="20.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="23.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="22.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="21.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="20.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="20.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+  </g>
+  <g transform="translate(-8.1688e-8 -1.8618e-5)" shape-rendering="auto">
+   <g fill="#cfcfcf">
+    <rect x="45.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.361" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.861" y="1.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.361" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="45.861" y="6.2364" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+   <path d="m44.335 2.4601 3.49e-4 1.264 0.23117 0.23152v1.1326l-0.23117 0.22213v1.2295h15.33v-4.0798z" color="#000000" color-rendering="auto" fill="#fef9eb" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="45.474" y="3.0221" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="45.474" y="5.0221" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <g fill="#fcd950">
+    <rect x="45.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.407" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.907" y="2.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.407" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="45.907" y="4.8009" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+  </g>
+  <g transform="translate(-8.1688e-8 -1.8618e-5)" shape-rendering="auto">
+   <g fill="#cfcfcf">
+    <rect x="45.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="45.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+   <path d="m44.335 38.46 3.49e-4 1.264 0.23117 0.23152v1.1326l-0.23117 0.22213v1.2295h15.33v-4.0798z" color="#000000" color-rendering="auto" fill="#fef9eb" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="45.474" y="39.022" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="45.474" y="41.022" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <g fill="#fcd950">
+    <rect x="45.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="57.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="56.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="55.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="54.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="53.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="52.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="51.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="49.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="48.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="47.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="46.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="45.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+  </g>
+  <g transform="translate(-8.1688e-8 -1.8618e-5)" shape-rendering="auto">
+   <g fill="#cfcfcf">
+    <rect x="24.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.861" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="36.361" y="37.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="36.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.861" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.361" y="42.236" width=".27875" height="1.5271" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+   <path d="m22.835 38.46 3.49e-4 1.264 0.23117 0.23152v1.1326l-0.23117 0.22213v1.2295h15.33v-4.0798z" color="#000000" color-rendering="auto" fill="#fef9eb" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="23.974" y="39.022" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="23.974" y="41.022" width="13.052" height=".9557" color="#000000" color-rendering="auto" fill="#e2c588" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <g fill="#fcd950">
+    <rect x="24.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.907" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="36.407" y="38.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="36.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="35.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="34.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="33.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="32.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="31.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="30.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="29.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="28.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="27.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="26.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="25.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.907" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="24.407" y="40.801" width=".18583" height="1.3982" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+  </g>
+  <g transform="matrix(0 -.087966 .087966 0 -27.202 47.586)">
+   <g>
+    <rect x="126.5" y="980.86" width="90" height="12" fill="#cfcfcf"/>
+    <rect x="126.5" y="1023.9" width="90" height="12" fill="#cfcfcf"/>
+    <rect x="144.5" y="980.86" width="54" height="55" fill="#efe0b3"/>
+    <path d="m144.5 993.86 13-13h28l13 13 2e-5 29-13 13h-28l-13-13" fill="#ebebeb" stroke="#9b9b9b"/>
+    <circle cx="171.5" cy="1008.4" r="13.387" fill="#ffa635"/>
+   </g>
+   <path d="m150.85 997.27 9.9446-9.9445h21.419l9.9445 9.9445 1e-5 22.184-9.9446 9.9445h-21.419l-9.9446-9.9445z" fill="none" stroke="#9b9b9b" stroke-width="1.0897"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 29.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.26458 .26458 0 50.245 -257.12)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 31.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 33.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 35.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 37.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 39.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 41.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -8.6247 43.477)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.070004 .070004 0 -67.625 45.977)">
+   <rect x="254.89" y="995.86" width="18.114" height="26" fill="#fbdb80"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-996.36" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m254.89 990.11v6.7559h18.113v-6.7559h-4.0684a5 5 0 0 1-4.9883 4.7559 5 5 0 0 1-4.9922-4.7559z" fill="#ffc44a"/>
+   <rect transform="scale(1,-1)" x="255.39" y="-1030.4" width="17.114" height="9" fill="#cfcfcf"/>
+   <path d="m273 1027.6v-6.7558h-18.113v6.7558h4.0684a5 5 0 0 1 4.9883-4.7558 5 5 0 0 1 4.9922 4.7558z" fill="#ffc44a"/>
+  </g>
+  <g transform="matrix(0 -.088929 .088929 0 -38.504 60.148)">
+   <g fill="#cfcfcf">
+    <rect x="345.18" y="940.86" width="6" height="30"/>
+    <rect x="354.06" y="940.86" width="6" height="30"/>
+    <rect x="362.94" y="940.86" width="6" height="30"/>
+    <rect x="371.82" y="940.86" width="6" height="30"/>
+   </g>
+   <rect x="343.21" y="946.86" width="36.576" height="18" fill="#e3e3e3"/>
+   <rect x="343.21" y="950.86" width="36.576" height="10" fill="#252525"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 16.061 46.407)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -20.939 42.907)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -20.939 40.407)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -20.939 37.907)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -20.939 35.407)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -30.439 33.607)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -30.439 29.407)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -38.824 44.907)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 -.06834 .06834 0 -40.019 44.907)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 19.907 70.039)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 19.907 68.939)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 19.907 67.139)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 19.907 66.039)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 19.907 64.939)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 19.907 63.839)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.907 63.339)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.907 64.439)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.907 65.939)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.907 67.039)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.907 68.139)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.907 69.639)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.907 70.746)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 31.007 62.139)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 25.407 58.839)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 20.107 62.539)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 25.407 55.039)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 24.607 53.339)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 24.607 52.139)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 27.607 48.639)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 29.907 48.639)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 24.12 71.939)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 27.007 72.039)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 24.907 73.477)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#252525"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.06834 0 0 -.06834 40.407 76.539)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.092857 0 0 -.092857 75.557 82.251)">
+   <g fill="#cfcfcf">
+    <rect x="386.5" y="473.86" width="3" height="14"/>
+    <rect x="350.5" y="473.86" width="3" height="14"/>
+    <rect x="386.5" y="501.86" width="3" height="14"/>
+    <rect x="350.5" y="501.86" width="3" height="14"/>
+   </g>
+   <rect x="352.5" y="466.86" width="35" height="56" fill="#282828"/>
+  </g>
+  <g fill="#fc0">
+   <circle cx="5.5" cy="42.5" r=".55644"/>
+   <circle cx="62.5" cy="39" r=".55644"/>
+   <circle cx="62.5" cy="6" r=".55644"/>
+  </g>
+  <rect x="9" y="35" width="5" height="4" color="#000000" color-rendering="auto" fill="#282828" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  <rect x="8.5" y="22" width="7" height="7" color="#000000" color-rendering="auto" fill="#282828" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  <g transform="matrix(.63529 0 0 .63529 15.458 -174.66)" fill="#fff">
+   <path d="m15.419 294.42q-0.14976-0.39644-0.2819-0.77524-0.13214-0.38761-0.27309-0.78405h-2.7662l-0.555 1.5593h-0.88976q0.35238-0.96905 0.66071-1.7883 0.30833-0.8281 0.59905-1.5681 0.29952-0.74 0.59024-1.4095 0.29071-0.67833 0.60786-1.339h0.78404q0.31714 0.66071 0.60786 1.339 0.29071 0.66952 0.58143 1.4095 0.29952 0.73999 0.60786 1.5681 0.30833 0.81928 0.66071 1.7883zm-0.80166-2.264q-0.2819-0.76643-0.56381-1.48-0.2731-0.72237-0.57262-1.3831-0.30833 0.66072-0.59024 1.3831-0.27309 0.71357-0.54619 1.48z"/>
+   <path d="m18.494 294.51q-0.75762-0.0176-1.0748-0.32595-0.31714-0.30833-0.31714-0.96024v-5.4971l0.81928-0.14095v5.5059q0 0.20262 0.03523 0.33476 0.03524 0.13214 0.11452 0.21143 0.07928 0.0793 0.21143 0.12333 0.13214 0.0353 0.32595 0.0617z"/>
+   <path d="m21.52 294.53q-0.555 0-0.97785-0.17619-0.41405-0.17619-0.70476-0.49333-0.2819-0.31714-0.42286-0.74881-0.14095-0.44047-0.14095-0.96905 0-0.52856 0.14976-0.96904 0.15857-0.44047 0.44047-0.75761 0.2819-0.32595 0.68714-0.50214 0.41405-0.185 0.91619-0.185 0.30833 0 0.61666 0.0529t0.59024 0.16738l-0.185 0.69595q-0.185-0.0881-0.43166-0.14095-0.23786-0.0529-0.51095-0.0529-0.68714 0-1.0571 0.43166-0.36119 0.43166-0.36119 1.2598 0 0.37001 0.07929 0.67834 0.08809 0.30833 0.26428 0.52857 0.185 0.22024 0.4669 0.34357 0.2819 0.11452 0.68714 0.11452 0.32595 0 0.59024-0.0617 0.26428-0.0617 0.41405-0.13215l0.11452 0.68714q-0.07048 0.0441-0.20262 0.0881-0.13214 0.0353-0.29952 0.0617-0.16738 0.0353-0.36119 0.0529-0.185 0.0264-0.36119 0.0264z"/>
+   <path d="m23.624 294.42v-6.6952l0.81928-0.14095v2.3433q0.22905-0.0881 0.48452-0.13214 0.26428-0.0529 0.51976-0.0529 0.54619 0 0.90738 0.15857 0.36119 0.14976 0.57262 0.43166 0.22024 0.2731 0.30833 0.66071 0.08809 0.38762 0.08809 0.85452v2.5724h-0.81928v-2.3962q0-0.42285-0.06166-0.72237-0.05286-0.29953-0.185-0.48453-0.13214-0.185-0.35238-0.26428-0.22024-0.0881-0.54619-0.0881-0.13214 0-0.2731 0.0176-0.14095 0.0176-0.27309 0.0441-0.12333 0.0176-0.22905 0.0441-0.09691 0.0264-0.14095 0.0441v3.8057z"/>
+   <path transform="matrix(.26458 0 0 .26458 .14284 284.42)" d="m110.83 20.969c-0.49905 0.13881-1.0237 0.21875-1.5664 0.21875-0.53083 0-1.042-0.07794-1.5312-0.21094v16.83h3.0976z"/>
+   <path d="m31.651 289.84h1.7355v0.68714h-1.7355v2.1143q0 0.34357 0.05286 0.57261 0.05286 0.22025 0.15857 0.35239 0.10571 0.12333 0.26428 0.17619 0.15857 0.0529 0.37 0.0529 0.37 0 0.59024-0.0793 0.22905-0.0881 0.31714-0.12333l0.15857 0.67832q-0.12333 0.0617-0.43166 0.14977-0.30833 0.097-0.70476 0.097-0.4669 0-0.77524-0.11452-0.29952-0.12334-0.48452-0.36119-0.185-0.23786-0.26429-0.58142-0.07048-0.35239-0.07048-0.81048v-4.0876l0.81928-0.14096z"/>
+   <path d="m36.121 289.75q0.10571 0 0.23786 0.0176 0.14095 9e-3 0.27309 0.0353 0.13214 0.0176 0.23786 0.0441 0.11452 0.0176 0.16738 0.0353l-0.14095 0.71356q-0.09691-0.0352-0.32595-0.0793-0.22024-0.0529-0.57262-0.0529-0.22905 0-0.45809 0.0529-0.22024 0.0441-0.29071 0.0617v3.8498h-0.81928v-4.3871q0.29071-0.10571 0.72238-0.19381 0.43167-0.0969 0.96904-0.0969z"/>
+   <path d="m37.488 295.28q0.09691 0.0441 0.24667 0.0793 0.15857 0.0441 0.30833 0.0441 0.48452 0 0.75762-0.22024 0.27309-0.21143 0.49333-0.69595-0.555-1.0571-1.0395-2.2376-0.47571-1.1893-0.79285-2.405h0.88095q0.09691 0.39643 0.22905 0.85452 0.14095 0.45809 0.30833 0.94262 0.16738 0.48452 0.36119 0.96904t0.40524 0.93381q0.33476-0.925 0.58143-1.8324 0.24666-0.90739 0.4669-1.8676h0.84571q-0.31714 1.295-0.70476 2.4931-0.38762 1.1893-0.8369 2.2288-0.17619 0.39644-0.37 0.67833-0.185 0.29072-0.41405 0.47572t-0.51976 0.27309q-0.2819 0.0881-0.64309 0.0881-0.09691 0-0.20262-0.0176-0.10571-9e-3 -0.21143-0.0353-0.09691-0.0176-0.185-0.0441-0.07928-0.0264-0.11452-0.0441z"/>
+  </g>
+  <g transform="matrix(.63529 0 0 .63529 15.548 6.0292)">
+   <path d="m28.911 3.6673c0.21438 0 0.38904 0.17461 0.38904 0.38953 0 0.21456-0.17468 0.38905-0.38904 0.38905-0.21438 0-0.38904-0.17441-0.38904-0.38905 0-0.21488 0.17468-0.38953 0.38904-0.38953m0 1.4791c0.60084 0 1.0896-0.48871 1.0896-1.0896 0-0.60087-0.48875-1.09-1.0896-1.09s-1.0896 0.48918-1.0896 1.09c0 0.60085 0.48876 1.0896 1.0896 1.0896" fill="#fbcb34"/>
+  </g>
+  <g transform="matrix(.63529 0 0 .63529 15.548 6.0292)">
+   <g transform="translate(-.0074748 .27635)">
+    <g transform="matrix(.078812 0 0 -.078812 4.1785 8.5637)">
+     <path d="m0 0c-1.479 0-2.678-1.199-2.678-2.678 0-1.478 1.199-2.677 2.678-2.677s2.678 1.199 2.678 2.677c0 1.479-1.199 2.678-2.678 2.678" fill="#fc0"/>
+    </g>
+    <g transform="matrix(.078812 0 0 -.078812 4.4368 9.2328)" fill="#67b319">
+     <path d="m0 0c-0.969-0.549-2.086-0.866-3.277-0.866-3.683 0-6.679 2.996-6.679 6.678 0 3.681 2.996 6.677 6.679 6.677 3.682 0 6.678-2.996 6.678-6.677 0-1.037-0.244-2.014-0.667-2.89l5.146-5.146v-5.912h3.157v27.465c-2.709 0.853-4.679 3.386-4.679 6.371 0 3.684 2.996 6.68 6.679 6.68 3.682 0 6.678-2.996 6.678-6.68 0-2.985-1.97-5.518-4.678-6.371v-27.465h3.374v11.973l5.241 5.243c-0.484 0.924-0.762 1.973-0.762 3.087 0 3.684 2.996 6.68 6.679 6.68 3.682 0 6.678-2.996 6.678-6.68 0-3.682-2.996-6.678-6.678-6.678-1.114 0-2.163 0.279-3.088 0.763l-4.07-4.071v-10.317h19.684l6.57 16.631-26.128 22.353v25.389h-19v-25.389l-26.129-22.353 6.57-16.631h19.902v4.256z" fill="#fc0"/>
+    </g>
+    <g transform="matrix(.078812 0 0 -.078812 6.7672 8.4849)">
+     <path d="m0 0c1.479 0 2.678 1.199 2.678 2.678 0 1.48-1.199 2.679-2.678 2.679-1.48 0-2.679-1.199-2.679-2.679 0-1.479 1.199-2.678 2.679-2.678" fill="#fc0"/>
+    </g>
+    <g transform="matrix(.078812 0 0 -.078812 5.4581 7.4177)">
+     <path d="m0 0h0.155c1.443 0.042 2.601 1.216 2.601 2.67 0 1.48-1.199 2.68-2.678 2.68-1.48 0-2.679-1.2-2.679-2.68 0-1.454 1.158-2.628 2.601-2.67" fill="#fc0"/>
+    </g>
+    <g transform="matrix(.078812 0 0 -.078812 4.831 2.8665)">
+     <path d="m-0.8371-0.84074c1.0081 0 1.8296-0.82145 1.8296-1.8318 0-1.0092-0.82145-1.8296-1.8296-1.8296-1.0081 0-1.8296 0.82035-1.8296 1.8296 0 1.0103 0.82145 1.8318 1.8296 1.8318m0-6.9559c2.8256 0 5.1242 2.2985 5.1242 5.1242 0 2.8267-2.2985 5.1263-5.1242 5.1263-2.8256 0-5.1242-2.2996-5.1242-5.1263 0-2.8256 2.2985-5.1242 5.1242-5.1242" fill="#fc0"/>
+    </g>
+    <g transform="matrix(.078812 0 0 -.078812 6.1748 2.3675)">
+     <path d="m0.8371-0.21901c1.0081 0 1.8296-0.82145 1.8296-1.8318 0-1.0092-0.82145-1.8296-1.8296-1.8296-1.0081 0-1.8296 0.82035-1.8296 1.8296 0 1.0103 0.82145 1.8318 1.8296 1.8318m0-6.9559c2.8256 0 5.1242 2.2985 5.1242 5.1242 0 2.8267-2.2985 5.1263-5.1242 5.1263-2.8256 0-5.1242-2.2996-5.1242-5.1263 0-2.8256 2.2985-5.1242 5.1242-5.1242" fill="#fc0"/>
+    </g>
+    <g transform="matrix(.078812 0 0 -.078812 5.5029 1.2541)">
+     <path d="m-6.2293e-8 1.1681c1.0081 0 1.8296-0.82035 1.8296-1.8296 0-1.0092-0.82145-1.8296-1.8296-1.8296-1.0081 0-1.8296 0.82035-1.8296 1.8296 0 1.0092 0.82145 1.8296 1.8296 1.8296m0-6.9537c2.8256 0 5.1242 2.2985 5.1242 5.1242s-2.2985 5.1242-5.1242 5.1242c-2.8256 0-5.1242-2.2985-5.1242-5.1242s2.2985-5.1242 5.1242-5.1242" fill="#fc0"/>
+    </g>
+    <g transform="matrix(.078812 0 0 -.078812 8.0224 10.268)">
+     <path d="m0 0h-64.919l-9.13 23.111 27.09 23.175v23.048h-8.666v5.999h46.332v-5.999h-8.666v-23.048l27.089-23.175zm-11.959 49.05v14.284h8.666v17.999h-58.332v-17.999h8.666v-14.284l-28.243-24.161 12.202-30.889h73.081l12.202 30.889z" fill="#fff"/>
+    </g>
+   </g>
+  </g>
+  <g transform="matrix(.59461 0 0 .59461 16.903 6.8522)">
+   <g transform="matrix(.051758 0 0 .051758 2.69 1.578)" fill="#fc0" aria-label="Au">
+    <rect transform="matrix(19.321 0 0 19.321 -51.974 -30.489)" x="43.761" y="2.2093" width="8.6364" height="8.6364" color="#000000" color-rendering="auto" fill="none" image-rendering="auto" shape-rendering="auto" solid-color="#000000" stroke="#fc0" stroke-linecap="round" stroke-width=".5" style="isolation:auto;mix-blend-mode:normal"/>
+    <path d="m873.74 137.12q-2.0278-5.3676-3.817-10.497-1.7892-5.2484-3.6977-10.616h-37.454l-7.5147 21.113h-12.047q4.7712-13.121 8.9461-24.214 4.1748-11.212 8.1111-21.232 4.0556-10.02 7.9918-19.085 3.9363-9.1846 8.2304-18.131h10.616q4.2941 8.9461 8.2304 18.131 3.9363 9.0654 7.8726 19.085 4.0556 10.02 8.2304 21.232 4.1748 11.093 8.9461 24.214zm-10.855-30.655q-3.817-10.377-7.634-20.039-3.6977-9.781-7.7533-18.727-4.1748 8.9461-7.9918 18.727-3.6977 9.6618-7.3954 20.039z" fill="#fc0" stroke-width="2.982px"/>
+    <path d="m944.29 135.34q-3.817 0.95424-10.139 2.0278-6.2026 1.0735-14.433 1.0735-7.1568 0-12.047-2.0278-4.8905-2.147-7.8725-5.964-2.982-3.817-4.2941-8.9461-1.3121-5.2484-1.3121-11.57v-34.83h11.093v32.444q0 11.332 3.5784 16.222 3.5784 4.8905 12.047 4.8905 1.7892 0 3.6977-0.11928 1.9085-0.11928 3.5784-0.23856 1.6699-0.23856 2.982-0.35784 1.4314-0.23856 2.0278-0.47713v-52.364h11.093z" fill="#fc0" stroke-width="2.982px"/>
+   </g>
+  </g>
+  <rect x="25.7" y="33.356" width="1.6" height="1.0874" color="#000000" color-rendering="auto" fill="#252525" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  <g transform="matrix(-.1625 0 0 -.1625 50.569 129.53)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.1625 0 0 -.1625 39.569 129.53)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.1625 0 0 -.1625 39.069 137.53)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .1625 -.1625 0 100.53 4.4312)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.1625 0 0 -.22604 50.069 178.56)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.1625 0 0 -.1625 48.569 117.53)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .1625 -.1625 0 102.03 -15.569)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .1625 -.1625 0 118.03 -15.569)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .12212 -.12212 0 87.347 -15.151)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#5f5f5f"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .12212 -.12212 0 89.347 -15.151)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#5f5f5f"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.029332 0 0 -.029332 19.569 30.486)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.029332 0 0 -.029332 22.357 30.486)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.029332 0 0 -.029332 21.543 23.823)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(-.029332 0 0 -.029332 19.296 23.823)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .029332 -.029332 0 27.885 2.7391)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .029332 -.029332 0 27.697 -.87764)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g transform="matrix(0 .029332 -.029332 0 35.506 .24866)">
+   <rect x="191.5" y="600.86" width="24" height="11" fill="#975226"/>
+   <rect x="191.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+   <rect x="207.5" y="599.86" width="8" height="13" fill="#cfcfcf"/>
+  </g>
+  <g shape-rendering="auto">
+   <g fill="#282828">
+    <rect x="26.44" y="13.94" width="17.12" height="17.12" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50" y="10.5" width="8" height="14" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    <rect x="50.85" y="25.5" width="5.5" height="5" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+   <g fill="none" stroke="#fc0" stroke-linecap="round">
+    <circle cx="2.5" cy="2.5" r="1.4867" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" stroke-width=".225" style="isolation:auto;mix-blend-mode:normal"/>
+    <g stroke-width=".225">
+     <circle cx="2.5" cy="42.5" r="1.4867" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+     <circle cx="62.5" cy="42.5" r="1.4867" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+     <circle cx="62.5" cy="2.5" r="1.4867" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+    </g>
+    <circle cx="2.0044" cy="22.465" r=".73073" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" stroke-width=".49711" style="isolation:auto;mix-blend-mode:normal"/>
+    <circle cx="2.0044" cy="25.013" r=".73073" color="#000000" color-rendering="auto" image-rendering="auto" solid-color="#000000" stroke-width=".49711" style="isolation:auto;mix-blend-mode:normal"/>
+   </g>
+  </g>
+  <g transform="translate(.2 -.099999)" shape-rendering="auto">
+   <rect x="3.5" y="33.3" width="4.6" height="3.6" color="#000000" color-rendering="auto" fill="#cfcfcf" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="3.8" y="33.15" width="4" height="3.9" color="#000000" color-rendering="auto" fill="#2a2a2a" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <path d="m4.85 33.15-0.8 0.8v2.3l0.8 0.8h1.9l0.8-0.8v-2.3l-0.8-0.8z" color="#000000" color-rendering="auto" fill="#404040" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </g>
+  <g transform="translate(1.9 -17.5)" shape-rendering="auto">
+   <rect x="3.5" y="33.3" width="4.6" height="3.6" color="#000000" color-rendering="auto" fill="#cfcfcf" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="3.8" y="33.15" width="4" height="3.9" color="#000000" color-rendering="auto" fill="#2a2a2a" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <path d="m4.85 33.15-0.8 0.8v2.3l0.8 0.8h1.9l0.8-0.8v-2.3l-0.8-0.8z" color="#000000" color-rendering="auto" fill="#404040" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </g>
+  <g transform="translate(9.7 -19.6)" shape-rendering="auto">
+   <rect x="3.5" y="33.3" width="4.6" height="3.6" color="#000000" color-rendering="auto" fill="#cfcfcf" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <rect x="3.8" y="33.15" width="4" height="3.9" color="#000000" color-rendering="auto" fill="#2a2a2a" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+   <path d="m4.85 33.15-0.8 0.8v2.3l0.8 0.8h1.9l0.8-0.8v-2.3l-0.8-0.8z" color="#000000" color-rendering="auto" fill="#404040" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </g>
+  <rect x="14.85" y="32.95" width="6.3" height="6.1" color="#000000" color-rendering="auto" fill="#cfcfcf" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  <path d="m16.698 39.125-1.0417-0.62499-0.72917-1.0417v-0.62499l0.41667-0.41667v-0.83333l-0.41667-0.41667v-0.625l0.72917-1.0417 1.0417-0.625h2.6042l1.0417 0.625 0.72917 1.0417v0.625l-0.41667 0.41667v0.83333l0.41667 0.41667v0.62499l-0.72917 1.0417-1.0417 0.62502z" color="#000000" color-rendering="auto" fill="#404040" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+ </g>
+</svg>

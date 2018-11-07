@@ -3,17 +3,19 @@ package com.alchitry.labs.gui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.widgets.CustomTabs;
-import com.alchitry.labs.widgets.SVGTest;
+import com.alchitry.labs.widgets.SVGImage;
 import com.alchitry.labs.widgets.TabChild;
 
 public class ConstraintsEditor extends Composite implements TabChild {
 	private CustomTabs tabFolder;
-	private SVGTest svg;
+	private SVGImage svg;
 
 	public ConstraintsEditor(CustomTabs parent) {
 			super(parent, SWT.NONE);
@@ -28,9 +30,17 @@ public class ConstraintsEditor extends Composite implements TabChild {
 				}
 			});
 
-			svg = new SVGTest(this);
+			svg = new SVGImage(this);
 
 			resize();
+			
+			addDisposeListener(new DisposeListener() {
+				
+				@Override
+				public void widgetDisposed(DisposeEvent arg0) {
+					svg.dispose();
+				}
+			});
 		}
 
 	protected void controlResized(ControlEvent e) {

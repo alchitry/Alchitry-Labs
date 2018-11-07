@@ -732,6 +732,8 @@ public class MainWindow {
 		coreGen = new CoreGen();
 
 		openFile(null, true);
+		
+		openSVG();
 	}
 
 	public void headlessInit() {
