@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.lucid.LucidAutoComplete;
 import com.alchitry.labs.lucid.LucidDictionary;
 import com.alchitry.labs.lucid.style.BracketUnderliner;

@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
 import com.alchitry.labs.gui.Images;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public class CustomTab extends Canvas {
 	private static final int NO_MOUSE = 0;
@@ -152,6 +152,8 @@ public class CustomTab extends Canvas {
 	}
 
 	private void paint(GC gc) {
+		gc.setFont(Theme.defaultFont);
+		
 		Point ts = gc.stringExtent(text);
 		int iconHeight = (getSize().y - 13) / 2;
 
@@ -271,6 +273,7 @@ public class CustomTab extends Canvas {
 	public Point computeSize(int wHint, int hHint, boolean changed) {
 		if (text != null) {
 			GC gc = new GC(this);
+			gc.setFont(Theme.defaultFont);
 			Point textSize = gc.stringExtent(text);
 			gc.dispose();
 			return new Point(textSize.x + 18 + 13, 25);

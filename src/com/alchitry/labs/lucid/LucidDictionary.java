@@ -9,8 +9,8 @@ import java.util.Set;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Dictionary;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.Sig;

@@ -1,4 +1,4 @@
-package com.alchitry.labs.gui;
+package com.alchitry.labs.gui.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,15 +13,12 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -29,8 +26,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -39,7 +34,16 @@ import com.alchitry.labs.Reporter;
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.UpdateChecker;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.Board;
+import com.alchitry.labs.gui.ComponentsDialog;
+import com.alchitry.labs.gui.ConstraintsEditor;
+import com.alchitry.labs.gui.Images;
+import com.alchitry.labs.gui.NewProjectDialog;
+import com.alchitry.labs.gui.NewSourceDialog;
+import com.alchitry.labs.gui.SerialPortSelector;
+import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.WaveForm;
+import com.alchitry.labs.gui.WelcomeDialog;
 import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
@@ -49,7 +53,6 @@ import com.alchitry.labs.project.CoreGen;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.project.SourceFile;
 import com.alchitry.labs.style.ParseException;
-import com.alchitry.labs.widgets.CustomButton;
 import com.alchitry.labs.widgets.CustomConsole;
 import com.alchitry.labs.widgets.CustomTabs;
 import com.alchitry.labs.widgets.CustomTree;
@@ -58,8 +61,8 @@ import com.alchitry.labs.widgets.TabChild;
 import jssc.SerialPortList;
 
 public class MainWindow {
-	public static final String VERSION = "1.0";
-	public static final String LIB_VERSION = "1.0";
+	public static final String VERSION = "1.0.0";
+	public static final String LIB_VERSION = "1.0.0";
 
 	protected final Display display = Display.getDefault();
 	protected Shell shlAlchitryLabs;
@@ -71,20 +74,17 @@ public class MainWindow {
 
 	private int leftWidth, oldLeftWeight;
 	private int bottomHeight, oldBottomWeight;
-	private ArrayList<TabChild> tabs;
-	private CustomConsole console;
-	private MojoFlasher flasher;
-	private SerialMonitor monitor;
-	private ImageCapture imgCapture;
-	private RegInterface regInterface;
-
-	private CustomButton buildbtn;
+	protected ArrayList<TabChild> tabs;
+	protected CustomConsole console;
+	protected MojoFlasher flasher;
+	protected SerialMonitor monitor;
+	protected ImageCapture imgCapture;
+	protected RegInterface regInterface;
+	protected MainMenu mainMenu;
+	protected MainToolbar mainToolbar;
 
 	public static MainWindow mainWindow;
-	private CoreGen coreGen;
-
-	private static String projToOpen;
-	// private MojoLoader loader;
+	protected CoreGen coreGen;
 
 	/**
 	 * Launch the application.
@@ -175,19 +175,9 @@ public class MainWindow {
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					if (building) {
-						buildbtn.setIcon(Images.cancelIcon);
-						buildbtn.setIconHover(Images.cancelIconHover);
-						buildbtn.setToolTipText("Cancel Build");
-					} else {
-						buildbtn.setIcon(Images.buildIcon);
-						buildbtn.setIconHover(Images.buildIconHover);
-						buildbtn.setToolTipText("Build Project");
-					}
-					buildbtn.redraw();
+					mainToolbar.setBuilding(building);
 				}
 			});
-
 	}
 
 	private void upgrade() {
@@ -228,38 +218,6 @@ public class MainWindow {
 		}
 	}
 
-	// private void updatePorts(MenuItem portMenu) {
-	// ArrayList<String> ports = MojoLoader.listPorts();
-	// for (MenuItem i : items)
-	// i.dispose();
-	// if (ports.size() != 0) {
-	// Object[] array = ports.toArray();
-	// String selectedPort = Settings.settings.get(Settings.MOJO_PORT, "");
-	//
-	// for (int i = 0; i < array.length; i++) {
-	// MenuItem menuItem = new MenuItem(menu, SWT.RADIO);
-	// menuItem.setText((String) array[i]);
-	// menuItem.addSelectionListener(new SelectionListener() {
-	// @Override
-	// public void widgetDefaultSelected(SelectionEvent event) {
-	// widgetSelected(event);
-	// }
-	//
-	// @Override
-	// public void widgetSelected(SelectionEvent event) {
-	// Settings.settings.put(Settings.MOJO_PORT,
-	// ((MenuItem) event.widget).getText());
-	// }
-	// });
-	// if (menuItem.getText().equals(selectedPort))
-	// menuItem.setSelection(true);
-	// }
-	// } else {
-	// MenuItem menuItem = new MenuItem(menu, SWT.RADIO);
-	// menuItem.setText("No Serial Ports!");
-	// }
-	// }
-
 	private boolean filesModified() {
 		for (TabChild editor : tabs) {
 			if (editor.isModified())
@@ -268,7 +226,7 @@ public class MainWindow {
 		return false;
 	}
 
-	private boolean saveAll(boolean ask) {
+	public boolean saveAll(boolean ask) {
 		for (TabChild editor : tabs) {
 			if (editor instanceof StyledCodeEditor)
 				switch (saveEditor((StyledCodeEditor) editor, ask)) {
@@ -332,7 +290,7 @@ public class MainWindow {
 		return false;
 	}
 
-	private void updateXilinxLocation() {
+	public void updateXilinxLocation() {
 		Util.showInfo("ISE Location", "The next dialog will ask you for the location of where you installed ISE. "
 				+ "Please point it to the directory whose name is the version number of ISE. This is the Xilinx/14.7 " + "folder in most cases.");
 		DirectoryDialog dialog = new DirectoryDialog(shlAlchitryLabs, SWT.OPEN | SWT.PRIMARY_MODAL);
@@ -437,7 +395,7 @@ public class MainWindow {
 		shlAlchitryLabs = new Shell();
 		Util.setShell(shlAlchitryLabs);
 		loadFonts();
-		Theme.initColors(display);
+		Theme.init(display);
 		Images.loadImages(display);
 		tabs = new ArrayList<>();
 		shlAlchitryLabs.addShellListener(new ShellAdapter() {
@@ -470,7 +428,7 @@ public class MainWindow {
 
 		shlAlchitryLabs.setImage(SWTResourceManager.getImage(MainWindow.class, "/images/icon.png"));
 
-		shlAlchitryLabs.setMinimumSize(450, 178);
+		shlAlchitryLabs.setMinimumSize(550, 200);
 		shlAlchitryLabs.setText("Alchitry Labs Version " + VERSION);
 		shlAlchitryLabs.setLayout(new GridLayout(1, false));
 
@@ -485,135 +443,11 @@ public class MainWindow {
 		shlAlchitryLabs.setBackground(Theme.windowBackgroundColor);
 		shlAlchitryLabs.setForeground(Theme.windowForgroundColor);
 
-		createMenuBar();
+		mainMenu = new MainMenu(this);
+		mainMenu.build();
 
-		Composite composite = new Composite(shlAlchitryLabs, SWT.NONE);
-		composite.setBackground(Theme.windowBackgroundColor);
-		composite.setForeground(Theme.windowForgroundColor);
-		RowLayout rl_composite = new RowLayout(SWT.HORIZONTAL);
-		composite.setLayout(rl_composite);
-
-		CustomButton newbtn = new CustomButton(composite, SWT.NONE);
-		newbtn.setIcon(Images.fileIcon);
-		newbtn.setIconHover(Images.fileIconHover);
-		newbtn.setToolTipText("New File");
-		newbtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				addNewFile();
-			}
-		});
-
-		CustomButton savebtn = new CustomButton(composite, SWT.NONE);
-		savebtn.setIcon(Images.saveIcon);
-		savebtn.setIconHover(Images.saveIconHover);
-		savebtn.setToolTipText("Save File");
-		savebtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				TabChild tc = tabFolder.getSelectedControl();
-				if (tc instanceof StyledCodeEditor)
-					saveEditor((StyledCodeEditor) tc, false);
-			}
-		});
-
-		CustomButton saveallbtn = new CustomButton(composite, SWT.NONE);
-		saveallbtn.setIcon(Images.saveAllIcon);
-		saveallbtn.setIconHover(Images.saveAllIconHover);
-		saveallbtn.setToolTipText("Save All");
-		saveallbtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				saveAll(false);
-			}
-		});
-
-		CustomButton checkbtn = new CustomButton(composite, SWT.NONE);
-		checkbtn.setIcon(Images.checkIcon);
-		checkbtn.setIconHover(Images.checkIconHover);
-		checkbtn.setToolTipText("Check Syntax");
-		checkbtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				checkProject();
-			}
-		});
-
-		buildbtn = new CustomButton(composite, SWT.NONE);
-		setBuilding(false);
-		buildbtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				buildProject();
-			}
-		});
-
-		CustomButton debugbtn = new CustomButton(composite, SWT.NONE);
-		debugbtn.setIcon(Images.debugIcon);
-		debugbtn.setIconHover(Images.debugIconHover);
-		debugbtn.setToolTipText("Debug Project");
-		debugbtn.addListener(SWT.Selection, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				if (!project.isOpen()) {
-					Util.showError("A project must be opened before you can build it!");
-					return;
-				}
-				if (project.isBusy()) {
-					Util.showError("Can't debug while operation is in progress!");
-					return;
-				}
-				if (!saveAll(false)) {
-					Util.showError("Could not save all open tabs before debugging!");
-					MessageBox box = new MessageBox(shlAlchitryLabs, SWT.YES | SWT.NO);
-
-					box.setMessage("Continue anyway?");
-					box.setText("All files not saved...");
-					if (box.open() != SWT.YES) {
-						return;
-					}
-				}
-				project.build(true);
-			}
-		});
-
-		CustomButton loadtempbtn = new CustomButton(composite, SWT.NONE);
-		loadtempbtn.setIcon(Images.loadTempIcon);
-		loadtempbtn.setIconHover(Images.loadTempIconHover);
-		loadtempbtn.setToolTipText("Program (Temporary)");
-		loadtempbtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				programProject(false, false);
-			}
-		});
-
-		CustomButton loadbtn = new CustomButton(composite, SWT.NONE);
-		loadbtn.setIcon(Images.loadIcon);
-		loadbtn.setIconHover(Images.loadIconHover);
-		loadbtn.setToolTipText("Program (Flash)");
-		loadbtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				programProject(true, event.button == 2);
-			}
-		});
-
-		CustomButton erasebtn = new CustomButton(composite, SWT.NONE);
-		erasebtn.setIcon(Images.eraseIcon);
-		erasebtn.setIconHover(Images.eraseIconHover);
-		erasebtn.setToolTipText("Erase");
-		erasebtn.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				if (project.isBusy()) {
-					Util.showError("Operation already in progress!");
-					return;
-				}
-				project.erase();
-			}
-		});
+		mainToolbar = new MainToolbar(this);
+		mainToolbar.build();
 
 		bottomSashForm = new SashForm(shlAlchitryLabs, SWT.VERTICAL);
 		bottomSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -704,17 +538,6 @@ public class MainWindow {
 		project = new Project(shlAlchitryLabs);
 		project.setTree(tree);
 		String oldProject = Settings.pref.get(Settings.OPEN_PROJECT, null);
-		if (projToOpen != null)
-			oldProject = projToOpen;
-		if (oldProject != null)
-			try {
-				project.openXML(oldProject);
-				project.updateTree();
-				project.openTree();
-			} catch (ParseException | IOException e1) {
-				Util.showError("Could not open project file " + oldProject);
-				Util.log.severe("Error: could not open old project file " + oldProject);
-			}
 
 		tabFolder = new CustomTabs(sideSashForm, SWT.NONE);
 
@@ -731,9 +554,12 @@ public class MainWindow {
 
 		coreGen = new CoreGen();
 
+		if (oldProject != null)
+			openProject(oldProject);
+
 		openFile(null, true);
-		
-		openSVG();
+
+		// openSVG();
 	}
 
 	public void headlessInit() {
@@ -751,7 +577,7 @@ public class MainWindow {
 			Util.showError("Operation already in progress!");
 			return;
 		}
-		
+
 		project.load(flash, verify);
 	}
 
@@ -805,7 +631,7 @@ public class MainWindow {
 
 	public void addNewFile() {
 		if (project.isOpen()) {
-			NewSourceDialog dialog = new NewSourceDialog(shlAlchitryLabs);
+			NewSourceDialog dialog = new NewSourceDialog(shlAlchitryLabs, project.getBoard());
 			shlAlchitryLabs.setEnabled(false);
 			SourceFile file = dialog.open();
 			if (file != null) {
@@ -855,304 +681,17 @@ public class MainWindow {
 		return c == sideSashForm;
 	}
 
-	private void createMenuBar() {
-		Menu menu = new Menu(shlAlchitryLabs, SWT.BAR);
-		shlAlchitryLabs.setMenuBar(menu);
-
-		/******************** File Menu ***********************/
-
-		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
-		mntmFile.setText("File");
-
-		Menu menu_1 = new Menu(mntmFile);
-		mntmFile.setMenu(menu_1);
-
-		MenuItem mntmNewProject = new MenuItem(menu_1, SWT.NONE);
-		mntmNewProject.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				createNewProject();
-			}
-		});
-		mntmNewProject.setText("New Project...");
-
-		MenuItem mntmOpenProject = new MenuItem(menu_1, SWT.NONE);
-		mntmOpenProject.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openProject();
-			}
-		});
-		mntmOpenProject.setText("Open Project...");
-
-		MenuItem mntmImportFile = new MenuItem(menu_1, SWT.NONE);
-		mntmImportFile.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (!project.isOpen()) {
-					Util.showError("A project must be open to import a file!");
-					return;
-				}
-				FileDialog dialog = new FileDialog(shlAlchitryLabs, SWT.MULTI);
-				dialog.setFilterExtensions(new String[] { "*.luc;*.v;*.ucf",".pcf", "*" });
-				String path = dialog.open();
-				if (path != null) {
-					String[] files = dialog.getFileNames();
-					String dir = dialog.getFilterPath();
-					for (String f : files) {
-						if (!project.importFile(dir + File.separator + f))
-							Util.showError("Failed to import \"" + f + "\"");
-					}
-					project.updateTree();
-				}
-			}
-		});
-		mntmImportFile.setText("Import Files...");
-
-		MenuItem mntmOpenFile = new MenuItem(menu_1, SWT.NONE);
-		mntmOpenFile.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FileDialog dialog = new FileDialog(shlAlchitryLabs, SWT.MULTI);
-				dialog.setFilterExtensions(new String[] { "*.luc", "*.v", "*" });
-				String path = dialog.open();
-				if (path != null) {
-					String[] files = dialog.getFileNames();
-					String dir = dialog.getFilterPath();
-					for (String f : files)
-						openFile(dir + File.separator + f, true);
-				}
-			}
-		});
-		mntmOpenFile.setText("Open File...");
-
-		MenuItem mntmSaveFile = new MenuItem(menu_1, SWT.NONE);
-		mntmSaveFile.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				((StyledCodeEditor) (tabFolder.getSelectedControl())).save();
-			}
-		});
-		mntmSaveFile.setText("Save");
-
-		MenuItem mntmCloneProject = new MenuItem(menu_1, SWT.NONE);
-		mntmCloneProject.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				NewProjectDialog dialog = new NewProjectDialog(shlAlchitryLabs, SWT.DIALOG_TRIM, true);
-				shlAlchitryLabs.setEnabled(false);
-				Project p = dialog.open();
-				if (p != null) {
-					try {
-						project.saveAsXML(p.getProjectFolder(), p.getProjectName());
-						openProject(p.getProjectFolder() + File.separatorChar + p.getProjectName() + ".alp");
-					} catch (IOException e1) {
-						Util.showError("Failed to clone project!");
-						e1.printStackTrace();
-					}
-				}
-				shlAlchitryLabs.setEnabled(true);
-			}
-		});
-		mntmCloneProject.setText("Clone Project");
-
-		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
-		mntmExit.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				close();
-			}
-		});
-		mntmExit.setText("Exit");
-
-		/******************** Project Menu ***********************/
-
-		MenuItem mntmProject = new MenuItem(menu, SWT.CASCADE);
-		mntmProject.setText("Project");
-
-		final Menu menu_3 = new Menu(mntmProject);
-		mntmProject.setMenu(menu_3);
-
-		MenuItem mntmAddComponent = new MenuItem(menu_3, SWT.NONE);
-		mntmAddComponent.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (project == null || !project.isOpen()) {
-					Util.showError("You need to open or create a project first!");
-					return;
-				}
-				addComponents();
-			}
-		});
-		mntmAddComponent.setText("Add Components...");
-
-		MenuItem mntmCoreGen = new MenuItem(menu_3, SWT.NONE);
-		mntmCoreGen.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (project == null || !project.isOpen()) {
-					Util.showError("You need to open or create a project first!");
-					return;
-				}
-				coreGen.launch(project);
-			}
-		});
-		mntmCoreGen.setText("Launch CoreGen");
-
-		/******************** Tools Menu ***********************/
-
-		MenuItem mntmTools = new MenuItem(menu, SWT.CASCADE);
-		mntmTools.setText("Tools");
-
-		final Menu menu_4 = new Menu(mntmTools);
-		mntmTools.setMenu(menu_4);
-
-		MenuItem mntmFlash = new MenuItem(menu_4, SWT.NONE);
-		mntmFlash.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String port = Settings.pref.get(Settings.MOJO_PORT, null);
-				if (port == null) {
-					Util.showError("You need to select the serial port the Mojo is connected to in the settings menu.");
-					return;
-				}
-
-				BoardSelector selector = new BoardSelector(shlAlchitryLabs, SWT.APPLICATION_MODAL);
-				Board b = selector.open();
-				if (b != null)
-					flasher.flashMojo(port, b);
-			}
-		});
-		mntmFlash.setText("Flash Firmware...");
-
-		MenuItem mntmMonitor = new MenuItem(menu_4, SWT.NONE);
-		mntmMonitor.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (monitor == null || monitor.isDisposed()) {
-					if (project.isBusy()) {
-						Util.showError("Operation already in progress!");
-					} else {
-						if (!display.isDisposed())
-							monitor = new SerialMonitor(display);
-					}
-				} else {
-					monitor.setFocus();
-				}
-			}
-		});
-		mntmMonitor.setText("Serial Port Monitor...");
-
-		MenuItem mntmRegInt = new MenuItem(menu_4, SWT.NONE);
-		mntmRegInt.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (display.isDisposed())
-					return;
-
-				if (regInterface == null || regInterface.isDisposed()) {
-					regInterface = new RegInterface(display);
-
-				} else {
-					regInterface.setFocus();
-				}
-			}
-		});
-		mntmRegInt.setText("Register Interface...");
-
-		MenuItem mntmImageCapture = new MenuItem(menu_4, SWT.NONE);
-		mntmImageCapture.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (imgCapture == null || imgCapture.isDisposed()) {
-					imgCapture = new ImageCapture(display);
-
-				} else {
-					imgCapture.setFocus();
-				}
-			}
-		});
-		mntmImageCapture.setText("Image Capture...");
-
-		MenuItem mntmWaveCapture = new MenuItem(menu_4, SWT.NONE);
-		mntmWaveCapture.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				openWave();
-			}
-		});
-		mntmWaveCapture.setText("Wave Capture...");
-
-		/******************** Settings Menu ***********************/
-
-		MenuItem mntmSettings = new MenuItem(menu, SWT.CASCADE);
-		mntmSettings.setText("Settings");
-
-		final Menu menu_2 = new Menu(mntmSettings);
-		mntmSettings.setMenu(menu_2);
-
-		MenuItem mntmSerialPort = new MenuItem(menu_2, SWT.NONE);
-		mntmSerialPort.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				selectSerialPort();
-			}
-		});
-		mntmSerialPort.setText("Serial Port...");
-
-		MenuItem mntmPlanaheadLocation = new MenuItem(menu_2, SWT.NONE);
-		mntmPlanaheadLocation.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				updateXilinxLocation();
-			}
-		});
-		mntmPlanaheadLocation.setText("ISE Location...");
-
-		MenuItem mntmTheme = new MenuItem(menu_2, SWT.NONE);
-		mntmTheme.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				ThemeSelectorDialog dialog = new ThemeSelectorDialog(shlAlchitryLabs);
-				dialog.open();
-			}
-		});
-		mntmTheme.setText("Choose Theme...");
-
-		/******************** Help Menu ***********************/
-
-		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
-		mntmHelp.setText("Help");
-
-		final Menu menu_5 = new Menu(mntmHelp);
-		mntmHelp.setMenu(menu_5);
-
-		MenuItem mntmFeedback = new MenuItem(menu_5, SWT.NONE);
-		mntmFeedback.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FeedbackDialog feedbackDialog = new FeedbackDialog(shlAlchitryLabs, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.CLOSE);
-				EmailMessage message = feedbackDialog.open();
-				if (message != null) {
-					Reporter.sendFeedback(message);
-				}
-			}
-		});
-		mntmFeedback.setText("Send Feedback...");
-
-		MenuItem mntmAbout = new MenuItem(menu_5, SWT.NONE);
-		mntmAbout.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				new WelcomeDialog(shlAlchitryLabs, SWT.APPLICATION_MODAL).open();
-			}
-		});
-		mntmAbout.setText("About Alchitry Labs");
-	}
-
 	public void addComponents() {
 		ComponentsDialog diag = new ComponentsDialog(shlAlchitryLabs);
 		diag.open();
+	}
+
+	private void projectChanged() {
+		project.setShell(shlAlchitryLabs);
+		project.updateTree();
+		project.openTree();
+		mainMenu.build();
+		mainToolbar.build();
 	}
 
 	public void createNewProject() {
@@ -1164,15 +703,13 @@ public class MainWindow {
 			if (project != null)
 				project.close();
 			project = p;
-			project.setShell(shlAlchitryLabs);
-			project.setTree(tree);
-			project.updateTree();
+
+			projectChanged();
 		}
 		shlAlchitryLabs.setEnabled(true);
 	}
 
-	private void openProject(String path) {
-
+	public void openProject(String path) {
 		try {
 			project.openXML(path);
 			closeAllTabs();
@@ -1189,8 +726,7 @@ public class MainWindow {
 			box.open();
 		}
 
-		project.updateTree();
-		project.openTree();
+		projectChanged();
 	}
 
 	public void openProject() {
@@ -1248,7 +784,7 @@ public class MainWindow {
 		}
 		return false;
 	}
-	
+
 	public void openSVG() {
 		ConstraintsEditor svg = new ConstraintsEditor(tabFolder);
 		tabs.add(svg);
@@ -1275,7 +811,7 @@ public class MainWindow {
 	}
 
 	public static Project getOpenProject() {
-		if (project.isOpen())
+		if (project != null && project.isOpen())
 			return project;
 		return null;
 	}

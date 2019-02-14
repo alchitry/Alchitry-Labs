@@ -12,8 +12,8 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.lucid.LucidDictionary;
 import com.alchitry.labs.lucid.tools.LucidErrorChecker;
 import com.alchitry.labs.style.ErrorChecker;

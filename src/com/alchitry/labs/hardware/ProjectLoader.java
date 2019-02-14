@@ -3,7 +3,7 @@ package com.alchitry.labs.hardware;
 import org.eclipse.swt.custom.StyledText;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public abstract class ProjectLoader {
 	protected abstract void eraseFlash();

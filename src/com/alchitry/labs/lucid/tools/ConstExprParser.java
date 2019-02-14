@@ -14,7 +14,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.language.BitValue;
 import com.alchitry.labs.language.ConstValue;
 import com.alchitry.labs.lucid.Constant;

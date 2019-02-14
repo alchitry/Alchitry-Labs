@@ -1,6 +1,8 @@
 package com.alchitry.labs;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
@@ -25,6 +27,11 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.batik.transcoder.SVGAbstractTranscoder;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -33,13 +40,14 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.widgets.CustomConsole;
 
 import jssc.SerialPort;
@@ -93,6 +101,10 @@ public class Util {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static float getScalingFactor() {
+		return display.getDPI().x;
 	}
 
 	public static void setDisplay(Display display) {
@@ -403,7 +415,7 @@ public class Util {
 	public static String getIceProgCommand() {
 		return "iceprog";
 	}
-	
+
 	public static String getAuLoaderCommand() {
 		if (ideType == ECLIPSE)
 			return "tools/linux/bin/auloader";
@@ -561,5 +573,36 @@ public class Util {
 
 	public static boolean isSourceFile(String fileName) {
 		return endsWithSuffixList(fileName, sourceSuffixes);
+	}
+
+	public static Image svgToImage(String svgFile, int width, int height) {
+		ByteArrayOutputStream resultByteStream = new ByteArrayOutputStream();
+		TranscoderInput input = new TranscoderInput(MainWindow.class.getResourceAsStream(svgFile));
+		TranscoderOutput output = new TranscoderOutput(resultByteStream);
+
+		PNGTranscoder png = new PNGTranscoder();
+
+		if (height > 0)
+			png.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, (float) height);
+		if (width > 0)
+			png.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, (float) width);
+
+		try {
+			png.transcode(input, output);
+		} catch (TranscoderException e1) {
+			System.err.println("Failed to transcode image " + svgFile + "!");
+			return null;
+		}
+
+		try {
+			resultByteStream.flush();
+		} catch (IOException e1) {
+			System.err.println("Failed to flush stream for image " + svgFile + "!");
+			return null;
+		}
+
+		ByteArrayInputStream imgstream = new ByteArrayInputStream(resultByteStream.toByteArray());
+
+		return new Image(getDisplay(), imgstream);
 	}
 }

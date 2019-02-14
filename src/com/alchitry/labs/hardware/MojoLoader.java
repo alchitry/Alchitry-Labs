@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 
 import jssc.SerialPort;
 import jssc.SerialPortException;

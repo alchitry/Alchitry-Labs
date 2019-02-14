@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.ProjectSignal;
 import com.alchitry.labs.language.Sig;

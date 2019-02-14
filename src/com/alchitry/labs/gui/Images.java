@@ -5,6 +5,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 
 import com.alchitry.labs.Settings;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public class Images {
 	public static Image loadIcon;

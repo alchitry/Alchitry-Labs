@@ -3,7 +3,7 @@ package com.alchitry.labs;
 import java.io.File;
 import java.net.URISyntaxException;
 
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public class Locations {
 	public static final File progDir;

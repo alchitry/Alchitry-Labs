@@ -1,6 +1,6 @@
 package com.alchitry.labs.lucid.toVerilog;
 
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public class LucidConvertedHeader {
 	private LucidConvertedHeader(){}

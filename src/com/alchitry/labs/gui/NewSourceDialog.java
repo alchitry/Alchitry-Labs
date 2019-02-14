@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.alchitry.labs.boards.Board;
 import com.alchitry.labs.project.SourceFile;
 
 public class NewSourceDialog extends Dialog {
@@ -20,19 +21,23 @@ public class NewSourceDialog extends Dialog {
 	protected SourceFile result;
 	protected Shell shell;
 	private Text text;
+	private Board board;
 
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
-	public NewSourceDialog(Shell parent) {
+	public NewSourceDialog(Shell parent, Board board) {
 		super(parent);
 		setText("New File...");
+		this.board = board;
 	}
 
 	/**
 	 * Open the dialog.
+	 * 
 	 * @return the result
 	 */
 	public SourceFile open() {
@@ -56,83 +61,82 @@ public class NewSourceDialog extends Dialog {
 		shell.setSize(615, 472);
 		shell.setText(getText());
 		shell.setLayout(new GridLayout(6, false));
-		
+
 		Label lblFileName = new Label(shell, SWT.NONE);
 		lblFileName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblFileName.setText("File name:");
-		
+
 		text = new Text(shell, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
-		
+
 		Label lblSelectAType = new Label(shell, SWT.NONE);
 		lblSelectAType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 6, 1));
 		lblSelectAType.setText("Select the type of file to add to your project.");
-		
+
 		final Button btnLucidSourceFile = new Button(shell, SWT.RADIO);
 		btnLucidSourceFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String name = text.getText();
 				String newName;
-				if (name.endsWith(".ucf"))
-					newName = name.substring(0, name.length()-4)+".luc";
-				else if (name.endsWith(".v"))
-					newName = name.substring(0, name.length()-2)+".luc";
-				else if (name.endsWith(".luc"))
-					newName = name;
+				int lastDot = name.lastIndexOf('.');
+				if (lastDot >= 0)
+					newName = name.substring(0, lastDot) + ".luc";
 				else
 					newName = name + ".luc";
+
 				text.setText(newName);
-				
+
 			}
 		});
 		btnLucidSourceFile.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnLucidSourceFile.setText("Lucid Source");
-		
+
 		final Button btnVerilogSourceFile = new Button(shell, SWT.RADIO);
 		btnVerilogSourceFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String name = text.getText();
 				String newName;
-				if (name.endsWith(".ucf") || name.endsWith(".luc"))
-					newName = name.substring(0, name.length()-4)+".v";
-				else if (name.endsWith(".v"))
-					newName = name;
+				int lastDot = name.lastIndexOf('.');
+				if (lastDot >= 0)
+					newName = name.substring(0, lastDot) + ".v";
 				else
 					newName = name + ".v";
+
 				text.setText(newName);
-				
+
 			}
 		});
 		btnVerilogSourceFile.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnVerilogSourceFile.setText("Verilog Source");
-		
-		
-		final Button btnUcfConstraintsFile = new Button(shell, SWT.RADIO);
-		btnUcfConstraintsFile.addSelectionListener(new SelectionAdapter() {
+
+		final Button btnConstraintsFile = new Button(shell, SWT.RADIO);
+		btnConstraintsFile.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnConstraintsFile.setText("User Constraints");
+		btnConstraintsFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String name = text.getText();
-				String newName;
-				if (name.endsWith(".v"))
-					newName = name.substring(0, name.length()-2)+".ucf";
-				else if (name.endsWith(".luc"))
-					newName = name.substring(0, name.length()-4)+".ucf";
-				else if (name.endsWith(".ucf"))
-					newName = name;
-				else
-					newName = name + ".ucf";
-				text.setText(newName);
+				String[] constratintExtensions = board.getSupportedConstraintExtensions();
+				if (constratintExtensions.length > 0) {
+					String ext = constratintExtensions[0];
+					String name = text.getText();
+					String newName;
+					int lastDot = name.lastIndexOf('.');
+					if (lastDot >= 0)
+						newName = name.substring(0, lastDot) + ext;
+					else
+						newName = name + ext;
+
+					text.setText(newName);
+				}
 			}
 		});
-		btnUcfConstraintsFile.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnUcfConstraintsFile.setText("User Constraints");
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
-		
+
 		Button btnCancel = new Button(shell, SWT.NONE);
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -145,43 +149,50 @@ public class NewSourceDialog extends Dialog {
 		gd_btnCancel.widthHint = 100;
 		btnCancel.setLayoutData(gd_btnCancel);
 		btnCancel.setText("Cancel");
-		
+
 		Button btnCreateFile = new Button(shell, SWT.NONE);
 		btnCreateFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				result = new SourceFile();
 				result.fileName = text.getText();
-				if (btnLucidSourceFile.getSelection()){
+				if (btnLucidSourceFile.getSelection()) {
 					result.type = SourceFile.LUCID;
-					if (!result.fileName.endsWith(".luc")){
-						MessageBox box = new MessageBox(shell,SWT.OK);
+					if (!result.fileName.endsWith(".luc")) {
+						MessageBox box = new MessageBox(shell, SWT.OK);
 						box.setText("Invalid Options");
 						box.setMessage("Lucid file names must end with \".luc\".");
 						box.open();
 						return;
 					}
-				} else if (btnVerilogSourceFile.getSelection()){
+				} else if (btnVerilogSourceFile.getSelection()) {
 					result.type = SourceFile.VERILOG;
-					if (!result.fileName.endsWith(".v")){
-						MessageBox box = new MessageBox(shell,SWT.OK);
+					if (!result.fileName.endsWith(".v")) {
+						MessageBox box = new MessageBox(shell, SWT.OK);
 						box.setText("Invalid Options");
 						box.setMessage("Verilog file names must end with \".v\".");
 						box.open();
 						return;
 					}
-				} else if (btnUcfConstraintsFile.getSelection()){
+				} else if (btnConstraintsFile.getSelection()) {
 					result.type = SourceFile.CONSTRAINT;
-					if (!result.fileName.endsWith(".ucf")){
-						MessageBox box = new MessageBox(shell,SWT.OK);
+					boolean acceptable = false;
+					String[] constraintTypes = board.getSupportedConstraintExtensions();
+					for (String c : constraintTypes)
+						if (result.fileName.endsWith(c)) {
+							acceptable = true;
+							break;
+						}
+					if (!acceptable) {
+						MessageBox box = new MessageBox(shell, SWT.OK);
 						box.setText("Invalid Options");
-						box.setMessage("Constraint file names must end with \".ucf\".");
+						box.setMessage("Constraint file names must end with \"" + String.join("\", \"", constraintTypes) + "\".");
 						box.open();
 						return;
 					}
 				} else {
 					result = null;
-					MessageBox box = new MessageBox(shell,SWT.OK);
+					MessageBox box = new MessageBox(shell, SWT.OK);
 					box.setText("Invalid Options");
 					box.setMessage("You must select the file type.");
 					box.open();

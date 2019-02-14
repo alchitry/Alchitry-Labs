@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -47,9 +48,9 @@ import org.jdom2.output.XMLOutputter;
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.boards.Board;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.Param;
@@ -415,6 +416,24 @@ public class Project {
 			if (Boolean.valueOf(lib).equals(constraintLib.get(s)))
 				hs.add(s);
 		return hs;
+	}
+	
+	private boolean endsWithExt(String str, String[] ext) {
+		for (String e : ext)
+			if (str.endsWith(e))
+				return true;
+		return false;
+	}
+	
+	public void removeUnsupportedConstraints(HashSet<String> constraints) {
+		String[] ext = boardType.getSupportedConstraintExtensions();
+		for (Iterator<String> it = constraints.iterator(); it.hasNext(); ) {
+			String c = it.next();
+			if (!endsWithExt(c,ext)) {
+				it.remove();
+				Util.println("Constraint \"" + c + "\" is of an unsupported type. It will be ignored.", true);
+			}
+		}
 	}
 
 	public boolean isConstraintFromLib(String c) {

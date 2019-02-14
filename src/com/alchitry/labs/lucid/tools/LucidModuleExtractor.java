@@ -7,7 +7,7 @@ import java.util.List;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.Param;
 import com.alchitry.labs.language.Sig;

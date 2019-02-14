@@ -21,7 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.alchitry.labs.gui.FileDownloaderDialog;
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public class UpdateChecker {
 	private UpdateChecker() {

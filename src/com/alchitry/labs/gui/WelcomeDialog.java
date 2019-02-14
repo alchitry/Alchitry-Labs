@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.alchitry.labs.gui.main.MainWindow;
+
 public class WelcomeDialog extends Dialog {
 
 	protected Object result;

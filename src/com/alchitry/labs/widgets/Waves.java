@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Images;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.LogicCapture;
 import com.alchitry.labs.language.BitValue;
 import com.alchitry.labs.language.ConstValue;

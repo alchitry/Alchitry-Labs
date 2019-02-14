@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
@@ -136,11 +138,13 @@ public class VivadoBuilder extends ProjectBuilder {
 		file.write("set verilogSources [list " + getSpacedList(vFiles, srcFolder.replace("\\", "/") + ps) + "]" + nl);
 		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
 		file.write("set xdcSources [list ");
-		HashSet<String> localUcf = project.getConstraintFiles(false);
-		if (localUcf.size() > 0)
+		HashSet<String> localConstraint = project.getConstraintFiles(false);
+		project.removeUnsupportedConstraints(localConstraint);
+		if (localConstraint.size() > 0)
 			file.write(getSpacedList(project.getConstraintFiles(false), project.getConstraintFolder().replace("\\", "/").replace(" ", "\\ ") + ps));
-		HashSet<String> libUcf = project.getConstraintFiles(true);
-		if (libUcf.size() > 0)
+		HashSet<String> libConstraint = project.getConstraintFiles(true);
+		project.removeUnsupportedConstraints(libConstraint);
+		if (libConstraint.size() > 0)
 			file.write(" " + getSpacedList(project.getConstraintFiles(true), Locations.COMPONENTS.replace("\\", "/").replace(" ", "\\ ") + ps));
 		file.write("]" + nl);
 		file.write("read_xdc $xdcSources" + nl);
@@ -165,8 +169,8 @@ public class VivadoBuilder extends ProjectBuilder {
 
 		file.write("launch_runs -runs synth_1 -jobs 8" + nl);
 		file.write("wait_on_run synth_1" + nl);
-		//file.write("launch_runs -runs impl_1 -jobs 8" + nl);
-		//file.write("wait_on_run impl_1" + nl);
+		// file.write("launch_runs -runs impl_1 -jobs 8" + nl);
+		// file.write("wait_on_run impl_1" + nl);
 		file.write("launch_runs impl_1 -to_step write_bitstream -jobs 8" + nl);
 		file.write("wait_on_run impl_1" + nl);
 

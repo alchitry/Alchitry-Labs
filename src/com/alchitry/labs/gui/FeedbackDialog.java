@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.alchitry.labs.gui.main.MainWindow;
+
 public class FeedbackDialog extends Dialog {
 
 	protected EmailMessage result;

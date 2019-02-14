@@ -14,8 +14,6 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -47,10 +45,8 @@ public class CustomTree extends Canvas {
 	public CustomTree(Composite parent) {
 		super(parent, SWT.DOUBLE_BUFFERED);
 
-		FontData[] fd = getFont().getFontData();
-		for (int i = 0; i < fd.length; ++i)
-			fd[i].setHeight(12);
-		setFont(new Font(getDisplay(), fd));
+
+		setFont(Theme.defaultFont);
 		
 		textHeight = 21;
 		oldHeight = -1;

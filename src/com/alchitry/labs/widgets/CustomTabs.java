@@ -32,9 +32,9 @@ import org.eclipse.swt.widgets.Sash;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Images;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public class CustomTabs extends Composite implements Listener {
 	private ArrayList<CustomTab> tabs;
@@ -615,7 +615,7 @@ public class CustomTabs extends Composite implements Listener {
 	}
 
 	public void setTabTextColor(Control c, Color tabTextColor) {
-		int idx = contents.indexOf(c);
+		int idx = contents.indexOf((Object)c);
 		if (idx < 0 || idx > tabs.size())
 			return;
 		tabs.get(idx).setForeground(tabTextColor);

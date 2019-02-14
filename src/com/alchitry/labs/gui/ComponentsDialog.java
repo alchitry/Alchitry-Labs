@@ -31,6 +31,7 @@ import org.jdom2.input.SAXBuilder;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.style.ParseException;
 

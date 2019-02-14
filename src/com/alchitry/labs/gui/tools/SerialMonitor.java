@@ -14,8 +14,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.widgets.CustomCombo;
 
 import jssc.SerialPort;

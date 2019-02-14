@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
 import com.alchitry.labs.gui.SignalSelectionDialog;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.ProjectSignal;

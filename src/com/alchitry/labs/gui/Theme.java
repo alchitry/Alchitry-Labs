@@ -1,9 +1,12 @@
 package com.alchitry.labs.gui;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 
 import com.alchitry.labs.Settings;
+import com.alchitry.labs.Util;
 
 public class Theme {
 	public static boolean set;
@@ -62,10 +65,19 @@ public class Theme {
 	public static Color waveButtonActiveColor;
 	public static Color waveGridColor;
 	public static Color waveCursorColor;
+	
+	public static Font defaultFont;
+	public static Font boldFont;
+	
+	public static void init(Display display) {
+		initColors(display);
+		initFonts(display);
+		set = true;
+	}
 
-	public static void initColors(Display display) {
+	private static void initColors(Display display) {
 		if (Settings.pref.getBoolean(Settings.THEME, false)) {
-			mainAccentColor = new Color(display, 217, 172, 33);
+			mainAccentColor = new Color(display, 255, 204, 0);
 			darkAccentColor = new Color(display, 191, 152, 29);
 			moduleColor = new Color(display, 217, 165, 11);
 			keyWordColor = new Color(display, 8, 153, 153);
@@ -119,7 +131,7 @@ public class Theme {
 			waveGridColor = new Color(display, 220, 220, 220);
 			waveCursorColor = new Color(display, 0, 0, 0);
 		} else {
-			mainAccentColor = new Color(display, 217, 172, 33);
+			mainAccentColor = new Color(display, 255, 204, 0);
 			darkAccentColor = new Color(display, 191, 152, 29);
 			moduleColor = new Color(display, 217, 165, 11);
 			keyWordColor = new Color(display, 10, 191, 191);
@@ -173,7 +185,11 @@ public class Theme {
 			waveGridColor = new Color(display, 80, 80, 70);
 			waveCursorColor = new Color(display, 255, 255, 255);
 		}
-		set = true;
+	}
+	
+	private static void initFonts(Display display) {
+		defaultFont = new Font(display, "Ubuntu", 12, SWT.NORMAL);
+		boldFont = new Font(display, "Ubuntu", 12, SWT.BOLD);
 	}
 
 	public static void dispose() {
@@ -229,6 +245,10 @@ public class Theme {
 		waveButtonActiveColor.dispose();
 		waveGridColor.dispose();
 		waveCursorColor.dispose();
+		
+		defaultFont.dispose();
+		boldFont.dispose();
+		
 		set = false;
 	}
 }

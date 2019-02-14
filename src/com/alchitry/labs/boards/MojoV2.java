@@ -4,6 +4,7 @@ import com.alchitry.labs.hardware.MojoLoader;
 import com.alchitry.labs.hardware.ProjectLoader;
 import com.alchitry.labs.project.ISEBuilder;
 import com.alchitry.labs.project.ProjectBuilder;
+import com.alchitry.labs.widgets.IoRegion;
 
 public class MojoV2 extends Board {
 
@@ -45,6 +46,23 @@ public class MojoV2 extends Board {
 	@Override
 	public ProjectLoader getLoader() {
 		return new MojoLoader();
+	}
+
+	@Override
+	public IoRegion[] getIoRegions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getSVGPath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public String[] getSupportedConstraintExtensions() {
+		return new String[] {".ucf"};
 	}
 
 }

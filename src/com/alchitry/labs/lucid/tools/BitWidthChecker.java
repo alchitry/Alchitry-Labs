@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.MainWindow;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.language.ConstValue;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.Module;
