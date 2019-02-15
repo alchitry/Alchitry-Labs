@@ -101,7 +101,7 @@ public class MainWindow {
 			mainWindow.open();
 		} catch (Exception e) {
 			Util.log.log(Level.SEVERE, "", e);
-			if (Util.ideType != Util.ECLIPSE)
+			if (Util.getEnvType() != Util.ECLIPSE)
 				Reporter.reportException(e);
 
 			if (mainWindow != null)
@@ -152,19 +152,19 @@ public class MainWindow {
 		if (args.length > 0) {
 			switch (args[0]) {
 			case "lin32":
-				Util.ideType = Util.LIN32;
+				Util.setEnvType(Util.LIN32);
 				break;
 			case "lin64":
-				Util.ideType = Util.LIN64;
+				Util.setEnvType(Util.LIN64);
 				break;
 			case "win32":
-				Util.ideType = Util.WIN32;
+				Util.setEnvType(Util.WIN32);
 				break;
 			case "win64":
-				Util.ideType = Util.WIN64;
+				Util.setEnvType(Util.WIN64);
 				break;
 			case "eclipse":
-				Util.ideType = Util.ECLIPSE;
+				Util.setEnvType(Util.ECLIPSE);
 				break;
 			}
 		}

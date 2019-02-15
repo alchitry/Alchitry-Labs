@@ -417,19 +417,19 @@ public class Project {
 				hs.add(s);
 		return hs;
 	}
-	
+
 	private boolean endsWithExt(String str, String[] ext) {
 		for (String e : ext)
 			if (str.endsWith(e))
 				return true;
 		return false;
 	}
-	
+
 	public void removeUnsupportedConstraints(HashSet<String> constraints) {
 		String[] ext = boardType.getSupportedConstraintExtensions();
-		for (Iterator<String> it = constraints.iterator(); it.hasNext(); ) {
+		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
 			String c = it.next();
-			if (!endsWithExt(c,ext)) {
+			if (!endsWithExt(c, ext)) {
 				it.remove();
 				Util.println("Constraint \"" + c + "\" is of an unsupported type. It will be ignored.", true);
 			}
@@ -477,9 +477,12 @@ public class Project {
 		return projectFolder + File.separatorChar + projectFile;
 	}
 
-	public void setBoardType(String type) {
+	public boolean setBoardType(String type) {
 		boardType = Board.getFromName(type);
+		if (boardType == null) 
+			return false;
 		builder = boardType.getBuilder();
+		return true;
 	}
 
 	public void setProjectFolder(String folder) {
@@ -846,7 +849,8 @@ public class Project {
 		if (brdType == null) {
 			throw new ParseException("Board type is missing");
 		}
-		setBoardType(brdType.getValue());
+		if (!setBoardType(brdType.getValue()))
+			throw new ParseException("Unknown board type: " + brdType.getValue());
 
 		Attribute langType = project.getAttribute(Tags.Attributes.language);
 		if (langType == null)

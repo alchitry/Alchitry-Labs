@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,116 @@ public class MojoFlasher {
 
 	public boolean isLoading() {
 		return thread != null && thread.isAlive();
+	}
+
+	private int attemptFlash(boolean isV3, String port) {
+		BufferedWriter out = null;
+		int status = -1;
+		try {
+			String avrDude = Locations.BIN + File.separator + "avrdude";
+			String configPath = Locations.ETC + File.separator + "avrdude.conf";
+			String hexFile = Locations.FIRMWARE + File.separator + (isV3 ? "mojo-v3-loader.hex" : "mojo-v2-loader.hex");
+			String avr = isV3 ? "atmega32u4" : "atmega16u4";
+			String board = isV3 ? "Mojo V3" : "Mojo V2";
+
+			if (Util.isWindows)
+				avrDude += ".exe";
+
+			if (!new File(avrDude).exists()) {
+				Util.log.severe("Couldn't find avrdude");
+				Util.println("The loading program avrdude couldn't be found!", true);
+				return -1;
+			}
+
+			if (!new File(hexFile).exists()) {
+				Util.log.severe("Couldn't find hex file");
+				Util.println("Could not find the firmware for " + board + ". Looked at " + hexFile, true);
+				return -1;
+			}
+
+			hexFile = "library/firmware/mojo-v3-loader.hex";
+			configPath = "tools/etc/avrdude.conf";
+
+			ArrayList<String> cmd = new ArrayList<>();
+			cmd.add(avrDude);
+			cmd.add("-p");
+			cmd.add(avr);
+			cmd.add("-P");
+			cmd.add(port);
+			cmd.add("-c");
+			cmd.add("avr109");
+			cmd.add("-C");
+			cmd.add(configPath);
+			cmd.add("-U");
+			cmd.add("flash:w:" + hexFile + ":i");
+
+			ProcessBuilder pb = new ProcessBuilder(cmd);
+
+			final Process p;
+			try {
+				p = pb.start();
+			} catch (Exception e) {
+				Util.log.severe("Couldn't start avrdude. Tried " + avrDude);
+				Util.println("Could not start avrdude!", true);
+				return -1;
+			}
+
+			new Thread() {
+				public void run() {
+					BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+					String line;
+					try {
+						while ((line = br.readLine()) != null) {
+							Util.print(line + System.lineSeparator(), false);
+						}
+					} catch (IOException e) {
+						Util.log.severe(ExceptionUtils.getStackTrace(e));
+						Util.print(e.getMessage(), true);
+					} finally {
+						try {
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}.start();
+
+			new Thread() {
+				public void run() {
+					BufferedReader br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+					String line;
+					try {
+						while ((line = br.readLine()) != null) {
+							Util.print(line + System.lineSeparator(), false);
+						}
+					} catch (IOException e) {
+						Util.log.severe(ExceptionUtils.getStackTrace(e));
+						Util.print(e.getMessage(), true);
+					} finally {
+						try {
+							br.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}.start();
+			status = p.waitFor();
+
+		} catch (Exception e) {
+			Util.println("ERROR: " + e.getMessage(), true);
+			Util.log.severe(ExceptionUtils.getStackTrace(e));
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			MainWindow.mainWindow.enableMonitor(true);
+		}
+		return status;
 	}
 
 	public void flashMojo(final String portName, final Board board) {
@@ -73,97 +184,20 @@ public class MojoFlasher {
 					return;
 				}
 
-				Util.println("Programming Mojo on " + port);
+				Util.println("Programming Mojo V3 on " + port);
 
-				BufferedWriter out = null;
-				try {
-					String avrDude = Locations.BIN + File.separator + "avrdude";
-					String configPath = Locations.ETC + File.separator + "avrdude.conf";
-					String hexFile = Locations.FIRMWARE + File.separator + board.getHexFile();
-
-					if (Util.isWindows)
-						avrDude += ".exe";
-
-					if (!new File(avrDude).exists()) {
-						Util.log.severe("Couldn't find avrdude");
-						Util.println("The loading program avrdude couldn't be found!", true);
-						return;
-					}
-
-					if (!new File(hexFile).exists()) {
-						Util.log.severe("Couldn't find hex file");
-						Util.println("Could not find the firmware for " + board.getName() + ". Looked at " + hexFile, true);
-						return;
-					}
-
-					ProcessBuilder pb = new ProcessBuilder(avrDude, "-p", board.getAVRName(), "-P", port, "-c", "avr109", "-C", configPath, "-U", "flash:w:" + hexFile+":i");
-					
-					final Process p;
-					try {
-						p = pb.start();
-					} catch (Exception e) {
-						Util.log.severe("Couldn't start avrdude. Tried " + avrDude);
-						Util.println("Could not start avrdude!", true);
-						return;
-					}
-
-					new Thread() {
-						public void run() {
-							BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-							String line;
-							try {
-								while ((line = br.readLine()) != null) {
-									Util.print(line + System.lineSeparator(), false);
-								}
-							} catch (IOException e) {
-								Util.log.severe(ExceptionUtils.getStackTrace(e));
-								Util.print(e.getMessage(), true);
-							} finally {
-								try {
-									br.close();
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}.start();
-
-					new Thread() {
-						public void run() {
-							BufferedReader br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-							String line;
-							try {
-								while ((line = br.readLine()) != null) {
-									Util.print(line + System.lineSeparator(), false);
-								}
-							} catch (IOException e) {
-								Util.log.severe(ExceptionUtils.getStackTrace(e));
-								Util.print(e.getMessage(), true);
-							} finally {
-								try {
-									br.close();
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}.start();
-					p.waitFor();
-
-					Util.println("Finished flashing.");
-
-				} catch (Exception e) {
-					Util.println("ERROR: " + e.getMessage(), true);
-					Util.log.severe(ExceptionUtils.getStackTrace(e));
-				} finally {
-					if (out != null)
-						try {
-							out.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					MainWindow.mainWindow.enableMonitor(true);
+				int status = attemptFlash(true, port);
+				if (status != 0) {
+					Util.println("Flashing failed. Trying V2 firmware instead!");
+					Util.println("Programming Mojo V2 on " + port);
+					status = attemptFlash(false, port);
 				}
+
+				if (status == 0)
+					Util.println("Finished flashing.");
+				else
+					Util.println("Flashing failed.");
+
 			}
 		};
 

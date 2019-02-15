@@ -243,7 +243,7 @@ public class NewProjectDialog extends Dialog {
 
 		HashMap<String, String> nameToFile = getExampleProjects(boardType, language, null);
 
-		File srcDir = new File(Locations.BASE + File.separator + board.getBaseProjectName() + File.separator + language + File.separator + nameToFile.get(example));
+		File srcDir = new File(Locations.BASE + File.separator + board.getExampleProjectDir() + File.separator + language + File.separator + nameToFile.get(example));
 
 		if (!srcDir.exists()) {
 			Util.showError("Could not find starter code!");
@@ -335,7 +335,7 @@ public class NewProjectDialog extends Dialog {
 		HashMap<String, String> map = new HashMap<>();
 
 		SAXBuilder builder = new SAXBuilder();
-		File xmlFile = new File(Locations.BASE + File.separator + board.getBaseProjectName() + File.separator + language + File.separator + PROJECT_XML);
+		File xmlFile = new File(Locations.BASE + File.separator + board.getExampleProjectDir() + File.separator + language + File.separator + PROJECT_XML);
 
 		Document document;
 		try {

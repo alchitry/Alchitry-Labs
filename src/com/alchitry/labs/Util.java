@@ -60,6 +60,7 @@ public class Util {
 	public static Path tmpDir;
 	public static final boolean isWindows;
 	public static final boolean isLinux;
+	public static String osDir;
 	public static Logger log;
 	public static boolean isGUI;
 
@@ -69,7 +70,7 @@ public class Util {
 	public static final int LIN32 = 2;
 	public static final int LIN64 = 3;
 	public static final int ECLIPSE = 4;
-	public static int ideType = UNKNOWN;
+	private static int envType = UNKNOWN;
 
 	public static String[] constraintSuffixes = new String[] { ".ucf" };
 	public static String[] sourceSuffixes = new String[] { ".v", ".luc" };
@@ -78,7 +79,7 @@ public class Util {
 		String os = System.getProperty("os.name");
 		isWindows = os.startsWith("Windows");
 		isLinux = os.startsWith("Linux");
-
+		
 		isGUI = false;
 
 		try {
@@ -100,6 +101,28 @@ public class Util {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public static int getEnvType() {
+		return envType;
+	}
+	
+	public static void setEnvType(int env) {
+		envType = env;
+		switch (envType) {
+		case UNKNOWN:
+			osDir = "";
+			break;
+		case WIN32:
+		case WIN64:
+			osDir = "windows";
+			break;
+		case LIN32:
+		case LIN64:
+		case ECLIPSE:
+			osDir = "linux";
+			break;
 		}
 	}
 
@@ -417,7 +440,7 @@ public class Util {
 	}
 
 	public static String getAuLoaderCommand() {
-		if (ideType == ECLIPSE)
+		if (envType == ECLIPSE)
 			return "tools/linux/bin/auloader";
 		return "auloader";
 	}

@@ -48,7 +48,7 @@ public class CoreGen {
 
 			String coregen = xilinx + Environment.COREGEN_PATH;
 			Board board = project.getBoard();
-			String projSettingsFile = Locations.BASE + File.separatorChar + board.getBaseProjectName() + File.separatorChar + "coregen_prop";
+			String projSettingsFile = Locations.BASE + File.separatorChar + board.getExampleProjectDir() + File.separatorChar + "coregen_prop";
 
 			String coreGenDir = project.getFolder() + File.separatorChar + "coreGen";
 			String coreGenProjFile = coreGenDir + File.separatorChar + PROJECT_FILE;

@@ -20,16 +20,16 @@ public class Locations {
 		}
 
 		prog = prog.getParentFile();
-		if (prog != null && !new File(prog.getPath()+File.separator+"lib").exists())
+		if (prog != null && !new File(prog.getPath() + File.separator + "lib").exists())
 			progDir = prog.getParentFile();
 		else
 			progDir = prog;
-		
+
 		if (progDir != null)
 			progPrefix = progDir.getPath() + File.separatorChar;
 		else
 			progPrefix = "";
-		
+
 	}
 
 	public static final String LIBRARY = progPrefix + "library";
@@ -38,9 +38,9 @@ public class Locations {
 	public static final String FIRMWARE = LIBRARY + File.separator + "firmware";
 
 	public static final String TOOLS = progPrefix + "tools";
-	public static final String BIN = TOOLS + File.separator + "bin";
+	public static final String BIN = TOOLS + File.separator + Util.osDir + File.separator + "bin";
 	public static final String ETC = TOOLS + File.separator + "etc";
-	public static final String LIB = TOOLS + File.separator + "lib";
+	public static final String LIB = TOOLS + File.separator + Util.osDir + File.separator + "lib";
 
 	public static final String RESOURCES = progPrefix + "res";
 

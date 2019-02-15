@@ -69,8 +69,6 @@ public class MainToolbar {
 		Project p = MainWindow.getOpenProject();
 		if (p != null)
 			board = p.getBoard();
-		
-		System.out.println(board);
 
 		createButton(Images.fileIcon, Images.fileIconHover, "New File", new Listener() {
 			@Override

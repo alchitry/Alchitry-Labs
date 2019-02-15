@@ -7,7 +7,7 @@ import com.alchitry.labs.project.ProjectBuilder;
 import com.alchitry.labs.widgets.IoRegion;
 
 public abstract class Board {
-	public static final int ANY = 0xFFFF;
+	public static final int ANY = 0xFFFFFFFF;
 	public static final int AU = 1 << 0;
 	public static final int CU = 1 << 1;
 	public static final int MOJO = 1 << 2;
@@ -17,19 +17,14 @@ public abstract class Board {
 	static {
 		boards.add(new AlchitryCu());
 		boards.add(new AlchitryAu());
-		boards.add(new MojoV3());
-		boards.add(new MojoV2());
+		boards.add(new Mojo());
 	}
 
 	public abstract String getFPGAName();
 
-	public abstract String getAVRName();
-
 	public abstract String getName();
 
-	public abstract String getBaseProjectName();
-
-	public abstract String getHexFile();
+	public abstract String getExampleProjectDir();
 
 	public abstract ProjectBuilder getBuilder();
 
@@ -53,18 +48,32 @@ public abstract class Board {
 
 	public static Board getFromProjectName(String board) {
 		for (Board b : boards) {
-			if (b.getBaseProjectName().equals(board))
+			if (b.getExampleProjectDir().equals(board))
 				return b;
 		}
 		return null;
 	}
 
+	public int getType() {
+		return getType(this);
+	}
+
+	public boolean isType(int type) {
+		return isType(this, type);
+	}
+
+	public static int getType(Board board) {
+		if (AlchitryAu.class.isInstance(board))
+			return AU;
+		if (AlchitryCu.class.isInstance(board))
+			return CU;
+		if (Mojo.class.isInstance(board))
+			return MOJO;
+		return 0;
+	}
+
 	public static boolean isType(Board board, int type) {
-		if ((type & AU) != 0 && AlchitryAu.class.isInstance(board))
-			return true;
-		if ((type & CU) != 0 && AlchitryCu.class.isInstance(board))
-			return true;
-		if ((type & MOJO) != 0 && (MojoV3.class.isInstance(board) || MojoV2.class.isInstance(board)))
+		if ((type & getType(board)) != 0)
 			return true;
 		return false;
 	}

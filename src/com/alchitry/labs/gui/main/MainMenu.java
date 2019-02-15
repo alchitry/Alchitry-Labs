@@ -14,15 +14,13 @@ import org.eclipse.swt.widgets.Shell;
 import com.alchitry.labs.Reporter;
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.AlchitryAu;
-import com.alchitry.labs.boards.AlchitryCu;
 import com.alchitry.labs.boards.Board;
-import com.alchitry.labs.boards.MojoV2;
-import com.alchitry.labs.boards.MojoV3;
+import com.alchitry.labs.boards.Mojo;
 import com.alchitry.labs.gui.BoardSelector;
 import com.alchitry.labs.gui.EmailMessage;
 import com.alchitry.labs.gui.FeedbackDialog;
 import com.alchitry.labs.gui.NewProjectDialog;
+import com.alchitry.labs.gui.SerialPortSelector;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.ThemeSelectorDialog;
 import com.alchitry.labs.gui.WelcomeDialog;
@@ -30,6 +28,8 @@ import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
 import com.alchitry.labs.project.Project;
+
+import jssc.SerialPortList;
 
 public class MainMenu {
 	MainWindow parent;
@@ -196,22 +196,30 @@ public class MainMenu {
 	private void buildToolsMenu() {
 		Menu subMenu = createSubMenu(menu, "Tools");
 
-		if (Board.isType(board, Board.MOJO))
-			createItem(subMenu, "Flash Firmware...", new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					String port = Settings.pref.get(Settings.MOJO_PORT, null);
-					if (port == null) {
-						Util.showError("You need to select the serial port the Mojo is connected to in the settings menu.");
-						return;
-					}
-
-					BoardSelector selector = new BoardSelector(parent.getShell(), SWT.APPLICATION_MODAL);
-					Board b = selector.open();
-					if (b != null)
-						parent.flasher.flashMojo(port, b);
+		createItem(subMenu, "Flash Firmware...", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				BoardSelector selector = new BoardSelector(parent.getShell(), SWT.APPLICATION_MODAL);
+				Board b = selector.open();
+				if (b == null)
+					return;
+				
+				switch(b.getType()) {
+				case Board.AU:
+				case Board.CU:
+					Util.showError("Au and Cu are currently not supported!");
+					break;
+				case Board.MOJO:
+					String[] ports = SerialPortList.getPortNames();
+					SerialPortSelector dialog = new SerialPortSelector(parent.getShell(), ports);
+					String port = dialog.open();
+					if (port == null)
+						break;
+					parent.flasher.flashMojo(port, b);
+					break;
 				}
-			});
+			}
+		});
 
 		createItem(subMenu, "Serial Port Monitor...", new SelectionAdapter() {
 			@Override

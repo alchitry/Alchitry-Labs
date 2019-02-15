@@ -38,23 +38,13 @@ public class AlchitryAu extends Board {
 	}
 
 	@Override
-	public String getAVRName() {
-		return null;
-	}
-
-	@Override
 	public String getName() {
 		return "Alchitry Au";
 	}
 
 	@Override
-	public String getBaseProjectName() {
+	public String getExampleProjectDir() {
 		return "alchitry-au";
-	}
-
-	@Override
-	public String getHexFile() {
-		return null;
 	}
 
 	@Override

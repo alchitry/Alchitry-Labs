@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IO Shield Base" board="Mojo" language="Lucid">
+  <files>
+    <src top="true">mojo_top.luc</src>
+    <constraint lib="true">mojo.ucf</constraint>
+    <constraint lib="true">io_shield.ucf</constraint>
+    <component>reset_conditioner.luc</component>
+  </files>
+</project>

@@ -27,23 +27,13 @@ public class AlchitryCu extends Board {
 	}
 
 	@Override
-	public String getAVRName() {
-		return null;
-	}
-
-	@Override
 	public String getName() {
 		return "Alchitry Cu";
 	}
 
 	@Override
-	public String getBaseProjectName() {
+	public String getExampleProjectDir() {
 		return "alchitry-cu";
-	}
-
-	@Override
-	public String getHexFile() {
-		return null;
 	}
 
 	@Override

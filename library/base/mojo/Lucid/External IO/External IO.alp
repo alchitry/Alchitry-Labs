@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="External IO" board="Mojo" language="Lucid">
+  <files>
+    <src top="true">mojo_top.luc</src>
+    <src>counter.luc</src>
+    <constraint lib="true">mojo.ucf</constraint>
+    <constraint>custom.ucf</constraint>
+    <component>reset_conditioner.luc</component>
+    <component>pipeline.luc</component>
+    <component>button_conditioner.luc</component>
+    <component>edge_detector.luc</component>
+  </files>
+</project>

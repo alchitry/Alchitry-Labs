@@ -29,7 +29,7 @@ public class UpdateChecker {
 	}
 
 	public static void checkForUpdates() {
-		if (Util.ideType != Util.ECLIPSE)
+		if (Util.getEnvType() != Util.ECLIPSE)
 			new Thread(new Runnable() {
 
 				@Override
@@ -276,7 +276,7 @@ public class UpdateChecker {
 			if (result) {
 				URL website;
 				try {
-					switch (Util.ideType) {
+					switch (Util.getEnvType()) {
 					case Util.LIN32:
 						website = new URL("https://embeddedmicro.com/ide/mojo-ide-" + version + "-linux32.tgz");
 						break;
@@ -299,7 +299,7 @@ public class UpdateChecker {
 				FileOutputStream fos = null;
 				Path tempDir;
 				try {
-					if (Util.ideType == Util.LIN32 || Util.ideType == Util.LIN64) {
+					if (Util.getEnvType() == Util.LIN32 || Util.getEnvType() == Util.LIN64) {
 						tempDir = Files.createTempDirectory("mojo_ide_");
 					} else {
 						tempDir = Paths.get(Util.getWorkspace());
@@ -319,7 +319,7 @@ public class UpdateChecker {
 
 					String arcName = null;
 
-					switch (Util.ideType) {
+					switch (Util.getEnvType()) {
 					case Util.LIN32:
 					case Util.LIN64:
 						arcName = "mojo-ide.tgz";
@@ -351,7 +351,7 @@ public class UpdateChecker {
 
 					String cmd[] = {};
 
-					if (Util.ideType == Util.LIN32 || Util.ideType == Util.LIN64) {
+					if (Util.getEnvType() == Util.LIN32 || Util.getEnvType() == Util.LIN64) {
 						ExtractUtility.untargz(libZip.getPath(), stringPath);
 
 						String ideFolder = null;
@@ -427,7 +427,7 @@ public class UpdateChecker {
 				} finally {
 					IOUtils.closeQuietly(rbc);
 					IOUtils.closeQuietly(fos);
-					if (Util.ideType == Util.LIN32 || Util.ideType == Util.LIN64) {
+					if (Util.getEnvType() == Util.LIN32 || Util.getEnvType() == Util.LIN64) {
 						try {
 							FileUtils.deleteDirectory(tempDir.toFile());
 						} catch (IOException e) {
