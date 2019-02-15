@@ -1,8 +1,9 @@
-package com.alchitry.labs.project;
+package com.alchitry.labs.project.builders;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
@@ -53,11 +54,13 @@ public class IceStormBuilder extends ProjectBuilder {
 		arachneCommand.add(workFolder + File.separator + "alchitry.txt");
 
 		HashSet<String> constraints = project.getConstraintFiles(false);
+		removeUnsupportedConstraints(constraints);
 		for (String con : constraints) {
 			arachneCommand.add("-p");
 			arachneCommand.add(project.getConstraintFolder() + File.separatorChar + con);
 		}
 		constraints = project.getConstraintFiles(true);
+		removeUnsupportedConstraints(constraints);
 		for (String con : constraints) {
 			arachneCommand.add("-p");
 			arachneCommand.add(Locations.COMPONENTS + File.separatorChar + con);
@@ -87,6 +90,17 @@ public class IceStormBuilder extends ProjectBuilder {
 		} else {
 			Util.println("");
 			Util.println("Bin file (" + binFile.getAbsolutePath() + ") could not be found! The build probably failed.", true);
+		}
+	}
+	
+	private void removeUnsupportedConstraints(HashSet<String> constraints) {
+		String ext = ".sdc";
+		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
+			String c = it.next();
+			if (c.endsWith(ext)) {
+				it.remove();
+				Util.println("Project IceStorm doesn't support .sdc constraints. \"" + c + "\" will be ignored.", true);
+			}
 		}
 	}
 }

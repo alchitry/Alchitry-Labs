@@ -1,4 +1,4 @@
-package com.alchitry.labs.project;
+package com.alchitry.labs.project.builders;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,6 +14,8 @@ import org.apache.commons.io.FileUtils;
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.project.Environment;
+import com.alchitry.labs.project.IPCore;
 import com.alchitry.labs.style.ParseException;
 
 public class ISEBuilder extends ProjectBuilder {

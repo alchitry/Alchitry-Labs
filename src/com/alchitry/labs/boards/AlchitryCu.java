@@ -2,8 +2,8 @@ package com.alchitry.labs.boards;
 
 import com.alchitry.labs.hardware.CuLoader;
 import com.alchitry.labs.hardware.ProjectLoader;
-import com.alchitry.labs.project.IceStormBuilder;
-import com.alchitry.labs.project.ProjectBuilder;
+import com.alchitry.labs.project.builders.IceStormBuilder;
+import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.widgets.IoRegion;
 
 public class AlchitryCu extends Board {

@@ -290,12 +290,11 @@ public class MainWindow {
 		return false;
 	}
 
-	public void updateXilinxLocation() {
-		Util.showInfo("ISE Location", "The next dialog will ask you for the location of where you installed ISE. "
-				+ "Please point it to the directory whose name is the version number of ISE. This is the Xilinx/14.7 " + "folder in most cases.");
+	public void updateLocation(String prompt, String startingDir, String prefName) {
+		Util.showInfo(prompt);
 		DirectoryDialog dialog = new DirectoryDialog(shlAlchitryLabs, SWT.OPEN | SWT.PRIMARY_MODAL);
-		if (Util.isISESet() && Util.getISELocation() != null) {
-			File current = new File(Util.getISELocation());
+		if (startingDir != null) {
+			File current = new File(startingDir);
 			if (current.getParent() != null)
 				dialog.setFilterPath(current.getParent());
 		}
@@ -303,8 +302,18 @@ public class MainWindow {
 		if (result != null) {
 			if (!result.endsWith(File.separator))
 				result += File.separator;
-			Settings.pref.put(Settings.XILINX_LOC, result);
+			Settings.pref.put(prefName, result);
 		}
+	}
+
+	public void updateISELocation() {
+		updateLocation("The next dialog will ask you for the location of where you installed ISE. Please point it to the "
+				+ "directory whose name is the version number of ISE. This is the Xilinx/14.7 folder in most cases.", Util.getISELocation(), Settings.XILINX_LOC);
+	}
+	
+	public void updateVivadoLocation() {
+		updateLocation("The next dialog will ask you for the location of where you installed Vivado. Please point it to the "
+				+ "directory whose name is the version number of Vivado. This is the Xilinx/Vivado/YEAR.MONTH folder in most cases.", Util.getVivadoCommand(), Settings.VIVADO_LOC);
 	}
 
 	private void loadFonts() {

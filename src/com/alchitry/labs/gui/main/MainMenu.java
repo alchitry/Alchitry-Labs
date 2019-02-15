@@ -287,7 +287,14 @@ public class MainMenu {
 		createItem(subMenu, "ISE Location...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				parent.updateXilinxLocation();
+				parent.updateISELocation();
+			}
+		});
+		
+		createItem(subMenu, "Vivado Location...", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.updateVivadoLocation();
 			}
 		});
 

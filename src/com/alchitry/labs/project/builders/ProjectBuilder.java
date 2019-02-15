@@ -1,4 +1,4 @@
-package com.alchitry.labs.project;
+package com.alchitry.labs.project.builders;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,8 @@ import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.ProjectSignal;
 import com.alchitry.labs.lucid.toVerilog.LucidToVerilog;
 import com.alchitry.labs.lucid.tools.LucidDebugModifier;
+import com.alchitry.labs.project.DebugInfo;
+import com.alchitry.labs.project.Project;
 import com.alchitry.labs.style.ParseException;
 import com.alchitry.labs.verilog.tools.VerilogLucidModuleFixer;
 

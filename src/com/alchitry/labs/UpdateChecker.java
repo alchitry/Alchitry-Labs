@@ -24,6 +24,10 @@ import com.alchitry.labs.gui.FileDownloaderDialog;
 import com.alchitry.labs.gui.main.MainWindow;
 
 public class UpdateChecker {
+	private static final String BASE_URL = "https://cdn.embeddedmicro.com/alchitry-labs/";
+	private static final String LIB_VERSION_URL = BASE_URL + "libVersion";
+	private static final String IDE_VERSION_URL = BASE_URL + "ideVersion";
+
 	private UpdateChecker() {
 
 	}
@@ -73,7 +77,7 @@ public class UpdateChecker {
 	public static boolean checkForLibUpdates() {
 		InputStream in;
 		try {
-			in = new URL("https://embeddedmicro.com/ide/libVersion").openStream();
+			in = new URL(LIB_VERSION_URL).openStream();
 		} catch (IOException e) {
 			return false;
 		}
@@ -98,14 +102,14 @@ public class UpdateChecker {
 			if (result) {
 				URL website;
 				try {
-					website = new URL("https://embeddedmicro.com/ide/lib-" + libVersion + ".zip");
+					website = new URL(BASE_URL + "/lib-" + libVersion + ".zip");
 				} catch (MalformedURLException e) {
 					Util.showError("Failed to open URL.");
 					return false;
 				}
 				Path tempDir;
 				try {
-					tempDir = Files.createTempDirectory("mojo_lib_");
+					tempDir = Files.createTempDirectory("alchitry_lib_");
 				} catch (IOException e1) {
 					Util.showError("Could not create temporary directory");
 					return false;
@@ -138,7 +142,7 @@ public class UpdateChecker {
 					boolean success = false;
 
 					if (Util.isWindows) {
-						ProcessBuilder pb = new ProcessBuilder("elevate.exe", "mojo-ide.exe", "-u", stringPath);
+						ProcessBuilder pb = new ProcessBuilder("elevate.exe", "alchitry-labs.exe", "-u", stringPath);
 						Util.log.log(Level.ALL, pb.toString());
 						final Process p;
 						try {
@@ -251,7 +255,7 @@ public class UpdateChecker {
 	public static boolean checkForIDEUpdates() {
 		InputStream in;
 		try {
-			in = new URL("https://embeddedmicro.com/ide/ideVersion").openStream();
+			in = new URL(IDE_VERSION_URL).openStream();
 		} catch (IOException e) {
 			return false;
 		}
@@ -272,20 +276,20 @@ public class UpdateChecker {
 
 		String curVersion = Settings.pref.get(Settings.VERSION, "");
 		if (!version.equals(curVersion)) {
-			boolean result = Util.askQuestion("New Mojo IDE Avaiable", "Would you like to update the IDE now?");
+			boolean result = Util.askQuestion("New Alchitry Labs Avaiable", "Would you like to update the IDE to version " + version + " now?");
 			if (result) {
 				URL website;
 				try {
 					switch (Util.getEnvType()) {
 					case Util.LIN32:
-						website = new URL("https://embeddedmicro.com/ide/mojo-ide-" + version + "-linux32.tgz");
+						website = new URL(BASE_URL+"alchitry-labs-" + version + "-linux32.tgz");
 						break;
 					case Util.LIN64:
-						website = new URL("https://embeddedmicro.com/ide/mojo-ide-" + version + "-linux64.tgz");
+						website = new URL(BASE_URL+"alchitry-labs-" + version + "-linux64.tgz");
 						break;
 					case Util.WIN32:
 					case Util.WIN64:
-						website = new URL("https://embeddedmicro.com/ide/mojo-ide-" + version + ".exe");
+						website = new URL(BASE_URL+"alchitry-labs-" + version + ".exe");
 						break;
 					default:
 						Util.showError("Unknown IDE Type");
@@ -300,7 +304,7 @@ public class UpdateChecker {
 				Path tempDir;
 				try {
 					if (Util.getEnvType() == Util.LIN32 || Util.getEnvType() == Util.LIN64) {
-						tempDir = Files.createTempDirectory("mojo_ide_");
+						tempDir = Files.createTempDirectory("alchitry_labs_");
 					} else {
 						tempDir = Paths.get(Util.getWorkspace());
 						File f = tempDir.toFile();
@@ -322,11 +326,11 @@ public class UpdateChecker {
 					switch (Util.getEnvType()) {
 					case Util.LIN32:
 					case Util.LIN64:
-						arcName = "mojo-ide.tgz";
+						arcName = "alchitry_labs.tgz";
 						break;
 					case Util.WIN32:
 					case Util.WIN64:
-						arcName = "mojo-ide.exe";
+						arcName = "alchitry_labs.exe";
 						break;
 					}
 
@@ -363,19 +367,19 @@ public class UpdateChecker {
 							switch (f.getName()) {
 							case "lib":
 							case "library":
-							case "mojo-ide":
+							case "alchitry-labs":
 								matched++;
 							}
 						}
 
 						if (matched != 3) {
 							if (!Util.askQuestion("Unknown Install Location",
-									"The directory " + dstDir.getPath() + " does not seem to be a valid Mojo IDE install. Continue anyways?"))
+									"The directory " + dstDir.getPath() + " does not seem to be a valid Alchitry Labs install. Continue anyways?"))
 								return false;
 						}
 
 						for (final File entry : new File(stringPath).listFiles()) {
-							if (entry.isDirectory() && entry.getName().startsWith("mojo-ide")) {
+							if (entry.isDirectory() && entry.getName().startsWith("alchitry-labs")) {
 								ideFolder = entry.getName();
 								break;
 							}
@@ -387,7 +391,7 @@ public class UpdateChecker {
 						}
 
 						if (!Util.askQuestion("Continue with Update?",
-								"The files in " + dstDir.getPath() + " will all be deleted and replaced with the new Mojo IDE files.\n\nContinue?"))
+								"The files in " + dstDir.getPath() + " will all be deleted and replaced with the new Alchitry Labs files.\n\nContinue?"))
 							return false;
 
 						// Flush the folder
@@ -406,7 +410,7 @@ public class UpdateChecker {
 								copyFileToDirectory(entry, dstDir);
 						}
 
-						cmd = new String[] { "nohup", Locations.progPrefix + "mojo-ide" };
+						cmd = new String[] { "nohup", Locations.progPrefix + "alchitry-labs" };
 					} else { // windows
 						cmd = new String[] { libZip.getAbsolutePath() };
 					}

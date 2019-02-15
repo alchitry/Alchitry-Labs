@@ -1,4 +1,4 @@
-package com.alchitry.labs.project;
+package com.alchitry.labs.project.builders;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,6 +16,8 @@ import org.apache.commons.io.FileUtils;
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.project.Environment;
+import com.alchitry.labs.project.IPCore;
 import com.alchitry.labs.style.ParseException;
 
 public class VivadoBuilder extends ProjectBuilder {
@@ -139,11 +141,9 @@ public class VivadoBuilder extends ProjectBuilder {
 		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
 		file.write("set xdcSources [list ");
 		HashSet<String> localConstraint = project.getConstraintFiles(false);
-		project.removeUnsupportedConstraints(localConstraint);
 		if (localConstraint.size() > 0)
 			file.write(getSpacedList(project.getConstraintFiles(false), project.getConstraintFolder().replace("\\", "/").replace(" ", "\\ ") + ps));
 		HashSet<String> libConstraint = project.getConstraintFiles(true);
-		project.removeUnsupportedConstraints(libConstraint);
 		if (libConstraint.size() > 0)
 			file.write(" " + getSpacedList(project.getConstraintFiles(true), Locations.COMPONENTS.replace("\\", "/").replace(" ", "\\ ") + ps));
 		file.write("]" + nl);

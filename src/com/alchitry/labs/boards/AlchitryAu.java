@@ -2,8 +2,8 @@ package com.alchitry.labs.boards;
 
 import com.alchitry.labs.hardware.AuLoader;
 import com.alchitry.labs.hardware.ProjectLoader;
-import com.alchitry.labs.project.ProjectBuilder;
-import com.alchitry.labs.project.VivadoBuilder;
+import com.alchitry.labs.project.builders.ProjectBuilder;
+import com.alchitry.labs.project.builders.VivadoBuilder;
 import com.alchitry.labs.widgets.IoRegion;
 
 public class AlchitryAu extends Board {

@@ -402,6 +402,10 @@ public class Util {
 	}
 
 	public static String getVivadoCommand() {
+		String vivado = Settings.pref.get(Settings.VIVADO_LOC, null);
+		if (vivado != null)
+			return vivado;
+		
 		File path = null;
 		if (isWindows)
 			path = new File("C:\\Xilinx\\Vivado");

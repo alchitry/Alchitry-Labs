@@ -16,7 +16,7 @@ import com.alchitry.labs.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.lucid.parser.LucidParser.ModuleContext;
 import com.alchitry.labs.lucid.parser.LucidParser.Module_instContext;
 import com.alchitry.labs.lucid.parser.LucidParser.Port_listContext;
-import com.alchitry.labs.project.ProjectBuilder.DebugFile;
+import com.alchitry.labs.project.builders.ProjectBuilder.DebugFile;
 import com.alchitry.labs.tools.ParserCache;
 import com.alchitry.labs.verilog.tools.VerilogConstExprParser;
 

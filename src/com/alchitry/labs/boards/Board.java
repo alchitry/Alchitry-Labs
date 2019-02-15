@@ -3,7 +3,7 @@ package com.alchitry.labs.boards;
 import java.util.ArrayList;
 
 import com.alchitry.labs.hardware.ProjectLoader;
-import com.alchitry.labs.project.ProjectBuilder;
+import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.widgets.IoRegion;
 
 public abstract class Board {

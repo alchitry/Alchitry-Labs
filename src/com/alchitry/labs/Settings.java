@@ -3,9 +3,8 @@ package com.alchitry.labs;
 import java.util.prefs.Preferences;
 
 public class Settings {
-	public static Preferences pref = Preferences
-			.userNodeForPackage(com.alchitry.labs.Settings.class);
-	
+	public static Preferences pref = Preferences.userNodeForPackage(com.alchitry.labs.Settings.class);
+
 	public static final String VERSION = "VERSION";
 	public static final String LIB_VERSION = "LIB_VERSION";
 	public static final String MOJO_PORT = "MOJO_PORT";
@@ -19,4 +18,5 @@ public class Settings {
 	public static final String WORKSPACE = "WORKSPACE";
 	public static final String THEME = "THEME";
 	public static final String WORD_WRAP = "WORD_WRAP";
+	public static final String VIVADO_LOC = "VIVADO_LOC";
 }

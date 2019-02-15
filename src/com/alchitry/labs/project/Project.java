@@ -63,6 +63,7 @@ import com.alchitry.labs.lucid.tools.LucidGlobalExtractor;
 import com.alchitry.labs.lucid.tools.LucidModuleExtractor;
 import com.alchitry.labs.project.Primitive.Parameter;
 import com.alchitry.labs.project.Primitive.Port;
+import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.style.ParseException;
 import com.alchitry.labs.style.SyntaxError;
 import com.alchitry.labs.verilog.tools.VerilogErrorChecker;
@@ -415,6 +416,7 @@ public class Project {
 		for (String s : constraintFiles)
 			if (Boolean.valueOf(lib).equals(constraintLib.get(s)))
 				hs.add(s);
+		removeUnsupportedConstraints(hs);
 		return hs;
 	}
 
@@ -425,7 +427,7 @@ public class Project {
 		return false;
 	}
 
-	public void removeUnsupportedConstraints(HashSet<String> constraints) {
+	private void removeUnsupportedConstraints(HashSet<String> constraints) {
 		String[] ext = boardType.getSupportedConstraintExtensions();
 		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
 			String c = it.next();
