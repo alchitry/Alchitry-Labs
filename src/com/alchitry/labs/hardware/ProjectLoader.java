@@ -28,11 +28,11 @@ public abstract class ProjectLoader {
 
 				for (int i = 0; i < 50; i++) {
 					if (i < (percent / 2)) {
-						bar.append("=");
+						bar.append('=');
 					} else if (i == (percent / 2)) {
-						bar.append(">");
+						bar.append('>');
 					} else {
-						bar.append(" ");
+						bar.append(' ');
 					}
 				}
 

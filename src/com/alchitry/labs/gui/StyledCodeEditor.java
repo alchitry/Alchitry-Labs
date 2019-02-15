@@ -466,7 +466,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			edited = true;
 
 			// work around for selectAll -> delete bug
-			if (getText() == "")
+			if (getText().isEmpty())
 				redraw();
 		} else { // modify from search
 			String text = ((Text) e.widget).getText();

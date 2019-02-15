@@ -111,7 +111,7 @@ public class SerialMonitor {
 				{
 					e.text = e.text.replace("\r", "");
 					text.setTopIndex(text.getLineCount() - 1);
-					;
+					
 				}
 			}
 		});

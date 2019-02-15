@@ -51,7 +51,7 @@ public class ResizingImage {
 
 	public void setSize(int x, int y) {
 		size.x = x;
-		size.y = y;;
+		size.y = y;
 		if (resizeTask != null)
 			resizeTask.cancel();
 		resizeTask = new TimerTask() {

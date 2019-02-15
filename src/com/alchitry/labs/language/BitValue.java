@@ -236,13 +236,13 @@ public enum BitValue {
 	public static String toString(ArrayList<BitValue> val) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("{");
+		sb.append('{');
 		for (int i = val.size() - 1; i >= 0; i--) {
 			BitValue bv = val.get(i);
 			sb.append(bv.toString().substring(1));
 
 		}
-		sb.append("}");
+		sb.append('}');
 		return sb.toString();
 	}
 }

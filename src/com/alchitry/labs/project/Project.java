@@ -1167,7 +1167,7 @@ public class Project {
 		Element source = new Element(Tags.files);
 		for (String sourceFile : sourceFiles) {
 			Element ele = new Element(Tags.source).setText(sourceFile);
-			if (sourceFile == topSource)
+			if (sourceFile.equals(topSource))
 				ele.setAttribute(new Attribute(Tags.Attributes.top, "true"));
 			source.addContent(ele);
 		}
