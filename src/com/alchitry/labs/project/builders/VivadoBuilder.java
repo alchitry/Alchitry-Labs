@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
@@ -102,6 +100,8 @@ public class VivadoBuilder extends ProjectBuilder {
 		return builder.toString();
 	}
 
+	//@formatter:off
+	/*
 	private String getSpacedListofCores(Collection<IPCore> list, String prefix) {
 		StringBuilder builder = new StringBuilder();
 		for (IPCore core : list)
@@ -112,6 +112,8 @@ public class VivadoBuilder extends ProjectBuilder {
 		builder.deleteCharAt(builder.length() - 1);
 		return builder.toString();
 	}
+	*/
+	//@formatter:on
 
 	private boolean generateProjectFile(BufferedWriter file) throws IOException {
 		final String nl = System.lineSeparator();

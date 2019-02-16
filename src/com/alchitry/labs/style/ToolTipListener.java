@@ -34,7 +34,7 @@ public class ToolTipListener implements MouseTrackListener, MouseMoveListener {
 	@Override
 	public void mouseHover(MouseEvent e) {
 		try {
-			int offset = editor.getOffsetAtLocation(new Point(e.x, e.y));
+			int offset = editor.getOffsetAtPoint(new Point(e.x, e.y));
 			if (errorChecker != null)
 				error = errorChecker.getErrorAtOffset(offset);
 			if (error != null) {
@@ -56,7 +56,7 @@ public class ToolTipListener implements MouseTrackListener, MouseMoveListener {
 	public void mouseMove(MouseEvent e) {
 		if (error != null) {
 			try {
-				int offset = editor.getOffsetAtLocation(new Point(e.x, e.y));
+				int offset = editor.getOffsetAtPoint(new Point(e.x, e.y));
 				if (error.start > offset || error.stop < offset) {
 					toolTip.setVisible(false);
 					error = null;

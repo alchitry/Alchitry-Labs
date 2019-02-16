@@ -19,4 +19,5 @@ public class Settings {
 	public static final String THEME = "THEME";
 	public static final String WORD_WRAP = "WORD_WRAP";
 	public static final String VIVADO_LOC = "VIVADO_LOC";
+	public static final String ICECUBE_LOC = "ICECUBE_LOC";
 }

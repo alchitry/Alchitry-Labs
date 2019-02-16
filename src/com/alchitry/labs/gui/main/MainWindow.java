@@ -315,6 +315,11 @@ public class MainWindow {
 		updateLocation("The next dialog will ask you for the location of where you installed Vivado. Please point it to the "
 				+ "directory whose name is the version number of Vivado. This is the Xilinx/Vivado/YEAR.MONTH folder in most cases.", Util.getVivadoCommand(), Settings.VIVADO_LOC);
 	}
+	
+	public void updateIcecubeLocation() {
+		updateLocation("The next dialog will ask you for the location of where you installed iCEcube2. Please point it to the "
+				+ "directory whose name is \"iCEcube2\". This is the lscc/iCEcube2 folder in most cases.", Util.getIceCubeFolder(), Settings.ICECUBE_LOC);
+	}
 
 	private void loadFonts() {
 		int fontsLoaded = 0;

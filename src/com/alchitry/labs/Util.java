@@ -428,7 +428,20 @@ public class Util {
 	}
 
 	public static String getIceCubeFolder() {
-		return "/opt/lattice/icecube2";
+		String iceCube = Settings.pref.get(Settings.ICECUBE_LOC, null);
+		if (iceCube != null)
+			return iceCube;
+
+		File path = null;
+		if (isWindows)
+			path = new File("C:\\lscc\\iCEcube2");
+		else
+			path = new File("~/lscc/iCEcube2");
+
+		if (!path.isDirectory())
+			return null;
+
+		return path.getAbsolutePath();
 	}
 
 	public static String getYosysCommand() {
@@ -640,8 +653,8 @@ public class Util {
 
 		return new Image(getDisplay(), imgstream);
 	}
-	
-	public static String assemblePath(String ... pieces) {
+
+	public static String assemblePath(String... pieces) {
 		String out = String.join(File.separator, pieces);
 		return out.replace(File.separator + File.separator, File.separator); // remove any duplicate separators
 	}

@@ -60,7 +60,7 @@ public class Fsm implements SyncLogic, Named, HasWidth, Serializable {
 	}
 
 	public boolean contains(String state) {
-		return states.contains(state);
+		return states.contains((Object)state);
 	}
 	
 	public int getNumStates() {

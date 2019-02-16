@@ -12,10 +12,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import com.alchitry.labs.Reporter;
-import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.boards.Board;
-import com.alchitry.labs.boards.Mojo;
 import com.alchitry.labs.gui.BoardSelector;
 import com.alchitry.labs.gui.EmailMessage;
 import com.alchitry.labs.gui.FeedbackDialog;
@@ -295,6 +293,13 @@ public class MainMenu {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateVivadoLocation();
+			}
+		});
+		
+		createItem(subMenu, "iCEcube2 Location...", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.updateIcecubeLocation();
 			}
 		});
 

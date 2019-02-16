@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 
 import com.alchitry.labs.Settings;
-import com.alchitry.labs.Util;
 
 public class Theme {
 	public static boolean set;
