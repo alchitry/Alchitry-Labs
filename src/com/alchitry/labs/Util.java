@@ -79,7 +79,7 @@ public class Util {
 		String os = System.getProperty("os.name");
 		isWindows = os.startsWith("Windows");
 		isLinux = os.startsWith("Linux");
-		
+
 		isGUI = false;
 
 		try {
@@ -103,11 +103,11 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static int getEnvType() {
 		return envType;
 	}
-	
+
 	public static void setEnvType(int env) {
 		envType = env;
 		switch (envType) {
@@ -405,7 +405,7 @@ public class Util {
 		String vivado = Settings.pref.get(Settings.VIVADO_LOC, null);
 		if (vivado != null)
 			return vivado;
-		
+
 		File path = null;
 		if (isWindows)
 			path = new File("C:\\Xilinx\\Vivado");
@@ -425,6 +425,10 @@ public class Util {
 			}
 		}
 		return path.getAbsolutePath();
+	}
+
+	public static String getIceCubeFolder() {
+		return "/opt/lattice/icecube2";
 	}
 
 	public static String getYosysCommand() {
@@ -565,16 +569,14 @@ public class Util {
 		printer.start();
 	}
 
-	public static Process runCommand(List<String> cmd) throws InterruptedException {
-		ProcessBuilder pb = new ProcessBuilder(cmd);
-
+	public static Process runCommand(ProcessBuilder pb) throws InterruptedException {
 		Process process;
 
 		try {
 			process = pb.start();
 		} catch (Exception e) {
-			Util.log.severe("Couldn't start " + cmd.get(0));
-			Util.showError("Could not start " + cmd.get(0) + "! Please check the location for " + cmd.get(0) + " is correctly set in the settings menu.");
+			Util.log.severe("Couldn't start " + pb.command().get(0));
+			Util.showError("Could not start " + pb.command().get(0) + "! Please check the location for " + pb.command().get(0) + " is correctly set in the settings menu.");
 			return null;
 		}
 
@@ -582,6 +584,12 @@ public class Util {
 		startStreamPrinter(process.getErrorStream(), true);
 
 		return process;
+	}
+
+	public static Process runCommand(List<String> cmd) throws InterruptedException {
+		ProcessBuilder pb = new ProcessBuilder(cmd);
+
+		return runCommand(pb);
 	}
 
 	private static boolean endsWithSuffixList(String testString, String[] suffixList) {
@@ -631,5 +639,10 @@ public class Util {
 		ByteArrayInputStream imgstream = new ByteArrayInputStream(resultByteStream.toByteArray());
 
 		return new Image(getDisplay(), imgstream);
+	}
+	
+	public static String assemblePath(String ... pieces) {
+		String out = String.join(File.separator, pieces);
+		return out.replace(File.separator + File.separator, File.separator); // remove any duplicate separators
 	}
 }

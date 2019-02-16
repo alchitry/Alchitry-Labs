@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware;
+package com.alchitry.labs.hardware.loaders;
 
 import java.util.ArrayList;
 import java.util.List;

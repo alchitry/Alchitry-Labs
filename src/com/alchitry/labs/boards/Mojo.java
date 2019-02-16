@@ -1,7 +1,7 @@
 package com.alchitry.labs.boards;
 
-import com.alchitry.labs.hardware.MojoLoader;
-import com.alchitry.labs.hardware.ProjectLoader;
+import com.alchitry.labs.hardware.loaders.MojoLoader;
+import com.alchitry.labs.hardware.loaders.ProjectLoader;
 import com.alchitry.labs.project.builders.ISEBuilder;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.widgets.IoRegion;

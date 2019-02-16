@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware;
+package com.alchitry.labs.hardware.loaders;
 
 import org.eclipse.swt.custom.StyledText;
 

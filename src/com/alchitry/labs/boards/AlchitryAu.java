@@ -1,7 +1,7 @@
 package com.alchitry.labs.boards;
 
-import com.alchitry.labs.hardware.AuLoader;
-import com.alchitry.labs.hardware.ProjectLoader;
+import com.alchitry.labs.hardware.loaders.AuLoader;
+import com.alchitry.labs.hardware.loaders.ProjectLoader;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.project.builders.VivadoBuilder;
 import com.alchitry.labs.widgets.IoRegion;
