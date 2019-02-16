@@ -460,10 +460,12 @@ public class Util {
 		return "iceprog";
 	}
 
-	public static String getAuLoaderCommand() {
-		if (envType == ECLIPSE)
-			return "tools/linux/bin/auloader";
-		return "auloader";
+	public static String getAlchitryLoaderCommand() {
+		if (isLinux)
+			return "tools/linux/bin/loader";
+		if (isWindows)
+			return "tools\\windows\\bin\\loader.exe";
+		return null;
 	}
 
 	public static <T extends Named> boolean removeByName(Collection<T> list, String name) {
