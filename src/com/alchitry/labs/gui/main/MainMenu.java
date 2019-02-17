@@ -18,16 +18,16 @@ import com.alchitry.labs.gui.BoardSelector;
 import com.alchitry.labs.gui.EmailMessage;
 import com.alchitry.labs.gui.FeedbackDialog;
 import com.alchitry.labs.gui.NewProjectDialog;
-import com.alchitry.labs.gui.SerialPortSelector;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.ThemeSelectorDialog;
 import com.alchitry.labs.gui.WelcomeDialog;
 import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
+import com.alchitry.labs.hardware.flashers.AuFlasher;
+import com.alchitry.labs.hardware.flashers.CuFlasher;
+import com.alchitry.labs.hardware.flashers.MojoFlasher;
 import com.alchitry.labs.project.Project;
-
-import jssc.SerialPortList;
 
 public class MainMenu {
 	MainWindow parent;
@@ -46,7 +46,7 @@ public class MainMenu {
 		menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
 
-		Project p = MainWindow.getOpenProject();
+		Project p = MainWindow.project;
 		if (p != null)
 			board = p.getBoard();
 		else
@@ -204,16 +204,13 @@ public class MainMenu {
 				
 				switch(b.getType()) {
 				case Board.AU:
+					new AuFlasher().flash();
+					break;
 				case Board.CU:
-					Util.showError("Au and Cu are currently not supported!");
+					new CuFlasher().flash();
 					break;
 				case Board.MOJO:
-					String[] ports = SerialPortList.getPortNames();
-					SerialPortSelector dialog = new SerialPortSelector(parent.getShell(), ports);
-					String port = dialog.open();
-					if (port == null)
-						break;
-					parent.flasher.flashMojo(port, b);
+					new MojoFlasher().flash();
 					break;
 				}
 			}

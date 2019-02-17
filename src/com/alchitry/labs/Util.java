@@ -228,7 +228,7 @@ public class Util {
 
 				@Override
 				public void run() {
-					MessageBox b = new MessageBox(shell, SWT.OK | SWT.ICON_INFORMATION | SWT.PRIMARY_MODAL);
+					MessageBox b = new MessageBox(shell, SWT.OK | SWT.ICON_INFORMATION | SWT.APPLICATION_MODAL);
 					b.setText(title);
 					b.setMessage(text);
 					b.open();
@@ -584,7 +584,9 @@ public class Util {
 		printer.start();
 	}
 
-	public static Process runCommand(ProcessBuilder pb) throws InterruptedException {
+	public static Process runCommand(List<String> cmd) throws InterruptedException {
+		ProcessBuilder pb = new ProcessBuilder(cmd);
+
 		Process process;
 
 		try {
@@ -599,12 +601,6 @@ public class Util {
 		startStreamPrinter(process.getErrorStream(), true);
 
 		return process;
-	}
-
-	public static Process runCommand(List<String> cmd) throws InterruptedException {
-		ProcessBuilder pb = new ProcessBuilder(cmd);
-
-		return runCommand(pb);
 	}
 
 	private static boolean endsWithSuffixList(String testString, String[] suffixList) {

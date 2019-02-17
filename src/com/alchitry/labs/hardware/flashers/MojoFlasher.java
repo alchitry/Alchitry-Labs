@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware;
+package com.alchitry.labs.hardware.flashers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,22 +15,14 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.Board;
+import com.alchitry.labs.gui.SerialPortSelector;
 import com.alchitry.labs.gui.main.MainWindow;
 
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import jssc.SerialPortList;
 
-public class MojoFlasher {
-	private Thread thread;
-
-	public MojoFlasher() {
-	}
-
-	public boolean isLoading() {
-		return thread != null && thread.isAlive();
-	}
+public class MojoFlasher extends Flasher {
 
 	private int attemptFlash(boolean isV3, String port) {
 		BufferedWriter out = null;
@@ -142,7 +134,13 @@ public class MojoFlasher {
 		return status;
 	}
 
-	public void flashMojo(final String portName, final Board board) {
+	@Override
+	public void flash() {
+		String[] ports = SerialPortList.getPortNames();
+		SerialPortSelector dialog = new SerialPortSelector(MainWindow.mainWindow.getShell(), ports);
+		final String portName = dialog.open();
+		if (portName == null)
+			return;
 		thread = new Thread() {
 			public void run() {
 				MainWindow.mainWindow.enableMonitor(false);
@@ -225,5 +223,6 @@ public class MojoFlasher {
 		}
 		return false;
 	}
+
 
 }

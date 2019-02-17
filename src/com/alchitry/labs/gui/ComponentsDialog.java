@@ -11,6 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -127,7 +128,7 @@ public class ComponentsDialog extends Dialog {
 		description = new Label(grpDescription, SWT.WRAP);
 		description.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true, 1, 1));
 
-		shell.pack();
+		
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
 		new Label(shell, SWT.NONE);
@@ -167,6 +168,14 @@ public class ComponentsDialog extends Dialog {
 				addSelectedToProject();
 			}
 		});
+		
+		shell.pack();
+		
+		Rectangle parentSize = getParent().getBounds();
+		Rectangle shellSize = shell.getBounds();
+		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
+		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
+		shell.setLocation(new Point(locationX, locationY));
 	}
 	
 	private void addDependants(HashSet<String> files, Component comp){

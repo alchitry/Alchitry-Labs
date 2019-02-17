@@ -3,6 +3,8 @@ package com.alchitry.labs.gui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -207,6 +209,12 @@ public class NewSourceDialog extends Dialog {
 		btnCreateFile.setText("Create File");
 
 		shell.pack();
+		
+		Rectangle parentSize = getParent().getBounds();
+		Rectangle shellSize = shell.getBounds();
+		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
+		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
+		shell.setLocation(new Point(locationX, locationY));
 	}
 
 }

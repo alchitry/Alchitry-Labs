@@ -856,7 +856,7 @@ public class Project {
 
 		Attribute langType = project.getAttribute(Tags.Attributes.language);
 		if (langType == null)
-			language = "Verilog";
+			language = "Lucid";
 		else
 			language = langType.getValue();
 

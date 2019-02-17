@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -75,7 +76,7 @@ public class WelcomeDialog extends Dialog {
 				.setText("Welcome to version "
 						+ MainWindow.VERSION
 						+ " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
-						+ " at bugspray@embeddedmicro.com\n\n"
+						+ " at bugspray@alchitry.com\n\n"
 						+ "This version fixes some bugs."
 						+ "\n\nAs always, we hope you enjoy this version!");
 
@@ -90,6 +91,12 @@ public class WelcomeDialog extends Dialog {
 		gd_btnOk.widthHint = 100;
 		btnOk.setLayoutData(gd_btnOk);
 		btnOk.setText("Ok");
+		
+		Rectangle parentSize = getParent().getBounds();
+		Rectangle shellSize = shell.getBounds();
+		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
+		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
+		shell.setLocation(new Point(locationX, locationY));
 	}
 
 }

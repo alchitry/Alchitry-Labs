@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Base Project" board="Alchitry Cu" language="Lucid">
+<project name="Base Project" board="Alchitry Cu" language="Verilog">
   <files>
-    <src top="true">cu_top.luc</src>
+    <src top="true">cu_top.v</src>
     <constraint lib="true">cu.pcf</constraint>
     <constraint lib="true">cu.sdc</constraint>
     <component>reset_conditioner.luc</component>

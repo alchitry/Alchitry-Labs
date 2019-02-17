@@ -47,7 +47,6 @@ import com.alchitry.labs.gui.WelcomeDialog;
 import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
-import com.alchitry.labs.hardware.MojoFlasher;
 import com.alchitry.labs.lucid.Constant;
 import com.alchitry.labs.project.CoreGen;
 import com.alchitry.labs.project.Project;
@@ -76,7 +75,6 @@ public class MainWindow {
 	private int bottomHeight, oldBottomWeight;
 	protected ArrayList<TabChild> tabs;
 	protected CustomConsole console;
-	protected MojoFlasher flasher;
 	protected SerialMonitor monitor;
 	protected ImageCapture imgCapture;
 	protected RegInterface regInterface;
@@ -292,7 +290,7 @@ public class MainWindow {
 
 	public void updateLocation(String prompt, String startingDir, String prefName) {
 		Util.showInfo(prompt);
-		DirectoryDialog dialog = new DirectoryDialog(shlAlchitryLabs, SWT.OPEN | SWT.PRIMARY_MODAL);
+		DirectoryDialog dialog = new DirectoryDialog(shlAlchitryLabs, SWT.OPEN | SWT.APPLICATION_MODAL);
 		if (startingDir != null) {
 			File current = new File(startingDir);
 			if (current.getParent() != null)
@@ -564,8 +562,6 @@ public class MainWindow {
 		leftWidth = Settings.pref.getInt(Settings.FILE_LIST_WIDTH, 200);
 		bottomHeight = Settings.pref.getInt(Settings.CONSOLE_HEIGHT, 200);
 
-		flasher = new MojoFlasher();
-
 		coreGen = new CoreGen();
 
 		if (oldProject != null)
@@ -578,7 +574,6 @@ public class MainWindow {
 
 	public void headlessInit() {
 		project = new Project();
-		flasher = new MojoFlasher();
 		coreGen = new CoreGen();
 	}
 
@@ -702,6 +697,7 @@ public class MainWindow {
 
 	private void projectChanged() {
 		project.setShell(shlAlchitryLabs);
+		project.setTree(tree);
 		project.updateTree();
 		project.openTree();
 		mainMenu.build();

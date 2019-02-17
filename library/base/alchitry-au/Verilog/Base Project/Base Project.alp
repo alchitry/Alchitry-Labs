@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Base Project" board="Alchitry Au" language="Lucid">
+<project name="Base Project" board="Alchitry Au" language="Verilog">
   <files>
-    <src top="true">au_top.luc</src>
+    <src top="true">au_top.v</src>
     <constraint lib="true">au.xcf</constraint>
     <component>reset_conditioner.luc</component>
   </files>

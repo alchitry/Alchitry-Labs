@@ -66,7 +66,7 @@ public class MainToolbar {
 		buttons.clear();
 
 		Board board = null;
-		Project p = MainWindow.getOpenProject();
+		Project p = MainWindow.project;
 		if (p != null)
 			board = p.getBoard();
 
@@ -162,6 +162,6 @@ public class MainToolbar {
 				}
 			});
 		
-		parent.getShell().layout();
+		toolbar.requestLayout();
 	}
 }
