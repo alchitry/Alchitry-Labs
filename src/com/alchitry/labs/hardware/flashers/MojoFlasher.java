@@ -28,14 +28,11 @@ public class MojoFlasher extends Flasher {
 		BufferedWriter out = null;
 		int status = -1;
 		try {
-			String avrDude = Locations.BIN + File.separator + "avrdude";
-			String configPath = Locations.ETC + File.separator + "avrdude.conf";
-			String hexFile = Locations.FIRMWARE + File.separator + (isV3 ? "mojo-v3-loader.hex" : "mojo-v2-loader.hex");
+			String avrDude = Util.assemblePath(Locations.BIN, Util.isWindows ? "avrdude.exe" : "avrdude");
+			String configPath = Util.assemblePath(Locations.ETC, "avrdude.conf");
+			String hexFile = Util.assemblePath(Locations.FIRMWARE, (isV3 ? "mojo-v3-loader.hex" : "mojo-v2-loader.hex"));
 			String avr = isV3 ? "atmega32u4" : "atmega16u4";
 			String board = isV3 ? "Mojo V3" : "Mojo V2";
-
-			if (Util.isWindows)
-				avrDude += ".exe";
 
 			if (!new File(avrDude).exists()) {
 				Util.log.severe("Couldn't find avrdude");
@@ -48,9 +45,6 @@ public class MojoFlasher extends Flasher {
 				Util.println("Could not find the firmware for " + board + ". Looked at " + hexFile, true);
 				return -1;
 			}
-
-			hexFile = "library/firmware/mojo-v3-loader.hex";
-			configPath = "tools/etc/avrdude.conf";
 
 			ArrayList<String> cmd = new ArrayList<>();
 			cmd.add(avrDude);
@@ -223,6 +217,5 @@ public class MojoFlasher extends Flasher {
 		}
 		return false;
 	}
-
 
 }

@@ -44,6 +44,7 @@ public abstract class ProjectBuilder {
 
 	public void stopBuild() {
 		if (isBuilding()) {
+			builder.destroyForcibly();
 			try {
 				builder.getOutputStream().close();
 				builder.getInputStream().close();
@@ -51,7 +52,6 @@ public abstract class ProjectBuilder {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			builder.destroyForcibly();
 			Util.println("");
 			Util.println("Build aborted by user.", true);
 		}

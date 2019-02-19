@@ -2,7 +2,7 @@
 <project name="Base Project" board="Alchitry Au" language="Lucid">
   <files>
     <src top="true">au_top.luc</src>
-    <constraint lib="true">au.xcf</constraint>
+    <constraint lib="true">au.xdc</constraint>
     <component>reset_conditioner.luc</component>
   </files>
 </project>

@@ -88,7 +88,7 @@ public class UpdateChecker {
 			libVersion = IOUtils.toString(in);
 
 		} catch (IOException e) {
-			Util.showError("Error while checking for udpate", e.getMessage());
+			Util.showError("Error while checking for update", e.getMessage());
 		} finally {
 			IOUtils.closeQuietly(in);
 		}
@@ -281,15 +281,11 @@ public class UpdateChecker {
 				URL website;
 				try {
 					switch (Util.getEnvType()) {
-					case Util.LIN32:
-						website = new URL(BASE_URL+"alchitry-labs-" + version + "-linux32.tgz");
-						break;
 					case Util.LIN64:
-						website = new URL(BASE_URL+"alchitry-labs-" + version + "-linux64.tgz");
+						website = new URL(BASE_URL+"alchitry-labs-" + version + "-linux.tgz");
 						break;
-					case Util.WIN32:
 					case Util.WIN64:
-						website = new URL(BASE_URL+"alchitry-labs-" + version + ".exe");
+						website = new URL(BASE_URL+"alchitry-labs-" + version + "-windows.msi");
 						break;
 					default:
 						Util.showError("Unknown IDE Type");
@@ -326,11 +322,11 @@ public class UpdateChecker {
 					switch (Util.getEnvType()) {
 					case Util.LIN32:
 					case Util.LIN64:
-						arcName = "alchitry_labs.tgz";
+						arcName = "alchitry-labs.tgz";
 						break;
 					case Util.WIN32:
 					case Util.WIN64:
-						arcName = "alchitry_labs.exe";
+						arcName = "alchitry-labs.exe";
 						break;
 					}
 

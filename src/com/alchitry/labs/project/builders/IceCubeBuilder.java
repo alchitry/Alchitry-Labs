@@ -44,6 +44,12 @@ public class IceCubeBuilder extends ProjectBuilder {
 			return;
 		}
 
+		if (Util.getIceCubeLicenseFile() == null) {
+			Util.log.severe("Couldn't find the license file for iCEcube2 :(");
+			Util.showError("iCEcube2's license file's location must be set in the settings menu before you can build!");
+			return;
+		}
+
 		String lseProjectFile = Util.assemblePath(workFolder, SYN_PROJECT_FILE);
 
 		try {
@@ -139,7 +145,15 @@ public class IceCubeBuilder extends ProjectBuilder {
 			file.write(Util.assemblePath(Util.getIceCubeFolder(), "sbt_backend", "bin", "linux", "opt", "synpwrap"));
 			file.write(":$LD_LIBRARY_PATH");
 			file.write(nl);
+		} else {
+			file.write(export + " TCL_LIBRARY=");
+			file.write(Util.assemblePath(Util.getIceCubeFolder(), "Aldec", "Active-HDL", "tcl", "lib", "tcl"));
+			file.write(nl);
 		}
+
+		file.write(export + " LM_LICENSE_FILE=");
+		file.write(Util.getIceCubeLicenseFile());
+		file.write(nl);
 
 		file.write(export + " SYNPLIFY_PATH=");
 		file.write(Util.assemblePath(Util.getIceCubeFolder(), "synpbase"));
@@ -157,7 +171,10 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write(Util.assemblePath(workFolder, "icelog.log"));
 		file.write(nl);
 
-		file.write("tclsh ");
+		if (Util.isWindows)
+			file.write(Util.assemblePath(Util.getIceCubeFolder(), "Aldec", "Active-HDL", "BIN", "tclsh85.exe") + " ");
+		else
+			file.write("tclsh ");
 		file.write(Util.assemblePath(workFolder, TCL_SCRIPT));
 		file.write(nl);
 	}
@@ -170,7 +187,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write(nl);
 		file.write("set device iCE40HX8K-CB132" + nl);
 		file.write("set top_module " + topModuleName + nl);
-		file.write("set proj_dir " + workFolder + nl);
+		file.write("set proj_dir " + workFolder.replace("\\", "/").replace(" ", "\\ ") + nl);
 		file.write("set output_dir \"" + IMP_DIR + '"' + nl);
 		file.write("set edif_file \"" + topModuleName + '"' + nl);
 		file.write("set tool_options \":edifparser ");

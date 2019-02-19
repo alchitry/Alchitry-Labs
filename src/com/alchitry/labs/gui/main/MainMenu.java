@@ -299,6 +299,13 @@ public class MainMenu {
 				parent.updateIcecubeLocation();
 			}
 		});
+		
+		createItem(subMenu, "iCEcube2 License Location...", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.updateIcecubeLicenseLocation();
+			}
+		});
 
 		createItem(subMenu, "Choose Theme...", new SelectionAdapter() {
 			@Override

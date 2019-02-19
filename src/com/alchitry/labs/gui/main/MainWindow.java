@@ -166,6 +166,21 @@ public class MainWindow {
 				break;
 			}
 		}
+		
+
+		if (Util.getEnvType() == Util.UNKNOWN) {
+			if (args.length == 2 && args[0].equals("-u")) {
+				try {
+					UpdateChecker.copyLibrary(args[1]);
+				} catch (IOException e) {
+					System.exit(1);
+				}
+				System.exit(0);
+			} else {
+				System.err.println("Library value missing after -u!");
+				System.exit(2);
+			}
+		}
 	}
 
 	public void setBuilding(final boolean building) {
@@ -288,8 +303,9 @@ public class MainWindow {
 		return false;
 	}
 
-	public void updateLocation(String prompt, String startingDir, String prefName) {
-		Util.showInfo(prompt);
+	public void updateDirectoryLocation(String prompt, String startingDir, String prefName) {
+		if (prompt != null)
+			Util.showInfo(prompt);
 		DirectoryDialog dialog = new DirectoryDialog(shlAlchitryLabs, SWT.OPEN | SWT.APPLICATION_MODAL);
 		if (startingDir != null) {
 			File current = new File(startingDir);
@@ -304,24 +320,47 @@ public class MainWindow {
 		}
 	}
 
+	public void updateFileLocation(String prompt, String startingDir, String prefName) {
+		if (prompt != null)
+			Util.showInfo(prompt);
+		FileDialog dialog = new FileDialog(shlAlchitryLabs, SWT.OPEN | SWT.APPLICATION_MODAL);
+		if (startingDir != null) {
+			File current = new File(startingDir);
+			if (current.getParent() != null)
+				dialog.setFilterPath(current.getParent());
+		}
+		String result = dialog.open();
+		if (result != null) {
+			Settings.pref.put(prefName, result);
+		}
+	}
+
 	public void updateISELocation() {
-		updateLocation("The next dialog will ask you for the location of where you installed ISE. Please point it to the "
+		updateDirectoryLocation("The next dialog will ask you for the location of where you installed ISE. Please point it to the "
 				+ "directory whose name is the version number of ISE. This is the Xilinx/14.7 folder in most cases.", Util.getISELocation(), Settings.XILINX_LOC);
 	}
-	
+
 	public void updateVivadoLocation() {
-		updateLocation("The next dialog will ask you for the location of where you installed Vivado. Please point it to the "
-				+ "directory whose name is the version number of Vivado. This is the Xilinx/Vivado/YEAR.MONTH folder in most cases.", Util.getVivadoCommand(), Settings.VIVADO_LOC);
+		updateDirectoryLocation(
+				"The next dialog will ask you for the location of where you installed Vivado. Please point it to the "
+						+ "directory whose name is the version number of Vivado. This is the Xilinx/Vivado/YEAR.MONTH folder in most cases.",
+				Util.getVivadoLocation(), Settings.VIVADO_LOC);
 	}
-	
+
 	public void updateIcecubeLocation() {
-		updateLocation("The next dialog will ask you for the location of where you installed iCEcube2. Please point it to the "
+		updateDirectoryLocation("The next dialog will ask you for the location of where you installed iCEcube2. Please point it to the "
 				+ "directory whose name is \"iCEcube2\". This is the lscc/iCEcube2 folder in most cases.", Util.getIceCubeFolder(), Settings.ICECUBE_LOC);
+	}
+
+	public void updateIcecubeLicenseLocation() {
+		updateFileLocation("The next dialog will ask you for the location of iCEcube2's license file. You need to get your own file from Lattcie's website.",
+				Util.getIceCubeLicenseFile(), Settings.ICECUBE_LICENSE);
 	}
 
 	private void loadFonts() {
 		int fontsLoaded = 0;
-		String[] fonts = new String[] { "UbuntuMono-R.ttf", "UbuntuMono-RI.ttf", "UbuntuMono-B.ttf", "UbuntuMono-BI.ttf" };
+		String[] fonts = new String[] { "UbuntuMono-R.ttf", "UbuntuMono-RI.ttf", "UbuntuMono-B.ttf", "UbuntuMono-BI.ttf", "Ubuntu-R.ttf", "Ubuntu-RI.ttf", "Ubuntu-B.ttf",
+				"Ubuntu-BI.ttf" };
 		for (String font : fonts)
 			try {
 				fontsLoaded = display.loadFont(Util.createTmpFont(font)) ? fontsLoaded + 1 : fontsLoaded;

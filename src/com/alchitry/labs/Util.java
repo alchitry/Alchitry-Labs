@@ -343,7 +343,7 @@ public class Util {
 		if (workspace == null) {
 			JFileChooser fr = new JFileChooser();
 			FileSystemView fw = fr.getFileSystemView();
-			workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separatorChar + "mojo";
+			workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separatorChar + "alchitry";
 		}
 		return workspace;
 	}
@@ -402,7 +402,7 @@ public class Util {
 		return path.getAbsolutePath();
 	}
 
-	public static String getVivadoCommand() {
+	public static String getVivadoLocation() {
 		String vivado = Settings.pref.get(Settings.VIVADO_LOC, null);
 		if (vivado != null)
 			return vivado;
@@ -435,7 +435,7 @@ public class Util {
 
 		File path = null;
 		if (isWindows)
-			path = new File("C:\\lscc\\iCEcube2");
+			path = new File("C:\\lscc\\iCEcube2.2017.08");
 		else
 			path = new File("~/lscc/iCEcube2");
 
@@ -443,6 +443,10 @@ public class Util {
 			return null;
 
 		return path.getAbsolutePath();
+	}
+	
+	public static String getIceCubeLicenseFile() {
+		return Settings.pref.get(Settings.ICECUBE_LICENSE, null);
 	}
 
 	public static String getYosysCommand() {

@@ -14,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.project.Environment;
 import com.alchitry.labs.project.IPCore;
 import com.alchitry.labs.style.ParseException;
 
@@ -47,26 +46,16 @@ public class VivadoBuilder extends ProjectBuilder {
 				}
 		}
 
-		String xilinx = Util.getVivadoCommand();
+		String vivado = Util.getVivadoLocation();
 
-		if (xilinx == null) {
+		if (vivado == null) {
 			Util.log.severe("Couldn't find Vivado :(");
 			Util.showError("Vivado's location must be set in the settings menu before you can build!");
 			return;
 		}
 
-		if (!xilinx.endsWith(File.separator))
-			xilinx = xilinx + File.separator;
-
-		String vivado = xilinx + Environment.VIVADO_PATH;
-		// System.out.println(planAhead);
-
-		if (!Util.isIseUpdated()) // only ISE 14.7 supported
-			if (!Util.askQuestion("ISE is Out of Date", "Only version 14.7 of ISE is supported. Continue anyway?"))
-				return;
-
 		ArrayList<String> cmd = new ArrayList<>();
-		cmd.add(vivado);
+		cmd.add(Util.assemblePath(vivado, "bin", Util.isWindows ? "vivado.bat" : "vivado"));
 		cmd.add("-nojournal");
 		cmd.add("-nolog");
 		cmd.add("-mode");
@@ -137,7 +126,6 @@ public class VivadoBuilder extends ProjectBuilder {
 		file.write("set device " + project.getBoard().getFPGAName() + nl);
 		file.write("if {[file exists \"$projDir" + ps + "$projName\"]} { file delete -force \"$projDir" + ps + "$projName\" }" + nl);
 		file.write("create_project $projName \"$projDir" + ps + "$projName\" -part $device" + nl);
-		// file.write("set_property source_mgmt_mode None [current_project]" + nl);
 		file.write("set_property design_mode RTL [get_filesets sources_1]" + nl);
 		file.write("set verilogSources [list " + getSpacedList(vFiles, srcFolder.replace("\\", "/") + ps) + "]" + nl);
 		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
@@ -160,19 +148,12 @@ public class VivadoBuilder extends ProjectBuilder {
 						file.write("import_ip -srcset [get_filesets sources_1] [list \"" + prefix + s + "\"]" + nl);
 					}
 				}
-
-			// file.write(
-			// "set coreSources [list " + getSpacedListofCores(project.getIPCores(), project.getIPCoreFolder().replace("\\", "/").replace(" ", "\\ ") + ps) + "]" + nl);
-			// file.write("import_files -fileset [get_filesets sources_1] $coreSources" + nl);
 		}
-		// file.write("set_property top " + project.getTop().split("\\.")[0] + " [get_property srcset [current_run]]" + nl);
 		file.write("set_property STEPS.WRITE_BITSTREAM.ARGS.BIN_FILE true [get_runs impl_1]" + nl);
 		file.write("update_compile_order -fileset sources_1" + nl);
 
 		file.write("launch_runs -runs synth_1 -jobs 8" + nl);
 		file.write("wait_on_run synth_1" + nl);
-		// file.write("launch_runs -runs impl_1 -jobs 8" + nl);
-		// file.write("wait_on_run impl_1" + nl);
 		file.write("launch_runs impl_1 -to_step write_bitstream -jobs 8" + nl);
 		file.write("wait_on_run impl_1" + nl);
 
