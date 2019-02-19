@@ -63,6 +63,7 @@ public class Util {
 	public static String osDir;
 	public static Logger log;
 	public static boolean isGUI;
+	public static final String logFile = "alchitry-labs.log";
 
 	public static final int UNKNOWN = -1;
 	public static final int WIN32 = 0;
@@ -93,7 +94,7 @@ public class Util {
 
 		try {
 			// This block configure the logger with handler and formatter
-			FileHandler fh = new FileHandler("mojo-ide.log");
+			FileHandler fh = new FileHandler(logFile);
 			log.addHandler(fh);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fh.setFormatter(formatter);

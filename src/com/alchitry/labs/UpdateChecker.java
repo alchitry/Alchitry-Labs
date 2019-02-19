@@ -24,7 +24,7 @@ import com.alchitry.labs.gui.FileDownloaderDialog;
 import com.alchitry.labs.gui.main.MainWindow;
 
 public class UpdateChecker {
-	private static final String BASE_URL = "https://cdn.embeddedmicro.com/alchitry-labs/";
+	private static final String BASE_URL = "https://cdn.alchitry.com/labs/";
 	private static final String LIB_VERSION_URL = BASE_URL + "libVersion";
 	private static final String IDE_VERSION_URL = BASE_URL + "ideVersion";
 

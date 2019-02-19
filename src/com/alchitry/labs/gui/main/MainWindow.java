@@ -127,7 +127,7 @@ public class MainWindow {
 		return shlAlchitryLabs;
 	}
 
-	private void saveOnCrash() {
+	public void saveOnCrash() {
 		if (filesModified()) {
 			Shell shell = new Shell(display);
 			MessageBox dialog = new MessageBox(shell, SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
