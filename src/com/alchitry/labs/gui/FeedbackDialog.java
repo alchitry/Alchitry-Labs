@@ -96,7 +96,7 @@ public class FeedbackDialog extends Dialog {
 				result = new EmailMessage();
 				result.email = emailText.getText();
 				if (result.email.equals(""))
-					result.email.equals("noreply@embeddedmicro.com");
+					result.email.equals("noreply@alchitry.com");
 				result.subject = "Feedback Report for " + MainWindow.VERSION + " from " + nameText.getText();
 				result.body = commentsText.getText();
 				shell.dispose();
