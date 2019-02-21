@@ -326,7 +326,7 @@ public class UpdateChecker {
 						break;
 					case Util.WIN32:
 					case Util.WIN64:
-						arcName = "alchitry-labs.exe";
+						arcName = "alchitry-labs.msi";
 						break;
 					}
 
