@@ -408,7 +408,7 @@ public class UpdateChecker {
 
 						cmd = new String[] { "nohup", Locations.progPrefix + "alchitry-labs" };
 					} else { // windows
-						cmd = new String[] { libZip.getAbsolutePath() };
+						cmd = new String[] { "msiexec.exe", "/i", libZip.getAbsolutePath() };
 					}
 
 					MainWindow.mainWindow.close();
