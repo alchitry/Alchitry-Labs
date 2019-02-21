@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import com.alchitry.labs.boards.Board;
+import com.alchitry.labs.hardware.boards.Board;
 
 public class BoardSelector extends Dialog {
 

@@ -77,7 +77,7 @@ public class WelcomeDialog extends Dialog {
 						+ MainWindow.VERSION
 						+ " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
 						+ " at bugspray@alchitry.com\n\n"
-						+ "This version fixes some bugs."
+						+ "This version added support for Project IceStorm! Checkout the Settings menu to enable it."
 						+ "\n\nAs always, we hope you enjoy this version!");
 
 		Button btnOk = new Button(shell, SWT.NONE);

@@ -1,4 +1,4 @@
-package com.alchitry.labs.boards;
+package com.alchitry.labs.hardware.boards;
 
 import java.util.ArrayList;
 
@@ -27,8 +27,6 @@ public abstract class Board {
 	public abstract String getExampleProjectDir();
 
 	public abstract ProjectBuilder getBuilder();
-
-	public abstract ProjectBuilder getOpenBuilder();
 
 	public abstract ProjectLoader getLoader();
 

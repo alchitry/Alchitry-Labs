@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.AlchitryAu;
-import com.alchitry.labs.boards.Board;
+import com.alchitry.labs.hardware.boards.AlchitryAu;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.widgets.CustomTabs;
 import com.alchitry.labs.widgets.IoRegion;
 import com.alchitry.labs.widgets.SelectableSVG;

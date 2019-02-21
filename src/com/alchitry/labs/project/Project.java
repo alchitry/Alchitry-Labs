@@ -47,10 +47,10 @@ import org.jdom2.output.XMLOutputter;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.Board;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.language.InstModule;
 import com.alchitry.labs.language.Module;
 import com.alchitry.labs.language.Param;
@@ -483,7 +483,6 @@ public class Project {
 		boardType = Board.getFromName(type);
 		if (boardType == null) 
 			return false;
-		builder = boardType.getBuilder();
 		return true;
 	}
 
@@ -1393,6 +1392,8 @@ public class Project {
 			Util.showError("Operation already in progress!");
 			return;
 		}
+		
+		builder = boardType.getBuilder();
 
 		if (Util.isGUI) {
 			thread = new Thread() {
@@ -1413,7 +1414,7 @@ public class Project {
 	}
 
 	public boolean isBuilding() {
-		return isBusy() && builder.isBuilding();
+		return isBusy() &&  (builder != null) &&  builder.isBuilding();
 	}
 
 	public boolean isBusy() {
@@ -1421,7 +1422,7 @@ public class Project {
 	}
 
 	public void stopBuild() {
-		if (isBusy() && builder.isBuilding()) {
+		if (isBusy() && builder != null && builder.isBuilding()) {
 			builder.stopBuild();
 		}
 	}

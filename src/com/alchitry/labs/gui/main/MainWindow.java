@@ -60,7 +60,7 @@ import com.alchitry.labs.widgets.TabChild;
 import jssc.SerialPortList;
 
 public class MainWindow {
-	public static final String VERSION = "1.0.0";
+	public static final String VERSION = "1.0.1";
 	public static final String LIB_VERSION = "1.0.0";
 
 	protected final Display display = Display.getDefault();
@@ -355,6 +355,18 @@ public class MainWindow {
 	public void updateIcecubeLicenseLocation() {
 		updateFileLocation("The next dialog will ask you for the location of iCEcube2's license file. You need to get your own file from Lattcie's website.",
 				Util.getIceCubeLicenseFile(), Settings.ICECUBE_LICENSE);
+	}
+	
+	public void updateYosysLocation() {
+		updateFileLocation("The next dialog will ask for the location of the Yosys executable.", Settings.pref.get(Settings.YOSYS_LOC, null), Settings.YOSYS_LOC);
+	}
+	
+	public void updateArachneLocation() {
+		updateFileLocation("The next dialog will ask for the location of the Arachne PNR executable.", Settings.pref.get(Settings.ARACHNE_LOC, null), Settings.ARACHNE_LOC);
+	}
+	
+	public void updateIcepackLocation() {
+		updateFileLocation("The next dialog will ask for the location of the IcePack executable.", Settings.pref.get(Settings.ICEPACK_LOC, null), Settings.ICEPACK_LOC);
 	}
 
 	private void loadFonts() {

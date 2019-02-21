@@ -67,7 +67,7 @@ public class IceStormBuilder extends ProjectBuilder {
 		}
 		arachneCommand.add(workFolder + File.separator + "alchitry.blif");
 
-		builder = Util.runCommand(arachneCommand);
+		builder = Util.runCommand(arachneCommand, false);
 		builder.waitFor();
 
 		Util.println("");

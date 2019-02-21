@@ -1,4 +1,4 @@
-package com.alchitry.labs.boards;
+package com.alchitry.labs.hardware.boards;
 
 import com.alchitry.labs.hardware.loaders.AuLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
@@ -50,11 +50,6 @@ public class AlchitryAu extends Board {
 	@Override
 	public ProjectBuilder getBuilder() {
 		return new VivadoBuilder();
-	}
-
-	@Override
-	public ProjectBuilder getOpenBuilder() {
-		return null;
 	}
 
 	@Override

@@ -109,8 +109,8 @@ public class IceCubeBuilder extends ProjectBuilder {
 			cmd.add("bash");
 		cmd.add(bashScript);
 
-		Process p = Util.runCommand(cmd);
-		p.waitFor();
+		builder = Util.runCommand(cmd);
+		builder.waitFor();
 
 		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
 

@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.Board;
 import com.alchitry.labs.gui.Images;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.widgets.CustomButton;
 import com.alchitry.labs.widgets.TabChild;

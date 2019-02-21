@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.alchitry.labs.boards.Board;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.project.SourceFile;
 
 public class NewSourceDialog extends Dialog {

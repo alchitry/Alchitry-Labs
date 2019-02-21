@@ -444,25 +444,36 @@ public class Util {
 
 		return path.getAbsolutePath();
 	}
-	
+
 	public static String getIceCubeLicenseFile() {
 		return Settings.pref.get(Settings.ICECUBE_LICENSE, null);
 	}
 
 	public static String getYosysCommand() {
-		return "yosys";
+		String yosys = Settings.pref.get(Settings.YOSYS_LOC, null);
+		if (yosys != null)
+			return yosys;
+		if (isLinux)
+			return "yosys";
+		return null;
 	}
 
 	public static String getArachneCommand() {
-		return "arachne-pnr";
+		String arachne = Settings.pref.get(Settings.ARACHNE_LOC, null);
+		if (arachne != null)
+			return arachne;
+		if (isLinux)
+			return "arachne-pnr";
+		return null;
 	}
 
 	public static String getIcePackCommand() {
-		return "icepack";
-	}
-
-	public static String getIceProgCommand() {
-		return "iceprog";
+		String icepack = Settings.pref.get(Settings.ICEPACK_LOC, null);
+		if (icepack != null)
+			return icepack;
+		if (isLinux)
+			return "icepack";
+		return null;
 	}
 
 	public static String getAlchitryLoaderCommand() {
@@ -590,6 +601,10 @@ public class Util {
 	}
 
 	public static Process runCommand(List<String> cmd) throws InterruptedException {
+		return runCommand(cmd, true);
+	}
+
+	public static Process runCommand(List<String> cmd, boolean showRed) throws InterruptedException {
 		ProcessBuilder pb = new ProcessBuilder(cmd);
 
 		Process process;
@@ -603,7 +618,7 @@ public class Util {
 		}
 
 		startStreamPrinter(process.getInputStream(), false);
-		startStreamPrinter(process.getErrorStream(), true);
+		startStreamPrinter(process.getErrorStream(), showRed);
 
 		return process;
 	}

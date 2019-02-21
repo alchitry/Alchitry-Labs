@@ -14,7 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.Board;
+import com.alchitry.labs.hardware.boards.Board;
 
 public class CoreGen {
 	private static final String PROJECT_FILE = "coregen.cgc";

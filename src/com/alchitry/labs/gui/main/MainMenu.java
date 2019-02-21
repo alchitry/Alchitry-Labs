@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import com.alchitry.labs.Reporter;
+import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.Board;
 import com.alchitry.labs.gui.BoardSelector;
 import com.alchitry.labs.gui.EmailMessage;
 import com.alchitry.labs.gui.FeedbackDialog;
@@ -24,6 +24,7 @@ import com.alchitry.labs.gui.WelcomeDialog;
 import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.hardware.flashers.AuFlasher;
 import com.alchitry.labs.hardware.flashers.CuFlasher;
 import com.alchitry.labs.hardware.flashers.MojoFlasher;
@@ -33,6 +34,8 @@ public class MainMenu {
 	MainWindow parent;
 	Menu menu;
 	Board board;
+	MenuItem iceCube;
+	MenuItem iceStorm;
 
 	public MainMenu(MainWindow parent) {
 		this.parent = parent;
@@ -58,16 +61,24 @@ public class MainMenu {
 		buildSettingsMenu();
 		buildHelpMenu();
 	}
-
-	private MenuItem createItem(Menu m, String text, SelectionAdapter selectedListener) {
-		MenuItem menuItem = new MenuItem(m, SWT.NONE);
+	
+	private MenuItem createItem(Menu m, int style, String text, SelectionAdapter selectedListener) {
+		MenuItem menuItem = new MenuItem(m, style);
 		menuItem.addSelectionListener(selectedListener);
 		menuItem.setText(text);
 		return menuItem;
 	}
+	
+	private MenuItem createCheckItem(Menu m, String text, SelectionAdapter selectedListener) {
+		return createItem(m, SWT.CHECK, text, selectedListener);
+	}
+
+	private MenuItem createItem(Menu m, String text, SelectionAdapter selectedListener) {
+		return createItem(m, SWT.NONE, text, selectedListener);
+	}
 
 	private Menu createSubMenu(Menu m, String text) {
-		MenuItem menuItem = new MenuItem(menu, SWT.CASCADE);
+		MenuItem menuItem = new MenuItem(m, SWT.CASCADE);
 		menuItem.setText(text);
 
 		Menu subMenu = new Menu(menuItem);
@@ -306,6 +317,35 @@ public class MainMenu {
 				parent.updateIcecubeLicenseLocation();
 			}
 		});
+		
+		createItem(subMenu, "IceStorm Locations...", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.updateYosysLocation();
+				parent.updateArachneLocation();
+				parent.updateIcepackLocation();
+			}
+		});
+		
+		Menu cuBuilder = createSubMenu(subMenu, "Cu Toolchain");
+		
+		iceCube = createCheckItem(cuBuilder, "iCEcube2", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Settings.pref.putBoolean(Settings.USE_ICESTORM, false);
+				updateCuToolchainSelection();
+			}
+		});
+		
+		iceStorm = createCheckItem(cuBuilder, "IceStorm", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Settings.pref.putBoolean(Settings.USE_ICESTORM, true);
+				updateCuToolchainSelection();
+			}
+		});
+		
+		updateCuToolchainSelection();
 
 		createItem(subMenu, "Choose Theme...", new SelectionAdapter() {
 			@Override
@@ -314,6 +354,12 @@ public class MainMenu {
 				dialog.open();
 			}
 		});
+	}
+	
+	private void updateCuToolchainSelection () {
+		boolean useStorm = Settings.pref.getBoolean(Settings.USE_ICESTORM, false);
+		iceCube.setSelection(!useStorm);
+		iceStorm.setSelection(useStorm);
 	}
 
 	private void buildHelpMenu() {

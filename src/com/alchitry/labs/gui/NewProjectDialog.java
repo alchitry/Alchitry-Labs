@@ -33,7 +33,7 @@ import com.alchitry.labs.Locations;
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.Strings;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.boards.Board;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.style.ParseException;
 

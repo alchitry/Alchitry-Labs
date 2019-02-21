@@ -1,4 +1,4 @@
-package com.alchitry.labs.boards;
+package com.alchitry.labs.hardware.boards;
 
 import com.alchitry.labs.hardware.loaders.MojoLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
@@ -26,11 +26,6 @@ public class Mojo extends Board {
 	@Override
 	public ProjectBuilder getBuilder() {
 		return new ISEBuilder();
-	}
-
-	@Override
-	public ProjectBuilder getOpenBuilder() {
-		return null;
 	}
 	
 	@Override

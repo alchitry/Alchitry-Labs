@@ -21,4 +21,8 @@ public class Settings {
 	public static final String VIVADO_LOC = "VIVADO_LOC";
 	public static final String ICECUBE_LOC = "ICECUBE_LOC";
 	public static final String ICECUBE_LICENSE = "ICECUBE_LICENSE";
+	public static final String USE_ICESTORM = "USE_ICESTORM";
+	public static final String ICEPACK_LOC = "ICEPACK_LOC";
+	public static final String YOSYS_LOC = "YOSYS_LOC";
+	public static final String ARACHNE_LOC = "ARACHNE_LOC";
 }

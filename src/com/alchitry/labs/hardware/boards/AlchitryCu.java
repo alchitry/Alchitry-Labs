@@ -1,5 +1,6 @@
-package com.alchitry.labs.boards;
+package com.alchitry.labs.hardware.boards;
 
+import com.alchitry.labs.Settings;
 import com.alchitry.labs.hardware.loaders.CuLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
 import com.alchitry.labs.project.builders.IceCubeBuilder;
@@ -17,9 +18,9 @@ public class AlchitryCu extends Board {
 			new IoRegion("Clock", 6, 0.583353846153846, 0.664444444444445, 0.0557076923076923, 0.115555555555556),
 			new IoRegion("USB", 7, 0.00189230769230769, 0.107711111111111, 0.137446153846154, 0.221177777777778),
 			new IoRegion("Flash", 8, 0.724230769230769, 0.575555555555555, 0.135384615384615, 0.111111111111111), };
-	
+
 	public AlchitryCu() {
-		ioRegions[0].signals = new String[] {"A2", "A3"};
+		ioRegions[0].signals = new String[] { "A2", "A3" };
 	}
 
 	@Override
@@ -39,19 +40,17 @@ public class AlchitryCu extends Board {
 
 	@Override
 	public ProjectBuilder getBuilder() {
-		return new IceCubeBuilder();
-	}
-
-	@Override
-	public ProjectBuilder getOpenBuilder() {
-		return new IceStormBuilder();
+		if (Settings.pref.getBoolean(Settings.USE_ICESTORM, false))
+			return new IceStormBuilder();
+		else
+			return new IceCubeBuilder();
 	}
 
 	@Override
 	public ProjectLoader getLoader() {
 		return new CuLoader();
 	}
-	
+
 	@Override
 	public IoRegion[] getIoRegions() {
 		return ioRegions;
@@ -61,10 +60,10 @@ public class AlchitryCu extends Board {
 	public String getSVGPath() {
 		return "/images/cu.svg";
 	}
-	
+
 	@Override
 	public String[] getSupportedConstraintExtensions() {
-		return new String[] {".pcf", ".sdc"};
+		return new String[] { ".pcf", ".sdc" };
 	}
 
 }
