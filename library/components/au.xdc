@@ -184,5 +184,3 @@ set_property -dict { PACKAGE_PIN J3 IOSTANDARD LVCMOS33 PULLDOWN TRUE } [get_por
 set_property -dict { PACKAGE_PIN H4 IOSTANDARD LVCMOS33 PULLDOWN TRUE } [get_ports {io_dip[22]}];
 
 set_property -dict { PACKAGE_PIN H5 IOSTANDARD LVCMOS33 PULLDOWN TRUE } [get_ports {io_dip[23]}];
-
-set_property -dict { PACKAGE_PIN H5 IOSTANDARD LVCMOS33 PULLDOWN TRUE } [get_ports {io_other}];
