@@ -13,15 +13,15 @@ import org.apache.commons.io.FileUtils;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.SignalSelectionDialog;
 import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.language.InstModule;
-import com.alchitry.labs.language.Module;
-import com.alchitry.labs.language.ProjectSignal;
-import com.alchitry.labs.lucid.toVerilog.LucidToVerilog;
-import com.alchitry.labs.lucid.tools.LucidDebugModifier;
+import com.alchitry.labs.parsers.InstModule;
+import com.alchitry.labs.parsers.Module;
+import com.alchitry.labs.parsers.ProjectSignal;
+import com.alchitry.labs.parsers.lucid.toVerilog.LucidToVerilog;
+import com.alchitry.labs.parsers.tools.lucid.LucidDebugModifier;
+import com.alchitry.labs.parsers.tools.verilog.VerilogLucidModuleFixer;
 import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.style.ParseException;
-import com.alchitry.labs.verilog.tools.VerilogLucidModuleFixer;
 
 public abstract class ProjectBuilder {
 

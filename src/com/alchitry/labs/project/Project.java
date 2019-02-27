@@ -51,24 +51,25 @@ import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
-import com.alchitry.labs.language.InstModule;
-import com.alchitry.labs.language.Module;
-import com.alchitry.labs.language.Param;
-import com.alchitry.labs.language.Sig;
-import com.alchitry.labs.lucid.Constant;
-import com.alchitry.labs.lucid.SignalWidth;
-import com.alchitry.labs.lucid.Struct;
-import com.alchitry.labs.lucid.tools.LucidErrorChecker;
-import com.alchitry.labs.lucid.tools.LucidGlobalExtractor;
-import com.alchitry.labs.lucid.tools.LucidModuleExtractor;
+import com.alchitry.labs.parsers.InstModule;
+import com.alchitry.labs.parsers.Module;
+import com.alchitry.labs.parsers.Param;
+import com.alchitry.labs.parsers.Sig;
+import com.alchitry.labs.parsers.errors.AlchitryConstraintsErrorProvider;
+import com.alchitry.labs.parsers.errors.VerilogErrorProvider;
+import com.alchitry.labs.parsers.lucid.Constant;
+import com.alchitry.labs.parsers.lucid.SignalWidth;
+import com.alchitry.labs.parsers.lucid.Struct;
+import com.alchitry.labs.parsers.tools.lucid.LucidErrorChecker;
+import com.alchitry.labs.parsers.tools.lucid.LucidGlobalExtractor;
+import com.alchitry.labs.parsers.tools.lucid.LucidModuleExtractor;
+import com.alchitry.labs.parsers.tools.verilog.VerilogLucidModuleFixer;
+import com.alchitry.labs.parsers.tools.verilog.VerilogModuleListener;
 import com.alchitry.labs.project.Primitive.Parameter;
 import com.alchitry.labs.project.Primitive.Port;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.style.ParseException;
 import com.alchitry.labs.style.SyntaxError;
-import com.alchitry.labs.verilog.tools.VerilogErrorChecker;
-import com.alchitry.labs.verilog.tools.VerilogLucidModuleFixer;
-import com.alchitry.labs.verilog.tools.VerilogModuleListener;
 import com.alchitry.labs.widgets.CustomTree;
 import com.alchitry.labs.widgets.CustomTree.TreeElement;
 import com.alchitry.labs.widgets.CustomTree.TreeLeaf;
@@ -111,6 +112,8 @@ public class Project {
 	private DebugInfo debugInfo;
 
 	private Thread thread;
+	
+	private List<Listener> saveListeners = new ArrayList<>();
 
 	private enum FileType {
 		SOURCE, CONSTRAINT, COMPONENT, CORE
@@ -178,6 +181,14 @@ public class Project {
 
 	public String getFolder() {
 		return projectFolder;
+	}
+	
+	public void addSaveListener(Listener l) {
+		saveListeners.add(l);
+	}
+	
+	public void removeSaveListener(Listener l) {
+		saveListeners.remove(l);
 	}
 
 	public String getBinFile() {
@@ -1022,6 +1033,11 @@ public class Project {
 		}
 		return m;
 	}
+	
+	public Module getTopModule() throws IOException {
+		List<Module> modules = getModules(null);
+		return getModuleFromFile(getSourceFolder(), topSource, modules);
+	}
 
 	public ArrayList<Module> getModules(List<File> debugFiles) throws IOException {
 		ArrayList<Module> modules = new ArrayList<Module>();
@@ -1196,6 +1212,9 @@ public class Project {
 		xmlOutput.setFormat(Format.getPrettyFormat());
 
 		xmlOutput.output(doc, new FileWriter(file));
+		
+		for (Listener l : saveListeners)
+			l.handleEvent(null);
 	}
 
 	public boolean hasGlobalErrors() {
@@ -1257,14 +1276,17 @@ public class Project {
 	private boolean checkforErrors(String folder, String file, boolean printErrors) throws IOException {
 		boolean hasErrors = false;
 
-		if (Util.isSourceFile(file)) {
+		if (Util.hasErrorProvider(file)) {
 			List<SyntaxError> errors = null;
 			String fullPath = new File(folder + File.separatorChar + file).getAbsolutePath();
 			if (file.endsWith(".luc")) {
 				LucidErrorChecker errorChecker = new LucidErrorChecker(null);
 				errors = errorChecker.getErrors(fullPath);
 			} else if (file.endsWith(".v")) {
-				VerilogErrorChecker errorChecker = new VerilogErrorChecker();
+				VerilogErrorProvider errorChecker = new VerilogErrorProvider();
+				errors = errorChecker.getErrors(fullPath);
+			} else if (file.endsWith(".acf")) {
+				AlchitryConstraintsErrorProvider errorChecker = new AlchitryConstraintsErrorProvider();
 				errors = errorChecker.getErrors(fullPath);
 			} else {
 				Util.println("Unknown source file extension " + file + "!", true);
@@ -1299,12 +1321,19 @@ public class Project {
 		for (String file : getSourceFiles()) {
 			hasErrors = hasErrors | checkforErrors(folder, file, true);
 		}
+		folder = getConstraintFolder();
+		for (String file : getConstraintFiles(false)) {
+			hasErrors = hasErrors | checkforErrors(folder, file, true);
+		}
 		for (InstModule im : list)
 			if (!im.getType().isPrimitive() && im.getType().getFileName().endsWith(".v"))
 				hasErrors = hasErrors | checkForIMErrors(im, modules, list);
 
 		folder = Locations.COMPONENTS;
 		for (String file : getComponentFiles(false)) {
+			hasErrors = hasErrors | checkforErrors(folder, file, true);
+		}
+		for (String file : getConstraintFiles(true)) {
 			hasErrors = hasErrors | checkforErrors(folder, file, true);
 		}
 

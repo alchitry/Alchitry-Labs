@@ -25,16 +25,18 @@ public class IceStormBuilder extends ProjectBuilder {
 			Util.showError("Error building the project", "Error with getting list of Verilog files!");
 		}
 		String srcFolder = workFolder + File.separatorChar + "verilog";
-		
+
 		String escapedWorkFolder = workFolder.replace(" ", "\\ ");
+		
+		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
 
 		ArrayList<String> yosysCommand = new ArrayList<>();
 		yosysCommand.add(Util.getYosysCommand());
 		yosysCommand.add("-p");
-		yosysCommand.add("synth_ice40 -top alchitry_top_0 -blif " + escapedWorkFolder + File.separator + "alchitry.blif");
+		yosysCommand.add("synth_ice40 -top " + topModuleName + " -blif " + escapedWorkFolder + File.separator + "alchitry.blif");
 		for (String file : vFiles)
 			yosysCommand.add(srcFolder + File.separatorChar + file);
-		
+
 		Util.println(yosysCommand.toString());
 
 		builder = Util.runCommand(yosysCommand);
@@ -92,7 +94,7 @@ public class IceStormBuilder extends ProjectBuilder {
 			Util.println("Bin file (" + binFile.getAbsolutePath() + ") could not be found! The build probably failed.", true);
 		}
 	}
-	
+
 	private void removeUnsupportedConstraints(HashSet<String> constraints) {
 		String ext = ".sdc";
 		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {

@@ -73,8 +73,9 @@ public class Util {
 	public static final int ECLIPSE = 4;
 	private static int envType = UNKNOWN;
 
-	public static String[] constraintSuffixes = new String[] { ".ucf" };
-	public static String[] sourceSuffixes = new String[] { ".v", ".luc" };
+	public static final String[] constraintSuffixes = new String[] { ".ucf" };
+	public static final String[] sourceSuffixes = new String[] { ".v", ".luc" };
+	public static final String[] errorProviderSuffixes = new String[] {".v", ".luc", ".acf"};
 
 	static {
 		String os = System.getProperty("os.name");
@@ -639,6 +640,10 @@ public class Util {
 
 	public static boolean isSourceFile(String fileName) {
 		return endsWithSuffixList(fileName, sourceSuffixes);
+	}
+	
+	public static boolean hasErrorProvider(String fileName) {
+		return endsWithSuffixList(fileName, errorProviderSuffixes);
 	}
 
 	public static Image svgToImage(String svgFile, int width, int height) {

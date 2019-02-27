@@ -39,24 +39,28 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.dictionaries.AlchitryConstraintsDictionary;
+import com.alchitry.labs.dictionaries.LucidDictionary;
 import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.lucid.LucidAutoComplete;
-import com.alchitry.labs.lucid.LucidDictionary;
-import com.alchitry.labs.lucid.style.BracketUnderliner;
-import com.alchitry.labs.lucid.style.LucidErrorHighlighter;
-import com.alchitry.labs.lucid.style.LucidNewLineIndenter;
-import com.alchitry.labs.lucid.style.LucidStyleProvider;
+import com.alchitry.labs.parsers.errors.AlchitryConstraintsErrorProvider;
+import com.alchitry.labs.parsers.errors.ErrorProvider;
+import com.alchitry.labs.parsers.errors.VerilogErrorProvider;
+import com.alchitry.labs.parsers.styles.AlchitryConstraintStyleProvider;
+import com.alchitry.labs.parsers.styles.LucidStyleProvider;
+import com.alchitry.labs.parsers.styles.VerilogStyleProvider;
+import com.alchitry.labs.parsers.styles.lucid.LucidErrorProvider;
+import com.alchitry.labs.parsers.styles.lucid.LucidNewLineIndenter;
+import com.alchitry.labs.parsers.styles.verilog.VerilogIndentProvider;
+import com.alchitry.labs.parsers.styles.verilog.VerilogNewLineIndenter;
+import com.alchitry.labs.project.Project;
+import com.alchitry.labs.style.AutoComplete;
 import com.alchitry.labs.style.AutoFormatter;
-import com.alchitry.labs.style.ErrorChecker;
+import com.alchitry.labs.style.BracketUnderliner;
 import com.alchitry.labs.style.IndentProvider;
 import com.alchitry.labs.style.LineHighlighter;
 import com.alchitry.labs.style.LineStyler;
 import com.alchitry.labs.style.ToolTipListener;
 import com.alchitry.labs.tools.ParserCache;
-import com.alchitry.labs.verilog.style.VerilogIndentProvider;
-import com.alchitry.labs.verilog.style.VerilogNewLineIndenter;
-import com.alchitry.labs.verilog.style.VerilogStyleProvider;
-import com.alchitry.labs.verilog.tools.VerilogErrorChecker;
 import com.alchitry.labs.widgets.CustomSearch;
 import com.alchitry.labs.widgets.CustomTabs;
 import com.alchitry.labs.widgets.TabChild;
@@ -77,14 +81,14 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	private DoubleClickHighlighter doubleClick;
 	private List<LineStyleListener> lineStyleListeners;
 
-	private ErrorChecker errorChecker;
+	private ErrorProvider errorChecker;
 	private boolean hasErrors;
 
 	private boolean searchActive = false;
 
 	private boolean isLucid = false;
 	private boolean isVerilog = false;
-	private boolean isUCF = false;
+	private boolean isConstraint = false;
 
 	private boolean write;
 
@@ -124,7 +128,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			undoRedo.skipNext();
 		} else if (file.endsWith(".luc")) {
 			LucidDictionary dict = new LucidDictionary(this);
-			LucidErrorHighlighter lErrorChecker = new LucidErrorHighlighter(this, dict);
+			LucidErrorProvider lErrorChecker = new LucidErrorProvider(this, dict);
 			lineStyleListeners.add(lErrorChecker);
 			addModifyListener(lErrorChecker);
 			errorChecker = lErrorChecker;
@@ -137,9 +141,9 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			unindentProvider = nli;
 			indentProvider = nli;
 			isLucid = true;
-			autoComplete = new LucidAutoComplete(this, dict);
+			autoComplete = new AutoComplete(this, dict);
 		} else if (file.endsWith(".v")) {
-			VerilogErrorChecker vErrorChecker = new VerilogErrorChecker(this);
+			VerilogErrorProvider vErrorChecker = new VerilogErrorProvider(this);
 			lineStyleListeners.add(vErrorChecker);
 			addModifyListener(vErrorChecker);
 			errorChecker = vErrorChecker;
@@ -150,8 +154,30 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			newLineIndenter = new VerilogNewLineIndenter(this, undoRedo);
 			isVerilog = true;
 		} else if (file.endsWith(".ucf")) {
-			isUCF = true;
+			isConstraint = true;
 			// TODO : UCF checking
+		} else if (file.endsWith(".acf")) {
+			AlchitryConstraintsErrorProvider aErrorChecker = new AlchitryConstraintsErrorProvider(this);
+			lineStyleListeners.add(aErrorChecker);
+			addModifyListener(aErrorChecker);
+			errorChecker = aErrorChecker;
+			AlchitryConstraintStyleProvider asp = new AlchitryConstraintStyleProvider(this);
+			lineStyleListeners.add(asp);
+			addModifyListener(asp);
+
+			AlchitryConstraintsDictionary dict = new AlchitryConstraintsDictionary();
+
+			Project p = MainWindow.getOpenProject();
+			if (p != null)
+				p.addSaveListener(new Listener() {
+					@Override
+					public void handleEvent(Event arg0) {
+						dict.updatePortNames();
+					}
+				});
+
+			autoComplete = new AutoComplete(this, dict);
+			isConstraint = true;
 		} else {
 			Util.log.severe("ERROR: UNSUPPORTED FILE TYPE. " + file);
 		}
@@ -271,8 +297,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			addVerifyListener(new VerifyListener() {
 				@Override
 				public void verifyText(VerifyEvent e) {
-					if (isUCF)
-						Util.showInfo("Library UCF files are read only!");
+					if (isConstraint)
+						Util.showInfo("Library constraint files are read only!");
 					else
 						Util.showInfo("Components are read only!");
 					e.doit = false;
@@ -363,10 +389,6 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 	public boolean hasErrors() {
 		return hasErrors;
-	}
-
-	public boolean hasSyntaxErrors() {
-		return errorChecker.hasSyntaxErrors();
 	}
 
 	public String getFileName() {

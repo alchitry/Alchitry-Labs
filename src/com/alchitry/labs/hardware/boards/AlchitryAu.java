@@ -69,7 +69,7 @@ public class AlchitryAu extends Board {
 
 	@Override
 	public String[] getSupportedConstraintExtensions() {
-		return new String[] {".xdc"};
+		return new String[] {".acf", ".xdc"};
 	}
 
 }

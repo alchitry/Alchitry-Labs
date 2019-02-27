@@ -28,9 +28,9 @@ import com.alchitry.labs.gui.Images;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.LogicCapture;
-import com.alchitry.labs.language.BitValue;
-import com.alchitry.labs.language.ConstValue;
-import com.alchitry.labs.language.ProjectSignal;
+import com.alchitry.labs.parsers.BitValue;
+import com.alchitry.labs.parsers.ConstValue;
+import com.alchitry.labs.parsers.ProjectSignal;
 import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.widgets.WaveSignal.TriggerType;
 

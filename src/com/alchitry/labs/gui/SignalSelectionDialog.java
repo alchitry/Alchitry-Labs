@@ -27,11 +27,11 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.language.InstModule;
-import com.alchitry.labs.language.ProjectSignal;
-import com.alchitry.labs.language.Sig;
-import com.alchitry.labs.lucid.Dff;
-import com.alchitry.labs.lucid.Fsm;
+import com.alchitry.labs.parsers.InstModule;
+import com.alchitry.labs.parsers.ProjectSignal;
+import com.alchitry.labs.parsers.Sig;
+import com.alchitry.labs.parsers.lucid.Dff;
+import com.alchitry.labs.parsers.lucid.Fsm;
 import com.alchitry.labs.project.DebugInfo;
 
 public class SignalSelectionDialog extends Dialog {

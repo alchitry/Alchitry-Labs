@@ -1,6 +1,7 @@
 package com.alchitry.labs.gui;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Token;
 import org.eclipse.swt.custom.LineStyleListener;
@@ -11,10 +12,10 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import com.alchitry.labs.lucid.parser.LucidLexer;
+import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
+import com.alchitry.labs.parsers.verilog.parser.Verilog2001Lexer;
 import com.alchitry.labs.style.StyleUtil;
 import com.alchitry.labs.style.StyleUtil.StyleMerger;
-import com.alchitry.labs.verilog.parser.Verilog2001Lexer;
 
 public class DoubleClickHighlighter extends CachedStyleListner implements Listener, LineStyleListener{
 	StyledText editor;
@@ -93,7 +94,7 @@ public class DoubleClickHighlighter extends CachedStyleListner implements Listen
 
 			Lexer lexer = null;
 
-			ANTLRInputStream stream = new ANTLRInputStream(line);
+			CharStream stream = CharStreams.fromString(line);
 
 			if (isLucid)
 				lexer = new LucidLexer(stream);

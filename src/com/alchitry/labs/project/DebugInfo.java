@@ -3,7 +3,7 @@ package com.alchitry.labs.project;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.alchitry.labs.language.ProjectSignal;
+import com.alchitry.labs.parsers.ProjectSignal;
 
 public class DebugInfo implements Serializable {
 	private static final long serialVersionUID = -1858662763771188844L;

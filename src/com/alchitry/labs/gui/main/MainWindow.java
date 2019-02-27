@@ -47,7 +47,7 @@ import com.alchitry.labs.gui.WelcomeDialog;
 import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
-import com.alchitry.labs.lucid.Constant;
+import com.alchitry.labs.parsers.lucid.Constant;
 import com.alchitry.labs.project.CoreGen;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.project.SourceFile;

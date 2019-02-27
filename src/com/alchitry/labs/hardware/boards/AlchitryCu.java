@@ -63,7 +63,7 @@ public class AlchitryCu extends Board {
 
 	@Override
 	public String[] getSupportedConstraintExtensions() {
-		return new String[] { ".pcf", ".sdc" };
+		return new String[] { ".acf", ".pcf", ".sdc" };
 	}
 
 }

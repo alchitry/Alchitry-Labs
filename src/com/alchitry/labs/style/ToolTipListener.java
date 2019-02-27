@@ -8,15 +8,16 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.ToolTip;
 
 import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.parsers.errors.ErrorProvider;
 
 public class ToolTipListener implements MouseTrackListener, MouseMoveListener {
 
 	private StyledCodeEditor editor;
-	private ErrorChecker errorChecker;
+	private ErrorProvider errorChecker;
 	private ToolTip toolTip;
 	private SyntaxError error;
 
-	public ToolTipListener(StyledCodeEditor editor, ErrorChecker errorChecker) {
+	public ToolTipListener(StyledCodeEditor editor, ErrorProvider errorChecker) {
 		this.editor = editor;
 		this.errorChecker = errorChecker;
 		toolTip = new ToolTip(editor.getShell(), SWT.ICON_ERROR);

@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
@@ -20,10 +21,12 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.lucid.parser.LucidLexer;
-import com.alchitry.labs.lucid.parser.LucidParser;
-import com.alchitry.labs.verilog.parser.Verilog2001Lexer;
-import com.alchitry.labs.verilog.parser.Verilog2001Parser;
+import com.alchitry.labs.parsers.constraints.parser.AlchitryConstraintsLexer;
+import com.alchitry.labs.parsers.constraints.parser.AlchitryConstraintsParser;
+import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser;
+import com.alchitry.labs.parsers.verilog.parser.Verilog2001Lexer;
+import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser;
 
 public class ParserCache {
 	private static HashMap<String, CacheEntry> treeMap = new HashMap<>();
@@ -162,7 +165,7 @@ public class ParserCache {
 
 		ParseTree tree = null;
 
-		ANTLRInputStream input = new ANTLRInputStream(text);
+		CharStream input = CharStreams.fromString(text);
 
 		entry.errors.clear();
 
@@ -171,6 +174,7 @@ public class ParserCache {
 			@Override
 			public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
 				entry.errors.add(new ParseError((Token) offendingSymbol, msg));
+				System.out.println("ERROR "+msg);
 			}
 
 			@Override
@@ -207,6 +211,15 @@ public class ParserCache {
 			vparser.removeErrorListeners();
 			vparser.addErrorListener(errorListener);
 			tree = vparser.source_text();
+			break;
+		case "acf":
+			AlchitryConstraintsLexer alexer = new AlchitryConstraintsLexer(input);
+			CommonTokenStream atoken = new CommonTokenStream(alexer);
+			entry.tokens = atoken;
+			AlchitryConstraintsParser aparser = new AlchitryConstraintsParser(atoken);
+			aparser.removeErrorListeners();
+			aparser.addErrorListener(errorListener);
+			tree = aparser.alchitry_constraints();
 			break;
 		case "ucf":
 			break;

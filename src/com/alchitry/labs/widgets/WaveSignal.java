@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Rectangle;
 
-import com.alchitry.labs.language.ConstValue;
+import com.alchitry.labs.parsers.ConstValue;
 
 public class WaveSignal {
 	private String name;
