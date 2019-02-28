@@ -158,17 +158,20 @@ public class IceCubeBuilder extends ProjectBuilder {
 
 		file.write(Util.assemblePath(Util.getIceCubeFolder(), "sbt_backend", "bin", (Util.isWindows ? "win32" : "linux"), "opt", "synpwrap",
 				"synpwrap" + (Util.isWindows ? ".exe" : "")));
-		file.write(" -prj ");
+		file.write(" -prj \"");
 		file.write(Util.assemblePath(workFolder, SYN_PROJECT_FILE));
-		file.write(" -log ");
+		file.write("\" -log \"");
 		file.write(Util.assemblePath(workFolder, "icelog.log"));
+		file.write('"');
 		file.write(nl);
 
 		if (Util.isWindows)
 			file.write(Util.assemblePath(Util.getIceCubeFolder(), "Aldec", "Active-HDL", "BIN", "tclsh85.exe") + " ");
 		else
 			file.write("tclsh ");
+		file.write('"');
 		file.write(Util.assemblePath(workFolder, TCL_SCRIPT));
+		file.write('"');
 		file.write(nl);
 	}
 
@@ -185,10 +188,11 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write("set edif_file \"" + topModuleName + '"' + nl);
 		file.write("set tool_options \":edifparser ");
 		
+		file.write("-y \\\"" );
 		for (String cf : cFiles)
 			if (cf.endsWith(".pcf"))
-				file.write("-y \\\"" + cf.replace("\\", "/").replace(" ", "\\ ") + "\\\"");
-		file.write("\"\n");
+				file.write(cf.replace("\\", "/").replace(" ", "\\ ") + " ");
+		file.write("\\\"\"\n");
 
 		file.write("set sbt_root $::env(SBT_DIR)" + nl);
 		file.write("append sbt_tcl $sbt_root \"/tcl/sbt_backend_synpl.tcl\"" + nl);

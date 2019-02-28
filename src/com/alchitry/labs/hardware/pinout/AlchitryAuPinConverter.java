@@ -6,17 +6,17 @@ public class AlchitryAuPinConverter extends PinConverter {
 	public String getFPGAPin(String pin) {
 		switch (pin) {
 		case "A2":
-			return "N2";
+			return "T8";
 		case "A3":
-			return "N3";
+			return "T7";
 		case "A5":
-			return "M1";
+			return "T5";
 		case "A6":
-			return "M2";
+			return "R5";
 		case "A8":
-			return "P1";
+			return "R8";
 		case "A9":
-			return "N1";
+			return "P8";
 		case "A11":
 			return "L2";
 		case "A12":
@@ -38,9 +38,9 @@ public class AlchitryAuPinConverter extends PinConverter {
 		case "A24":
 			return "E6";
 		case "A27":
-			return "P5";
+			return "M6";
 		case "A28":
-			return "L5";
+			return "N6";
 		case "A30":
 			return "H5";
 		case "A31":
@@ -58,17 +58,17 @@ public class AlchitryAuPinConverter extends PinConverter {
 		case "A40":
 			return "K2";
 		case "A42":
-			return "L4";
+			return "N9";
 		case "A43":
-			return "M4";
+			return "P9";
 		case "A45":
-			return "M5";
+			return "R7";
 		case "A46":
-			return "N4";
+			return "R6";
 		case "A48":
-			return "P4";
+			return "T9";
 		case "A49":
-			return "P3";
+			return "T10";
 
 		case "B2":
 			return "D1";
@@ -136,69 +136,69 @@ public class AlchitryAuPinConverter extends PinConverter {
 			return "B1";
 
 		case "C2":
-			return "T2";
-		case "C3":
-			return "R3";
-		case "C5":
-			return "T5";
-		case "C6":
-			return "R5";
-		case "C8":
-			return "N6";
-		case "C9":
-			return "M6";
-		case "C11":
-			return "R8";
-		case "C12":
-			return "P8";
-		case "C14":
-			return "P9";
-		case "C15":
-			return "N9";
-		case "C17":
-			return "P11";
-		case "C18":
-			return "P10";
-		case "C20":
-			return "N12";
-		case "C21":
-			return "N11";
-		case "C23":
-			return "P13";
-		case "C24":
-			return "N13";
-		case "C27":
-			return "R13";
-		case "C28":
 			return "T13";
-		case "C30":
-			return "R12";
-		case "C31":
+		case "C3":
+			return "R13";
+		case "C5":
 			return "T12";
-		case "C33":
-			return "R10";
-		case "C34":
+		case "C6":
+			return "R12";
+		case "C8":
 			return "R11";
-		case "C36":
-			return "T9";
-		case "C37":
-			return "T10";
-		case "C39":
-			return "T7";
-		case "C40":
-			return "T8";
-		case "C42":
-			return "R6";
-		case "C43":
-			return "R7";
-		case "C45":
+		case "C9":
+			return "R10";
+		case "C11":
+			return "N2";
+		case "C12":
+			return "N3";
+		case "C14":
+			return "P3";
+		case "C15":
+			return "P4";
+		case "C17":
+			return "M4";
+		case "C18":
+			return "L4";
+		case "C20":
+			return "N4";
+		case "C21":
+			return "M5";
+		case "C23":
+			return "L5";
+		case "C24":
+			return "P5";
+		case "C27":
 			return "T4";
-		case "C46":
+		case "C28":
 			return "T3";
-		case "C48":
+		case "C30":
+			return "R3";
+		case "C31":
+			return "T2";
+		case "C33":
 			return "R2";
-		case "C49":
+		case "C34":
 			return "R1";
+		case "C36":
+			return "N1";
+		case "C37":
+			return "P1";
+		case "C39":
+			return "M2";
+		case "C40":
+			return "M1";
+		case "C42":
+			return "N13";
+		case "C43":
+			return "P13";
+		case "C45":
+			return "N11";
+		case "C46":
+			return "N12";
+		case "C48":
+			return "P10";
+		case "C49":
+			return "P11";
 			
 		case "D8":
 			return "R16";

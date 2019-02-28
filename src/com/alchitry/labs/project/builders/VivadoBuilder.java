@@ -137,8 +137,9 @@ public class VivadoBuilder extends ProjectBuilder {
 		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
 		file.write("set xdcSources [list ");
 		for (String cF : cFiles) {
+			file.write('"');
 			file.write(cF.replace('\\', '/').replace(" ", "\\ "));
-			file.write(' ');
+			file.write("\" ");
 		}
 		file.write("]" + nl);
 		file.write("read_xdc $xdcSources" + nl);

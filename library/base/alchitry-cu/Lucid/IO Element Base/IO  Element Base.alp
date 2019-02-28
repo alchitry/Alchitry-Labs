@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Base Project" board="Alchitry Cu" language="Lucid">
+<project name="IO Element Base" board="Alchitry Cu" language="Lucid">
   <files>
+    <src>pull_down.luc</src>
     <src top="true">cu_top.luc</src>
     <constraint lib="true">alchitry.acf</constraint>
+    <constraint lib="true">io.acf</constraint>
     <component>reset_conditioner.luc</component>
   </files>
 </project>

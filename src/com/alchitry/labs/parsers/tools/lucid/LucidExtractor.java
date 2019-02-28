@@ -120,15 +120,15 @@ public class LucidExtractor extends LucidBaseListener {
 		this(null, thisModule, errorListener);
 	}
 
-	public LucidExtractor(LucidDictionary dict, InstModule thisModule, ErrorListener errorListner) {
-		this.errorListener = errorListner;
+	public LucidExtractor(LucidDictionary dict, InstModule thisModule, ErrorListener errListener) {
+		this.errorListener = errListener;
 		
 		if (this.errorListener == null)
 			this.errorListener = new DummyErrorListener();
 
-		constExprParser = new ConstExprParser(errorListner);
-		bitWidthChecker = new BitWidthChecker(this, errorListner, constExprParser);
-		boundsParser = new BoundsParser(constExprParser, bitWidthChecker, errorListner);
+		constExprParser = new ConstExprParser(errorListener);
+		bitWidthChecker = new BitWidthChecker(this, errorListener, constExprParser);
+		boundsParser = new BoundsParser(constExprParser, bitWidthChecker, errorListener);
 
 		paramsParser = new ParamsParser(constExprParser, thisModule);
 		constParser = new ConstParser(constExprParser);

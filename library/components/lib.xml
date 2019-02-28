@@ -225,6 +225,15 @@
     </module>
   </category>
   <category name="Constraints">
+    <constraint file="alchitry.acf" name="Alchitry">
+      <description>This file contains the basic pin and clock constraints for the Alchitry Au and Cu.</description>
+    </constraint>
+    <constraint file="au.xdc" name="Au Base">
+      <description>This file contains the basic constraints for the Alchitry Au.</description>
+    </constraint>
+    <constraint file="io.acf" name="IO Element">
+      <description>Pin definitions for the Alchitry IO Element.</description>
+    </constraint>
     <constraint file="mojo.ucf" name="Mojo">
       <description>This file contains the core constraints for the Mojo V2 and V3.</description>
     </constraint>

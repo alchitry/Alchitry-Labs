@@ -38,7 +38,7 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 	public AlchitryConstraintsExtractor() {
 		this(null);
 	}
-	
+
 	public AlchitryConstraintsExtractor(ErrorListener errorListener) {
 		this.errorListener = errorListener;
 		if (this.errorListener == null)
@@ -100,7 +100,7 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 
 		int bitOffset = 0;
 		SignalWidth current = new SignalWidth(width);
-		
+
 		current = convertToFixed(current);
 
 		for (int i = childOffset; i < ctx.children.size(); i++) {
@@ -114,6 +114,10 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 				}
 
 				int bWidth = current.getWidths().remove(0);
+				
+				if (aic.INT() == null) {
+					return 0;
+				}
 
 				int index = 0;
 				try {
@@ -162,7 +166,11 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 
 		int bit = 0;
 
-		Sig portSig = portSignals.get(portSignals.indexOf(new Sig(port)));
+		int idx = portSignals.indexOf(new Sig(port));
+
+		Sig portSig = null;
+		if (idx >= 0)
+			portSig = portSignals.get(idx);
 
 		if (portSig == null) {
 			errorListener.reportError(ctx.port_name(), String.format(ErrorStrings.CONSTRAINT_PORT_UNKNOWN, port));

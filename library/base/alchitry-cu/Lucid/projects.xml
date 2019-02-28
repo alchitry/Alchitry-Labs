@@ -1,3 +1,5 @@
 <projects>
   <project name="Base Project">Base Project</project>
+  <project name="IO Element Base">IO Element Base</project>
+  <project name="IO Element Demo">IO Element Demo</project>
 </projects>

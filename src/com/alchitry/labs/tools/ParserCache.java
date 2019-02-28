@@ -150,7 +150,7 @@ public class ParserCache {
 			if (entry.tree != null)
 				entry.timeStamp = mod;
 		} else {
-			// System.out.println("Cache hit!");
+			 //System.out.println("Cache hit!");
 		}
 	}
 
@@ -180,7 +180,6 @@ public class ParserCache {
 			@Override
 			public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
 				entry.errors.add(new ParseError((Token) offendingSymbol, msg));
-				System.out.println("ERROR "+msg);
 			}
 
 			@Override
