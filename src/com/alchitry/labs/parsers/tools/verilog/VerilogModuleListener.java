@@ -12,18 +12,18 @@ import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Param;
 import com.alchitry.labs.parsers.Sig;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001BaseListener;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Inout_declarationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Input_declarationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_declarationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_instanceContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_instantiationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Named_parameter_assignmentContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Ordered_parameter_assignmentContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Output_declarationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Param_assignmentContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Port_identifierContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.RangeContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001BaseListener;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Inout_declarationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Input_declarationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_declarationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_instanceContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_instantiationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Named_parameter_assignmentContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Ordered_parameter_assignmentContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Output_declarationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Param_assignmentContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Port_identifierContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.RangeContext;
 import com.alchitry.labs.tools.ParserCache;
 
 public class VerilogModuleListener extends Verilog2001BaseListener {
@@ -47,9 +47,7 @@ public class VerilogModuleListener extends Verilog2001BaseListener {
 		moduleList = null;
 		modules = new ArrayList<>();
 		instModules = new ArrayList<InstModule>();
-		List<ParseTreeListener> listeners = new ArrayList<>();
-		listeners.add(this);
-		ParserCache.walk(file, listeners);
+		ParserCache.walk(file, this);
 		return modules;
 	}
 

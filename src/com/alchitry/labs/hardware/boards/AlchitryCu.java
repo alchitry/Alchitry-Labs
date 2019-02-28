@@ -3,6 +3,8 @@ package com.alchitry.labs.hardware.boards;
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.hardware.loaders.CuLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
+import com.alchitry.labs.hardware.pinout.AlchitryCuPinConverter;
+import com.alchitry.labs.hardware.pinout.PinConverter;
 import com.alchitry.labs.project.builders.IceCubeBuilder;
 import com.alchitry.labs.project.builders.IceStormBuilder;
 import com.alchitry.labs.project.builders.ProjectBuilder;
@@ -64,6 +66,11 @@ public class AlchitryCu extends Board {
 	@Override
 	public String[] getSupportedConstraintExtensions() {
 		return new String[] { ".acf", ".pcf", ".sdc" };
+	}
+
+	@Override
+	public PinConverter getPinConverter() {
+		return new AlchitryCuPinConverter();
 	}
 
 }

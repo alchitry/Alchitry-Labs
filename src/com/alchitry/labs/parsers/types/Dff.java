@@ -1,10 +1,11 @@
-package com.alchitry.labs.parsers.lucid;
+package com.alchitry.labs.parsers.types;
 
 import java.io.Serializable;
 
 import com.alchitry.labs.Named;
 import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.HasWidth;
+import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprContext;
 
 public class Dff implements SyncLogic, Named, HasWidth, Serializable {

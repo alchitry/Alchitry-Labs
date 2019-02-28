@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import com.alchitry.labs.parsers.lucid.Dff;
-import com.alchitry.labs.parsers.lucid.Fsm;
+import com.alchitry.labs.parsers.types.Dff;
+import com.alchitry.labs.parsers.types.Fsm;
 
 public class ProjectSignal implements Serializable {
 	/**

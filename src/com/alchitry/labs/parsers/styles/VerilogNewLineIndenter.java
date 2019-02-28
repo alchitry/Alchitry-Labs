@@ -1,4 +1,4 @@
-package com.alchitry.labs.parsers.styles.verilog;
+package com.alchitry.labs.parsers.styles;
 
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;

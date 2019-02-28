@@ -1,7 +1,11 @@
 package com.alchitry.labs.hardware.boards;
 
+import java.util.logging.Level;
+
+import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.loaders.MojoLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
+import com.alchitry.labs.hardware.pinout.PinConverter;
 import com.alchitry.labs.project.builders.ISEBuilder;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.widgets.IoRegion;
@@ -48,6 +52,12 @@ public class Mojo extends Board {
 	@Override
 	public String[] getSupportedConstraintExtensions() {
 		return new String[] {".ucf"};
+	}
+
+	@Override
+	public PinConverter getPinConverter() {
+		Util.log.log(Level.SEVERE, "Error: Mojo doesn't have a pin converter!");
+		return null;
 	}
 	
 }

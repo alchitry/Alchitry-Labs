@@ -10,7 +10,7 @@ import org.eclipse.swt.SWT;
 
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Lexer;
+import com.alchitry.labs.parsers.verilog.Verilog2001Lexer;
 
 public class VerilogStyleProvider extends StyleProvider {
 	protected int numBlockComments = -1;

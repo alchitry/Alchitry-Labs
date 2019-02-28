@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Lexer;
+import com.alchitry.labs.parsers.verilog.Verilog2001Lexer;
 import com.alchitry.labs.style.StyleUtil;
 import com.alchitry.labs.style.StyleUtil.StyleMerger;
 

@@ -56,15 +56,16 @@ import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Param;
 import com.alchitry.labs.parsers.Sig;
 import com.alchitry.labs.parsers.errors.AlchitryConstraintsErrorProvider;
+import com.alchitry.labs.parsers.errors.LucidErrorProvider;
 import com.alchitry.labs.parsers.errors.VerilogErrorProvider;
-import com.alchitry.labs.parsers.lucid.Constant;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.lucid.Struct;
-import com.alchitry.labs.parsers.tools.lucid.LucidErrorChecker;
+import com.alchitry.labs.parsers.tools.lucid.LucidExtractor;
 import com.alchitry.labs.parsers.tools.lucid.LucidGlobalExtractor;
 import com.alchitry.labs.parsers.tools.lucid.LucidModuleExtractor;
 import com.alchitry.labs.parsers.tools.verilog.VerilogLucidModuleFixer;
 import com.alchitry.labs.parsers.tools.verilog.VerilogModuleListener;
+import com.alchitry.labs.parsers.types.Constant;
+import com.alchitry.labs.parsers.types.Struct;
 import com.alchitry.labs.project.Primitive.Parameter;
 import com.alchitry.labs.project.Primitive.Port;
 import com.alchitry.labs.project.builders.ProjectBuilder;
@@ -1080,7 +1081,7 @@ public class Project {
 	private List<InstModule> getLucidInstModules(InstModule im, List<Module> modules) throws IOException {
 		String folder = im.getType().getFolder();
 		String file = im.getType().getFileName();
-		LucidErrorChecker converter = new LucidErrorChecker(im);
+		LucidExtractor converter = new LucidExtractor(im);
 		return converter.getInstModules(new File(folder + File.separatorChar + file).getAbsolutePath(), modules);
 	}
 
@@ -1280,7 +1281,7 @@ public class Project {
 			List<SyntaxError> errors = null;
 			String fullPath = new File(folder + File.separatorChar + file).getAbsolutePath();
 			if (file.endsWith(".luc")) {
-				LucidErrorChecker errorChecker = new LucidErrorChecker(null);
+				LucidErrorProvider errorChecker = new LucidErrorProvider();
 				errors = errorChecker.getErrors(fullPath);
 			} else if (file.endsWith(".v")) {
 				VerilogErrorProvider errorChecker = new VerilogErrorProvider();

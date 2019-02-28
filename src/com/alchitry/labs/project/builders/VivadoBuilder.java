@@ -6,12 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
 
-import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.project.IPCore;
@@ -109,14 +107,22 @@ public class VivadoBuilder extends ProjectBuilder {
 		final String ps = "/"; // the tcl script expects / for all OS's
 
 		ArrayList<String> vFiles;
+		ArrayList<String> cFiles;
 		try {
 			vFiles = getVerilogFiles();
+			cFiles = getConstraintFiles();
 		} catch (ParseException e) {
 			Util.println("Error: " + e.getMessage(), true);
 			return false;
 		}
 		if (vFiles == null || vFiles.size() == 0) {
 			Util.showError("Error building the project", "Error with getting list of Verilog files!");
+			return false;
+		}
+
+		if (cFiles == null) {
+			Util.showError("Error building the project", "Error with getting list of constraint files!");
+			return false;
 		}
 		String srcFolder = workFolder + File.separatorChar + "verilog";
 
@@ -127,15 +133,13 @@ public class VivadoBuilder extends ProjectBuilder {
 		file.write("if {[file exists \"$projDir" + ps + "$projName\"]} { file delete -force \"$projDir" + ps + "$projName\" }" + nl);
 		file.write("create_project $projName \"$projDir" + ps + "$projName\" -part $device" + nl);
 		file.write("set_property design_mode RTL [get_filesets sources_1]" + nl);
-		file.write("set verilogSources [list " + getSpacedList(vFiles, srcFolder.replace("\\", "/") + ps) + "]" + nl);
+		file.write("set verilogSources [list " + getSpacedList(vFiles, srcFolder.replace("\\", "/").replace(" ", "\\ ") + ps) + "]" + nl);
 		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
 		file.write("set xdcSources [list ");
-		HashSet<String> localConstraint = project.getConstraintFiles(false);
-		if (localConstraint.size() > 0)
-			file.write(getSpacedList(project.getConstraintFiles(false), project.getConstraintFolder().replace("\\", "/").replace(" ", "\\ ") + ps));
-		HashSet<String> libConstraint = project.getConstraintFiles(true);
-		if (libConstraint.size() > 0)
-			file.write(" " + getSpacedList(project.getConstraintFiles(true), Locations.COMPONENTS.replace("\\", "/").replace(" ", "\\ ") + ps));
+		for (String cF : cFiles) {
+			file.write(cF.replace('\\', '/').replace(" ", "\\ "));
+			file.write(' ');
+		}
 		file.write("]" + nl);
 		file.write("read_xdc $xdcSources" + nl);
 		if (project.getIPCores().size() > 0) {

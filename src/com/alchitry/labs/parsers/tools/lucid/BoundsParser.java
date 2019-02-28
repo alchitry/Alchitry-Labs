@@ -6,6 +6,8 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.parsers.BitValue;
 import com.alchitry.labs.parsers.ConstValue;
+import com.alchitry.labs.parsers.errors.ErrorListener;
+import com.alchitry.labs.parsers.errors.ErrorStrings;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_indexContext;
@@ -16,10 +18,10 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
 public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 	protected ParseTreeProperty<ArrayBounds> bounds;
 	private ConstExprParser constExprParser;
-	private TokenErrorListener errorChecker;
+	private ErrorListener errorChecker;
 	private WidthProvider widthProvider;
 
-	public BoundsParser(ConstExprParser cep, WidthProvider wp, TokenErrorListener errorListener) {
+	public BoundsParser(ConstExprParser cep, WidthProvider wp, ErrorListener errorListener) {
 		constExprParser = cep;
 		errorChecker = errorListener;
 		widthProvider = wp;
@@ -42,46 +44,46 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 			ConstValue min = constExprParser.getValue(ctx.expr(1));
 
 			if (!constExprParser.isConstant(ctx.expr(0)))
-				errorChecker.onTokenErrorFound(ctx.expr(0), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(0).getText()));
+				errorChecker.reportError(ctx.expr(0), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(0).getText()));
 
 			if (!constExprParser.isConstant(ctx.expr(1)))
-				errorChecker.onTokenErrorFound(ctx.expr(1), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(1).getText()));
+				errorChecker.reportError(ctx.expr(1), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(1).getText()));
 
 			if (max == null || min == null)
 				return;
 
 			if (max.isArray())
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.BIT_SELECTOR_ARRAY);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.BIT_SELECTOR_ARRAY);
 			if (min.isArray())
-				errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.BIT_SELECTOR_ARRAY);
+				errorChecker.reportError(ctx.expr(1), ErrorStrings.BIT_SELECTOR_ARRAY);
 			if (max.isArray() || min.isArray())
 				return;
 
 			boolean maxNan = !max.isNumber();
 			boolean minNan = !min.isNumber();
 			if (maxNan)
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.BIT_SELECTOR_NAN);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.BIT_SELECTOR_NAN);
 			if (minNan)
-				errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.BIT_SELECTOR_NAN);
+				errorChecker.reportError(ctx.expr(1), ErrorStrings.BIT_SELECTOR_NAN);
 			if (maxNan || minNan)
 				return;
 
 			if (max.lessThan(min) == BitValue.B1)
-				errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.BIT_SELECTOR_ORDER);
+				errorChecker.reportError(ctx.expr(1), ErrorStrings.BIT_SELECTOR_ORDER);
 
 			int maxInt, minInt;
 
 			try {
 				maxInt = max.getBigInt().intValue();
 			} catch (ArithmeticException e) {
-				errorChecker.onTokenWarningFound(ctx.expr(0), ErrorStrings.ARRAY_SIZE_TOO_BIG);
+				errorChecker.reportWarning(ctx.expr(0), ErrorStrings.ARRAY_SIZE_TOO_BIG);
 				return;
 			}
 
 			try {
 				minInt = min.getBigInt().intValue();
 			} catch (ArithmeticException e) {
-				errorChecker.onTokenWarningFound(ctx.expr(1), ErrorStrings.ARRAY_SIZE_TOO_BIG);
+				errorChecker.reportWarning(ctx.expr(1), ErrorStrings.ARRAY_SIZE_TOO_BIG);
 				return;
 			}
 
@@ -100,7 +102,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 
 		if (width == null) {
 			if (!constExprParser.isConstant(ctx.expr(1)))
-				errorChecker.onTokenErrorFound(ctx.expr(1), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(1)));
+				errorChecker.reportError(ctx.expr(1), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(1)));
 			return;
 		}
 
@@ -110,16 +112,16 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 				Util.log.severe("Width of " + ctx.expr(0).getText() + " could not be determined!");
 			} else {
 				if (!aw.isSimpleArray()) {
-					errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.BIT_SELECTOR_STRUCT);
+					errorChecker.reportError(ctx.expr(0), ErrorStrings.BIT_SELECTOR_STRUCT);
 					return;
 				}
 			}
 			if (aw != null && aw.getWidths().size() != 1)
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.BIT_SELECTOR_ARRAY);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.BIT_SELECTOR_ARRAY);
 		}
 
 		if (width.isArray()) {
-			errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.BIT_SELECTOR_ARRAY);
+			errorChecker.reportError(ctx.expr(1), ErrorStrings.BIT_SELECTOR_ARRAY);
 			return;
 		}
 
@@ -128,7 +130,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 		ConstValue start = constExprParser.getValue(ctx.expr(0));
 
 		if (!width.isNumber()) {
-			errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.BIT_SELECTOR_NAN);
+			errorChecker.reportError(ctx.expr(1), ErrorStrings.BIT_SELECTOR_NAN);
 			return;
 		}
 
@@ -137,7 +139,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 		try {
 			w = width.getBigInt().intValue();
 		} catch (ArithmeticException e) {
-			errorChecker.onTokenWarningFound(ctx.expr(1), ErrorStrings.ARRAY_SIZE_TOO_BIG);
+			errorChecker.reportWarning(ctx.expr(1), ErrorStrings.ARRAY_SIZE_TOO_BIG);
 			error = true;
 		}
 		try {
@@ -147,7 +149,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 				}
 			}
 		} catch (ArithmeticException e) {
-			errorChecker.onTokenWarningFound(ctx.expr(0), ErrorStrings.ARRAY_SIZE_TOO_BIG);
+			errorChecker.reportWarning(ctx.expr(0), ErrorStrings.ARRAY_SIZE_TOO_BIG);
 			error = true;
 		}
 
@@ -162,7 +164,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 					b = new ArrayBounds(s, s - w + 1);
 				}
 			} else {
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.BIT_SELECTOR_NAN);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.BIT_SELECTOR_NAN);
 			}
 		}
 
@@ -175,12 +177,12 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 			SignalWidth aw = widthProvider.getWidth(ctx.expr());
 
 			if (aw != null && !aw.isSimpleArray()) {
-				errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.ARRAY_INDEX_STRUCT);
+				errorChecker.reportError(ctx.expr(), ErrorStrings.ARRAY_INDEX_STRUCT);
 				return;
 			}
 
 			if (aw != null && aw.getWidths().size() != 1) {
-				errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.BIT_SELECTOR_ARRAY);
+				errorChecker.reportError(ctx.expr(), ErrorStrings.BIT_SELECTOR_ARRAY);
 				return;
 			}
 
@@ -188,7 +190,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 
 			if (val != null) {
 				if (!val.isNumber()) {
-					errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.ARRAY_INDEX_NAN);
+					errorChecker.reportError(ctx.expr(), ErrorStrings.ARRAY_INDEX_NAN);
 					return;
 				}
 				try {
@@ -196,7 +198,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 					ArrayBounds b = new ArrayBounds(v, v);
 					bounds.put(ctx, b);
 				} catch (ArithmeticException e) {
-					errorChecker.onTokenWarningFound(ctx.expr(), ErrorStrings.ARRAY_INDEX_TOO_BIG);
+					errorChecker.reportWarning(ctx.expr(), ErrorStrings.ARRAY_INDEX_TOO_BIG);
 				}
 			}
 		}

@@ -13,14 +13,14 @@ import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Sig;
-import com.alchitry.labs.parsers.lucid.Constant;
-import com.alchitry.labs.parsers.lucid.Dff;
-import com.alchitry.labs.parsers.lucid.Fsm;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.lucid.Struct;
-import com.alchitry.labs.parsers.lucid.Struct.Member;
-import com.alchitry.labs.parsers.tools.lucid.LucidErrorChecker;
+import com.alchitry.labs.parsers.tools.lucid.LucidExtractor;
+import com.alchitry.labs.parsers.types.Constant;
+import com.alchitry.labs.parsers.types.Dff;
+import com.alchitry.labs.parsers.types.Fsm;
+import com.alchitry.labs.parsers.types.Struct;
+import com.alchitry.labs.parsers.types.Struct.Member;
 
 public class LucidDictionary extends Dictionary {
 	private static final String[] LUCID_KEYWORDS = { "module", "dff", "fsm", "input", "output", "inout", "signed", "for", "case", "if", "default", "const", "var", "sig",
@@ -32,7 +32,7 @@ public class LucidDictionary extends Dictionary {
 	private List<InstModule> instModules;
 
 	private StyledCodeEditor editor;
-	private LucidErrorChecker errorChecker;
+	private LucidExtractor errorChecker;
 
 	private int position;
 
@@ -48,7 +48,7 @@ public class LucidDictionary extends Dictionary {
 		editor = e;
 	}
 
-	public void setSignals(LucidErrorChecker checker, List<InstModule> im) {
+	public void setSignals(LucidExtractor checker, List<InstModule> im) {
 		dffs = checker.getDffs();
 		fsms = checker.getFsms();
 		inouts = checker.getInouts();

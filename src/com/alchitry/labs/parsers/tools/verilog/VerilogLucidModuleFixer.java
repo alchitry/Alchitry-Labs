@@ -19,12 +19,12 @@ import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Param;
-import com.alchitry.labs.parsers.tools.lucid.ErrorStrings;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001BaseListener;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_declarationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_instantiationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Named_parameter_assignmentContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Ordered_parameter_assignmentContext;
+import com.alchitry.labs.parsers.errors.ErrorStrings;
+import com.alchitry.labs.parsers.verilog.Verilog2001BaseListener;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_declarationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_instantiationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Named_parameter_assignmentContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Ordered_parameter_assignmentContext;
 import com.alchitry.labs.style.SyntaxError;
 import com.alchitry.labs.tools.ParserCache;
 

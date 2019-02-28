@@ -1,33 +1,31 @@
-package com.alchitry.labs.parsers.styles.verilog;
+package com.alchitry.labs.parsers.styles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.eclipse.swt.custom.StyledText;
 
 import com.alchitry.labs.gui.StyledCodeEditor;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001BaseListener;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Always_constructContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Case_statementContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Conditional_statementContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Generated_instantiationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.List_of_param_assignmentsContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.List_of_parameter_assignmentsContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.List_of_port_declarationsContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.List_of_variable_identifiersContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_declarationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_instanceContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Module_parameter_port_listContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Parameter_value_assignmentContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Procedural_timing_control_statementContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Seq_blockContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.StatementContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Statement_or_nullContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001BaseListener;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Always_constructContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Case_statementContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Conditional_statementContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Generated_instantiationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.List_of_param_assignmentsContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.List_of_parameter_assignmentsContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.List_of_port_declarationsContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.List_of_variable_identifiersContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_declarationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_instanceContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Module_parameter_port_listContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Parameter_value_assignmentContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Procedural_timing_control_statementContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Seq_blockContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.StatementContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Statement_or_nullContext;
 import com.alchitry.labs.style.IndentProvider;
 import com.alchitry.labs.tools.ParserCache;
 
@@ -45,9 +43,7 @@ public class VerilogIndentProvider extends Verilog2001BaseListener implements In
 
 	public void updateIndentList(StyledCodeEditor editor) {
 		initWalk(editor, ParserCache.getTokens(editor.getFilePath()));
-		List<ParseTreeListener> listeners = new ArrayList<>();
-		listeners.add(this);
-		ParserCache.walk(editor.getFilePath(), listeners);
+		ParserCache.walk(editor.getFilePath(), this);
 	}
 
 	public int getTabs(int line) {

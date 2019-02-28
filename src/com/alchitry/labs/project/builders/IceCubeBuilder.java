@@ -5,14 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
 
-import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.ParseException;
@@ -28,14 +25,19 @@ public class IceCubeBuilder extends ProjectBuilder {
 	protected void projectBuilder() throws Exception {
 		BufferedWriter out = null;
 		ArrayList<String> vFiles;
+		ArrayList<String> cFiles;
 		try {
 			vFiles = getVerilogFiles();
+			cFiles = getConstraintFiles();
 		} catch (ParseException e) {
 			Util.println("Error: " + e.getMessage(), true);
 			return;
 		}
 		if (vFiles == null || vFiles.size() == 0) {
 			Util.showError("Error building the project", "Error with getting list of Verilog files!");
+		}
+		if (cFiles == null) {
+			Util.showError("Error building the project", "Error with getting list of constraint files!");
 		}
 
 		if (Util.getIceCubeFolder() == null) {
@@ -56,7 +58,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 			FileWriter fstream = new FileWriter(lseProjectFile);
 			out = new BufferedWriter(fstream);
 
-			generateSynProjectFile(out, vFiles);
+			generateSynProjectFile(out, vFiles, cFiles);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -74,7 +76,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 			FileWriter fstream = new FileWriter(tclScript);
 			out = new BufferedWriter(fstream);
 
-			generateTclScript(out);
+			generateTclScript(out, cFiles);
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -125,15 +127,6 @@ public class IceCubeBuilder extends ProjectBuilder {
 		}
 	}
 
-	private void keepExt(HashSet<String> files, String ext) {
-		for (Iterator<String> it = files.iterator(); it.hasNext();) {
-			String c = it.next();
-			if (!c.endsWith(ext)) {
-				it.remove();
-			}
-		}
-	}
-
 	private void generateBashScript(BufferedWriter file) throws IOException {
 		final String nl = System.lineSeparator();
 		final String export = Util.isLinux ? "export" : "SET";
@@ -179,7 +172,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write(nl);
 	}
 
-	private void generateTclScript(BufferedWriter file) throws IOException {
+	private void generateTclScript(BufferedWriter file, List<String> cFiles) throws IOException {
 		final String nl = System.lineSeparator();
 		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
 
@@ -191,18 +184,10 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write("set output_dir \"" + IMP_DIR + '"' + nl);
 		file.write("set edif_file \"" + topModuleName + '"' + nl);
 		file.write("set tool_options \":edifparser ");
-
-		String prefix = project.getConstraintFolder().replace("\\", "/").replace(" ", "\\ ") + '/';
-		HashSet<String> localConstraint = project.getConstraintFiles(false);
-		keepExt(localConstraint, ".pcf");
-		for (String lc : localConstraint)
-			file.write("-y \\\"" + prefix + lc + "\\\"");
-
-		prefix = Locations.COMPONENTS.replace("\\", "/").replace(" ", "\\ ") + '/';
-		HashSet<String> libConstraint = project.getConstraintFiles(true);
-		keepExt(libConstraint, ".pcf");
-		for (String lc : libConstraint)
-			file.write("-y \\\"" + prefix + lc + "\\\"");
+		
+		for (String cf : cFiles)
+			if (cf.endsWith(".pcf"))
+				file.write("-y \\\"" + cf.replace("\\", "/").replace(" ", "\\ ") + "\\\"");
 		file.write("\"\n");
 
 		file.write("set sbt_root $::env(SBT_DIR)" + nl);
@@ -213,7 +198,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 
 	}
 
-	private void generateSynProjectFile(BufferedWriter file, List<String> vFiles) throws IOException {
+	private void generateSynProjectFile(BufferedWriter file, List<String> vFiles, List<String> cFiles) throws IOException {
 		final String nl = System.lineSeparator();
 		final String srcFolder = workFolder + File.separatorChar + "verilog";
 		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
@@ -224,18 +209,9 @@ public class IceCubeBuilder extends ProjectBuilder {
 
 		for (String vf : vFiles)
 			file.write("add_file -verilog -lib work \"" + prefix + vf + '"' + nl);
-
-		prefix = project.getConstraintFolder().replace("\\", "/").replace(" ", "\\ ") + '/';
-		HashSet<String> localConstraint = project.getConstraintFiles(false);
-		keepExt(localConstraint, ".sdc");
-		for (String lc : localConstraint)
-			file.write("add_file -constraint -lib work \"" + prefix + lc + '"' + nl);
-
-		prefix = Locations.COMPONENTS.replace("\\", "/").replace(" ", "\\ ") + '/';
-		HashSet<String> libConstraint = project.getConstraintFiles(true);
-		keepExt(libConstraint, ".sdc");
-		for (String lc : libConstraint)
-			file.write("add_file -constraint -lib work \"" + prefix + lc + '"' + nl);
+		for (String cf : cFiles)
+			if (cf.endsWith(".sdc"))
+				file.write("add_file -constraint -lib work \"" + cf.replace("\\", "/").replace(" ", "\\ ") + '"' + nl);
 
 		file.write("#options" + nl);
 		file.write("impl -add " + IMP_DIR + " -type fpga" + nl);

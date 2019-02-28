@@ -1,8 +1,11 @@
 package com.alchitry.labs.hardware.boards;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
+import com.alchitry.labs.hardware.pinout.PinConverter;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.widgets.IoRegion;
 
@@ -12,12 +15,18 @@ public abstract class Board {
 	public static final int CU = 1 << 1;
 	public static final int MOJO = 1 << 2;
 
+	public static final Set<String> constraintExtensions;
+
 	public final static ArrayList<Board> boards = new ArrayList<>();
 
 	static {
 		boards.add(new AlchitryCu());
 		boards.add(new AlchitryAu());
 		boards.add(new Mojo());
+		constraintExtensions = new HashSet<>();
+		for (Board b : boards)
+			for (String ext : b.getSupportedConstraintExtensions())
+				constraintExtensions.add(ext);
 	}
 
 	public abstract String getFPGAName();
@@ -35,6 +44,8 @@ public abstract class Board {
 	public abstract String getSVGPath();
 
 	public abstract String[] getSupportedConstraintExtensions();
+
+	public abstract PinConverter getPinConverter();
 
 	public static Board getFromName(String board) {
 		for (Board b : boards) {

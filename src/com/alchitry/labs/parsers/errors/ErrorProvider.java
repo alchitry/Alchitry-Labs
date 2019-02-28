@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyleRange;
@@ -12,11 +16,15 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
+import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.StyleUtil;
 import com.alchitry.labs.style.SyntaxError;
+import com.alchitry.labs.tools.ParserCache;
+import com.alchitry.labs.tools.ParserCache.ParseError;
 
-public abstract class ErrorProvider implements ModifyListener, LineStyleListener {
+public abstract class ErrorProvider implements ModifyListener, LineStyleListener, ErrorListener {
 	protected ArrayList<SyntaxError> errors;
 	protected StyledCodeEditor editor;
 	protected Display display;
@@ -35,7 +43,9 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 	}
 	
 	public ArrayList<SyntaxError> getErrors(String file) {
-		errors = ErrorUtil.getErrors(file);
+		errors.clear();
+		for (ParseError e : ParserCache.getErrors(file)) 
+			underline(e.token, null, e.msg, Theme.errorTextColor, SyntaxError.ERROR);
 		return errors;
 	}
 
@@ -123,5 +133,74 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 			}
 			event.styles = styles;
 		}
+	}
+	
+	@Override
+	public void reportDebug(TerminalNode node, String message) {
+		underline(node.getSymbol(), node.getSymbol(), message, Theme.debugTextColor, SyntaxError.DEBUG);
+	}
+
+	@Override
+	public void reportDebug(ParserRuleContext ctx, String message) {
+		underline(ctx.start, ctx.stop, message, Theme.debugTextColor, SyntaxError.DEBUG);
+	}
+
+	@Override
+	public void reportError(TerminalNode node, String message) {
+		underlineError(node, message);
+	}
+
+	@Override
+	public void reportWarning(TerminalNode node, String message) {
+		underlineWarning(node, message);
+	}
+
+	@Override
+	public void reportError(ParserRuleContext ctx, String message) {
+		underlineError(ctx, message);
+	}
+
+	@Override
+	public void reportWarning(ParserRuleContext ctx, String message) {
+		underlineWarning(ctx, message);
+	}
+
+	private void underlineWarning(ParserRuleContext ctx, String message) {
+		underline(ctx.start, ctx.stop, message, Theme.warningTextColor, SyntaxError.WARNING);
+	}
+
+	private void underlineError(ParserRuleContext ctx, String message) {
+		underline(ctx.start, ctx.stop, message, Theme.errorTextColor, SyntaxError.ERROR);
+	}
+
+	private void underlineWarning(TerminalNode term, String message) {
+		underline(term.getSymbol(), term.getSymbol(), message, Theme.warningTextColor, SyntaxError.WARNING);
+	}
+
+	private void underlineError(TerminalNode term, String message) {
+		underline(term.getSymbol(), term.getSymbol(), message, Theme.errorTextColor, SyntaxError.ERROR);
+	}
+
+	private void underline(Token startToken, Token stopToken, String message, Color color, int type) {
+		int start = startToken.getStartIndex();
+		int stop = stopToken == null ? startToken.getStopIndex() : stopToken.getStopIndex();
+
+		if (stop < start) // bad token, can happen with severe syntax errors
+			return;
+
+		if (start == -1 || stop == -1) {
+			Util.log.severe("ERROR: Token start or stop was -1");
+			return;
+		}
+
+		StyleRange style = new StyleRange();
+		style.start = start;
+		style.length = stop - start + 1;
+		style.underline = true;
+		style.underlineColor = color;
+		style.underlineStyle = SWT.UNDERLINE_SINGLE;
+		int line = startToken.getLine();
+		int offset = startToken.getCharPositionInLine();
+		errors.add(new SyntaxError(type, style, message, start, stop, line, offset));
 	}
 }

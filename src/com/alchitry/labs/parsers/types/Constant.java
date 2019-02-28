@@ -1,9 +1,10 @@
-package com.alchitry.labs.parsers.lucid;
+package com.alchitry.labs.parsers.types;
 
 import java.io.Serializable;
 
 import com.alchitry.labs.Named;
 import com.alchitry.labs.parsers.ConstValue;
+import com.alchitry.labs.parsers.lucid.SignalWidth;
 
 public class Constant implements Named, Serializable {
 	private static final long serialVersionUID = 376452255402037480L;

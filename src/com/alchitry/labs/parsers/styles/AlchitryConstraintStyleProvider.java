@@ -10,7 +10,7 @@ import org.eclipse.swt.SWT;
 
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.parsers.constraints.parser.AlchitryConstraintsLexer;
+import com.alchitry.labs.parsers.constraints.AlchitryConstraintsLexer;
 
 public class AlchitryConstraintStyleProvider extends StyleProvider {
 	protected int numBlockComments = -1;

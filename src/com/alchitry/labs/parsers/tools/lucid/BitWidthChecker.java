@@ -16,11 +16,11 @@ import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Param;
 import com.alchitry.labs.parsers.Sig;
+import com.alchitry.labs.parsers.errors.ErrorListener;
+import com.alchitry.labs.parsers.errors.ErrorStrings;
 import com.alchitry.labs.parsers.lucid.AssignBlock;
-import com.alchitry.labs.parsers.lucid.Connection;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.lucid.Struct;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_indexContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_sizeContext;
@@ -65,19 +65,23 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_typeContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Type_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_decContext;
+import com.alchitry.labs.parsers.types.Connection;
+import com.alchitry.labs.parsers.types.Struct;
 
 public class BitWidthChecker extends LucidBaseListener implements WidthProvider {
-	private LucidErrorChecker errorChecker;
+	private ErrorListener errorChecker;
 	private ConstExprParser constExprParser;
 	private ConstProvider constParser;
 	private BoundsProvider boundsProvider;
+	private LucidExtractor lucid;
 
 	private HashMap<String, SignalWidth> widthMap = new HashMap<>();
 	protected ParseTreeProperty<SignalWidth> widths;
 
 	private InstModule currentModule;
 
-	public BitWidthChecker(LucidErrorChecker errorListener, ConstExprParser p) {
+	public BitWidthChecker(LucidExtractor lucid, ErrorListener errorListener, ConstExprParser p) {
+		this.lucid = lucid;
 		errorChecker = errorListener;
 		constExprParser = p;
 	}
@@ -128,14 +132,14 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 		if (sctx != null) {
 			Struct s = null;
 			if (sctx.name().size() == 1)
-				s = errorChecker.getStruct(sctx.name().get(0).getText());
+				s = lucid.getStruct(sctx.name().get(0).getText());
 			if (sctx.name().size() == 2) {
 				HashMap<String, List<Struct>> gS = MainWindow.getOpenProject().getGlobalStructs();
 				List<Struct> structs = gS.get(sctx.name(0).getText());
 				if (structs != null) {
 					s = Util.getByName(structs, sctx.name(1).getText());
 				} else {
-					errorChecker.onTokenErrorFound(sctx, String.format(ErrorStrings.UNKNOWN_NAMESPACE, sctx.name(0).getText()));
+					errorChecker.reportError(sctx, String.format(ErrorStrings.UNKNOWN_NAMESPACE, sctx.name(0).getText()));
 				}
 			}
 
@@ -146,7 +150,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				else
 					width.setNext(sw);
 			} else {
-				errorChecker.onTokenErrorFound(sctx.name(sctx.name().size() - 1), String.format(ErrorStrings.UNKNOWN_STRUCT, sctx.name(sctx.name().size() - 1).getText()));
+				errorChecker.reportError(sctx.name(sctx.name().size() - 1), String.format(ErrorStrings.UNKNOWN_STRUCT, sctx.name(sctx.name().size() - 1).getText()));
 			}
 
 		}
@@ -273,7 +277,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 		@Override
 		public ConstValue getValue(String s) {
-			for (AssignBlock block : errorChecker.getAssignBlock()) {
+			for (AssignBlock block : lucid.getAssignBlock()) {
 				if (block != null) {
 					for (Connection c : block.connections) {
 						if (c.param && c.port.equals(s)) {
@@ -323,15 +327,15 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			if (w.isText()) {
 				ConstValue cv = ConstExprParser.parseExpr(w.getText(), paramsProvider, constParser, null);
 				if (cv == null) {
-					errorChecker.onTokenErrorFound(ctx, String.format(ErrorStrings.MODULE_DIM_PARSE_FALIED, s.getName()));
+					errorChecker.reportError(ctx, String.format(ErrorStrings.MODULE_DIM_PARSE_FALIED, s.getName()));
 					current = current.getNext();
 					break;
 				} else if (!cv.isNumber()) {
-					errorChecker.onTokenErrorFound(ctx, String.format(ErrorStrings.MODULE_IO_SIZE_NAN, s.getName()));
+					errorChecker.reportError(ctx, String.format(ErrorStrings.MODULE_IO_SIZE_NAN, s.getName()));
 					current = current.getNext();
 					break;
 				} else if (cv.isNegative()) {
-					errorChecker.onTokenErrorFound(ctx, String.format(ErrorStrings.ARRAY_SIZE_NEG, s.getName()));
+					errorChecker.reportError(ctx, String.format(ErrorStrings.ARRAY_SIZE_NEG, s.getName()));
 					current = current.getNext();
 					break;
 				} else {
@@ -387,7 +391,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	// this function checks the connections on a module to make sure the port
 	// matches the signal
 	private void checkConnectionWidths(String instName, ParserRuleContext ctx, ArrayList<Sig> ports) {
-		for (AssignBlock block : errorChecker.getAssignBlock()) {
+		for (AssignBlock block : lucid.getAssignBlock()) {
 			if (block != null) {
 				for (Connection c : block.connections) {
 					if (!c.param) { // only check signals
@@ -402,9 +406,9 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 									if (!portWidth.equals(conWidth)) {
 										if (block.instCon)
-											errorChecker.onTokenErrorFound(c.signalNode, String.format(ErrorStrings.PORT_DIM_MISMATCH, c.signal, sigName));
+											errorChecker.reportError(c.signalNode, String.format(ErrorStrings.PORT_DIM_MISMATCH, c.signal, sigName));
 										else
-											errorChecker.onTokenErrorFound(ctx, String.format(ErrorStrings.PORT_DIM_MISMATCH, c.signal, sigName));
+											errorChecker.reportError(ctx, String.format(ErrorStrings.PORT_DIM_MISMATCH, c.signal, sigName));
 									}
 								}
 							}
@@ -523,7 +527,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	}
 
 	/* Removes/edits "width" so that the index starting at "ctx" offset by "idx" are reflected. */
-	static public boolean getArrayWidth(SignalWidth width, SignalContext ctx, int idx, int max, WidthProvider wp, BoundsProvider bp, TokenErrorListener listener) {
+	static public boolean getArrayWidth(SignalWidth width, SignalContext ctx, int idx, int max, WidthProvider wp, BoundsProvider bp, ErrorListener listener) {
 		for (int i = idx; i < max; i++) {
 			ParseTree pt = ctx.children.get(i);
 
@@ -547,13 +551,13 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					for (int j = 0; j < i - 1; j++)
 						sb.append(ctx.children.get(j).getText());
 					if (listener != null)
-						listener.onTokenErrorFound((NameContext) pt, String.format(ErrorStrings.NOT_A_MEMBER, pt.getText(), sb.toString()));
+						listener.reportError((NameContext) pt, String.format(ErrorStrings.NOT_A_MEMBER, pt.getText(), sb.toString()));
 					return false;
 				}
 				SignalWidth w = width.getStruct().getWidthOfMember(name);
 				if (w == null) {
 					if (listener != null)
-						listener.onTokenErrorFound((NameContext) pt, String.format(ErrorStrings.UNKNOWN_STRUCT_NAME, name, width.getStruct()));
+						listener.reportError((NameContext) pt, String.format(ErrorStrings.UNKNOWN_STRUCT_NAME, name, width.getStruct()));
 				} else {
 					width.set(w);
 				}
@@ -568,7 +572,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 		return true;
 	}
 
-	static private boolean getArrayWidth(SignalWidth width, Bit_selectionContext ctx, WidthProvider wp, BoundsProvider bp, TokenErrorListener listener) {
+	static private boolean getArrayWidth(SignalWidth width, Bit_selectionContext ctx, WidthProvider wp, BoundsProvider bp, ErrorListener listener) {
 
 		if (width != null) {
 			if (ctx == null) {
@@ -577,14 +581,14 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				if (ctx.getChildCount() <= width.getDepth()) {
 					if (width.isStruct()) {
 						if (listener != null)
-							listener.onTokenErrorFound(ctx, ErrorStrings.STRUCT_NOT_ARRAY);
+							listener.reportError(ctx, ErrorStrings.STRUCT_NOT_ARRAY);
 						return false;
 					}
 					for (Array_indexContext aic : ctx.array_index()) {
 						ArrayBounds b = bp.getBounds(aic);
 						if (b != null && !b.fitInWidth(width.getWidths().get(0))) {
 							if (listener != null)
-								listener.onTokenErrorFound(aic, ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
+								listener.reportError(aic, ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
 						}
 						width.getWidths().remove(0);
 					}
@@ -593,7 +597,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 						if (b != null && !b.fitInWidth(width.getWidths().get(0))) {
 							if (listener != null)
-								listener.onTokenErrorFound(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
+								listener.reportError(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
 						}
 						if (wp.getWidth(ctx.bit_selector()) != null)
 							width.getWidths().set(0, wp.getWidth(ctx.bit_selector()).getWidths().get(0));
@@ -605,10 +609,10 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				} else {
 					if (ctx.array_index().size() > width.getDepth()) {
 						if (listener != null)
-							listener.onTokenErrorFound(ctx.array_index(width.getDepth()), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
+							listener.reportError(ctx.array_index(width.getDepth()), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
 					} else if (ctx.bit_selector() != null) {
 						if (listener != null)
-							listener.onTokenErrorFound(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
+							listener.reportError(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
 					}
 				}
 			}
@@ -627,7 +631,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					for (Array_indexContext aic : ctx.array_index()) {
 						ArrayBounds b = boundsProvider.getBounds(aic);
 						if (b != null && !b.fitInWidth(width.getWidths().get(0))) {
-							errorChecker.onTokenErrorFound(aic, ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
+							errorChecker.reportError(aic, ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
 						}
 						width.getWidths().remove(0);
 					}
@@ -635,7 +639,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 						ArrayBounds b = boundsProvider.getBounds(ctx.bit_selector());
 
 						if (b != null && !b.fitInWidth(width.getWidths().get(0))) {
-							errorChecker.onTokenErrorFound(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
+							errorChecker.reportError(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_OUT_OF_BOUNDS);
 						}
 						if (widths.get(ctx.bit_selector()) != null)
 							width.getWidths().set(0, widths.get(ctx.bit_selector()).getWidths().get(0));
@@ -644,9 +648,9 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					return true;
 				} else {
 					if (ctx.array_index().size() >= width.getWidths().size())
-						errorChecker.onTokenErrorFound(ctx.array_index(width.getWidths().size() - 1), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
+						errorChecker.reportError(ctx.array_index(width.getWidths().size() - 1), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
 					else if (ctx.bit_selector() != null)
-						errorChecker.onTokenErrorFound(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
+						errorChecker.reportError(ctx.bit_selector(), ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
 				}
 			}
 		}
@@ -661,27 +665,27 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			if (cv == null) {
 				debugNullConstant(ctx.expr());
 				if (!constExprParser.isConstant(ctx.expr()))
-					errorChecker.onTokenErrorFound(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
+					errorChecker.reportError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
 				return;
 			}
 
 			if (cv.isArray()) {
-				errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.ARRAY_SIZE_MULTI_DIM);
+				errorChecker.reportError(ctx.expr(), ErrorStrings.ARRAY_SIZE_MULTI_DIM);
 				return;
 			}
 
 			if (!cv.isNumber()) {
-				errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.ARRAY_SIZE_NAN);
+				errorChecker.reportError(ctx.expr(), ErrorStrings.ARRAY_SIZE_NAN);
 				return;
 			}
 			if (cv.isNegative()) {
-				errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.ARRAY_SIZE_NEG);
+				errorChecker.reportError(ctx.expr(), ErrorStrings.ARRAY_SIZE_NEG);
 				return;
 			}
 			try {
 				widths.put(ctx, new SignalWidth(cv.getBigInt().intValue()));
 			} catch (ArithmeticException e) {
-				errorChecker.onTokenWarningFound(ctx.expr(), ErrorStrings.ARRAY_SIZE_TOO_BIG);
+				errorChecker.reportWarning(ctx.expr(), ErrorStrings.ARRAY_SIZE_TOO_BIG);
 			}
 		}
 	}
@@ -713,14 +717,14 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	public SignalWidth getWidth(String signal) {
 		SignalWidth w = widthMap.get(signal);
 		if (w == null) {
-			if (Util.containsName(errorChecker.getInouts(), signal))
+			if (Util.containsName(lucid.getInouts(), signal))
 				signal = signal + ".enable";
-			else if (Util.containsName(errorChecker.getDffs(), signal))
+			else if (Util.containsName(lucid.getDffs(), signal))
 				signal = signal + ".d";
-			else if (Util.containsName(errorChecker.getFsms(), signal))
+			else if (Util.containsName(lucid.getFsms(), signal))
 				signal = signal + ".d";
-			else if (Util.containsName(errorChecker.getInstModules(), signal)) {
-				InstModule im = Util.getByName(errorChecker.getInstModules(), signal);
+			else if (Util.containsName(lucid.getInstModules(), signal)) {
+				InstModule im = Util.getByName(lucid.getInstModules(), signal);
 				if (im != null) {
 					return im.getModuleWidth();
 				}
@@ -785,7 +789,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			}
 
 			if (i < size && ctx.bit_selection().size() > 0 && ctx.children.indexOf(ctx.name(i)) > ctx.children.indexOf(ctx.bit_selection(0))) {
-				errorChecker.onTokenErrorFound(ctx.bit_selection(0), ErrorStrings.BIT_SELECTOR_IN_NAME);
+				errorChecker.reportError(ctx.bit_selection(0), ErrorStrings.BIT_SELECTOR_IN_NAME);
 				return;
 			}
 
@@ -831,12 +835,12 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					}
 				} else {
 					aw = new SignalWidth(aw);
-					if (errorChecker.isFSM(ctx.name(0).getText())) {
+					if (lucid.isFSM(ctx.name(0).getText())) {
 						if (ctx.bit_selection().size() == 1) {
 							if (getFsmArrayWidth(aw, ctx.bit_selection(0)))
 								widths.put(ctx, aw);
 						} else if (ctx.bit_selection().size() > 1) {
-							errorChecker.onTokenErrorFound(ctx.bit_selection(1), ErrorStrings.EXTRA_BIT_SELECTORS);
+							errorChecker.reportError(ctx.bit_selection(1), ErrorStrings.EXTRA_BIT_SELECTORS);
 						} else {
 							widths.put(ctx, aw);
 						}
@@ -868,12 +872,12 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				}
 				if (sigWidth.getDepth() > 1 || sigWidth.isStruct()) {
 					if (!sigWidth.equals(exprWidth))
-						errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.ASSIGN_ARRAY_DIM_MISMATCH);
+						errorChecker.reportError(ctx.expr(), ErrorStrings.ASSIGN_ARRAY_DIM_MISMATCH);
 				} else if (exprWidth.getDepth() > 1) {
-					errorChecker.onTokenErrorFound(ctx.expr(), ErrorStrings.ASSIGN_SIG_NOT_ARRAY);
+					errorChecker.reportError(ctx.expr(), ErrorStrings.ASSIGN_SIG_NOT_ARRAY);
 				} else if (sigWidth.isSimpleArray() && exprWidth.isSimpleArray() && ctx.expr().getClass() == ExprSignalContext.class
 						&& (sigWidth.getWidths().get(0) < exprWidth.getWidths().get(0))) {
-					errorChecker.onTokenWarningFound(ctx.expr(), String.format(ErrorStrings.TRUNC_WARN, ctx.expr().getText(), ctx.signal().getText()));
+					errorChecker.reportWarning(ctx.expr(), String.format(ErrorStrings.TRUNC_WARN, ctx.expr().getText(), ctx.signal().getText()));
 				}
 			}
 		}
@@ -921,7 +925,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			SignalWidth base = widths.get(ctx.expr(0));
 
 			if (!base.isSimpleArray()) {
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.ARRAY_CONCAT_STRUCT);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.ARRAY_CONCAT_STRUCT);
 				return;
 			}
 
@@ -932,7 +936,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			for (int i = 1; i < ctx.expr().size(); i++) {
 				SignalWidth w = widths.get(ctx.expr(i));
 				if (!w.isSimpleArray()) {
-					errorChecker.onTokenErrorFound(ctx.expr(i), ErrorStrings.ARRAY_CONCAT_STRUCT);
+					errorChecker.reportError(ctx.expr(i), ErrorStrings.ARRAY_CONCAT_STRUCT);
 					return;
 				}
 				if (w == null || w.getWidths().size() == 0)
@@ -941,7 +945,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				tempList.addAll(w.getWidths());
 				tempList.remove(0);
 				if (!baseWidths.equals(tempList)) { // match all but first dim
-					errorChecker.onTokenErrorFound(ctx.expr(i), ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH);
+					errorChecker.reportError(ctx.expr(i), ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH);
 					return;
 				}
 			}
@@ -978,12 +982,12 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			return;
 
 		if (dupValue.isArray()) {
-			errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_MULTI_DIM);
+			errorChecker.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_MULTI_DIM);
 			return;
 		}
 
 		if (!dupValue.isNumber()) {
-			errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_NAN);
+			errorChecker.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_NAN);
 			return;
 		}
 
@@ -992,7 +996,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 		SignalWidth aw = new SignalWidth(widths.get(ctx.expr(1)));
 		if (!aw.isSimpleArray()) {
-			errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.ARRAY_DUP_STRUCT);
+			errorChecker.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_STRUCT);
 			return;
 		}
 
@@ -1017,7 +1021,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			boolean error = false;
 			for (ExprContext ec : ctx.expr())
 				if (!widths.get(ec).equals(baseDim)) {
-					errorChecker.onTokenErrorFound(ec, ErrorStrings.ARRAY_BUILDING_DIM_MISMATCH);
+					errorChecker.reportError(ec, ErrorStrings.ARRAY_BUILDING_DIM_MISMATCH);
 					error = true;
 				}
 			if (error)
@@ -1078,28 +1082,28 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				return;
 
 			if (!op1.isSimpleArray())
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.MUL_DIV_STRUCT);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.MUL_DIV_STRUCT);
 
 			if (!op2.isSimpleArray())
-				errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.MUL_DIV_STRUCT);
+				errorChecker.reportError(ctx.expr(1), ErrorStrings.MUL_DIV_STRUCT);
 
 			if (!op1.isSimpleArray() || !op2.isSimpleArray())
 				return;
 
 			if (ctx.getChild(1).getText().equals("*")) { // multiply
 				if (op1.getWidths().size() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.MUL_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(0), ErrorStrings.MUL_MULTI_DIM);
 				if (op2.getWidths().size() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.MUL_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(1), ErrorStrings.MUL_MULTI_DIM);
 				if (op1.getWidths().size() != 1 || op2.getWidths().size() != 1)
 					return;
 
 				widths.put(ctx, new SignalWidth(Util.widthOfMult(op1.getWidths().get(0), op2.getWidths().get(0))));
 			} else { // divide
 				if (op1.getWidths().size() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.DIV_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(0), ErrorStrings.DIV_MULTI_DIM);
 				if (op2.getWidths().size() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.DIV_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(1), ErrorStrings.DIV_MULTI_DIM);
 				if (op1.getWidths().size() != 1 || op2.getWidths().size() != 1)
 					return;
 
@@ -1124,24 +1128,24 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				return;
 
 			if (!op1.isSimpleArray())
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.ADD_SUB_NOT_ARRAY);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.ADD_SUB_NOT_ARRAY);
 
 			if (!op2.isSimpleArray())
-				errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.ADD_SUB_NOT_ARRAY);
+				errorChecker.reportError(ctx.expr(1), ErrorStrings.ADD_SUB_NOT_ARRAY);
 
 			if (!op1.isSimpleArray() || !op2.isSimpleArray())
 				return;
 
 			if (ctx.getChild(1).getText().equals("+")) {
 				if (op1.getDepth() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.ADD_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(0), ErrorStrings.ADD_MULTI_DIM);
 				if (op2.getDepth() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.ADD_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(1), ErrorStrings.ADD_MULTI_DIM);
 			} else { // subtact
 				if (op1.getDepth() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.SUB_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(0), ErrorStrings.SUB_MULTI_DIM);
 				if (op2.getDepth() != 1)
-					errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.SUB_MULTI_DIM);
+					errorChecker.reportError(ctx.expr(1), ErrorStrings.SUB_MULTI_DIM);
 			}
 
 			if (op1.getDepth() != 1 || op2.getDepth() != 1)
@@ -1167,7 +1171,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				return;
 
 			if (!op1.isSimpleArray()) {
-				errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.SHIFT_NOT_ARRAY);
+				errorChecker.reportError(ctx.expr(0), ErrorStrings.SHIFT_NOT_ARRAY);
 				return;
 			}
 
@@ -1218,9 +1222,9 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 			if ((op1.getDepth() != 1 || op2.getDepth() != 1 || !op1.isSimpleArray() || !op2.isSimpleArray()) && !op1.equals(op2)) {
 				if (andOp)
-					errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.AND_MULTI_DIM_MISMATCH);
+					errorChecker.reportError(ctx.expr(1), ErrorStrings.AND_MULTI_DIM_MISMATCH);
 				else
-					errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.OR_MULTI_DIM_MISMATCH);
+					errorChecker.reportError(ctx.expr(1), ErrorStrings.OR_MULTI_DIM_MISMATCH);
 				return;
 			}
 
@@ -1265,39 +1269,39 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			if (equality) {
 				if ((w1.getDepth() != 1 || w2.getDepth() != 1 || !w1.isSimpleArray() || !w2.isSimpleArray()) && !w1.equals(w2)) {
 					if (operand.equals("=="))
-						errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_EQ_DIM_MISMATCH);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_EQ_DIM_MISMATCH);
 					else
-						errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_NEQ_DIM_MISMATCH);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_NEQ_DIM_MISMATCH);
 				}
 			} else {
 				if (w1.getDepth() != 1 || !w1.isSimpleArray())
 					switch (operand) {
 					case "<":
-						errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_LT_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_LT_ARRAY);
 						break;
 					case ">":
-						errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_GT_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_GT_ARRAY);
 						break;
 					case "<=":
-						errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_LTE_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_LTE_ARRAY);
 						break;
 					case ">=":
-						errorChecker.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_GTE_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_GTE_ARRAY);
 						break;
 					}
 				if (w2.getDepth() != 1 || !w2.isSimpleArray())
 					switch (operand) {
 					case "<":
-						errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_LT_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_LT_ARRAY);
 						break;
 					case ">":
-						errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_GT_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_GT_ARRAY);
 						break;
 					case "<=":
-						errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_LTE_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_LTE_ARRAY);
 						break;
 					case ">=":
-						errorChecker.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_GTE_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_GTE_ARRAY);
 						break;
 					}
 			}
@@ -1333,7 +1337,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 			if (w1.getDepth() != 1 || w2.getDepth() != 1 || !w1.isSimpleArray() || !w2.isSimpleArray()) {
 				if (!w1.equals(w2))
-					errorChecker.onTokenErrorFound(ctx.expr(2), ErrorStrings.OP_TERN_DIM_MISMATCH);
+					errorChecker.reportError(ctx.expr(2), ErrorStrings.OP_TERN_DIM_MISMATCH);
 				widths.put(ctx, w1);
 			} else {
 				if (w1.getWidths().get(0) >= w2.getWidths().get(0))

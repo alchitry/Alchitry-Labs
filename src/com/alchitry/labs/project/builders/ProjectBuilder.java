@@ -10,15 +10,20 @@ import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
 
+import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.SignalSelectionDialog;
 import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.ProjectSignal;
 import com.alchitry.labs.parsers.lucid.toVerilog.LucidToVerilog;
+import com.alchitry.labs.parsers.tools.constraints.AlchitryConstraintsExtractor;
 import com.alchitry.labs.parsers.tools.lucid.LucidDebugModifier;
 import com.alchitry.labs.parsers.tools.verilog.VerilogLucidModuleFixer;
+import com.alchitry.labs.parsers.types.ClockConstraint;
+import com.alchitry.labs.parsers.types.PinConstraint;
 import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.style.ParseException;
@@ -182,6 +187,89 @@ public abstract class ProjectBuilder {
 		}
 
 		return vName;
+	}
+
+	private void convertConstraintFile(String file, String folder, String srcFolder, List<String> constraintFiles) throws IOException {
+		String fullPath = Util.assemblePath(folder, file);
+		if (file.endsWith(".acf")) {
+			AlchitryConstraintsExtractor extractor = new AlchitryConstraintsExtractor();
+			extractor.parseAll(fullPath);
+			Board board = project.getBoard();
+			if (board.isType(Board.CU)) {
+				if (!extractor.getPinConstraints().isEmpty()) {
+					File pcf = new File(Util.assemblePath(srcFolder, file.substring(0, file.lastIndexOf('.')) + ".pcf"));
+					if (!pcf.exists() && !pcf.createNewFile()) {
+						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
+						return;
+					}
+					StringBuilder sb = new StringBuilder();
+					for (PinConstraint pc : extractor.getPinConstraints())
+						sb.append(pc.getBoardConstraint(board));
+					FileUtils.write(pcf, sb.toString());
+					constraintFiles.add(pcf.getAbsolutePath());
+				}
+
+				if (!extractor.getClockConstraints().isEmpty()) {
+					File sdc = new File(Util.assemblePath(srcFolder, file.substring(0, file.lastIndexOf('.')) + ".sdc"));
+					if (!sdc.exists() && !sdc.createNewFile()) {
+						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
+						return;
+					}
+					StringBuilder sb = new StringBuilder();
+					for (ClockConstraint cc : extractor.getClockConstraints())
+						sb.append(cc.getBoardConstraint(board));
+					FileUtils.write(sdc, sb.toString());
+					constraintFiles.add(sdc.getAbsolutePath());
+				}
+			} else if (board.isType(Board.AU)) {
+				if (!extractor.getPinConstraints().isEmpty() || !extractor.getClockConstraints().isEmpty()) {
+					File xdc = new File(Util.assemblePath(srcFolder, file.substring(0, file.lastIndexOf('.')) + ".xdc"));
+					if (!xdc.exists() && !xdc.createNewFile()) {
+						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
+						return;
+					}
+					StringBuilder sb = new StringBuilder();
+					for (ClockConstraint cc : extractor.getClockConstraints())
+						sb.append(cc.getBoardConstraint(board));
+					for (PinConstraint pc : extractor.getPinConstraints())
+						sb.append(pc.getBoardConstraint(board));
+					FileUtils.write(xdc, sb.toString());
+					constraintFiles.add(xdc.getAbsolutePath());
+				}
+			}
+		} else {
+			constraintFiles.add(fullPath);
+		}
+	}
+
+	protected ArrayList<String> getConstraintFiles() throws IOException, ParseException {
+		String srcFolder = workFolder + File.separatorChar + "constraint";
+		ArrayList<String> constraintFiles = new ArrayList<String>();
+		File destDir = new File(srcFolder);
+		if (!destDir.exists() || !destDir.isDirectory()) {
+			boolean success = destDir.mkdir();
+			if (!success) {
+				Util.showError("Error building the project", "Could not create source folder!");
+				return null;
+			}
+		}
+
+		// clean up old files
+		for (File f : destDir.listFiles()) {
+			f.delete();
+		}
+
+		String folder = project.getConstraintFolder();
+
+		for (String cf : project.getConstraintFiles(false)) {
+			convertConstraintFile(cf, folder, srcFolder, constraintFiles);
+		}
+		folder = Locations.COMPONENTS;
+		for (String cf : project.getConstraintFiles(true)) {
+			convertConstraintFile(cf, folder, srcFolder, constraintFiles);
+		}
+		
+		return constraintFiles;
 	}
 
 	protected ArrayList<String> getVerilogFiles() throws IOException, ParseException {

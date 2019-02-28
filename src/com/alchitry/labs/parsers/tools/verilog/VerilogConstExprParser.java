@@ -7,9 +7,9 @@ import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.Param;
 import com.alchitry.labs.parsers.tools.lucid.ConstExprParser;
 import com.alchitry.labs.parsers.tools.lucid.ConstProvider;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001BaseListener;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Local_parameter_declarationContext;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser.Param_assignmentContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001BaseListener;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Local_parameter_declarationContext;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Param_assignmentContext;
 
 public class VerilogConstExprParser extends Verilog2001BaseListener implements ConstProvider {
 	private HashMap<String, ConstValue> constants = new HashMap<>();

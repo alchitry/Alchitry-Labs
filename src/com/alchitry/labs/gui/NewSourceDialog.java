@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.project.SourceFile;
 
@@ -123,14 +124,16 @@ public class NewSourceDialog extends Dialog {
 				if (constratintExtensions.length > 0) {
 					String ext = constratintExtensions[0];
 					String name = text.getText();
-					String newName;
-					int lastDot = name.lastIndexOf('.');
-					if (lastDot >= 0)
-						newName = name.substring(0, lastDot) + ext;
-					else
-						newName = name + ext;
+					if (!Util.isConstraintFile(name, board)) {
+						String newName;
+						int lastDot = name.lastIndexOf('.');
+						if (lastDot >= 0)
+							newName = name.substring(0, lastDot) + ext;
+						else
+							newName = name + ext;
 
-					text.setText(newName);
+						text.setText(newName);
+					}
 				}
 			}
 		});
@@ -209,11 +212,11 @@ public class NewSourceDialog extends Dialog {
 		btnCreateFile.setText("Create File");
 
 		shell.pack();
-		
+
 		Rectangle parentSize = getParent().getBounds();
 		Rectangle shellSize = shell.getBounds();
-		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
-		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
+		int locationX = (parentSize.width - shellSize.width) / 2 + parentSize.x;
+		int locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y;
 		shell.setLocation(new Point(locationX, locationY));
 	}
 

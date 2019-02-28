@@ -3,10 +3,10 @@ package com.alchitry.labs.parsers.tools.lucid;
 import java.util.HashMap;
 
 import com.alchitry.labs.parsers.ConstValue;
-import com.alchitry.labs.parsers.lucid.Constant;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Const_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ModuleContext;
+import com.alchitry.labs.parsers.types.Constant;
 
 public class ConstParser extends LucidBaseListener implements ConstProvider {
 	private HashMap<String, Constant> constMap;

@@ -1,4 +1,4 @@
-package com.alchitry.labs.parsers.styles.lucid;
+package com.alchitry.labs.parsers.styles;
 
 import java.util.Arrays;
 import java.util.List;

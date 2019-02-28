@@ -1,10 +1,7 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
@@ -12,7 +9,6 @@ import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Param;
 import com.alchitry.labs.parsers.Sig;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.lucid.Struct;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_sizeContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Inout_decContext;
@@ -22,6 +18,7 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.Output_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_nameContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_typeContext;
+import com.alchitry.labs.parsers.types.Struct;
 import com.alchitry.labs.tools.ParserCache;
 
 public class LucidModuleExtractor extends LucidBaseListener {
@@ -31,9 +28,7 @@ public class LucidModuleExtractor extends LucidBaseListener {
 	}
 
 	public Module getModule(String file) {
-		List<ParseTreeListener> listeners = new ArrayList<>();
-		listeners.add(this);
-		ParserCache.walk(file, listeners);
+		ParserCache.walk(file, this);
 		return module;
 	}
 

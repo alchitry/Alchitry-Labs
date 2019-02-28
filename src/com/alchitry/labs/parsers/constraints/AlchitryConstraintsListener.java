@@ -1,6 +1,6 @@
 // Generated from AlchitryConstraints.g4 by ANTLR 4.7.1
 
-package com.alchitry.labs.parsers.constraints.parser;
+package com.alchitry.labs.parsers.constraints;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -39,6 +39,16 @@ public interface AlchitryConstraintsListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClock(AlchitryConstraintsParser.ClockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AlchitryConstraintsParser#name}.
+	 * @param ctx the parse tree
+	 */
+	void enterName(AlchitryConstraintsParser.NameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AlchitryConstraintsParser#name}.
+	 * @param ctx the parse tree
+	 */
+	void exitName(AlchitryConstraintsParser.NameContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AlchitryConstraintsParser#port_name}.
 	 * @param ctx the parse tree

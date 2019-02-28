@@ -105,8 +105,8 @@ public class Sig implements Named, HasWidth, Serializable {
 	@Override
 	public String toString() {
 		if (width != null)
-			return width.toString();
-		return "";
+			return name + width.toString();
+		return name;
 	}
 
 	@Override

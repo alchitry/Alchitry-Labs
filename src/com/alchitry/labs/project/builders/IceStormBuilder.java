@@ -2,10 +2,9 @@ package com.alchitry.labs.project.builders;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
-import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.ParseException;
@@ -15,14 +14,19 @@ public class IceStormBuilder extends ProjectBuilder {
 	@Override
 	protected void projectBuilder() throws Exception {
 		ArrayList<String> vFiles;
+		ArrayList<String> cFiles;
 		try {
 			vFiles = getVerilogFiles();
+			cFiles = getConstraintFiles();
 		} catch (ParseException e) {
 			Util.println("Error: " + e.getMessage(), true);
 			return;
 		}
 		if (vFiles == null || vFiles.size() == 0) {
 			Util.showError("Error building the project", "Error with getting list of Verilog files!");
+		}
+		if (cFiles == null) {
+			Util.showError("Error building the project", "Error with getting list of constraint files!");
 		}
 		String srcFolder = workFolder + File.separatorChar + "verilog";
 
@@ -55,18 +59,12 @@ public class IceStormBuilder extends ProjectBuilder {
 		arachneCommand.add("-o");
 		arachneCommand.add(workFolder + File.separator + "alchitry.txt");
 
-		HashSet<String> constraints = project.getConstraintFiles(false);
-		removeUnsupportedConstraints(constraints);
-		for (String con : constraints) {
+		removeUnsupportedConstraints(cFiles);
+		for (String con : cFiles) {
 			arachneCommand.add("-p");
-			arachneCommand.add(project.getConstraintFolder() + File.separatorChar + con);
+			arachneCommand.add(con);
 		}
-		constraints = project.getConstraintFiles(true);
-		removeUnsupportedConstraints(constraints);
-		for (String con : constraints) {
-			arachneCommand.add("-p");
-			arachneCommand.add(Locations.COMPONENTS + File.separatorChar + con);
-		}
+
 		arachneCommand.add(workFolder + File.separator + "alchitry.blif");
 
 		builder = Util.runCommand(arachneCommand, false);
@@ -95,7 +93,7 @@ public class IceStormBuilder extends ProjectBuilder {
 		}
 	}
 
-	private void removeUnsupportedConstraints(HashSet<String> constraints) {
+	private void removeUnsupportedConstraints(List<String> constraints) {
 		String ext = ".sdc";
 		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
 			String c = it.next();

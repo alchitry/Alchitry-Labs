@@ -1,10 +1,11 @@
-package com.alchitry.labs.parsers.lucid;
+package com.alchitry.labs.parsers.types;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.alchitry.labs.Named;
 import com.alchitry.labs.Util;
+import com.alchitry.labs.parsers.lucid.SignalWidth;
 
 public class Struct implements Named, Serializable {
 	private static final long serialVersionUID = -1009958205793745457L;

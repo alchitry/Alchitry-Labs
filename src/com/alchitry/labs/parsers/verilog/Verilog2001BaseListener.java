@@ -1,6 +1,6 @@
 // Generated from Verilog2001.g4 by ANTLR 4.7.1
 
-package com.alchitry.labs.parsers.verilog.parser;
+package com.alchitry.labs.parsers.verilog;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;

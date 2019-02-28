@@ -1,23 +1,28 @@
 grammar AlchitryConstraints;
 
 @header {
-package com.alchitry.labs.parsers.constraints.parser;
+package com.alchitry.labs.parsers.constraints;
 }
 
 // starting rule
 alchitry_constraints: (pin|clock)* EOF;
 
-pin: 'pin' port_name pin_name 'pullup'? 'pulldown'? ';';
+pin: 'pin' port_name pin_name PULLUP? PULLDOWN? ';';
 
 clock: 'clock' port_name frequency ';';
 
-port_name: (BASIC_NAME | FREQ_UNIT) array_index?;
-pin_name: BASIC_NAME  | FREQ_UNIT;
+name: (BASIC_NAME | FREQ_UNIT);
+
+port_name: name array_index? ('.' name array_index?)*;
+pin_name: name;
 frequency: number FREQ_UNIT;
 
 array_index: '[' INT ']';
 
 number : INT | REAL;
+
+PULLUP: 'pullup';
+PULLDOWN: 'pulldown';
 
 FREQ_UNIT: (M | K | G)? H Z;
 BASIC_NAME: [a-zA-Z][a-zA-Z0-9_]*;

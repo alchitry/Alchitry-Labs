@@ -18,7 +18,8 @@ import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.parsers.BitValue;
 import com.alchitry.labs.parsers.ConstValue;
-import com.alchitry.labs.parsers.lucid.Constant;
+import com.alchitry.labs.parsers.errors.ErrorListener;
+import com.alchitry.labs.parsers.errors.ErrorStrings;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
@@ -49,9 +50,10 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.NumberContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_constraintContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.SignalContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
+import com.alchitry.labs.parsers.types.Constant;
 
 public class ConstExprParser extends LucidBaseListener {
-	private TokenErrorListener listener;
+	private ErrorListener listener;
 	private WidthProvider bitWidthChecker;
 	private BoundsProvider boundsProvider;
 	private ConstProvider paramsParser;
@@ -59,33 +61,33 @@ public class ConstExprParser extends LucidBaseListener {
 	protected ParseTreeProperty<ConstValue> values;
 	protected ParseTreeProperty<Boolean> constant;
 
-	private static final TokenErrorListener dummyListener = new TokenErrorListener() {
+	private static final ErrorListener dummyListener = new ErrorListener() {
 		@Override
-		public void onTokenWarningFound(ParserRuleContext ctx, String message) {
+		public void reportWarning(ParserRuleContext ctx, String message) {
 		}
 
 		@Override
-		public void onTokenWarningFound(TerminalNode node, String message) {
+		public void reportWarning(TerminalNode node, String message) {
 		}
 
 		@Override
-		public void onTokenErrorFound(ParserRuleContext ctx, String message) {
+		public void reportError(ParserRuleContext ctx, String message) {
 		}
 
 		@Override
-		public void onTokenErrorFound(TerminalNode node, String message) {
+		public void reportError(TerminalNode node, String message) {
 		}
 
 		@Override
-		public void onTokenDebugFound(ParserRuleContext ctx, String message) {
+		public void reportDebug(ParserRuleContext ctx, String message) {
 		}
 
 		@Override
-		public void onTokenDebugFound(TerminalNode node, String message) {
+		public void reportDebug(TerminalNode node, String message) {
 		}
 	};
 
-	public ConstExprParser(TokenErrorListener listen) {
+	public ConstExprParser(ErrorListener listen) {
 		listener = listen;
 		if (listener == null)
 			listener = dummyListener;
@@ -184,7 +186,7 @@ public class ConstExprParser extends LucidBaseListener {
 								cv = new ConstValue(aw.getWidths().get(0));
 						}
 					} else {
-						listener.onTokenErrorFound(ctx.name(ctx.name().size() - 1), ErrorStrings.WIDTH_NOT_SIMPLE_ARRAY);
+						listener.reportError(ctx.name(ctx.name().size() - 1), ErrorStrings.WIDTH_NOT_SIMPLE_ARRAY);
 					}
 				}
 
@@ -214,7 +216,7 @@ public class ConstExprParser extends LucidBaseListener {
 							ArrayBounds b = boundsProvider.getBounds(aic);
 							if (b == null || b.getMax() >= cv.getValues().size() || b.getMin() < 0) {
 								if (isWidth)
-									listener.onTokenErrorFound(aic, ErrorStrings.WIDTH_COULD_NOT_BE_EVALUATED);
+									listener.reportError(aic, ErrorStrings.WIDTH_COULD_NOT_BE_EVALUATED);
 								return;
 							}
 							cv = cv.get(b.getMax());
@@ -225,7 +227,7 @@ public class ConstExprParser extends LucidBaseListener {
 							int size = cv.getWidth();
 							if (b == null || b.getMax() >= size || b.getMin() < 0) {
 								if (isWidth)
-									listener.onTokenErrorFound(lbsc.bit_selector(), ErrorStrings.WIDTH_COULD_NOT_BE_EVALUATED);
+									listener.reportError(lbsc.bit_selector(), ErrorStrings.WIDTH_COULD_NOT_BE_EVALUATED);
 								return;
 							}
 
@@ -247,7 +249,7 @@ public class ConstExprParser extends LucidBaseListener {
 			debugNullConstant(ctx);
 
 		if (ctx.expr() != null && !isConstant(ctx.expr())) {
-			listener.onTokenErrorFound(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
+			listener.reportError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
 		}
 		values.put(ctx, values.get(ctx.expr()));
 		constant.put(ctx, constant.get(ctx.expr()));
@@ -278,7 +280,7 @@ public class ConstExprParser extends LucidBaseListener {
 			if (!split[0].equals("")) {
 				width = new ConstValue(split[0]);
 				if (!width.isNumber()) {
-					listener.onTokenErrorFound(ctx, ErrorStrings.NUM_WIDTH_NAN);
+					listener.reportError(ctx, ErrorStrings.NUM_WIDTH_NAN);
 					return;
 				}
 			}
@@ -299,7 +301,7 @@ public class ConstExprParser extends LucidBaseListener {
 					cv = new ConstValue(value.charAt(0));
 				} else {
 					cv = new ConstValue(0);
-					listener.onTokenErrorFound(ctx, ErrorStrings.STRING_CANNOT_BE_EMPTY);
+					listener.reportError(ctx, ErrorStrings.STRING_CANNOT_BE_EMPTY);
 				}
 				values.put(ctx, cv);
 				return;
@@ -314,7 +316,7 @@ public class ConstExprParser extends LucidBaseListener {
 			cv = unbound;
 
 		if (cv.getWidth() < unbound.getMinWidth()) {
-			listener.onTokenWarningFound(ctx, String.format(ErrorStrings.VALUE_TOO_BIG, ctx.getText(), cv.getWidth()));
+			listener.reportWarning(ctx, String.format(ErrorStrings.VALUE_TOO_BIG, ctx.getText(), cv.getWidth()));
 		}
 
 		values.put(ctx, cv);
@@ -350,14 +352,14 @@ public class ConstExprParser extends LucidBaseListener {
 					if (bi != null)
 						values.put(ctx, new ConstValue((long) Math.ceil(Math.log(bi.doubleValue()) / Math.log(2))));
 					else
-						listener.onTokenErrorFound(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
 				} else {
 					debugNullConstant(ctx);
 					if (!c)
-						listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
+						listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
 				}
 			} else {
-				listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
 			}
 			break;
 		case "$pow":
@@ -367,12 +369,12 @@ public class ConstExprParser extends LucidBaseListener {
 					if (args[0].isNumber())
 						b1 = args[0].getBigInt();
 					else
-						listener.onTokenErrorFound(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
 
 					if (args[1].isNumber())
 						b2 = args[1].getBigInt();
 					else
-						listener.onTokenErrorFound(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
+						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
 
 					if (b1 != null && b2 != null)
 						values.put(ctx, new ConstValue((long) Math.pow(b1.doubleValue(), b2.doubleValue())));
@@ -380,10 +382,10 @@ public class ConstExprParser extends LucidBaseListener {
 				} else {
 					debugNullConstant(ctx);
 					if (!c)
-						listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
+						listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
 				}
 			} else {
-				listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 2));
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 2));
 			}
 			break;
 		case "$reverse":
@@ -393,10 +395,10 @@ public class ConstExprParser extends LucidBaseListener {
 				} else {
 					debugNullConstant(ctx);
 					if (!c)
-						listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
+						listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
 				}
 			} else {
-				listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
 			}
 			break;
 		case "$flatten":
@@ -405,7 +407,7 @@ public class ConstExprParser extends LucidBaseListener {
 					values.put(ctx, args[0].flatten());
 				}
 			} else {
-				listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
 			}
 			break;
 		case "$signed":
@@ -416,7 +418,7 @@ public class ConstExprParser extends LucidBaseListener {
 					values.put(ctx, scv);
 				}
 			} else {
-				listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
 			}
 			break;
 		case "$unsigned":
@@ -427,7 +429,7 @@ public class ConstExprParser extends LucidBaseListener {
 					values.put(ctx, scv);
 				}
 			} else {
-				listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
 			}
 			break;
 		case "$cdiv":
@@ -437,31 +439,31 @@ public class ConstExprParser extends LucidBaseListener {
 					if (args[0].isNumber())
 						b1 = args[0].getBigInt();
 					else
-						listener.onTokenErrorFound(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
 
 					if (args[1].isNumber())
 						b2 = args[1].getBigInt();
 					else
-						listener.onTokenErrorFound(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
+						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
 
 					if (b1 != null && b2 != null) {
 						if (!b2.equals(BigInteger.ZERO))
 							values.put(ctx, new ConstValue((long) Math.ceil(b1.doubleValue() / b2.doubleValue())));
 						else
-							listener.onTokenErrorFound(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
+							listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
 					}
 
 				} else {
 					debugNullConstant(ctx);
 					if (!c)
-						listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
+						listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
 				}
 			} else {
-				listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 2));
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 2));
 			}
 			break;
 		default:
-			listener.onTokenErrorFound(ctx.FUNCTION_ID(), String.format(ErrorStrings.UNKNOWN_FUNCTION, ctx.FUNCTION_ID()));
+			listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.UNKNOWN_FUNCTION, ctx.FUNCTION_ID()));
 			break;
 		}
 
@@ -538,7 +540,7 @@ public class ConstExprParser extends LucidBaseListener {
 						tempList.addAll(cvs.get(i).getWidths());
 						tempList.remove(0);
 						if (!baseDim.equals(tempList)) { // match all but first dim
-							listener.onTokenErrorFound(nodes.get(i), ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH);
+							listener.reportError(nodes.get(i), ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH);
 							error = true;
 						}
 					}
@@ -552,7 +554,7 @@ public class ConstExprParser extends LucidBaseListener {
 				} else {
 					for (int i = 0; i < cvs.size(); i++) {
 						if (cvs.get(i).isArray()) {
-							listener.onTokenErrorFound(nodes.get(i), ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH);
+							listener.reportError(nodes.get(i), ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH);
 							error = true;
 						}
 					}
@@ -586,7 +588,7 @@ public class ConstExprParser extends LucidBaseListener {
 				debugNullConstant(ctx.expr(0));
 
 			if (!isConstant(ctx.expr(0)))
-				listener.onTokenErrorFound(ctx.expr(0), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(0).getText()));
+				listener.reportError(ctx.expr(0), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr(0).getText()));
 
 			if (dupVal == null || val == null)
 				return;
@@ -594,11 +596,11 @@ public class ConstExprParser extends LucidBaseListener {
 			ConstValue cv;
 
 			if (dupVal.isArray()) {
-				listener.onTokenErrorFound(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_MULTI_DIM);
+				listener.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_MULTI_DIM);
 				return;
 			}
 			if (!dupVal.isNumber()) {
-				listener.onTokenErrorFound(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_NAN);
+				listener.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_NAN);
 				return;
 			}
 			BigInteger bi = dupVal.getBigInt();
@@ -658,7 +660,7 @@ public class ConstExprParser extends LucidBaseListener {
 
 				for (int i = 0; i < cvs.size(); i++) {
 					if (!dim.equals(cvs.get(i).getWidths())) {
-						listener.onTokenErrorFound(nodes.get(i), ErrorStrings.ARRAY_BUILDING_DIM_MISMATCH);
+						listener.reportError(nodes.get(i), ErrorStrings.ARRAY_BUILDING_DIM_MISMATCH);
 					} else {
 						cv.addToFront(cvs.get(i));
 					}
@@ -680,7 +682,7 @@ public class ConstExprParser extends LucidBaseListener {
 			return;
 
 		if (value.isArray()) {
-			listener.onTokenErrorFound(ctx, ErrorStrings.NEG_MULTI_DIM);
+			listener.reportError(ctx, ErrorStrings.NEG_MULTI_DIM);
 			return;
 		}
 
@@ -792,11 +794,11 @@ public class ConstExprParser extends LucidBaseListener {
 			String operand = ctx.getChild(1).getText();
 
 			if (op1.isArray()) {
-				listener.onTokenErrorFound(ctx.expr(0), ErrorStrings.SHIFT_MULTI_DIM);
+				listener.reportError(ctx.expr(0), ErrorStrings.SHIFT_MULTI_DIM);
 				return;
 			}
 			if (op2.isArray()) {
-				listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.SHIFT_MULTI_DIM);
+				listener.reportError(ctx.expr(1), ErrorStrings.SHIFT_MULTI_DIM);
 				return;
 			}
 
@@ -842,9 +844,9 @@ public class ConstExprParser extends LucidBaseListener {
 			if (op1.isArray() || op2.isArray()) {
 				if (!op1.getWidths().equals(op2.getWidths())) {
 					if (operand.equals("|"))
-						listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.OR_MULTI_DIM_MISMATCH);
+						listener.reportError(ctx.expr(1), ErrorStrings.OR_MULTI_DIM_MISMATCH);
 					else
-						listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.AND_MULTI_DIM_MISMATCH);
+						listener.reportError(ctx.expr(1), ErrorStrings.AND_MULTI_DIM_MISMATCH);
 					return;
 				}
 				switch (operand) {
@@ -957,9 +959,9 @@ public class ConstExprParser extends LucidBaseListener {
 			switch (operand) {
 			case "<":
 				if (op1.isArray())
-					listener.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_LT_ARRAY);
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_LT_ARRAY);
 				if (op2.isArray())
-					listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_LT_ARRAY);
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_LT_ARRAY);
 				if (op1.isArray() || op2.isArray())
 					return;
 
@@ -967,9 +969,9 @@ public class ConstExprParser extends LucidBaseListener {
 				break;
 			case ">":
 				if (op1.isArray())
-					listener.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_GT_ARRAY);
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_GT_ARRAY);
 				if (op2.isArray())
-					listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_GT_ARRAY);
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_GT_ARRAY);
 				if (op1.isArray() || op2.isArray())
 					return;
 
@@ -979,7 +981,7 @@ public class ConstExprParser extends LucidBaseListener {
 
 				if (op1.isArray()) {
 					if (!op1.getWidths().equals(op2.getWidths())) {
-						listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_EQ_DIM_MISMATCH);
+						listener.reportError(ctx.expr(1), ErrorStrings.OP_EQ_DIM_MISMATCH);
 						return;
 					}
 				}
@@ -988,7 +990,7 @@ public class ConstExprParser extends LucidBaseListener {
 			case "!=":
 				if (op1.isArray()) {
 					if (!op1.getWidths().equals(op2.getWidths())) {
-						listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_NEQ_DIM_MISMATCH);
+						listener.reportError(ctx.expr(1), ErrorStrings.OP_NEQ_DIM_MISMATCH);
 						return;
 					}
 				}
@@ -996,9 +998,9 @@ public class ConstExprParser extends LucidBaseListener {
 				break;
 			case ">=":
 				if (op1.isArray())
-					listener.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_GTE_ARRAY);
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_GTE_ARRAY);
 				if (op2.isArray())
-					listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_GTE_ARRAY);
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_GTE_ARRAY);
 				if (op1.isArray() || op2.isArray())
 					return;
 
@@ -1006,9 +1008,9 @@ public class ConstExprParser extends LucidBaseListener {
 				break;
 			case "<=":
 				if (op1.isArray())
-					listener.onTokenErrorFound(ctx.expr(0), ErrorStrings.OP_LTE_ARRAY);
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_LTE_ARRAY);
 				if (op2.isArray())
-					listener.onTokenErrorFound(ctx.expr(1), ErrorStrings.OP_LTE_ARRAY);
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_LTE_ARRAY);
 				if (op1.isArray() || op2.isArray())
 					return;
 

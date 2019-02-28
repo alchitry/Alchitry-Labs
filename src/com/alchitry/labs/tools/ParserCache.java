@@ -21,12 +21,12 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.parsers.constraints.parser.AlchitryConstraintsLexer;
-import com.alchitry.labs.parsers.constraints.parser.AlchitryConstraintsParser;
+import com.alchitry.labs.parsers.constraints.AlchitryConstraintsLexer;
+import com.alchitry.labs.parsers.constraints.AlchitryConstraintsParser;
 import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Lexer;
-import com.alchitry.labs.parsers.verilog.parser.Verilog2001Parser;
+import com.alchitry.labs.parsers.verilog.Verilog2001Lexer;
+import com.alchitry.labs.parsers.verilog.Verilog2001Parser;
 
 public class ParserCache {
 	private static HashMap<String, CacheEntry> treeMap = new HashMap<>();
@@ -106,6 +106,12 @@ public class ParserCache {
 			}
 		}
 
+	}
+	
+	static public ParseTree walk(String file, ParseTreeListener listener) {
+		List<ParseTreeListener> listeners = new ArrayList<>();
+		listeners.add(listener);
+		return walk(file, listeners);
 	}
 
 	static public ParseTree walk(String file, List<ParseTreeListener> listeners) {

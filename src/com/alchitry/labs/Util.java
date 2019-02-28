@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.widgets.CustomConsole;
 
 import jssc.SerialPort;
@@ -73,7 +74,6 @@ public class Util {
 	public static final int ECLIPSE = 4;
 	private static int envType = UNKNOWN;
 
-	public static final String[] constraintSuffixes = new String[] { ".ucf" };
 	public static final String[] sourceSuffixes = new String[] { ".v", ".luc" };
 	public static final String[] errorProviderSuffixes = new String[] {".v", ".luc", ".acf"};
 
@@ -633,9 +633,18 @@ public class Util {
 		}
 		return false;
 	}
-
+	
 	public static boolean isConstraintFile(String fileName) {
-		return endsWithSuffixList(fileName, constraintSuffixes);
+		return isConstraintFile(fileName, null);
+	}
+
+	public static boolean isConstraintFile(String fileName, Board board) {
+		String[] set;
+		if (board != null)
+			set = board.getSupportedConstraintExtensions();
+		else
+			set = Board.constraintExtensions.toArray(new String[Board.constraintExtensions.size()]);
+		return endsWithSuffixList(fileName, set);
 	}
 
 	public static boolean isSourceFile(String fileName) {

@@ -1,6 +1,7 @@
-package com.alchitry.labs.parsers.lucid;
+package com.alchitry.labs.parsers.types;
 
 import com.alchitry.labs.Named;
+import com.alchitry.labs.parsers.lucid.SignalWidth;
 
 public class Var implements Named {
 	private String name;

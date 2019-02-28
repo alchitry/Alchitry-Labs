@@ -35,7 +35,7 @@
 grammar Verilog2001;
 
 @header {
-package com.alchitry.labs.parsers.verilog.parser;
+package com.alchitry.labs.parsers.verilog;
 }
 // 1 Source text
 // 1.1 Library source text

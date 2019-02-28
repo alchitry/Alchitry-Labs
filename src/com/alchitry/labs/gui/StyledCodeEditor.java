@@ -44,14 +44,14 @@ import com.alchitry.labs.dictionaries.LucidDictionary;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.parsers.errors.AlchitryConstraintsErrorProvider;
 import com.alchitry.labs.parsers.errors.ErrorProvider;
+import com.alchitry.labs.parsers.errors.LucidErrorProvider;
 import com.alchitry.labs.parsers.errors.VerilogErrorProvider;
 import com.alchitry.labs.parsers.styles.AlchitryConstraintStyleProvider;
+import com.alchitry.labs.parsers.styles.LucidNewLineIndenter;
 import com.alchitry.labs.parsers.styles.LucidStyleProvider;
+import com.alchitry.labs.parsers.styles.VerilogIndentProvider;
+import com.alchitry.labs.parsers.styles.VerilogNewLineIndenter;
 import com.alchitry.labs.parsers.styles.VerilogStyleProvider;
-import com.alchitry.labs.parsers.styles.lucid.LucidErrorProvider;
-import com.alchitry.labs.parsers.styles.lucid.LucidNewLineIndenter;
-import com.alchitry.labs.parsers.styles.verilog.VerilogIndentProvider;
-import com.alchitry.labs.parsers.styles.verilog.VerilogNewLineIndenter;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.style.AutoComplete;
 import com.alchitry.labs.style.AutoFormatter;
@@ -80,6 +80,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	private CustomSearch search;
 	private DoubleClickHighlighter doubleClick;
 	private List<LineStyleListener> lineStyleListeners;
+	private Listener projectSaveListener;
 
 	private ErrorProvider errorChecker;
 	private boolean hasErrors;
@@ -153,9 +154,6 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			indentProvider = new VerilogIndentProvider();
 			newLineIndenter = new VerilogNewLineIndenter(this, undoRedo);
 			isVerilog = true;
-		} else if (file.endsWith(".ucf")) {
-			isConstraint = true;
-			// TODO : UCF checking
 		} else if (file.endsWith(".acf")) {
 			AlchitryConstraintsErrorProvider aErrorChecker = new AlchitryConstraintsErrorProvider(this);
 			lineStyleListeners.add(aErrorChecker);
@@ -168,18 +166,23 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			AlchitryConstraintsDictionary dict = new AlchitryConstraintsDictionary();
 
 			Project p = MainWindow.getOpenProject();
-			if (p != null)
-				p.addSaveListener(new Listener() {
+			if (p != null) {
+				projectSaveListener = new Listener() {
 					@Override
 					public void handleEvent(Event arg0) {
 						dict.updatePortNames();
 					}
-				});
+				};
+				p.addSaveListener(projectSaveListener);
+			}
 
 			autoComplete = new AutoComplete(this, dict);
 			isConstraint = true;
+		} else if (Util.isConstraintFile(file)) {
+			isConstraint = true;
+			// TODO : native constraint checking
 		} else {
-			Util.log.severe("ERROR: UNSUPPORTED FILE TYPE. " + file);
+			Util.log.info("UNSUPPORTED FILE TYPE. " + file);
 		}
 
 		ToolTipListener tooltips = new ToolTipListener(this, errorChecker);
@@ -526,6 +529,9 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 	public void close() {
 		tabFolder.close(this);
+		Project p = MainWindow.getOpenProject();
+		if (p != null && projectSaveListener != null)
+			p.removeSaveListener(projectSaveListener);
 	}
 
 	public void updateTextColor() {

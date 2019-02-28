@@ -19,14 +19,8 @@ import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Param;
 import com.alchitry.labs.parsers.Sig;
 import com.alchitry.labs.parsers.lucid.AssignBlock;
-import com.alchitry.labs.parsers.lucid.Connection;
-import com.alchitry.labs.parsers.lucid.Constant;
-import com.alchitry.labs.parsers.lucid.Dff;
-import com.alchitry.labs.parsers.lucid.Fsm;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.lucid.SyncLogic;
-import com.alchitry.labs.parsers.lucid.Var;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.AlwaysCaseContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.AlwaysForContext;
@@ -108,8 +102,14 @@ import com.alchitry.labs.parsers.tools.lucid.ArrayBounds;
 import com.alchitry.labs.parsers.tools.lucid.BitWidthChecker;
 import com.alchitry.labs.parsers.tools.lucid.ConstExprParser;
 import com.alchitry.labs.parsers.tools.lucid.ConstProvider;
-import com.alchitry.labs.parsers.tools.lucid.LucidErrorChecker;
+import com.alchitry.labs.parsers.tools.lucid.LucidExtractor;
 import com.alchitry.labs.parsers.tools.verilog.VerilogConstExprParser;
+import com.alchitry.labs.parsers.types.Connection;
+import com.alchitry.labs.parsers.types.Constant;
+import com.alchitry.labs.parsers.types.Dff;
+import com.alchitry.labs.parsers.types.Fsm;
+import com.alchitry.labs.parsers.types.SyncLogic;
+import com.alchitry.labs.parsers.types.Var;
 import com.alchitry.labs.project.Primitive;
 import com.alchitry.labs.project.Primitive.Parameter;
 import com.alchitry.labs.tools.ParserCache;
@@ -122,14 +122,14 @@ public class LucidToVerilog extends LucidBaseListener {
 	private List<Param> params;
 	private List<InstModule> instModules;
 	private ConstExprParser exprParser;
-	private LucidErrorChecker errorChecker;
+	private LucidExtractor extractor;
 	private BitWidthChecker bitWidthChecker;
 
 	private InstModule thisModule;
 	private List<InstModule> projModules;
 
 	public static String convert(String file, List<Module> modules, InstModule im, List<InstModule> list) {
-		LucidErrorChecker lec = new LucidErrorChecker(im);
+		LucidExtractor lec = new LucidExtractor(im);
 		lec.setModuleList(modules);
 		LucidToVerilog l2v = new LucidToVerilog(modules, lec, im, list);
 
@@ -146,20 +146,20 @@ public class LucidToVerilog extends LucidBaseListener {
 
 	private int tabCount = 0;
 
-	public LucidToVerilog(List<Module> modules, LucidErrorChecker lec, InstModule thisModule, List<InstModule> list) {
+	public LucidToVerilog(List<Module> modules, LucidExtractor lec, InstModule thisModule, List<InstModule> list) {
 		this.modules = modules;
 		this.thisModule = thisModule;
 		projModules = list;
 		exprParser = lec.getExprParser();
-		errorChecker = lec;
+		extractor = lec;
 		bitWidthChecker = lec.getBitWidthChecker();
 	}
 
-	public LucidToVerilog(List<Module> modules, List<Param> params, LucidErrorChecker lec) {
+	public LucidToVerilog(List<Module> modules, List<Param> params, LucidExtractor lec) {
 		this.modules = modules;
 		this.params = params;
 		exprParser = lec.getExprParser();
-		errorChecker = lec;
+		extractor = lec;
 		bitWidthChecker = lec.getBitWidthChecker();
 	}
 
@@ -183,7 +183,7 @@ public class LucidToVerilog extends LucidBaseListener {
 
 		HashMap<ExprContext, HashMap<ExprContext, ArrayList<SyncLogic>>> hm = new HashMap<ExprContext, HashMap<ExprContext, ArrayList<SyncLogic>>>();
 
-		for (Dff d : errorChecker.getDffs()) {
+		for (Dff d : extractor.getDffs()) {
 			HashMap<ExprContext, ArrayList<SyncLogic>> hash = hm.get(d.getClk());
 			if (hash == null) {
 				hash = new HashMap<ExprContext, ArrayList<SyncLogic>>();
@@ -197,7 +197,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			list.add(d);
 		}
 
-		for (Fsm f : errorChecker.getFsms()) {
+		for (Fsm f : extractor.getFsms()) {
 			HashMap<ExprContext, ArrayList<SyncLogic>> hash = hm.get(f.getClk());
 			if (hash == null) {
 				hash = new HashMap<ExprContext, ArrayList<SyncLogic>>();
@@ -338,8 +338,8 @@ public class LucidToVerilog extends LucidBaseListener {
 	}
 
 	private void addInouts(StringBuilder sb) {
-		List<Sig> io = new ArrayList<>(errorChecker.getInouts());
-		io.removeAll(errorChecker.getConnectedInouts());
+		List<Sig> io = new ArrayList<>(extractor.getInouts());
+		io.removeAll(extractor.getConnectedInouts());
 		for (Sig inout : io) {
 			sb.append("reg ");
 
@@ -1292,7 +1292,7 @@ public class LucidToVerilog extends LucidBaseListener {
 	@Override
 	public void exitFsm_dec(Fsm_decContext ctx) {
 		String name = ctx.name().getText();
-		Fsm fsm = Util.getByName(errorChecker.getFsms(), name);
+		Fsm fsm = Util.getByName(extractor.getFsms(), name);
 		int stateWidth = Util.minWidthNum(fsm.getStates().size() - 1);
 
 		if (assignBlocks.size() > 0 && assignBlocks.lastElement().instCon) {
@@ -1340,7 +1340,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		for (Dff_singleContext dc : ctx.dff_single()) {
 			String name = dc.name().getText();
 			SignalWidth sw = bitWidthChecker.getWidth(name + ".d");
-			Dff dff = Util.getByName(errorChecker.getDffs(), name);
+			Dff dff = Util.getByName(extractor.getDffs(), name);
 
 			if (!first)
 				newLine(sb);
@@ -1643,31 +1643,31 @@ public class LucidToVerilog extends LucidBaseListener {
 	private SignalWidth getSigWidths(SignalContext ctx) {
 		String name = ctx.name(0).getText();
 
-		// Dff d = Util.getByName(errorChecker.getDffs(), name);
+		// Dff d = Util.getByName(extractor.getDffs(), name);
 		// if (d != null)
 		// return d.getWidths();
 		//
-		// Fsm f = Util.getByName(errorChecker.getFsms(), name);
+		// Fsm f = Util.getByName(extractor.getFsms(), name);
 		// if (f != null)
 		// return f.getWidths();
 
-		Sig s = Util.getByName(errorChecker.getSigs(), name);
+		Sig s = Util.getByName(extractor.getSigs(), name);
 		if (s != null)
 			return s.getWidth();
 
-		s = Util.getByName(errorChecker.getInputs(), name);
+		s = Util.getByName(extractor.getInputs(), name);
 		if (s != null)
 			return s.getWidth();
 
-		s = Util.getByName(errorChecker.getOutputs(), name);
+		s = Util.getByName(extractor.getOutputs(), name);
 		if (s != null)
 			return s.getWidth();
 
-		s = Util.getByName(errorChecker.getInouts(), name);
+		s = Util.getByName(extractor.getInouts(), name);
 		if (s != null)
 			return s.getWidth();
 
-		Var v = Util.getByName(errorChecker.getVars(), name);
+		Var v = Util.getByName(extractor.getVars(), name);
 		if (v != null)
 			return v.getWidth();
 
@@ -1813,7 +1813,7 @@ public class LucidToVerilog extends LucidBaseListener {
 
 		String name = ctx.name(0).getText();
 
-		Dff d = Util.getByName(errorChecker.getDffs(), name);
+		Dff d = Util.getByName(extractor.getDffs(), name);
 		if (d != null && !hasAttr) {
 			prefix = "M_";
 			if (alwaysDffs != null && write)
@@ -1823,7 +1823,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			widths = d.getWidth();
 			offset = 2;
 		} else {
-			Fsm f = Util.getByName(errorChecker.getFsms(), name);
+			Fsm f = Util.getByName(extractor.getFsms(), name);
 			if (f != null) {
 				widths = f.getWidth();
 				offset = 2;
@@ -1837,7 +1837,7 @@ public class LucidToVerilog extends LucidBaseListener {
 					alwaysFsms.add(f);
 				}
 			} else {
-				Sig io = Util.getByName(errorChecker.getInouts(), name);
+				Sig io = Util.getByName(extractor.getInouts(), name);
 				if (io != null) {
 					widths = io.getWidth();
 					offset = 2;
@@ -1864,7 +1864,7 @@ public class LucidToVerilog extends LucidBaseListener {
 								offset = 3;
 							}
 						}
-						im = Util.getByName(errorChecker.getInstModules(), im.getName());
+						im = Util.getByName(extractor.getInstModules(), im.getName());
 						if (im.getModuleWidth() != null && im.isArray()) {
 							widths = new SignalWidth(widths);
 							widths.getWidths().addAll(0, im.getModuleWidth().getWidths());
@@ -1875,7 +1875,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		}
 
 		if (!isInstModule && hasAttr && !isWidth) {
-			if (Util.containsName(errorChecker.getFsms(), ctx.name(0).getText()))
+			if (Util.containsName(extractor.getFsms(), ctx.name(0).getText()))
 				verilog.put(ctx, attribute.getText() + "_" + ctx.name(0).getText());
 			return;
 		} else if (isWidth) {
@@ -2051,7 +2051,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		return cv;
 	}
 
-	private String sanitize(String s) {
+	private static String sanitize(String s) {
 		if (ReservedWords.check(s))
 			return "L_" + s;
 		return s;

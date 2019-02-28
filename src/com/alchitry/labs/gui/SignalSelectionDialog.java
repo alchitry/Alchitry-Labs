@@ -30,8 +30,8 @@ import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.ProjectSignal;
 import com.alchitry.labs.parsers.Sig;
-import com.alchitry.labs.parsers.lucid.Dff;
-import com.alchitry.labs.parsers.lucid.Fsm;
+import com.alchitry.labs.parsers.types.Dff;
+import com.alchitry.labs.parsers.types.Fsm;
 import com.alchitry.labs.project.DebugInfo;
 
 public class SignalSelectionDialog extends Dialog {

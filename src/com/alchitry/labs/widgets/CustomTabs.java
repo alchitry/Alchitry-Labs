@@ -490,6 +490,7 @@ public class CustomTabs extends Composite implements Listener {
 		return contents.get(selected);
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	public void setSelection(Control c) {
 		for (int i = 0; i < contents.size(); i++) {
 			if (contents.get(i).equals(c)) {
@@ -533,6 +534,7 @@ public class CustomTabs extends Composite implements Listener {
 		// updateTabs();
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	public String getText(Control c) {
 		for (int i = 0; i < contents.size(); i++) {
 			if (contents.get(i).equals(c)) {

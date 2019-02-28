@@ -1,6 +1,5 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,31 +12,21 @@ import javax.swing.text.AbstractDocument.AttributeContext;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.graphics.Color;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.dictionaries.LucidDictionary;
-import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Param;
 import com.alchitry.labs.parsers.Sig;
-import com.alchitry.labs.parsers.errors.ErrorUtil;
+import com.alchitry.labs.parsers.errors.DummyErrorListener;
+import com.alchitry.labs.parsers.errors.ErrorListener;
+import com.alchitry.labs.parsers.errors.ErrorStrings;
 import com.alchitry.labs.parsers.lucid.AssignBlock;
-import com.alchitry.labs.parsers.lucid.Connection;
-import com.alchitry.labs.parsers.lucid.Constant;
-import com.alchitry.labs.parsers.lucid.Dff;
-import com.alchitry.labs.parsers.lucid.Fsm;
 import com.alchitry.labs.parsers.lucid.Lucid;
-import com.alchitry.labs.parsers.lucid.Struct;
-import com.alchitry.labs.parsers.lucid.Var;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Always_blockContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_sizeContext;
@@ -74,15 +63,17 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_memberContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Type_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_assignContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_decContext;
+import com.alchitry.labs.parsers.types.Connection;
+import com.alchitry.labs.parsers.types.Constant;
+import com.alchitry.labs.parsers.types.Dff;
+import com.alchitry.labs.parsers.types.Fsm;
+import com.alchitry.labs.parsers.types.Struct;
+import com.alchitry.labs.parsers.types.Var;
 import com.alchitry.labs.project.Primitive;
 import com.alchitry.labs.project.Primitive.Parameter;
-import com.alchitry.labs.style.SyntaxError;
 import com.alchitry.labs.tools.ParserCache;
 
-public class LucidErrorChecker extends LucidBaseListener implements TokenErrorListener {
-	private ArrayList<SyntaxError> errors;
-	private ArrayList<SyntaxError> errorList;
-
+public class LucidExtractor extends LucidBaseListener {
 	private ArrayList<Dff> dffs;
 	private ArrayList<Fsm> fsms;
 	private List<Constant> constants;
@@ -119,17 +110,25 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 	private InstModule thisModule;
 
-	public LucidErrorChecker(InstModule thisModule) {
-		this(null, thisModule);
+	private ErrorListener errorListener;
+	
+	public LucidExtractor(InstModule thisModule) {
+		this(thisModule, null);
 	}
 
-	public LucidErrorChecker(LucidDictionary dict, InstModule thisModule) {
-		errors = new ArrayList<SyntaxError>();
-		errorList = new ArrayList<SyntaxError>();
+	public LucidExtractor(InstModule thisModule, ErrorListener errorListener) {
+		this(null, thisModule, errorListener);
+	}
 
-		constExprParser = new ConstExprParser(this);
-		bitWidthChecker = new BitWidthChecker(this, constExprParser);
-		boundsParser = new BoundsParser(constExprParser, bitWidthChecker, this);
+	public LucidExtractor(LucidDictionary dict, InstModule thisModule, ErrorListener errorListner) {
+		this.errorListener = errorListner;
+		
+		if (this.errorListener == null)
+			this.errorListener = new DummyErrorListener();
+
+		constExprParser = new ConstExprParser(errorListner);
+		bitWidthChecker = new BitWidthChecker(this, errorListner, constExprParser);
+		boundsParser = new BoundsParser(constExprParser, bitWidthChecker, errorListner);
 
 		paramsParser = new ParamsParser(constExprParser, thisModule);
 		constParser = new ConstParser(constExprParser);
@@ -230,8 +229,6 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	}
 
 	public void addToParser(List<ParseTreeListener> listeners) {
-		reset();
-
 		listeners.add(constParser);
 		listeners.add(paramsParser);
 		listeners.add(constExprParser);
@@ -257,27 +254,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	// paramsParser.reset();
 	// }
 
-	public ArrayList<SyntaxError> getErrors(String file) {
-		try {
-			if (MainWindow.getOpenProject() != null)
-				setModuleList(MainWindow.getOpenProject().getModules(null));
-			else
-				setModuleList(new ArrayList<Module>());
-		} catch (IOException e) {
-			setModuleList(new ArrayList<Module>());
-			Util.log.severe("Could not parse project's modules!");
-			e.printStackTrace();
-		}
-
-		parseAll(file);
-
-		errorList.clear();
-		errorList.addAll(ErrorUtil.getErrors(file));
-		errorList.addAll(getErrors());
-		return errorList;
-	}
-
-	private void parseAll(String file) {
+	public void parseAll(String file) {
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		addToParser(listeners);
 		ParserCache.walk(file, listeners);
@@ -285,75 +262,6 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 	public Stack<AssignBlock> getAssignBlock() {
 		return assignBlocks;
-	}
-
-	@Override
-	public void onTokenDebugFound(TerminalNode node, String message) {
-		underline(node.getSymbol(), node.getSymbol(), message, Theme.debugTextColor, SyntaxError.DEBUG);
-	}
-
-	@Override
-	public void onTokenDebugFound(ParserRuleContext ctx, String message) {
-		underline(ctx.start, ctx.stop, message, Theme.debugTextColor, SyntaxError.DEBUG);
-	}
-
-	@Override
-	public void onTokenErrorFound(TerminalNode node, String message) {
-		underlineError(node, message);
-	}
-
-	@Override
-	public void onTokenWarningFound(TerminalNode node, String message) {
-		underlineWarning(node, message);
-	}
-
-	@Override
-	public void onTokenErrorFound(ParserRuleContext ctx, String message) {
-		underlineError(ctx, message);
-	}
-
-	@Override
-	public void onTokenWarningFound(ParserRuleContext ctx, String message) {
-		underlineWarning(ctx, message);
-	}
-
-	private void underlineWarning(ParserRuleContext ctx, String message) {
-		underline(ctx.start, ctx.stop, message, Theme.warningTextColor, SyntaxError.WARNING);
-	}
-
-	private void underlineError(ParserRuleContext ctx, String message) {
-		underline(ctx.start, ctx.stop, message, Theme.errorTextColor, SyntaxError.ERROR);
-	}
-
-	private void underlineWarning(TerminalNode term, String message) {
-		underline(term.getSymbol(), term.getSymbol(), message, Theme.warningTextColor, SyntaxError.WARNING);
-	}
-
-	private void underlineError(TerminalNode term, String message) {
-		underline(term.getSymbol(), term.getSymbol(), message, Theme.errorTextColor, SyntaxError.ERROR);
-	}
-
-	private void underline(Token startToken, Token stopToken, String message, Color color, int type) {
-		int start = startToken.getStartIndex();
-		int stop = stopToken == null ? startToken.getStopIndex() : stopToken.getStopIndex();
-
-		if (stop < start) // bad token, can happen with severe syntax errors
-			return;
-
-		if (start == -1 || stop == -1) {
-			Util.log.severe("ERROR: Token start or stop was -1");
-			return;
-		}
-
-		StyleRange style = new StyleRange();
-		style.start = start;
-		style.length = stop - start + 1;
-		style.underline = true;
-		style.underlineColor = color;
-		style.underlineStyle = SWT.UNDERLINE_SINGLE;
-		int line = startToken.getLine();
-		int offset = startToken.getCharPositionInLine();
-		errors.add(new SyntaxError(type, style, message, start, stop, line, offset));
 	}
 
 	public void clearModuleList() {
@@ -364,14 +272,10 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 		modules = list;
 	}
 
-	public void reset() {
-		errors.clear();
-	}
-
 	@Override
 	public void exitSource(SourceContext ctx) {
 		if (ctx.module().size() > 1) {
-			underlineError(ctx.module(1), ErrorStrings.MULTIPLE_MODULES);
+			errorListener.reportError(ctx.module(1), ErrorStrings.MULTIPLE_MODULES);
 		}
 	}
 
@@ -400,11 +304,11 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			if (modules != null)
 				for (Module m : modules)
 					dictionary.add(m.getName());
-				HashMap<String, List<Constant>> gC = MainWindow.getGlobalConstants();
-				for (String global : gC.keySet())
-					dictionary.add(global);
-			}
-		
+			HashMap<String, List<Constant>> gC = MainWindow.getGlobalConstants();
+			for (String global : gC.keySet())
+				dictionary.add(global);
+		}
+
 	}
 
 	@Override
@@ -439,13 +343,13 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	public void exitStruct_dec(Struct_decContext ctx) {
 		if (ctx.name() != null) {
 			if (ctx.name().TYPE_ID() == null)
-				underlineError(ctx.name(), ErrorStrings.STRUCT_NAME_CASE);
+				errorListener.reportError(ctx.name(), ErrorStrings.STRUCT_NAME_CASE);
 
 			Struct struct = new Struct(ctx.name().getText());
 			for (Struct_memberContext smc : ctx.struct_member()) {
 				if (smc.name() != null) {
 					if (smc.name().TYPE_ID() == null)
-						underlineError(smc.name(), ErrorStrings.STRUCT_MEMBER_CASE);
+						errorListener.reportError(smc.name(), ErrorStrings.STRUCT_MEMBER_CASE);
 
 					Struct.Member m = new Struct.Member(smc.name().getText());
 					m.width = bitWidthChecker.getArrayWidth(smc.array_size(), smc.struct_type());
@@ -463,11 +367,11 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	public void exitModule(ModuleContext ctx) {
 		if (ctx.name() != null) {
 			if (ctx.name().TYPE_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
 		}
 
 		for (Sig s : unusedSigs) {
-			underlineWarning(s.getNode(), String.format(ErrorStrings.NEVER_USED, s.getName()));
+			errorListener.reportWarning(s.getNode(), String.format(ErrorStrings.NEVER_USED, s.getName()));
 		}
 
 		if (thisModule != null) {
@@ -494,16 +398,18 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 				list.add(s);
 				moduleList.put(name[0], list);
 			} else {
-				underlineError(s.getNode(), String.format(ErrorStrings.OUPUT_NEVER_ASSIGNED, s.getName())); // it is a signal
+				errorListener.reportError(s.getNode(), String.format(ErrorStrings.OUPUT_NEVER_ASSIGNED, s.getName())); // it is a signal
 			}
 		}
 
 		for (Map.Entry<String, ArrayList<Sig>> entry : moduleList.entrySet()) {
 			if (entry.getValue().size() > 0) {
 				if (entry.getValue().size() != 1)
-					underlineError(entry.getValue().get(0).getNode(), String.format(ErrorStrings.MODULE_INPUTS_NOT_ASSIGNED, getMissingSigString(entry.getValue())));
+					errorListener.reportError(entry.getValue().get(0).getNode(),
+							String.format(ErrorStrings.MODULE_INPUTS_NOT_ASSIGNED, getMissingSigString(entry.getValue())));
 				else
-					underlineError(entry.getValue().get(0).getNode(), String.format(ErrorStrings.MODULE_INPUT_NOT_ASSIGNED, getMissingSigString(entry.getValue())));
+					errorListener.reportError(entry.getValue().get(0).getNode(),
+							String.format(ErrorStrings.MODULE_INPUT_NOT_ASSIGNED, getMissingSigString(entry.getValue())));
 			}
 		}
 
@@ -519,11 +425,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 		drivenSigs.addAll(writtenSigs);
 		writtenSigs = null;
 	}
-
-	public List<SyntaxError> getErrors() {
-		return errors;
-	}
-
+	
 	public boolean isFSM(String name) {
 		return Util.containsName(fsms, name);
 	}
@@ -538,14 +440,14 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	}
 
 	private void nameUsedError(ParserRuleContext ctx) {
-		underlineError(ctx, String.format(ErrorStrings.NAME_TAKEN, ctx.getText()));
+		errorListener.reportError(ctx, String.format(ErrorStrings.NAME_TAKEN, ctx.getText()));
 	}
 
 	@Override
 	public void exitInput_dec(Input_decContext ctx) {
 		if (ctx.name() != null) {
 			if (ctx.name().TYPE_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
 			Sig s = new Sig(ctx.name().getText(), ctx);
 			if (ctx.SIGNED() != null)
 				s.setSigned(true);
@@ -565,7 +467,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	public void exitOutput_dec(Output_decContext ctx) {
 		if (ctx.name() != null) {
 			if (ctx.name().TYPE_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
 			Sig s = new Sig(ctx.name().getText(), ctx);
 			if (ctx.SIGNED() != null)
 				s.setSigned(true);
@@ -586,7 +488,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	public void exitInout_dec(Inout_decContext ctx) {
 		if (ctx.name() != null) {
 			if (ctx.name().TYPE_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
 			Sig s = new Sig(ctx.name().getText(), ctx);
 			if (ctx.SIGNED() != null)
 				s.setSigned(true);
@@ -609,12 +511,12 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 		if (ctx.name() != null) {
 
 			if (ctx.name().CONST_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_CONST, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_CONST, ctx.name().getText()));
 
 			ConstValue cv = constExprParser.getValue(ctx.expr());
 
 			if (cv == null && ctx.expr() != null)
-				underlineError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
+				errorListener.reportError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
 
 			if (Util.containsName(constants, ctx.name().getText()))
 				nameUsedError(ctx.name());
@@ -645,7 +547,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 				if (constraint != null) {
 					if (constraint.isZero()) {
 						ConstValue cv = constExprParser.getValue(ctx.param_name().expr());
-						underlineError(ctx.param_constraint(),
+						errorListener.reportError(ctx.param_constraint(),
 								String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, ctx.param_constraint().getText(), p.getName(), cv.toString()));
 					}
 				}
@@ -657,10 +559,10 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	public void exitConst_dec(Const_decContext ctx) {
 		if (ctx.name() != null) {
 			if (ctx.name().CONST_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_CONST, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_CONST, ctx.name().getText()));
 
 			if (ctx.expr() != null && !constExprParser.isConstant(ctx.expr()))
-				underlineError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
+				errorListener.reportError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
 
 			Constant c = new Constant(ctx.name().getText());
 
@@ -682,7 +584,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			for (Type_decContext dc : ctx.type_dec()) {
 				if (dc.name() != null) {
 					if (dc.name().TYPE_ID() == null)
-						underlineError(dc.name(), String.format(ErrorStrings.NAME_NOT_TYPE, dc.name().getText()));
+						errorListener.reportError(dc.name(), String.format(ErrorStrings.NAME_NOT_TYPE, dc.name().getText()));
 
 					Sig sig = new Sig(dc.name().getText(), ctx);
 					if (ctx.SIGNED() != null)
@@ -705,7 +607,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 		for (Type_decContext dc : ctx.type_dec()) {
 			if (dc.name() != null) {
 				if (dc.name().TYPE_ID() == null)
-					underlineError(dc.name(), String.format(ErrorStrings.NAME_NOT_TYPE, dc.name().getText()));
+					errorListener.reportError(dc.name(), String.format(ErrorStrings.NAME_NOT_TYPE, dc.name().getText()));
 
 				Var var = new Var(dc.name().getText());
 				if (nameUsed(var.getName()))
@@ -728,12 +630,12 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			String moduleName = ctx.name(0).getText();
 
 			if (ctx.name(1).TYPE_ID() == null)
-				underlineError(ctx.name(1), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name(1).getText()));
+				errorListener.reportError(ctx.name(1), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name(1).getText()));
 
 			Module module = Util.getByName(modules, moduleName);
 
 			if (module == null) {
-				underlineError(ctx.name(0), String.format(ErrorStrings.UNDECLARED_MODULE, moduleName));
+				errorListener.reportError(ctx.name(0), String.format(ErrorStrings.UNDECLARED_MODULE, moduleName));
 				return;
 			}
 
@@ -782,13 +684,13 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 							Param p = Util.getByName(instModule.getParams(), c.port);
 							if (p == null) {
 								if (block.instCon)
-									underlineError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_PARAM, c.port, moduleName));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_PARAM, c.port, moduleName));
 								else
-									underlineError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_PARAM, c.port, moduleName));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_PARAM, c.port, moduleName));
 							} else {
 								Util.removeByName(reqParams, p.getName());
 								if (p.valueSet())
-									underlineError(c.portNode, String.format(ErrorStrings.MODULE_PARAM_DEFINED, c.port));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.MODULE_PARAM_DEFINED, c.port));
 								p.setValue(c.signal);
 								p.setValue(constExprParser.getValue(c.signalNode));
 
@@ -797,26 +699,29 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 									if (par != null) {
 										if (par.getType().equals(Parameter.TYPE_STRING)) {
 											if (c.signal.length() > 2 && !par.getOptions().contains(c.signal.substring(1, c.signal.length() - 1))) {
-												underlineError(c.signalNode, String.format(ErrorStrings.PRIMITIVE_INVALID_OPTION, c.signal, par.getOptions().toString()));
+												errorListener.reportError(c.signalNode,
+														String.format(ErrorStrings.PRIMITIVE_INVALID_OPTION, c.signal, par.getOptions().toString()));
 											}
 										} else if (par.getType().equals(Parameter.TYPE_INTEGER)) {
 											ConstValue cv = constExprParser.getValue(c.signalNode);
 
 											if (cv == null || !cv.isNumber()) {
-												underlineError(c.signalNode, String.format(ErrorStrings.PRIMITIVE_NAI, c.port));
+												errorListener.reportError(c.signalNode, String.format(ErrorStrings.PRIMITIVE_NAI, c.port));
 											} else {
 												int i = cv.getBigInt().intValue();
 												if (!par.inRange(i)) {
-													underlineError(c.signalNode, String.format(ErrorStrings.PRIMITIVE_OUT_OF_RANGE, c.port, par.getRanges().toString()));
+													errorListener.reportError(c.signalNode,
+															String.format(ErrorStrings.PRIMITIVE_OUT_OF_RANGE, c.port, par.getRanges().toString()));
 												}
 											}
 										} else { // Real type
 											try {
 												double d = Double.parseDouble(c.signal);
 												if (!par.inRange(d))
-													underlineError(c.signalNode, String.format(ErrorStrings.PRIMITIVE_OUT_OF_RANGE, c.port, par.getRanges().toString()));
+													errorListener.reportError(c.signalNode,
+															String.format(ErrorStrings.PRIMITIVE_OUT_OF_RANGE, c.port, par.getRanges().toString()));
 											} catch (NumberFormatException e) {
-												underlineError(c.signalNode, String.format(ErrorStrings.PRIMITIVE_NAD, c.port));
+												errorListener.reportError(c.signalNode, String.format(ErrorStrings.PRIMITIVE_NAD, c.port));
 											}
 										}
 									}
@@ -826,10 +731,10 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 							if (Util.containsName(module.getInputs(), c.port)) {
 								instModule.addConnection(c);
 								if (!Util.removeByName(reqSigs, instName + "." + c.port))
-									underlineError(c.portNode, String.format(ErrorStrings.MODULE_INPUT_DEFINED, c.port));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.MODULE_INPUT_DEFINED, c.port));
 							} else if (Util.containsName(module.getInouts(), c.port)) {
 								if (!Util.containsName(inouts, c.signal))
-									underlineError(c.signalNode, ErrorStrings.MODULE_INOUT_CONNECT_ONLY_INOUT);
+									errorListener.reportError(c.signalNode, ErrorStrings.MODULE_INOUT_CONNECT_ONLY_INOUT);
 								else
 									connectedInouts.add(Util.getByName(inouts, c.signal));
 								instModule.addConnection(c);
@@ -837,12 +742,12 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 								Util.removeByName(reqSigs, c.signal + ".write");
 
 								if (!Util.removeByName(reqIO, c.port))
-									underlineError(c.portNode, String.format(ErrorStrings.MODULE_INOUT_DEFINED, c.port));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.MODULE_INOUT_DEFINED, c.port));
 							} else {
 								if (block.instCon)
-									underlineError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_INPUT, c.port, moduleName));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_INPUT, c.port, moduleName));
 								else
-									underlineError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_INPUT, c.port, moduleName));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.MODULE_UNKNOWN_INPUT, c.port, moduleName));
 							}
 						}
 					}
@@ -859,7 +764,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 						first = false;
 					iosb.append(s.getName());
 				}
-				underlineError(ctx, String.format(ErrorStrings.MODULE_IO_MISSING, iosb.toString()));
+				errorListener.reportError(ctx, String.format(ErrorStrings.MODULE_IO_MISSING, iosb.toString()));
 			}
 
 			for (Param p : instModule.getParams())
@@ -868,7 +773,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 			if (reqParams.size() > 0) {
 				if (reqParams.size() == 1) {
-					underlineError(ctx.name(1), String.format(ErrorStrings.MODULE_MISSING_REQ_PARAM, reqParams.get(0).getName()));
+					errorListener.reportError(ctx.name(1), String.format(ErrorStrings.MODULE_MISSING_REQ_PARAM, reqParams.get(0).getName()));
 				} else {
 					StringBuilder sb = new StringBuilder();
 					boolean first = true;
@@ -880,7 +785,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 						sb.append(p.getName());
 					}
-					underlineError(ctx.name(1), String.format(ErrorStrings.MODULE_MISSING_REQ_PARAMS, sb.toString()));
+					errorListener.reportError(ctx.name(1), String.format(ErrorStrings.MODULE_MISSING_REQ_PARAMS, sb.toString()));
 				}
 			} else {
 				final List<Param> iparams = instModule.getParams();
@@ -908,9 +813,10 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 						ConstValue cv = ConstExprParser.parseExpr(p.getConstraint(), cp, null, null);
 
 						if (cv == null) {
-							underlineError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_PARSE_FAIL, p.getConstraint()));
+							errorListener.reportError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_PARSE_FAIL, p.getConstraint()));
 						} else if (cv.isZero()) {
-							underlineError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, p.getConstraint(), p.getName(), p.getValue()));
+							errorListener.reportError(ctx.name(1),
+									String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, p.getConstraint(), p.getName(), p.getValue()));
 						}
 					}
 
@@ -929,7 +835,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 		for (Dff_singleContext dc : ctx.dff_single()) {
 			if (dc.name() != null) {
 				if (dc.name().TYPE_ID() == null)
-					underlineError(dc.name(), String.format(ErrorStrings.NAME_NOT_TYPE, dc.name().getText()));
+					errorListener.reportError(dc.name(), String.format(ErrorStrings.NAME_NOT_TYPE, dc.name().getText()));
 
 				Dff dff = new Dff(dc.name().getText());
 				if (ctx.SIGNED() != null)
@@ -962,9 +868,9 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 								else if (c.port.equals("IOB"))
 									dff.setIOB(constExprParser.getValue(c.signalNode).getBigInt().intValue() != 0);
 								else if (block.instCon)
-									underlineError(c.portNode, String.format(ErrorStrings.DFF_UNKNOWN_PARAM, c.port));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.DFF_UNKNOWN_PARAM, c.port));
 								else
-									underlineError(dc.name(), String.format(ErrorStrings.DFF_UNKNOWN_PARAM, c.port));
+									errorListener.reportError(dc.name(), String.format(ErrorStrings.DFF_UNKNOWN_PARAM, c.port));
 							} else {
 								if (c.port.equals("clk")) {
 									dff.setClk((ExprContext) c.signalNode);
@@ -974,9 +880,9 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 								} else {
 									if (block.instCon)
-										underlineError(c.portNode, String.format(ErrorStrings.DFF_UNKNOWN_INPUT, c.port));
+										errorListener.reportError(c.portNode, String.format(ErrorStrings.DFF_UNKNOWN_INPUT, c.port));
 									else
-										underlineError(dc.name(), String.format(ErrorStrings.DFF_UNKNOWN_INPUT, c.port));
+										errorListener.reportError(dc.name(), String.format(ErrorStrings.DFF_UNKNOWN_INPUT, c.port));
 								}
 
 							}
@@ -988,7 +894,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 					}
 				}
 				if (dff.getClk() == null) {
-					underlineError(dc.name(), ErrorStrings.DFF_MISSING_CLK);
+					errorListener.reportError(dc.name(), ErrorStrings.DFF_MISSING_CLK);
 				}
 			}
 		}
@@ -998,7 +904,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	public void exitFsm_dec(Fsm_decContext ctx) {
 		if (ctx.name() != null && ctx.fsm_states() != null && ctx.fsm_states().name() != null) {
 			if (ctx.name().TYPE_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
 
 			Fsm fsm = new Fsm(ctx.name().getText());
 			if (nameUsed(fsm.getName())) {
@@ -1022,10 +928,10 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 			for (NameContext state : ctx.fsm_states().name()) {
 				if (state.CONST_ID() == null)
-					underlineError(state, String.format(ErrorStrings.NAME_NOT_CONST, state.getText()));
+					errorListener.reportError(state, String.format(ErrorStrings.NAME_NOT_CONST, state.getText()));
 
 				if (state.getText().equals(Lucid.WIDTH_ATTR))
-					underlineError(state, String.format(ErrorStrings.FSM_INVALID_STATE_NAME, state.getText()));
+					errorListener.reportError(state, String.format(ErrorStrings.FSM_INVALID_STATE_NAME, state.getText()));
 				else
 					fsm.addState(new Constant(state.getText()));
 			}
@@ -1041,16 +947,16 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 									fsm.setDefState(new Constant(c.signal));
 								} else {
 									if (block.instCon)
-										underlineError(c.signalNode, String.format(ErrorStrings.FSM_INVALID_STATE, c.signal, fsm.getName()));
+										errorListener.reportError(c.signalNode, String.format(ErrorStrings.FSM_INVALID_STATE, c.signal, fsm.getName()));
 									else
-										underlineError(ctx.name(), String.format(ErrorStrings.FSM_INVALID_STATE, c.signal, fsm.getName()));
+										errorListener.reportError(ctx.name(), String.format(ErrorStrings.FSM_INVALID_STATE, c.signal, fsm.getName()));
 								}
 
 							} else {
 								if (block.instCon)
-									underlineError(c.portNode, String.format(ErrorStrings.FSM_UNKNOWN_PARAM, c.port));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.FSM_UNKNOWN_PARAM, c.port));
 								else
-									underlineError(ctx.name(), String.format(ErrorStrings.FSM_UNKNOWN_PARAM, c.port));
+									errorListener.reportError(ctx.name(), String.format(ErrorStrings.FSM_UNKNOWN_PARAM, c.port));
 							}
 						} else {
 							if (c.port.equals("clk")) {
@@ -1061,9 +967,9 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 							} else {
 								if (block.instCon)
-									underlineError(c.portNode, String.format(ErrorStrings.FSM_UNKNOWN_INPUT, c.port));
+									errorListener.reportError(c.portNode, String.format(ErrorStrings.FSM_UNKNOWN_INPUT, c.port));
 								else
-									underlineError(ctx.name(), String.format(ErrorStrings.FSM_UNKNOWN_INPUT, c.port));
+									errorListener.reportError(ctx.name(), String.format(ErrorStrings.FSM_UNKNOWN_INPUT, c.port));
 							}
 
 						}
@@ -1081,7 +987,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 				fsm.setDefState(states.get(0));
 
 			if (fsm.getClk() == null) {
-				underlineError(ctx.name(), ErrorStrings.FSM_MISSING_CLK);
+				errorListener.reportError(ctx.name(), ErrorStrings.FSM_MISSING_CLK);
 			}
 		}
 	}
@@ -1106,7 +1012,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 	public void exitParam_con(Param_conContext ctx) {
 		if ((ctx.expr() != null || ctx.REAL() != null) && ctx.name() != null) {
 			if (ctx.name().CONST_ID() == null)
-				underlineError(ctx.name(), String.format(ErrorStrings.NAME_NOT_CONST, ctx.name().getText()));
+				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_CONST, ctx.name().getText()));
 			AssignBlock block = assignBlocks.peek();
 
 			// Check if the parameter belongs to FSM declaration
@@ -1122,7 +1028,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 				if (p == null || !(p instanceof Fsm_decContext)) { // FSM states will have a null value so ignore them
 					if (cv == null)
-						underlineError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
+						errorListener.reportError(ctx.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, ctx.expr().getText()));
 				}
 				block.connections.add(new Connection(ctx.name().getText(), ctx.expr().getText(), true, cv, ctx.name(), ctx.expr(), (ConnectionContext) ctx.parent));
 			} else {
@@ -1141,7 +1047,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 	private void sigWritten(String sig, ParserRuleContext node) {
 		if (Util.containsName(drivenSigs, sig)) {
-			underlineError(node, String.format(ErrorStrings.MULTIPLE_DRIVERS, node.getText()));
+			errorListener.reportError(node, String.format(ErrorStrings.MULTIPLE_DRIVERS, node.getText()));
 		}
 		if (assignedSigs.size() > 0) {
 			ArrayList<HashSet<Sig>> list = assignedSigs.peek(); // get top of stack
@@ -1176,13 +1082,13 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 			if (constant) {
 				if (write)
-					underlineError(ctx, ErrorStrings.CONST_READ_ONLY);
+					errorListener.reportError(ctx, ErrorStrings.CONST_READ_ONLY);
 
 				if (ctx.name().size() > 1 && !ctx.name(1).getText().equals(Lucid.WIDTH_ATTR))
-					underlineError(ctx.name(0), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(0).getText(), ctx.name(1).getText()));
+					errorListener.reportError(ctx.name(0), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(0).getText(), ctx.name(1).getText()));
 
 				if (!Util.containsName(constants, ctx.name(0).getText()))
-					underlineError(ctx.name(0), ErrorStrings.UNDECLARED_CONST);
+					errorListener.reportError(ctx.name(0), ErrorStrings.UNDECLARED_CONST);
 				else {
 					Util.removeByName(unusedSigs, ctx.name(0).getText());
 					return;
@@ -1191,22 +1097,23 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 			if (global) {
 				if (write)
-					underlineError(ctx, ErrorStrings.CONST_READ_ONLY);
+					errorListener.reportError(ctx, ErrorStrings.CONST_READ_ONLY);
 
 				HashMap<String, List<Constant>> gC = MainWindow.getGlobalConstants();
 				List<Constant> consts = gC.get(names.get(0).getText());
 
 				if (names.size() < 2)
-					underlineError(ctx.name(0), ErrorStrings.NAMESPACE_DIRECT);
+					errorListener.reportError(ctx.name(0), ErrorStrings.NAMESPACE_DIRECT);
 
 				if ((names.size() > 2 && !isWidth) || names.size() > 3)
-					underlineError(ctx.name(ctx.name().size() - 1), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(1).getText(), ctx.name(2).getText()));
+					errorListener.reportError(ctx.name(ctx.name().size() - 1),
+							String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(1).getText(), ctx.name(2).getText()));
 
 				if (consts == null)
-					underlineError(ctx.name(0), String.format(ErrorStrings.UNKNOWN_NAMESPACE, ctx.name(0).getText()));
+					errorListener.reportError(ctx.name(0), String.format(ErrorStrings.UNKNOWN_NAMESPACE, ctx.name(0).getText()));
 
 				if (names.size() >= 2 && consts != null && !Util.containsName(consts, names.get(1).getText()))
-					underlineError(ctx.name(1), String.format(ErrorStrings.NOT_IN_NAMESPACE, names.get(1).getText(), names.get(0).getText()));
+					errorListener.reportError(ctx.name(1), String.format(ErrorStrings.NOT_IN_NAMESPACE, names.get(1).getText(), names.get(0).getText()));
 
 				return;
 			}
@@ -1214,11 +1121,11 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			// check for DFFs
 			if (Util.containsName(dffs, name)) {
 				if (hasAttr && !isWidth)
-					underlineError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
+					errorListener.reportError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
 
 				if (names.size() < 2) {
 					if (!hasAttr)
-						underlineError(names.get(0), ErrorStrings.DFF_NO_SIG_SELECTED);
+						errorListener.reportError(names.get(0), ErrorStrings.DFF_NO_SIG_SELECTED);
 					return;
 				}
 
@@ -1228,23 +1135,23 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 				String sig = names.get(1).getText();
 				if (sig.equals("q")) {
 					if (ctx.getParent().getClass() == Assign_statContext.class) {
-						underlineError(names.get(1), ErrorStrings.DFF_Q_ASSIGNED);
+						errorListener.reportError(names.get(1), ErrorStrings.DFF_Q_ASSIGNED);
 					}
 					if (write) {
-						underlineError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, names.get(1).getText()));
 					}
 				} else if (sig.equals("d")) {
 					if (write) {
 						sigWritten(name + ".d", ctx);
 					}
 					if (ctx.getParent().getClass() != Assign_statContext.class) {
-						underlineError(names.get(1), ErrorStrings.DFF_D_READ);
+						errorListener.reportError(names.get(1), ErrorStrings.DFF_D_READ);
 					}
 					if (read) {
-						underlineError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
 					}
 				} else if (!hasAttr || names.get(1) != attribute) {
-					underlineError(names.get(1), String.format(ErrorStrings.DFF_INVALID_SIG, sig));
+					errorListener.reportError(names.get(1), String.format(ErrorStrings.DFF_INVALID_SIG, sig));
 					// return;
 				}
 
@@ -1262,16 +1169,16 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			if (f != null) {
 				if (hasAttr && !isWidth) {
 					if (!Util.containsName(f.getStates(), attribute.getText()))
-						underlineError(attribute, String.format(ErrorStrings.FSM_INVALID_STATE, attribute.getText(), name));
+						errorListener.reportError(attribute, String.format(ErrorStrings.FSM_INVALID_STATE, attribute.getText(), name));
 					if (names.size() > 2) {
-						underlineError(names.get(1), ErrorStrings.FSM_INVALID_SIG);
+						errorListener.reportError(names.get(1), ErrorStrings.FSM_INVALID_SIG);
 					}
 					return;
 				}
 
 				if (isWidth) {
 					if (names.size() > 3) {
-						underlineError(names.get(2), ErrorStrings.FSM_INVALID_SIG);
+						errorListener.reportError(names.get(2), ErrorStrings.FSM_INVALID_SIG);
 					}
 					return;
 				}
@@ -1281,29 +1188,29 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 				if (names.size() != 2) {
 					if (!hasAttr)
-						underlineError(names.get(0), ErrorStrings.FSM_NO_SIG_SELECTED);
+						errorListener.reportError(names.get(0), ErrorStrings.FSM_NO_SIG_SELECTED);
 					return;
 				}
 				String sig = names.get(1).getText();
 				if (sig.equals("q")) {
 					if (ctx.getParent().getClass() == Assign_statContext.class) {
-						underlineError(names.get(1), ErrorStrings.FSM_Q_ASSIGNED);
+						errorListener.reportError(names.get(1), ErrorStrings.FSM_Q_ASSIGNED);
 					}
 					if (write) {
-						underlineError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, names.get(1).getText()));
 					}
 				} else if (sig.equals("d")) {
 					if (write) {
 						sigWritten(name + ".d", ctx);
 					}
 					if (ctx.getParent().getClass() != Assign_statContext.class) {
-						underlineError(names.get(1), ErrorStrings.FSM_D_READ);
+						errorListener.reportError(names.get(1), ErrorStrings.FSM_D_READ);
 					}
 					if (read) {
-						underlineError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
 					}
 				} else if (!hasAttr || names.get(1) != attribute) {
-					underlineError(names.get(1), String.format(ErrorStrings.FSM_INVALID_SIG, sig));
+					errorListener.reportError(names.get(1), String.format(ErrorStrings.FSM_INVALID_SIG, sig));
 				}
 				return;
 			}
@@ -1311,7 +1218,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			// check for Signals, Inputs, Outputs, Inouts
 			if (Util.containsName(sigs, name)) {
 				if (hasAttr && !isWidth)
-					underlineError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
+					errorListener.reportError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
 
 				if (!hasAttr)
 					Util.removeByName(unusedSigs, names.get(0).getText());
@@ -1339,7 +1246,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 							}
 						}
 						if (!hasAttr && !written && !Util.containsName(drivenSigs, name))
-							underlineError(names.get(0), String.format(ErrorStrings.READ_BEFORE_WRITE, names.get(0).getText()));
+							errorListener.reportError(names.get(0), String.format(ErrorStrings.READ_BEFORE_WRITE, names.get(0).getText()));
 
 					}
 				return; // valid signal
@@ -1348,7 +1255,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			// Inputs
 			if (Util.containsName(inputs, name)) {
 				if (hasAttr && !isWidth)
-					underlineError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
+					errorListener.reportError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
 
 				if (!hasAttr)
 					Util.removeByName(unusedSigs, names.get(0).getText());
@@ -1358,7 +1265,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 				//
 				// } else
 				if (write) {
-					underlineError(names.get(0), String.format(ErrorStrings.SIG_READ_ONLY, name));
+					errorListener.reportError(names.get(0), String.format(ErrorStrings.SIG_READ_ONLY, name));
 				}
 				return; // valid signal
 			}
@@ -1366,7 +1273,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			// Outputs
 			if (Util.containsName(outputs, name)) {
 				if (hasAttr && !isWidth)
-					underlineError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
+					errorListener.reportError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
 
 				if (!hasAttr)
 					Util.removeByName(unusedSigs, names.get(0).getText());
@@ -1379,7 +1286,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 					sigWritten(name, ctx);
 				}
 				if (read && !hasAttr) {
-					underlineError(names.get(0), String.format(ErrorStrings.SIG_WRITE_ONLY, name));
+					errorListener.reportError(names.get(0), String.format(ErrorStrings.SIG_WRITE_ONLY, name));
 				}
 				return; // valid signal
 			}
@@ -1388,7 +1295,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			if (Util.containsName(inouts, name)) {
 				if (hasAttr) {
 					if (!isWidth) {
-						underlineError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
+						errorListener.reportError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
 					}
 					// else {
 					// if (names.size() != 2) {
@@ -1402,12 +1309,12 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 				if (ctx.parent.parent instanceof Sig_conContext) {
 					if (names.size() != 1) {
-						underlineError(ctx, ErrorStrings.INOUT_CONNECTION_INDIRECT);
+						errorListener.reportError(ctx, ErrorStrings.INOUT_CONNECTION_INDIRECT);
 					}
 					return;
 				}
 				if (names.size() == 1) {
-					underlineError(ctx, String.format(ErrorStrings.INOUT_ACCESSED_DIRECTLY, name));
+					errorListener.reportError(ctx, String.format(ErrorStrings.INOUT_ACCESSED_DIRECTLY, name));
 				} else {
 					String member = names.get(1).getText();
 					switch (member) {
@@ -1415,17 +1322,17 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 					case "write":
 						if (!hasAttr) {
 							if (read)
-								underlineError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, member));
+								errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, member));
 							if (write)
 								sigWritten(name + "." + member, ctx);
 						}
 						break;
 					case "read":
 						if (write && !hasAttr)
-							underlineError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, member));
+							errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, member));
 						break;
 					default:
-						underlineError(ctx, String.format(ErrorStrings.INOUT_UNKNOWN_SIG, member));
+						errorListener.reportError(ctx, String.format(ErrorStrings.INOUT_UNKNOWN_SIG, member));
 						break;
 					}
 				}
@@ -1435,13 +1342,13 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 			// check for Vars
 			if (Util.containsName(vars, name)) {
 				if (hasAttr && !isWidth)
-					underlineError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
+					errorListener.reportError(attribute, String.format(ErrorStrings.INVALID_ATTRIBUTE, attribute.getText()));
 
 				if (!hasAttr)
 					Util.removeByName(unusedSigs, names.get(0).getText());
 
 				if (names.size() > 2 || (names.size() > 1 && !isWidth)) {
-					underlineError(ctx, String.format(ErrorStrings.VAR_NOT_MODULE, name));
+					errorListener.reportError(ctx, String.format(ErrorStrings.VAR_NOT_MODULE, name));
 
 				}
 				return; // valid var
@@ -1457,7 +1364,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 				Module module = iModule.getType();
 
 				if (names.size() < 2) {
-					underlineError(names.get(0), ErrorStrings.MODULE_NO_SIG_SELECTED);
+					errorListener.reportError(names.get(0), ErrorStrings.MODULE_NO_SIG_SELECTED);
 					return;
 				}
 
@@ -1469,7 +1376,7 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 				for (Connection c : iModule.getConnections()) {
 					if (c.port.equals(names.get(1).getText())) {
-						underlineError(names.get(1), String.format(ErrorStrings.MODULE_SIG_ALREADY_ASSIGNED, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.MODULE_SIG_ALREADY_ASSIGNED, names.get(1).getText()));
 						break;
 					}
 				}
@@ -1480,14 +1387,14 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 				if (Util.containsName(module.getInouts(), sigName)) {
 					if (names.size() != 3) {
-						underlineError(names.get(1), ErrorStrings.INOUT_ACCESSED_DIRECTLY);
+						errorListener.reportError(names.get(1), ErrorStrings.INOUT_ACCESSED_DIRECTLY);
 					} else {
 						switch (names.get(2).getText()) {
 						case "enable":
 						case "write":
 							if (!hasAttr) {
 								if (read)
-									underlineError(names.get(2), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(2).getText()));
+									errorListener.reportError(names.get(2), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(2).getText()));
 								if (write)
 									sigWritten(names.get(0).getText() + "." + names.get(1).getText() + "." + names.get(2), ctx);
 							}
@@ -1495,36 +1402,36 @@ public class LucidErrorChecker extends LucidBaseListener implements TokenErrorLi
 
 						case "read":
 							if (write && !hasAttr)
-								underlineError(names.get(2), String.format(ErrorStrings.SIG_READ_ONLY, names.get(2).getText()));
+								errorListener.reportError(names.get(2), String.format(ErrorStrings.SIG_READ_ONLY, names.get(2).getText()));
 							break;
 						default:
-							underlineError(names.get(1), String.format(ErrorStrings.INOUT_UNKNOWN_SIG, names.get(2).getText()));
+							errorListener.reportError(names.get(1), String.format(ErrorStrings.INOUT_UNKNOWN_SIG, names.get(2).getText()));
 							break;
 						}
 					}
 				} else if (Util.containsName(module.getOutputs(), sigName)) {
 					if (write) {
-						underlineError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, names.get(1).getText()));
 					}
 				} else if (Util.containsName(module.getInputs(), sigName)) {
 					if (read) {
-						underlineError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
 					}
 				} else {
-					underlineError(names.get(1), String.format(ErrorStrings.MODULE_SIG_UNDEFINED, name, module.getName()));
+					errorListener.reportError(names.get(1), String.format(ErrorStrings.MODULE_SIG_UNDEFINED, name, module.getName()));
 				}
 
 				return;
 			}
 
 			if (hasAttr && write)
-				underlineError(attribute, ErrorStrings.ATTRIBUTE_READ_ONLY);
+				errorListener.reportError(attribute, ErrorStrings.ATTRIBUTE_READ_ONLY);
 
 			if (hasAttr && ctx.bit_selection().size() > 0 && !isWidth) {
-				underlineError(ctx.bit_selection(0), ErrorStrings.ATTRIBUTE_BIT_SELECT);
+				errorListener.reportError(ctx.bit_selection(0), ErrorStrings.ATTRIBUTE_BIT_SELECT);
 			}
 
-			underlineError(names.get(0), String.format(ErrorStrings.UNDECLARED_NAME, name));
+			errorListener.reportError(names.get(0), String.format(ErrorStrings.UNDECLARED_NAME, name));
 		}
 	}
 

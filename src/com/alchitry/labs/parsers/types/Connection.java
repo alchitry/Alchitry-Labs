@@ -1,4 +1,4 @@
-package com.alchitry.labs.parsers.lucid;
+package com.alchitry.labs.parsers.types;
 
 import java.io.Serializable;
 

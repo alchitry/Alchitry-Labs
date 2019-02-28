@@ -10,14 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.alchitry.labs.Named;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.parsers.lucid.Connection;
-import com.alchitry.labs.parsers.lucid.Dff;
-import com.alchitry.labs.parsers.lucid.Fsm;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.tools.lucid.BitWidthChecker;
 import com.alchitry.labs.parsers.tools.lucid.ConstExprParser;
 import com.alchitry.labs.parsers.tools.lucid.ConstProvider;
 import com.alchitry.labs.parsers.tools.lucid.WidthProvider;
+import com.alchitry.labs.parsers.types.Connection;
+import com.alchitry.labs.parsers.types.Dff;
+import com.alchitry.labs.parsers.types.Fsm;
 
 public class InstModule implements Named, Serializable {
 	private static final long serialVersionUID = 3100960916372359031L;

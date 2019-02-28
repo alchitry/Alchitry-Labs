@@ -1,15 +1,25 @@
 // Generated from AlchitryConstraints.g4 by ANTLR 4.7.1
 
-package com.alchitry.labs.parsers.constraints.parser;
+package com.alchitry.labs.parsers.constraints;
 
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
+
+import org.antlr.v4.runtime.NoViableAltException;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.RuntimeMetaData;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.Vocabulary;
+import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AlchitryConstraintsParser extends Parser {
@@ -19,22 +29,24 @@ public class AlchitryConstraintsParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, FREQ_UNIT=8, BASIC_NAME=9, 
-		REAL=10, INT=11, BLOCK_COMMENT=12, COMMENT=13, WS=14;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, PULLUP=7, PULLDOWN=8, 
+		FREQ_UNIT=9, BASIC_NAME=10, REAL=11, INT=12, BLOCK_COMMENT=13, COMMENT=14, 
+		WS=15;
 	public static final int
-		RULE_alchitry_constraints = 0, RULE_pin = 1, RULE_clock = 2, RULE_port_name = 3, 
-		RULE_pin_name = 4, RULE_frequency = 5, RULE_array_index = 6, RULE_number = 7;
+		RULE_alchitry_constraints = 0, RULE_pin = 1, RULE_clock = 2, RULE_name = 3, 
+		RULE_port_name = 4, RULE_pin_name = 5, RULE_frequency = 6, RULE_array_index = 7, 
+		RULE_number = 8;
 	public static final String[] ruleNames = {
-		"alchitry_constraints", "pin", "clock", "port_name", "pin_name", "frequency", 
-		"array_index", "number"
+		"alchitry_constraints", "pin", "clock", "name", "port_name", "pin_name", 
+		"frequency", "array_index", "number"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'pin'", "'pullup'", "'pulldown'", "';'", "'clock'", "'['", "']'"
+		null, "'pin'", "';'", "'clock'", "'.'", "'['", "']'", "'pullup'", "'pulldown'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, "FREQ_UNIT", "BASIC_NAME", 
-		"REAL", "INT", "BLOCK_COMMENT", "COMMENT", "WS"
+		null, null, null, null, null, null, null, "PULLUP", "PULLDOWN", "FREQ_UNIT", 
+		"BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -120,23 +132,23 @@ public class AlchitryConstraintsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(20);
+			setState(22);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__0 || _la==T__4) {
+			while (_la==T__0 || _la==T__2) {
 				{
-				setState(18);
+				setState(20);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case T__0:
 					{
-					setState(16);
+					setState(18);
 					pin();
 					}
 					break;
-				case T__4:
+				case T__2:
 					{
-					setState(17);
+					setState(19);
 					clock();
 					}
 					break;
@@ -144,11 +156,11 @@ public class AlchitryConstraintsParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(22);
+				setState(24);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(23);
+			setState(25);
 			match(EOF);
 			}
 		}
@@ -170,6 +182,8 @@ public class AlchitryConstraintsParser extends Parser {
 		public Pin_nameContext pin_name() {
 			return getRuleContext(Pin_nameContext.class,0);
 		}
+		public TerminalNode PULLUP() { return getToken(AlchitryConstraintsParser.PULLUP, 0); }
+		public TerminalNode PULLDOWN() { return getToken(AlchitryConstraintsParser.PULLDOWN, 0); }
 		public PinContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -191,34 +205,34 @@ public class AlchitryConstraintsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(25);
-			match(T__0);
-			setState(26);
-			port_name();
 			setState(27);
-			pin_name();
+			match(T__0);
+			setState(28);
+			port_name();
 			setState(29);
+			pin_name();
+			setState(31);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__1) {
+			if (_la==PULLUP) {
 				{
-				setState(28);
-				match(T__1);
-				}
-			}
-
-			setState(32);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==T__2) {
-				{
-				setState(31);
-				match(T__2);
+				setState(30);
+				match(PULLUP);
 				}
 			}
 
 			setState(34);
-			match(T__3);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==PULLDOWN) {
+				{
+				setState(33);
+				match(PULLDOWN);
+				}
+			}
+
+			setState(36);
+			match(T__1);
 			}
 		}
 		catch (RecognitionException re) {
@@ -259,14 +273,61 @@ public class AlchitryConstraintsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(36);
-			match(T__4);
-			setState(37);
-			port_name();
 			setState(38);
-			frequency();
+			match(T__2);
 			setState(39);
-			match(T__3);
+			port_name();
+			setState(40);
+			frequency();
+			setState(41);
+			match(T__1);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class NameContext extends ParserRuleContext {
+		public TerminalNode BASIC_NAME() { return getToken(AlchitryConstraintsParser.BASIC_NAME, 0); }
+		public TerminalNode FREQ_UNIT() { return getToken(AlchitryConstraintsParser.FREQ_UNIT, 0); }
+		public NameContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_name; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterName(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitName(this);
+		}
+	}
+
+	public final NameContext name() throws RecognitionException {
+		NameContext _localctx = new NameContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_name);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(43);
+			_la = _input.LA(1);
+			if ( !(_la==FREQ_UNIT || _la==BASIC_NAME) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -281,10 +342,17 @@ public class AlchitryConstraintsParser extends Parser {
 	}
 
 	public static class Port_nameContext extends ParserRuleContext {
-		public TerminalNode BASIC_NAME() { return getToken(AlchitryConstraintsParser.BASIC_NAME, 0); }
-		public TerminalNode FREQ_UNIT() { return getToken(AlchitryConstraintsParser.FREQ_UNIT, 0); }
-		public Array_indexContext array_index() {
-			return getRuleContext(Array_indexContext.class,0);
+		public List<NameContext> name() {
+			return getRuleContexts(NameContext.class);
+		}
+		public NameContext name(int i) {
+			return getRuleContext(NameContext.class,i);
+		}
+		public List<Array_indexContext> array_index() {
+			return getRuleContexts(Array_indexContext.class);
+		}
+		public Array_indexContext array_index(int i) {
+			return getRuleContext(Array_indexContext.class,i);
 		}
 		public Port_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -302,31 +370,49 @@ public class AlchitryConstraintsParser extends Parser {
 
 	public final Port_nameContext port_name() throws RecognitionException {
 		Port_nameContext _localctx = new Port_nameContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_port_name);
+		enterRule(_localctx, 8, RULE_port_name);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(41);
-			_la = _input.LA(1);
-			if ( !(_la==FREQ_UNIT || _la==BASIC_NAME) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
-			setState(43);
+			setState(45);
+			name();
+			setState(47);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__5) {
+			if (_la==T__4) {
 				{
-				setState(42);
+				setState(46);
 				array_index();
 				}
 			}
 
+			setState(56);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==T__3) {
+				{
+				{
+				setState(49);
+				match(T__3);
+				setState(50);
+				name();
+				setState(52);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				if (_la==T__4) {
+					{
+					setState(51);
+					array_index();
+					}
+				}
+
+				}
+				}
+				setState(58);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -341,8 +427,9 @@ public class AlchitryConstraintsParser extends Parser {
 	}
 
 	public static class Pin_nameContext extends ParserRuleContext {
-		public TerminalNode BASIC_NAME() { return getToken(AlchitryConstraintsParser.BASIC_NAME, 0); }
-		public TerminalNode FREQ_UNIT() { return getToken(AlchitryConstraintsParser.FREQ_UNIT, 0); }
+		public NameContext name() {
+			return getRuleContext(NameContext.class,0);
+		}
 		public Pin_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -359,21 +446,12 @@ public class AlchitryConstraintsParser extends Parser {
 
 	public final Pin_nameContext pin_name() throws RecognitionException {
 		Pin_nameContext _localctx = new Pin_nameContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_pin_name);
-		int _la;
+		enterRule(_localctx, 10, RULE_pin_name);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(45);
-			_la = _input.LA(1);
-			if ( !(_la==FREQ_UNIT || _la==BASIC_NAME) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
+			setState(59);
+			name();
 			}
 		}
 		catch (RecognitionException re) {
@@ -408,13 +486,13 @@ public class AlchitryConstraintsParser extends Parser {
 
 	public final FrequencyContext frequency() throws RecognitionException {
 		FrequencyContext _localctx = new FrequencyContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_frequency);
+		enterRule(_localctx, 12, RULE_frequency);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(47);
+			setState(61);
 			number();
-			setState(48);
+			setState(62);
 			match(FREQ_UNIT);
 			}
 		}
@@ -447,16 +525,16 @@ public class AlchitryConstraintsParser extends Parser {
 
 	public final Array_indexContext array_index() throws RecognitionException {
 		Array_indexContext _localctx = new Array_indexContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_array_index);
+		enterRule(_localctx, 14, RULE_array_index);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(50);
-			match(T__5);
-			setState(51);
+			setState(64);
+			match(T__4);
+			setState(65);
 			match(INT);
-			setState(52);
-			match(T__6);
+			setState(66);
+			match(T__5);
 			}
 		}
 		catch (RecognitionException re) {
@@ -489,12 +567,12 @@ public class AlchitryConstraintsParser extends Parser {
 
 	public final NumberContext number() throws RecognitionException {
 		NumberContext _localctx = new NumberContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_number);
+		enterRule(_localctx, 16, RULE_number);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(54);
+			setState(68);
 			_la = _input.LA(1);
 			if ( !(_la==REAL || _la==INT) ) {
 			_errHandler.recoverInline(this);
@@ -518,21 +596,24 @@ public class AlchitryConstraintsParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\20;\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\3\2\3\2\7\2\25\n\2"+
-		"\f\2\16\2\30\13\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3 \n\3\3\3\5\3#\n\3\3\3\3"+
-		"\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\5\5.\n\5\3\6\3\6\3\7\3\7\3\7\3\b\3\b\3"+
-		"\b\3\b\3\t\3\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\4\3\2\n\13\3\2\f\r\2\67\2"+
-		"\26\3\2\2\2\4\33\3\2\2\2\6&\3\2\2\2\b+\3\2\2\2\n/\3\2\2\2\f\61\3\2\2\2"+
-		"\16\64\3\2\2\2\208\3\2\2\2\22\25\5\4\3\2\23\25\5\6\4\2\24\22\3\2\2\2\24"+
-		"\23\3\2\2\2\25\30\3\2\2\2\26\24\3\2\2\2\26\27\3\2\2\2\27\31\3\2\2\2\30"+
-		"\26\3\2\2\2\31\32\7\2\2\3\32\3\3\2\2\2\33\34\7\3\2\2\34\35\5\b\5\2\35"+
-		"\37\5\n\6\2\36 \7\4\2\2\37\36\3\2\2\2\37 \3\2\2\2 \"\3\2\2\2!#\7\5\2\2"+
-		"\"!\3\2\2\2\"#\3\2\2\2#$\3\2\2\2$%\7\6\2\2%\5\3\2\2\2&\'\7\7\2\2\'(\5"+
-		"\b\5\2()\5\f\7\2)*\7\6\2\2*\7\3\2\2\2+-\t\2\2\2,.\5\16\b\2-,\3\2\2\2-"+
-		".\3\2\2\2.\t\3\2\2\2/\60\t\2\2\2\60\13\3\2\2\2\61\62\5\20\t\2\62\63\7"+
-		"\n\2\2\63\r\3\2\2\2\64\65\7\b\2\2\65\66\7\r\2\2\66\67\7\t\2\2\67\17\3"+
-		"\2\2\289\t\3\2\29\21\3\2\2\2\7\24\26\37\"-";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21I\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2\7\2"+
+		"\27\n\2\f\2\16\2\32\13\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3\"\n\3\3\3\5\3%\n"+
+		"\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\6\3\6\5\6\62\n\6\3\6\3\6\3\6"+
+		"\5\6\67\n\6\7\69\n\6\f\6\16\6<\13\6\3\7\3\7\3\b\3\b\3\b\3\t\3\t\3\t\3"+
+		"\t\3\n\3\n\3\n\2\2\13\2\4\6\b\n\f\16\20\22\2\4\3\2\13\f\3\2\r\16\2F\2"+
+		"\30\3\2\2\2\4\35\3\2\2\2\6(\3\2\2\2\b-\3\2\2\2\n/\3\2\2\2\f=\3\2\2\2\16"+
+		"?\3\2\2\2\20B\3\2\2\2\22F\3\2\2\2\24\27\5\4\3\2\25\27\5\6\4\2\26\24\3"+
+		"\2\2\2\26\25\3\2\2\2\27\32\3\2\2\2\30\26\3\2\2\2\30\31\3\2\2\2\31\33\3"+
+		"\2\2\2\32\30\3\2\2\2\33\34\7\2\2\3\34\3\3\2\2\2\35\36\7\3\2\2\36\37\5"+
+		"\n\6\2\37!\5\f\7\2 \"\7\t\2\2! \3\2\2\2!\"\3\2\2\2\"$\3\2\2\2#%\7\n\2"+
+		"\2$#\3\2\2\2$%\3\2\2\2%&\3\2\2\2&\'\7\4\2\2\'\5\3\2\2\2()\7\5\2\2)*\5"+
+		"\n\6\2*+\5\16\b\2+,\7\4\2\2,\7\3\2\2\2-.\t\2\2\2.\t\3\2\2\2/\61\5\b\5"+
+		"\2\60\62\5\20\t\2\61\60\3\2\2\2\61\62\3\2\2\2\62:\3\2\2\2\63\64\7\6\2"+
+		"\2\64\66\5\b\5\2\65\67\5\20\t\2\66\65\3\2\2\2\66\67\3\2\2\2\679\3\2\2"+
+		"\28\63\3\2\2\29<\3\2\2\2:8\3\2\2\2:;\3\2\2\2;\13\3\2\2\2<:\3\2\2\2=>\5"+
+		"\b\5\2>\r\3\2\2\2?@\5\22\n\2@A\7\13\2\2A\17\3\2\2\2BC\7\7\2\2CD\7\16\2"+
+		"\2DE\7\b\2\2E\21\3\2\2\2FG\t\3\2\2G\23\3\2\2\2\t\26\30!$\61\66:";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

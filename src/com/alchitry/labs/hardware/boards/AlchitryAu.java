@@ -2,6 +2,8 @@ package com.alchitry.labs.hardware.boards;
 
 import com.alchitry.labs.hardware.loaders.AuLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
+import com.alchitry.labs.hardware.pinout.AlchitryAuPinConverter;
+import com.alchitry.labs.hardware.pinout.PinConverter;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.project.builders.VivadoBuilder;
 import com.alchitry.labs.widgets.IoRegion;
@@ -70,6 +72,11 @@ public class AlchitryAu extends Board {
 	@Override
 	public String[] getSupportedConstraintExtensions() {
 		return new String[] {".acf", ".xdc"};
+	}
+
+	@Override
+	public PinConverter getPinConverter() {
+		return new AlchitryAuPinConverter();
 	}
 
 }

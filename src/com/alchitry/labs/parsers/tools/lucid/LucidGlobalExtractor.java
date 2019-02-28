@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
@@ -14,15 +13,16 @@ import org.eclipse.swt.graphics.Color;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.parsers.ConstValue;
-import com.alchitry.labs.parsers.lucid.Constant;
+import com.alchitry.labs.parsers.errors.ErrorStrings;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.lucid.Struct;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_sizeContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Const_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.GlobalContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_memberContext;
+import com.alchitry.labs.parsers.types.Constant;
+import com.alchitry.labs.parsers.types.Struct;
 import com.alchitry.labs.style.SyntaxError;
 import com.alchitry.labs.tools.ParserCache;
 
@@ -44,9 +44,7 @@ public class LucidGlobalExtractor extends LucidBaseListener {
 	public void parseGlobals(String file) {
 		errors = new ArrayList<>();
 		fileErrors.put(file, errors);
-		List<ParseTreeListener> listeners = new ArrayList<>();
-		listeners.add(this);
-		ParserCache.walk(file, listeners);
+		ParserCache.walk(file, this);
 	}
 
 	public HashMap<String, List<Constant>> getConstants() {

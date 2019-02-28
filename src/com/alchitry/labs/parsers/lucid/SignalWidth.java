@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.alchitry.labs.parsers.types.Struct;
+
 public class SignalWidth implements Serializable {
 	private static final long serialVersionUID = -3098905378574513053L;
 	private Struct struct;

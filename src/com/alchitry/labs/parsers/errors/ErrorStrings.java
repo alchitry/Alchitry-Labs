@@ -1,4 +1,4 @@
-package com.alchitry.labs.parsers.tools.lucid;
+package com.alchitry.labs.parsers.errors;
 
 import com.alchitry.labs.parsers.lucid.Lucid;
 
@@ -9,6 +9,8 @@ public class ErrorStrings {
 
 	public static final String PARAMETER_CONSTRAINT_FAILED = "The constraint \"%s\" for parameter \"%s\" with value \"%s\" failed";
 	public static final String PARAMETER_CONSTRAINT_PARSE_FAIL = "The constraint \"%s\" could not be parsed";
+	
+	public static final String NUMBER_PARSE_FAIL = "The value \"%s\" could not be parsed";
 
 	public static final String DFF_MISSING_CLK = "The \"clk\" input to the DFF must be assigned";
 	public static final String DFF_NO_SIG_SELECTED = "DFFs can not be accessed directly. You must select a signal with \".d\" or \".q\"";
@@ -162,4 +164,10 @@ public class ErrorStrings {
 	public static final String PRIMITIVE_NAI = "The parameter \"%s\" only accepts integers";
 	public static final String PRIMITIVE_NAD = "The parameter \"%s\" only accepts real numbers";
 	public static final String PRIMITIVE_OUT_OF_RANGE = "%s must be in the range %s";
+	
+	public static final String CONSTRAINT_PORT_UNKNOWN = "The port %s is not a port of the top module";
+	public static final String CONSTRAINT_UNSUPPORTED_ARRAY = "The port %s is of an unsupported type";
+	public static final String CONSTRAINT_UP_AND_DOWN = "Only pullup or pulldown can be specified for a single pin";
+	public static final String CONSTRAINT_UNKNOWN_UNIT = "Unknown frequency unit \"%s\"";
+	
 }
