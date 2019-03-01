@@ -113,7 +113,7 @@ public class Project {
 	private DebugInfo debugInfo;
 
 	private Thread thread;
-	
+
 	private List<Listener> saveListeners = new ArrayList<>();
 
 	private enum FileType {
@@ -183,11 +183,11 @@ public class Project {
 	public String getFolder() {
 		return projectFolder;
 	}
-	
+
 	public void addSaveListener(Listener l) {
 		saveListeners.add(l);
 	}
-	
+
 	public void removeSaveListener(Listener l) {
 		saveListeners.remove(l);
 	}
@@ -200,8 +200,15 @@ public class Project {
 	}
 
 	private String addFile(String fileName, String folder, HashSet<String> list) {
-		File file = new File(projectFolder + File.separatorChar + folder + File.separatorChar + fileName);
+		File parentFolder = new File(Util.assemblePath(projectFolder, folder));
+		File file = new File(Util.assemblePath(projectFolder, folder, fileName));
 		try {
+			if (!parentFolder.exists()) {
+				if (!parentFolder.mkdir()) {
+					Util.log.severe("Failed to create parent directory " + parentFolder.getAbsolutePath());
+					return null;
+				}
+			}
 			if (file.exists()) {
 				if (!Util.askQuestion("File " + fileName + " exists. Overwrite?"))
 					return null;
@@ -493,7 +500,7 @@ public class Project {
 
 	public boolean setBoardType(String type) {
 		boardType = Board.getFromName(type);
-		if (boardType == null) 
+		if (boardType == null)
 			return false;
 		return true;
 	}
@@ -1034,7 +1041,7 @@ public class Project {
 		}
 		return m;
 	}
-	
+
 	public Module getTopModule() throws IOException {
 		List<Module> modules = getModules(null);
 		return getModuleFromFile(getSourceFolder(), topSource, modules);
@@ -1213,7 +1220,7 @@ public class Project {
 		xmlOutput.setFormat(Format.getPrettyFormat());
 
 		xmlOutput.output(doc, new FileWriter(file));
-		
+
 		for (Listener l : saveListeners)
 			l.handleEvent(null);
 	}
@@ -1422,7 +1429,7 @@ public class Project {
 			Util.showError("Operation already in progress!");
 			return;
 		}
-		
+
 		builder = boardType.getBuilder();
 
 		if (Util.isGUI) {
@@ -1444,7 +1451,7 @@ public class Project {
 	}
 
 	public boolean isBuilding() {
-		return isBusy() &&  (builder != null) &&  builder.isBuilding();
+		return isBusy() && (builder != null) && builder.isBuilding();
 	}
 
 	public boolean isBusy() {

@@ -77,7 +77,7 @@ public class WelcomeDialog extends Dialog {
 						+ MainWindow.VERSION
 						+ " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
 						+ " at bugspray@alchitry.com\n\n"
-						+ "This version added support for Alchitry Constraint Files! Create a new example project to test it out."
+						+ "This version fixed a bug preventing adding new constraint files to projects."
 						+ "\n\nAs always, we hope you enjoy this version!");
 
 		Button btnOk = new Button(shell, SWT.NONE);
