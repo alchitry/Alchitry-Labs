@@ -1151,12 +1151,16 @@ public class Project {
 		return outList;
 	}
 
-	public void saveAsXML(String folder, String name) throws IOException {
+	public boolean saveAsXML(String folder, String name) throws IOException {
 		String oldFolder = projectFolder;
 		String oldFile = projectFile;
 
 		projectFile = name + ".alp";
 		projectFolder = folder;
+		
+		if (folder == null || oldFolder == null || name == null) {
+			return false;
+		}
 
 		File srcDir = new File(oldFolder);
 		File dstDir = new File(projectFolder);
@@ -1173,6 +1177,8 @@ public class Project {
 		projectName = oldName;
 		projectFile = oldFile;
 		projectFolder = oldFolder;
+		
+		return true;
 	}
 
 	public void saveXML() throws IOException {

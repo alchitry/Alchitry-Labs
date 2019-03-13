@@ -197,6 +197,7 @@ public class ConstExprParser extends LucidBaseListener {
 				if (consts != null) {
 					Constant c = Util.getByName(consts, ctx.name(1).getText());
 					if (c != null) {
+						constant.put(ctx, true);
 						cv = c.getValue();
 					}
 				}

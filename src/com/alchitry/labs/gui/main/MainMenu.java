@@ -61,14 +61,14 @@ public class MainMenu {
 		buildSettingsMenu();
 		buildHelpMenu();
 	}
-	
+
 	private MenuItem createItem(Menu m, int style, String text, SelectionAdapter selectedListener) {
 		MenuItem menuItem = new MenuItem(m, style);
 		menuItem.addSelectionListener(selectedListener);
 		menuItem.setText(text);
 		return menuItem;
 	}
-	
+
 	private MenuItem createCheckItem(Menu m, String text, SelectionAdapter selectedListener) {
 		return createItem(m, SWT.CHECK, text, selectedListener);
 	}
@@ -151,13 +151,19 @@ public class MainMenu {
 		createItem(subMenu, "Clone Project...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (MainWindow.project == null || !MainWindow.project.isOpen()) {
+					Util.showError("You need to open or create a project first!");
+					return;
+				}
 				NewProjectDialog dialog = new NewProjectDialog(parent.getShell(), SWT.DIALOG_TRIM, true);
 				parent.getShell().setEnabled(false);
 				Project p = dialog.open();
 				if (p != null) {
 					try {
-						MainWindow.project.saveAsXML(p.getProjectFolder(), p.getProjectName());
-						parent.openProject(p.getProjectFolder() + File.separatorChar + p.getProjectName() + ".alp");
+						if (MainWindow.project.saveAsXML(p.getProjectFolder(), p.getProjectName()))
+							parent.openProject(p.getProjectFolder() + File.separatorChar + p.getProjectName() + ".alp");
+						else
+							Util.showError("Failed to clone project! Project folder was null!");
 					} catch (IOException e1) {
 						Util.showError("Failed to clone project!");
 						e1.printStackTrace();
@@ -212,8 +218,8 @@ public class MainMenu {
 				Board b = selector.open();
 				if (b == null)
 					return;
-				
-				switch(b.getType()) {
+
+				switch (b.getType()) {
 				case Board.AU:
 					new AuFlasher().flash();
 					break;
@@ -296,28 +302,28 @@ public class MainMenu {
 				parent.updateISELocation();
 			}
 		});
-		
+
 		createItem(subMenu, "Vivado Location...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateVivadoLocation();
 			}
 		});
-		
+
 		createItem(subMenu, "iCEcube2 Location...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateIcecubeLocation();
 			}
 		});
-		
+
 		createItem(subMenu, "iCEcube2 License Location...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateIcecubeLicenseLocation();
 			}
 		});
-		
+
 		createItem(subMenu, "IceStorm Locations...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -326,9 +332,9 @@ public class MainMenu {
 				parent.updateIcepackLocation();
 			}
 		});
-		
+
 		Menu cuBuilder = createSubMenu(subMenu, "Cu Toolchain");
-		
+
 		iceCube = createCheckItem(cuBuilder, "iCEcube2", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -336,7 +342,7 @@ public class MainMenu {
 				updateCuToolchainSelection();
 			}
 		});
-		
+
 		iceStorm = createCheckItem(cuBuilder, "IceStorm", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -344,7 +350,7 @@ public class MainMenu {
 				updateCuToolchainSelection();
 			}
 		});
-		
+
 		updateCuToolchainSelection();
 
 		createItem(subMenu, "Choose Theme...", new SelectionAdapter() {
@@ -355,8 +361,8 @@ public class MainMenu {
 			}
 		});
 	}
-	
-	private void updateCuToolchainSelection () {
+
+	private void updateCuToolchainSelection() {
 		boolean useStorm = Settings.pref.getBoolean(Settings.USE_ICESTORM, false);
 		iceCube.setSelection(!useStorm);
 		iceStorm.setSelection(useStorm);

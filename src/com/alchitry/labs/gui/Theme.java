@@ -52,6 +52,7 @@ public class Theme {
 	public static Color autocompleteForegroundColor;
 	public static Color autocompleteHighlightColor;
 	public static Color searchBackgroundColor;
+	public static Color searchForegroundColor;
 	public static Color bracketUnderlineColor;
 	public static Color clockMarkerColor;
 
@@ -59,15 +60,15 @@ public class Theme {
 	public static Color tabWarningTextColor;
 	public static Color tabNormalTextColor;
 	public static Color tabHoverTextColor;
-	
+
 	public static Color waveButtonHoverColor;
 	public static Color waveButtonActiveColor;
 	public static Color waveGridColor;
 	public static Color waveCursorColor;
-	
+
 	public static Font defaultFont;
 	public static Font boldFont;
-	
+
 	public static void init(Display display) {
 		initColors(display);
 		initFonts(display);
@@ -76,7 +77,7 @@ public class Theme {
 
 	private static void initColors(Display display) {
 		if (Settings.pref.getBoolean(Settings.THEME, false)) {
-			mainAccentColor = new Color(display, 255, 204, 0);
+			mainAccentColor = new Color(display, 230, 184, 0);
 			darkAccentColor = new Color(display, 191, 152, 29);
 			moduleColor = new Color(display, 217, 165, 11);
 			keyWordColor = new Color(display, 8, 153, 153);
@@ -89,7 +90,7 @@ public class Theme {
 			nameSpaceColor = new Color(display, 203, 0, 99);
 			functionColor = new Color(display, 0, 162, 123);
 			instantiationColor = new Color(display, 166, 96, 17);
-			comboBackgroundColor  = new Color(display, 240, 240, 240);
+			comboBackgroundColor = new Color(display, 240, 240, 240);
 			editorBackgroundColor = new Color(display, 250, 250, 250);
 			editorForegroundColor = new Color(display, 0, 0, 0);
 			editorTextSelectedColor = new Color(display, 160, 160, 160);
@@ -123,14 +124,15 @@ public class Theme {
 			autocompleteForegroundColor = consoleForegoundColor;
 			autocompleteHighlightColor = mainAccentColor;
 			searchBackgroundColor = new Color(display, 240, 240, 240);
-			bracketUnderlineColor = new Color(display, 0, 0, 0);
+			searchForegroundColor = editorForegroundColor;
+			bracketUnderlineColor = editorForegroundColor;
 			clockMarkerColor = new Color(display, 240, 240, 240);
 			waveButtonHoverColor = treeHoverColor;
 			waveButtonActiveColor = mainAccentColor;
 			waveGridColor = new Color(display, 220, 220, 220);
 			waveCursorColor = new Color(display, 0, 0, 0);
 		} else {
-			mainAccentColor = new Color(display, 255, 204, 0);
+			mainAccentColor = new Color(display, 230, 184, 0);
 			darkAccentColor = new Color(display, 191, 152, 29);
 			moduleColor = new Color(display, 217, 165, 11);
 			keyWordColor = new Color(display, 10, 191, 191);
@@ -177,7 +179,8 @@ public class Theme {
 			autocompleteForegroundColor = consoleForegoundColor;
 			autocompleteHighlightColor = mainAccentColor;
 			searchBackgroundColor = new Color(display, 60, 60, 55);
-			bracketUnderlineColor = new Color(display, 255, 255, 255);
+			searchForegroundColor = editorForegroundColor;
+			bracketUnderlineColor = editorForegroundColor;
 			clockMarkerColor = new Color(display, 50, 50, 45);
 			waveButtonHoverColor = treeHoverColor;
 			waveButtonActiveColor = mainAccentColor;
@@ -185,7 +188,7 @@ public class Theme {
 			waveCursorColor = new Color(display, 255, 255, 255);
 		}
 	}
-	
+
 	private static void initFonts(Display display) {
 		defaultFont = new Font(display, "Ubuntu", 12, SWT.NORMAL);
 		boldFont = new Font(display, "Ubuntu", 12, SWT.BOLD);
@@ -238,16 +241,18 @@ public class Theme {
 		autocompleteBackgroundColor.dispose();
 		autocompleteForegroundColor.dispose();
 		autocompleteHighlightColor.dispose();
+		searchBackgroundColor.dispose();
+		searchForegroundColor.dispose();
 		bracketUnderlineColor.dispose();
 		clockMarkerColor.dispose();
 		waveButtonHoverColor.dispose();
 		waveButtonActiveColor.dispose();
 		waveGridColor.dispose();
 		waveCursorColor.dispose();
-		
+
 		defaultFont.dispose();
 		boldFont.dispose();
-		
+
 		set = false;
 	}
 }

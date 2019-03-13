@@ -19,6 +19,8 @@ import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -44,6 +46,17 @@ public class CustomConsole extends StyledText {
 	private TextHighligher highlighter;
 	private boolean searchActive = false;
 
+	private MenuItem createItem(Menu m, int style, String text, SelectionAdapter selectedListener) {
+		MenuItem menuItem = new MenuItem(m, style);
+		menuItem.addSelectionListener(selectedListener);
+		menuItem.setText(text);
+		return menuItem;
+	}
+
+	private MenuItem createItem(Menu m, String text, SelectionAdapter selectedListener) {
+		return createItem(m, SWT.NONE, text, selectedListener);
+	}
+
 	public CustomConsole(Composite parent, int style) {
 		super(parent, style);
 		final DummyComposite dc = new DummyComposite(parent, SWT.NONE);
@@ -55,11 +68,11 @@ public class CustomConsole extends StyledText {
 		setForeground(Theme.consoleForegoundColor);
 		setSelectionBackground(Theme.editorTextSelectedColor);
 		setSelectionForeground(null);
-		
+
 		// Bug in windows makes scroll bars flash
 		if (Util.isLinux)
 			setAlwaysShowScrollBars(false);
-		
+
 		addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -70,7 +83,28 @@ public class CustomConsole extends StyledText {
 		setFont(new Font(parent.getDisplay(), "Ubuntu Mono", 12, SWT.NORMAL));
 
 		final Menu consoleMenu = new Menu(this);
-		final MenuItem toggleWordwrap = new MenuItem(consoleMenu, SWT.PUSH);
+
+		createItem(consoleMenu, "&Copy\tCtrl+C", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				copy();
+			}
+		});
+
+		final MenuItem toggleWordwrap = createItem(consoleMenu, "", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (getWordWrap()) {
+					setWordWrap(false);
+					((MenuItem) e.widget).setText("Enable word-wrap");
+				} else {
+					setWordWrap(true);
+					((MenuItem) e.widget).setText("Disable word-wrap");
+				}
+				Settings.pref.putBoolean(Settings.WORD_WRAP, getWordWrap());
+			}
+		});
+
 		if (Settings.pref.getBoolean(Settings.WORD_WRAP, false)) {
 			setWordWrap(true);
 			toggleWordwrap.setText("Disable word-wrap");
@@ -78,21 +112,6 @@ public class CustomConsole extends StyledText {
 			setWordWrap(false);
 			toggleWordwrap.setText("Enable word-wrap");
 		}
-
-		toggleWordwrap.addListener(SWT.Selection, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				if (getWordWrap()) {
-					setWordWrap(false);
-					toggleWordwrap.setText("Enable word-wrap");
-				} else {
-					setWordWrap(true);
-					toggleWordwrap.setText("Disable word-wrap");
-				}
-				Settings.pref.putBoolean(Settings.WORD_WRAP, getWordWrap());
-			}
-		});
 
 		addMenuDetectListener(new MenuDetectListener() {
 
@@ -177,6 +196,9 @@ public class CustomConsole extends StyledText {
 					switch (e.keyCode) {
 					case 'f':
 						setSearch(true);
+						break;
+					case 'a':
+						selectAll();
 						break;
 					}
 				} else {

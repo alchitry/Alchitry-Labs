@@ -1,14 +1,16 @@
 package com.alchitry.labs.widgets;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.gui.Images;
 import com.alchitry.labs.gui.Theme;
@@ -17,15 +19,14 @@ public class CustomSearch extends Composite {
 	private static final int HEIGHT = 35;
 	private static final int WIDTH = 300;
 
-	private Text text;
+	private StyledText text;
 	CustomButton nextBtn;
 	CustomButton prevBtn;
-
-	
+	Font font;
 
 	public CustomSearch(Composite parent, int style) {
-		super(parent,style);
-		setSize(250, 50);
+		super(parent, style);
+		setSize(WIDTH, HEIGHT);
 		setBackground(Theme.windowBackgroundColor);
 		setForeground(Theme.editorForegroundColor);
 
@@ -46,17 +47,31 @@ public class CustomSearch extends Composite {
 		prevBtn.setToolTipText("Previous");
 
 		prevBtn.setBounds(WIDTH - padding * 2 - p.x * 2, padding, p.x, p.y);
-
-		text = new Text(this, SWT.SINGLE);
-		text.setBackground(Theme.searchBackgroundColor);
-		text.setForeground(Theme.editorForegroundColor);
-		text.setBounds(padding, padding, WIDTH - padding * 4 - p.x * 2, p.y);
 		
+		int textHeight = p.y;
+
+		text = new StyledText(this, SWT.SINGLE);
+		text.setBackground(Theme.searchBackgroundColor);
+		text.setForeground(Theme.searchForegroundColor);
+		text.setBounds(padding, padding, WIDTH - padding * 4 - p.x * 2, textHeight);
+		font = new Font(getDisplay(), "Ubuntu", 12, SWT.NORMAL);
+		text.setFont(font);
+		GC gc = new GC(this);
+		gc.setFont(font);
+		Point size = gc.stringExtent("T");
+		gc.dispose();
+		int margin = (textHeight - size.y) / 2;
+		text.setTopMargin(margin);
+		text.setBottomMargin(margin);
+		text.setLeftMargin(margin);
+		text.setRightMargin(margin);
+
 		addDisposeListener(new DisposeListener() {
-			
+
 			@Override
 			public void widgetDisposed(DisposeEvent e) {
 				text.dispose();
+				font.dispose();
 				nextBtn.dispose();
 				prevBtn.dispose();
 			}

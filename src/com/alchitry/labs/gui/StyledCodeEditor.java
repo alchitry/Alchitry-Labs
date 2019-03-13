@@ -410,10 +410,17 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	public void formatText() {
 		if (formatter == null)
 			return;
-		int carret = getCaretOffset();
+		int caret = getCaretOffset();
+		int line = getLineAtOffset(caret);
+		int origLength = getLine(line).length();
+		int offset = caret - getOffsetAtLine(line);
 		formatter.fixIndent();
-		carret = Math.min(Math.max(0, carret), getCharCount());
-		setCaretOffset(carret);
+		line = Math.min(line, getLineCount()-1);
+		caret = getOffsetAtLine(line);
+		int newLength = getLine(line).length();
+		offset += newLength - origLength;
+		caret += Math.min(newLength, offset);
+		setCaretOffset(caret);
 	}
 
 	public String getFilePath() {

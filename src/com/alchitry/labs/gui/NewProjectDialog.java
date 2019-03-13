@@ -198,6 +198,14 @@ public class NewProjectDialog extends Dialog {
 				String boardType = combo.getText();
 				String language = btnLucid.getSelection() ? Strings.lucid : Strings.verilog;
 				String workspace = projFolder.getText();
+				if (projectName.isEmpty()) {
+					Util.showError("Project name cannot be blank!");
+					return;
+				}
+				if (!(new File(workspace).exists())) {
+					Util.showError("The specified workspace does not exist!");
+					return;
+				}
 				if (clone) {
 					result = new Project();
 					result.setProjectFolder(workspace + File.separator + projectName);

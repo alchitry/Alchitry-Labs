@@ -202,7 +202,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 	@Override
 	public void exitInput_dec(Input_decContext ctx) {
-		if (ctx.name().TYPE_ID() != null) {
+		if (ctx.name() != null) {
 			SignalWidth width = getArrayWidth(ctx.array_size(), ctx.struct_type());
 			widthMap.put(ctx.name().getText(), width);
 			widths.put(ctx, width);

@@ -508,6 +508,8 @@ public class Util {
 	}
 
 	public static <T extends Named> T getByName(Collection<T> list, String name) {
+		if (list == null)
+			return null;
 		for (T t : list)
 			if (Objects.equals(t.getName(), name))
 				return t;
