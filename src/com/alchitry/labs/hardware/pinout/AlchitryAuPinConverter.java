@@ -252,6 +252,110 @@ public class AlchitryAuPinConverter extends PinConverter {
 			return "E8";
 		case "SPI_SS":
 			return "L12";
+			
+		case "DDR_DQ0":
+			return "A13";
+		case "DDR_DQ1":
+			return "B16";
+		case "DDR_DQ2":
+			return "B14";
+		case "DDR_DQ3":
+			return "C11";
+		case "DDR_DQ4":
+			return "C13";
+		case "DDR_DQ5":
+			return "C16";
+		case "DDR_DQ6":
+			return "C12";
+		case "DDR_DQ7":
+			return "C14";
+		case "DDR_DQ8":
+			return "D8";
+		case "DDR_DQ9":
+			return "B11";
+		case "DDR_DQ10":
+			return "C8";
+		case "DDR_DQ11":
+			return "B10";
+		case "DDR_DQ12":
+			return "A12";
+		case "DDR_DQ13":
+			return "A8";
+		case "DDR_DQ14":
+			return "B12";
+		case "DDR_DQ15":
+			return "A9";
+			
+		case "DDR_DQS0_P":
+			return "B15";
+		case "DDR_DQS0_N":
+			return "A15";
+		case "DDR_DQS1_P":
+			return "B9";
+		case "DDR_DQS1_N":
+			return "A10";
+			
+		case "DDR_DM0":
+			return "A14";
+		case "DDR_DM1":
+			return "C9";
+			
+		case "DDR_ODT":
+			return "G11";
+		case "DDR_RESET":
+			return "D13";
+			
+		case "DDR_BA0":
+			return "E13";
+		case "DDR_BA1":
+			return "F15";
+		case "DDR_BA2":
+			return "E15";
+			
+		case "DDR_CK_P":
+			return "G14";
+		case "DDR_CK_N":
+			return "F14";
+		case "DDR_CKE":
+			return "D15";
+			
+		case "DDR_CS":
+			return "D16";
+		case "DDR_RAS":
+			return "D11";
+		case "DDR_CAS":
+			return "D14";
+		case "DDR_WE":
+			return "E11";
+			
+		case "DDR_A0":
+			return "F12";
+		case "DDR_A1":
+			return "G16";
+		case "DDR_A2":
+			return "G15";
+		case "DDR_A3":
+			return "E16";
+		case "DDR_A4":
+			return "H11";
+		case "DDR_A5":
+			return "G12";
+		case "DDR_A6":
+			return "H16";
+		case "DDR_A7":
+			return "H12";
+		case "DDR_A8":
+			return "J16";
+		case "DDR_A9":
+			return "H13";
+		case "DDR_A10":
+			return "E12";
+		case "DDR_A11":
+			return "H14";
+		case "DDR_A12":
+			return "F13";
+		case "DDR_A13":
+			return "J15";
 		}
 		return null;
 	}

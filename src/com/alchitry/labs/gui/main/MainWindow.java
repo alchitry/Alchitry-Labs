@@ -60,7 +60,7 @@ import com.alchitry.labs.widgets.TabChild;
 import jssc.SerialPortList;
 
 public class MainWindow {
-	public static final String VERSION = "1.0.3";
+	public static final String VERSION = "1.0.4";
 	public static final String LIB_VERSION = "1.0.0";
 
 	protected final Display display = Display.getDefault();
