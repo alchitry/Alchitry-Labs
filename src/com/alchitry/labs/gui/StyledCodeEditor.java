@@ -501,7 +501,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			if (getText().isEmpty())
 				redraw();
 		} else { // modify from search
-			String text = ((Text) e.widget).getText();
+			String text = ((StyledText) e.widget).getText();
 			highlighter.setText(text);
 		}
 	}
