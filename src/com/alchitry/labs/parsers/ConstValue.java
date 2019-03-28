@@ -2,6 +2,7 @@ package com.alchitry.labs.parsers;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,7 +12,7 @@ import java.util.List;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 
-public class  ConstValue implements Serializable {
+public class ConstValue implements Serializable {
 	/**
 	 * 
 	 */
@@ -20,8 +21,9 @@ public class  ConstValue implements Serializable {
 	private ArrayList<BitValue> value;
 	private ArrayList<ConstValue> values;
 	private boolean signed = false;
-	
-	public ConstValue(){}
+
+	public ConstValue() {
+	}
 
 	public ConstValue(boolean isArray) {
 		if (isArray)
@@ -273,10 +275,6 @@ public class  ConstValue implements Serializable {
 			throw (new IllegalArgumentException("Radix must be 16, 10, or 2"));
 		}
 	}
-
-	public void setArray(boolean isArray) {
-		this.isArray = isArray;
-	}
 	
 	public boolean isArray() {
 		return isArray;
@@ -460,10 +458,11 @@ public class  ConstValue implements Serializable {
 		return width;
 	}
 
-	public void setValue(ArrayList<BitValue> v) {
+	public void setValue(List<BitValue> v) {
 		if (isArray)
 			throw new IllegalStateException("The function setValue() can't be used on arrays");
-		value = v;
+		value.clear();
+		value.addAll(v);
 	}
 
 	public void setValue(BitValue v) {
@@ -770,6 +769,37 @@ public class  ConstValue implements Serializable {
 		}
 		return BitValue.B0;
 
+	}
+	
+	private ConstValue build(List<BitValue> values, int[] dims) {
+		int d = dims[dims.length-1];
+		int vCt = values.size();
+		int step = vCt / d;
+		ConstValue root = new ConstValue(true);
+		if (step * d != vCt)
+			throw new InvalidParameterException("Dimensions don't split evenly for build()");
+		if (dims.length == 1) {
+			for (int i = 0; i < d; i++) {
+				root.add(new ConstValue(values.subList(step*i, step*i+step)));
+			}
+		} else {
+			for (int i = 0; i < d; i++) {
+				root.add(build(values.subList(step*i, step*i+step),Arrays.copyOfRange(dims, 0, dims.length-1)));
+			}
+		}
+		return root;
+	}
+
+	public ConstValue build(int... dimensions) {
+		if (dimensions.length < 1)
+			throw new InvalidParameterException("Dimensions must be specified when building an array!");
+		if (isArray)
+			throw new InvalidParameterException("The function build() can't be called on array values!");
+		for (int d : dimensions)
+			if (d == 0)
+				throw new InvalidParameterException("Dimensions supplied to build() can't be 0!");
+
+		return build(value, dimensions);
 	}
 
 	public ConstValue flatten() {

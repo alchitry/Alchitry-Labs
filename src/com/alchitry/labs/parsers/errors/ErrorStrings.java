@@ -71,6 +71,7 @@ public class ErrorStrings {
 	public static final String ARRAY_INDEX_DIM_MISMATCH = "There are too many indices for this array";
 	public static final String ARRAY_INDEX_NAN = "Array indices must be a number (no x or z values)";
 	public static final String ARRAY_INDEX_TOO_BIG = "Array index is HUGE, no error checking can be performed";
+	public static final String ARRAY_NOT_DIVISIBLE = "The array \"%s\" can't be split evenly";
 
 	public static final String BIT_SELECTOR_ARRAY = "The value used in bit selection can't be an array";
 	public static final String BIT_SELECTOR_ORDER = "The value on the left must be greater or equal to the value on the right";
@@ -84,6 +85,7 @@ public class ErrorStrings {
 	public static final String ADD_MULTI_DIM = "Only single dimensional arrays can be added";
 	public static final String SUB_MULTI_DIM = "Only single dimensional arrays can be subtracted";
 	public static final String SHIFT_MULTI_DIM = "Only single dimensional arrays can be shifted";
+	public static final String BUILD_MULTI_DIM = "Only single dimensional arrays can be built";
 
 	public static final String OR_MULTI_DIM_MISMATCH = "When performing an OR on multi-dimensional arrays their dimensions must match";
 	public static final String AND_MULTI_DIM_MISMATCH = "When performing an AND on multi-dimensional arrays their dimensions must match";
@@ -122,6 +124,7 @@ public class ErrorStrings {
 	public static final String CONST_FUNCTION = "The function \"%s\" can only be used on constants";
 	public static final String FUNCTION_ARG_NAN = "The argument \"%s\" with value \"%s\" must be a number";
 	public static final String FUNCTION_ARG_COUNT = "The function \"%s\" takes exactly %d argument(s)";
+	public static final String FUNCTION_MIN_ARG_COUNT = "The function \"%s\" requires at least %d argument(s)";
 	public static final String FUNCTION_NO_ARRAY = "The function \"%s\" can't be used on multidimensional arrays";
 	public static final String FUNCTION_ARG_ZERO = "The argument \"%s\" can't be zero";
 
