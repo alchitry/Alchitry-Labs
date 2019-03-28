@@ -3,8 +3,12 @@ package com.alchitry.labs.project.builders;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -242,6 +246,29 @@ public abstract class ProjectBuilder {
 		}
 	}
 
+	private ArrayList<String> mergeConstraintFiles(List<String> files) throws IOException {
+		HashMap<String, File> mergedFiles = new HashMap<>();
+		for (String cFile : files) {
+			String ext = cFile.substring(cFile.lastIndexOf('.'), cFile.length());
+			if (!mergedFiles.containsKey(ext)) {
+				File f = new File(Util.assemblePath(workFolder, "constraint", "merged_constraint" + ext));
+				mergedFiles.put(ext, f);
+			}
+			File f = mergedFiles.get(ext);
+			FileUtils.write(f, FileUtils.readFileToString(new File(cFile)) + System.lineSeparator(), true);
+		}
+
+		ArrayList<String> mFiles = new ArrayList<>(mergedFiles.size());
+
+		Iterator<Entry<String, File>> it = mergedFiles.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, File> pair = (Map.Entry<String, File>) it.next();
+			mFiles.add(pair.getValue().getAbsolutePath());
+		}
+
+		return mFiles;
+	}
+
 	protected ArrayList<String> getConstraintFiles() throws IOException, ParseException {
 		String srcFolder = workFolder + File.separatorChar + "constraint";
 		ArrayList<String> constraintFiles = new ArrayList<String>();
@@ -269,7 +296,10 @@ public abstract class ProjectBuilder {
 			convertConstraintFile(cf, folder, srcFolder, constraintFiles);
 		}
 		
-		return constraintFiles;
+		if (project.getBoard().isType(Board.CU))
+			constraintFiles = mergeConstraintFiles(constraintFiles);
+
+		return mergeConstraintFiles(constraintFiles);
 	}
 
 	protected ArrayList<String> getVerilogFiles() throws IOException, ParseException {

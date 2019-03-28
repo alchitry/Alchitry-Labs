@@ -447,7 +447,6 @@ public class ConstExprParser extends LucidBaseListener {
 				
 				ConstValue builtValue = args[0].build(dims);
 				values.put(ctx, builtValue);
-				System.out.println("Built: " + builtValue);
 			} else {
 				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_MIN_ARG_COUNT, ctx.FUNCTION_ID(), 2));
 			}
