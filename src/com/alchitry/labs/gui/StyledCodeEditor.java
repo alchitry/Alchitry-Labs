@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.dictionaries.AlchitryConstraintsDictionary;

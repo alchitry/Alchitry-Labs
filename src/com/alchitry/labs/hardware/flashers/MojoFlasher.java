@@ -17,10 +17,8 @@ import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.SerialPortSelector;
 import com.alchitry.labs.gui.main.MainWindow;
-
-import jssc.SerialPort;
-import jssc.SerialPortException;
-import jssc.SerialPortList;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortIOException;
 
 public class MojoFlasher extends Flasher {
 
@@ -130,8 +128,7 @@ public class MojoFlasher extends Flasher {
 
 	@Override
 	public void flash() {
-		String[] ports = SerialPortList.getPortNames();
-		SerialPortSelector dialog = new SerialPortSelector(MainWindow.mainWindow.getShell(), ports);
+		SerialPortSelector dialog = new SerialPortSelector(MainWindow.mainWindow.getShell(), Util.getSerialPortNames());
 		final String portName = dialog.open();
 		if (portName == null)
 			return;
@@ -143,7 +140,7 @@ public class MojoFlasher extends Flasher {
 				Util.println("Resetting into bootloader mode...");
 
 				String port = portName;
-				List<String> ports = Arrays.asList(SerialPortList.getPortNames());
+				List<String> ports = Arrays.asList(Util.getSerialPortNames());
 				try {
 					touchForCDCReset(port); // connect and close at 1200 baud
 				} catch (Exception e) {
@@ -153,7 +150,7 @@ public class MojoFlasher extends Flasher {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {
 				}
-				List<String> newPorts = Arrays.asList(SerialPortList.getPortNames());
+				List<String> newPorts = Arrays.asList(Util.getSerialPortNames());
 				if (!newPorts.contains(port)) { // if the same port wasn't used
 					port = null;
 					int ct = 0;
@@ -163,7 +160,7 @@ public class MojoFlasher extends Flasher {
 						} catch (InterruptedException e) {
 						}
 
-						for (String s : SerialPortList.getPortNames()) { // check current ports
+						for (String s : Util.getSerialPortNames()) { // check current ports
 							if (!ports.contains(s) || s.equals(portName)) // if port is new or returned
 								port = s;
 						}
@@ -197,22 +194,17 @@ public class MojoFlasher extends Flasher {
 	}
 
 	private static boolean touchForCDCReset(String iname) throws SerialException {
-		SerialPort serialPort = new SerialPort(iname);
+		SerialPort serialPort = null;
 		try {
-			serialPort.openPort();
-			serialPort.setParams(1200, 8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-			serialPort.setDTR(false);
+			serialPort = Util.connect(iname, 1200);
+			serialPort.clearDTR();
 			serialPort.closePort();
 			return true;
-		} catch (SerialPortException e) {
+		} catch (SerialPortIOException e) {
 			Util.log.severe(e.getMessage());
 		} finally {
-			if (serialPort.isOpened()) {
-				try {
-					serialPort.closePort();
-				} catch (SerialPortException e) {
-					// noop
-				}
+			if (serialPort != null && serialPort.isOpen()) {
+				serialPort.closePort();
 			}
 		}
 		return false;

@@ -33,9 +33,8 @@ import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.ProjectSignal;
 import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.widgets.WaveSignal.TriggerType;
-
-import jssc.SerialPortException;
-import jssc.SerialPortTimeoutException;
+import com.fazecast.jSerialComm.SerialPortIOException;
+import com.fazecast.jSerialComm.SerialPortTimeoutException;
 
 public class Waves extends Canvas {
 	private List<WaveSignal> signals;
@@ -275,11 +274,7 @@ public class Waves extends Canvas {
 					} catch (Exception e) {
 						throw e;
 					} finally {
-						try {
-							lc.disconnect();
-						} catch (SerialPortException e1) {
-
-						}
+						lc.disconnect();
 					}
 				}
 			});
@@ -364,16 +359,12 @@ public class Waves extends Canvas {
 						} else {
 							Util.showError("Failed to connect to Mojo!");
 						}
-					} catch (SerialPortException e1) {
+					} catch (SerialPortIOException e1) {
 						Util.showError(e1.getMessage());
 					} catch (SerialPortTimeoutException e) {
 						Util.showError(e.getMessage());
 					} finally {
-						try {
-							lc.disconnect();
-						} catch (SerialPortException e1) {
-							Util.println(e1.getMessage(), true);
-						}
+						lc.disconnect();
 					}
 					armed.set(false);
 					getDisplay().asyncExec(new Runnable() {

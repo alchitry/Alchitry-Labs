@@ -1,6 +1,7 @@
 package com.alchitry.labs;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,7 +17,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -50,9 +51,8 @@ import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.widgets.CustomConsole;
-
-import jssc.SerialPort;
-import jssc.SerialPortList;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortIOException;
 
 public class Util {
 	private static Display display;
@@ -75,7 +75,9 @@ public class Util {
 	private static int envType = UNKNOWN;
 
 	public static final String[] sourceSuffixes = new String[] { ".v", ".luc" };
-	public static final String[] errorProviderSuffixes = new String[] {".v", ".luc", ".acf"};
+	public static final String[] errorProviderSuffixes = new String[] { ".v", ".luc", ".acf" };
+
+	private static BufferedWriter consoleLogger;
 
 	static {
 		String os = System.getProperty("os.name");
@@ -142,6 +144,10 @@ public class Util {
 
 	public static void setConsole(CustomConsole console) {
 		Util.console = console;
+	}
+
+	public static void setConsoleLogger(BufferedWriter stream) {
+		consoleLogger = stream;
 	}
 
 	public static CustomConsole getConsole() {
@@ -284,6 +290,14 @@ public class Util {
 	}
 
 	public static void print(final String text, final Color color) {
+		if (consoleLogger != null) {
+			try {
+				consoleLogger.write(text);
+			} catch (Exception e) {
+				e.printStackTrace();
+				consoleLogger = null;
+			}
+		}
 		if (isGUI) {
 			display.asyncExec(new Runnable() {
 				@Override
@@ -546,17 +560,29 @@ public class Util {
 		return t;
 	}
 
-	public static SerialPort connect(String portName) throws Exception {
+	public static String[] getSerialPortNames() {
+		SerialPort[] ports = SerialPort.getCommPorts();
+		String[] names = new String[ports.length];
+		for (int i = 0; i < ports.length; i++)
+			names[i] = ports[i].getSystemPortName();
+		return names;
+	}
+
+	public static SerialPort connect(String portName, int baud) throws SerialPortIOException {
 		if (portName.equals(""))
-			throw new Exception("A serial port must be selected!");
-		if (!Arrays.asList(SerialPortList.getPortNames()).contains(portName)) {
-			throw new Exception("Port " + portName + " could not be found. Please select a different port.");
+			throw new InvalidParameterException("A serial port must be selected!");
+		SerialPort serialPort = SerialPort.getCommPort(portName);
+		if (serialPort == null) {
+			throw new SerialPortIOException("Port " + portName + " could not be found. Please select a different port.");
 
 		}
 
-		SerialPort serialPort = new SerialPort(portName);
 		serialPort.openPort();
-		serialPort.setParams(1000000, 8, 1, 0);
+		serialPort.setBaudRate(baud);
+		serialPort.setNumDataBits(8);
+		serialPort.setNumStopBits(1);
+		serialPort.setParity(0);
+		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 50000, 50000);
 
 		return serialPort;
 	}
@@ -635,7 +661,7 @@ public class Util {
 		}
 		return false;
 	}
-	
+
 	public static boolean isConstraintFile(String fileName) {
 		return isConstraintFile(fileName, null);
 	}
@@ -652,7 +678,7 @@ public class Util {
 	public static boolean isSourceFile(String fileName) {
 		return endsWithSuffixList(fileName, sourceSuffixes);
 	}
-	
+
 	public static boolean hasErrorProvider(String fileName) {
 		return endsWithSuffixList(fileName, errorProviderSuffixes);
 	}

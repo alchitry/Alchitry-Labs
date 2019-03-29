@@ -1,10 +1,16 @@
 package com.alchitry.labs.project.builders;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -63,6 +69,7 @@ public abstract class ProjectBuilder {
 	}
 
 	public void build(Project project, boolean debug) {
+		BufferedWriter logWriter = null;
 		try {
 			MainWindow.mainWindow.setBuilding(true);
 			this.project = project;
@@ -118,6 +125,13 @@ public abstract class ProjectBuilder {
 				}
 			}
 
+			File logFile = new File(Util.assemblePath(workFolder, "build_output.log"));
+
+			if (logFile.createNewFile()) {
+				logWriter = new BufferedWriter(new FileWriter(logFile));
+				Util.setConsoleLogger(logWriter);
+			}
+
 			if (project.checkForErrors()) {
 				return;
 			}
@@ -145,7 +159,13 @@ public abstract class ProjectBuilder {
 			Util.print(e);
 			Util.log.log(Level.SEVERE, "Exception with project builder!", e);
 		} finally {
-
+			Util.setConsoleLogger(null);
+			if (logWriter != null)
+				try {
+					logWriter.close();
+				} catch (IOException e) {
+					Util.println("Failed to close log file!", true);
+				}
 			MainWindow.mainWindow.setBuilding(false);
 		}
 	}
@@ -242,6 +262,29 @@ public abstract class ProjectBuilder {
 		}
 	}
 
+	private ArrayList<String> mergeConstraintFiles(List<String> files) throws IOException {
+		HashMap<String, File> mergedFiles = new HashMap<>();
+		for (String cFile : files) {
+			String ext = cFile.substring(cFile.lastIndexOf('.'), cFile.length());
+			if (!mergedFiles.containsKey(ext)) {
+				File f = new File(Util.assemblePath(workFolder, "constraint", "merged_constraint" + ext));
+				mergedFiles.put(ext, f);
+			}
+			File f = mergedFiles.get(ext);
+			FileUtils.write(f, FileUtils.readFileToString(new File(cFile)) + System.lineSeparator(), true);
+		}
+
+		ArrayList<String> mFiles = new ArrayList<>(mergedFiles.size());
+
+		Iterator<Entry<String, File>> it = mergedFiles.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, File> pair = (Map.Entry<String, File>) it.next();
+			mFiles.add(pair.getValue().getAbsolutePath());
+		}
+
+		return mFiles;
+	}
+
 	protected ArrayList<String> getConstraintFiles() throws IOException, ParseException {
 		String srcFolder = workFolder + File.separatorChar + "constraint";
 		ArrayList<String> constraintFiles = new ArrayList<String>();
@@ -268,7 +311,10 @@ public abstract class ProjectBuilder {
 		for (String cf : project.getConstraintFiles(true)) {
 			convertConstraintFile(cf, folder, srcFolder, constraintFiles);
 		}
-		
+
+		if (project.getBoard().isType(Board.CU))
+			constraintFiles = mergeConstraintFiles(constraintFiles);
+
 		return constraintFiles;
 	}
 
