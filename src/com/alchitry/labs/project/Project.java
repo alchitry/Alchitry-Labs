@@ -118,7 +118,7 @@ public class Project {
 
 	private enum FileType {
 		SOURCE, CONSTRAINT, COMPONENT, CORE
-	};
+	}
 
 	public Project(String name, String folder, String board, String lang) {
 		this();
@@ -229,26 +229,27 @@ public class Project {
 		return null;
 	}
 
-	public boolean renameSourceFile(String oldName, String newName) {
+	public String renameSourceFile(String oldName, String newName) {
 		return renameFile(oldName, newName, sourceFiles, SOURCE_FOLDER);
 	}
 
-	public boolean renameConstraintFile(String oldName, String newName) {
+	public String renameConstraintFile(String oldName, String newName) {
 		if (Boolean.TRUE.equals(constraintLib.get(oldName))) {
-			return false;
+			return null;
 		}
 		return renameFile(oldName, newName, constraintFiles, CONSTRAINTS_FOLDER);
 	}
 
-	private boolean renameFile(String oldName, String newName, HashSet<String> list, String folder) {
+	private String renameFile(String oldName, String newName, HashSet<String> list, String folder) {
 		File oldFile = new File(projectFolder + File.separatorChar + folder + File.separatorChar + oldName);
 		File newFile = new File(projectFolder + File.separatorChar + folder + File.separatorChar + newName);
 		if (!oldFile.exists() || newFile.exists() || !oldFile.renameTo(newFile)) {
-			return false;
+			return null;
 		}
-		boolean ret = list.remove(oldName) && list.add(newName);
+		list.remove(oldName);
+		list.add(newName);
 		updateTree();
-		return ret;
+		return newFile.getAbsolutePath();
 	}
 
 	public boolean removeSourceFile(String fileName) {
