@@ -529,6 +529,75 @@ public class Project {
 		}
 	}
 
+	private void addMenuItem_newSource() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("New source...");
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MainWindow.mainWindow.addNewFile();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_newConstraint() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("New constraint...");
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MainWindow.mainWindow.addNewFile();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_addComponent() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("Add component...");
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!isOpen()) {
+					Util.showError("You need to open or create a project first!");
+					return;
+				}
+				MainWindow.mainWindow.addComponents();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_launchCoreGen() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("Launch CoreGen");
+		mi.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MainWindow.mainWindow.getCoreGen().launch(Project.this);
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+	}
+
 	private void addMenuItem_removeFile(CustomTree.TreeElement item, final FileType type) {
 		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
 		mi.setText("Remove " + item.getName());
@@ -590,19 +659,7 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("New source...");
-				mi.addSelectionListener(new SelectionListener() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						MainWindow.mainWindow.addNewFile();
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-
-					}
-				});
+				addMenuItem_newSource();
 				if (!item.isNode())
 					addMenuItem_removeFile(item, FileType.SOURCE);
 			}
@@ -621,19 +678,7 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("New constraint...");
-				mi.addSelectionListener(new SelectionListener() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						MainWindow.mainWindow.addNewFile();
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-
-					}
-				});
+				addMenuItem_newConstraint();
 				if (!item.isNode())
 					addMenuItem_removeFile(item, FileType.CONSTRAINT);
 			}
@@ -649,23 +694,7 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("Add component...");
-				mi.addSelectionListener(new SelectionListener() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						if (!isOpen()) {
-							Util.showError("You need to open or create a project first!");
-							return;
-						}
-						MainWindow.mainWindow.addComponents();
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-
-					}
-				});
+				addMenuItem_addComponent();
 				if (!item.isNode())
 					addMenuItem_removeFile(item, FileType.COMPONENT);
 			}
@@ -681,20 +710,7 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("Launch CoreGen");
-				mi.addSelectionListener(new SelectionListener() {
-
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						MainWindow.mainWindow.getCoreGen().launch(Project.this);
-
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-					}
-				});
+				addMenuItem_launchCoreGen();
 				if (item.isNode() && !item.getName().equals(CORES_PARENT))
 					addMenuItem_removeFile(item, FileType.CORE);
 			}
@@ -1157,7 +1173,7 @@ public class Project {
 
 		projectFile = name + ".alp";
 		projectFolder = folder;
-		
+
 		if (folder == null || oldFolder == null || name == null) {
 			return false;
 		}
@@ -1177,7 +1193,7 @@ public class Project {
 		projectName = oldName;
 		projectFile = oldFile;
 		projectFolder = oldFolder;
-		
+
 		return true;
 	}
 
