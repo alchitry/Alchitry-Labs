@@ -529,7 +529,7 @@ public class Project {
 		}
 	}
 
-	private void addRemoveFile(CustomTree.TreeElement item, final FileType type) {
+	private void addMenuItem_removeFile(CustomTree.TreeElement item, final FileType type) {
 		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
 		mi.setText("Remove " + item.getName());
 		mi.setData(item.getName());
@@ -604,7 +604,7 @@ public class Project {
 					}
 				});
 				if (!item.isNode())
-					addRemoveFile(item, FileType.SOURCE);
+					addMenuItem_removeFile(item, FileType.SOURCE);
 			}
 		}
 	};
@@ -635,7 +635,7 @@ public class Project {
 					}
 				});
 				if (!item.isNode())
-					addRemoveFile(item, FileType.CONSTRAINT);
+					addMenuItem_removeFile(item, FileType.CONSTRAINT);
 			}
 		}
 	};
@@ -667,7 +667,7 @@ public class Project {
 					}
 				});
 				if (!item.isNode())
-					addRemoveFile(item, FileType.COMPONENT);
+					addMenuItem_removeFile(item, FileType.COMPONENT);
 			}
 		}
 	};
@@ -696,7 +696,7 @@ public class Project {
 					}
 				});
 				if (item.isNode() && !item.getName().equals(CORES_PARENT))
-					addRemoveFile(item, FileType.CORE);
+					addMenuItem_removeFile(item, FileType.CORE);
 			}
 		}
 	};
