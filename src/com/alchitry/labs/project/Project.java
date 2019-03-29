@@ -237,7 +237,7 @@ public class Project {
 		return removeFile(fileName, sourceFiles, SOURCE_FOLDER);
 	}
 
-	public boolean removeConstaintFile(String fileName) {
+	public boolean removeConstraintFile(String fileName) {
 		if (Boolean.TRUE.equals(constraintLib.get(fileName))) {
 			constraintLib.remove(fileName);
 			boolean ret = constraintFiles.remove(fileName);
@@ -547,7 +547,7 @@ public class Project {
 							Util.showError("Could not remove file!");
 						break;
 					case CONSTRAINT:
-						if (!removeConstaintFile(file))
+						if (!removeConstraintFile(file))
 							Util.showError("Could not remove file!");
 						break;
 					case COMPONENT:
