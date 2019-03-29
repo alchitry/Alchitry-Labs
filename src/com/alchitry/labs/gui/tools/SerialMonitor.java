@@ -1,5 +1,7 @@
 package com.alchitry.labs.gui.tools;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.VerifyEvent;
@@ -17,12 +19,10 @@ import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.widgets.CustomCombo;
-
-import jssc.SerialPort;
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
-import jssc.SerialPortException;
-import jssc.SerialPortList;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
+import com.fazecast.jSerialComm.SerialPortIOException;
 
 public class SerialMonitor {
 
@@ -103,15 +103,13 @@ public class SerialMonitor {
 					if (t.isEmpty() && len > 0) {
 						t = "\b";
 					}
-					try {
-						port.writeBytes(t.getBytes());
-					} catch (SerialPortException e1) {
-					}
+					port.writeBytes(t.getBytes(), t.getBytes().length);
+
 				}
 				{
 					e.text = e.text.replace("\r", "");
 					text.setTopIndex(text.getLineCount() - 1);
-					
+
 				}
 			}
 		});
@@ -131,31 +129,34 @@ public class SerialMonitor {
 	private void connect() {
 		String p = combo.getSelection();
 		if (p != null) {
-			port = new SerialPort(p);
+			port = null;
 			try {
-				port.openPort();
-				port.setParams(1000000, 8, 1, 0);
-				port.addEventListener(new SerialPortEventListener() {
+				port = Util.connect(p, 1000000);
+				port.addDataListener(new SerialPortDataListener() {
+
 					@Override
 					public void serialEvent(SerialPortEvent event) {
-						if (event.isRXCHAR() && event.getEventValue() > 0) {
-							try {
-								final String rx = port.readString(event.getEventValue());
-								shell.getDisplay().asyncExec(new Runnable() {
-									@Override
-									public void run() {
-										addText(rx);
-									}
-								});
+						if (port.bytesAvailable() > 0) {
+							byte[] buff = new byte[port.bytesAvailable()];
+							int ct = port.readBytes(buff, buff.length);
+							final String rx = new String(Arrays.copyOfRange(buff, 0, ct));
+							shell.getDisplay().asyncExec(new Runnable() {
+								@Override
+								public void run() {
+									addText(rx);
+								}
+							});
 
-							} catch (SerialPortException e) {
-								Util.showError("Connection Error", e.getMessage());
-							}
 						}
 					}
-				}, SerialPort.MASK_RXCHAR);
+
+					@Override
+					public int getListeningEvents() {
+						return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+					}
+				});
 				reset();
-			} catch (SerialPortException e) {
+			} catch (SerialPortIOException e) {
 				e.printStackTrace();
 				port = null;
 				Util.showError("Connection Error", e.getMessage());
@@ -170,10 +171,7 @@ public class SerialMonitor {
 
 	private void disconnect() {
 		if (port != null) {
-			try {
-				port.closePort();
-			} catch (SerialPortException e) {
-			}
+			port.closePort();
 		}
 		port = null;
 	}
@@ -204,7 +202,7 @@ public class SerialMonitor {
 	}
 
 	private void updatePorts() {
-		String[] ports = SerialPortList.getPortNames();
+		String[] ports = Util.getSerialPortNames();
 		combo.setItems(ports);
 	}
 

@@ -17,9 +17,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.RegisterInterface;
-
-import jssc.SerialPortException;
-import jssc.SerialPortTimeoutException;
+import com.fazecast.jSerialComm.SerialPortIOException;
+import com.fazecast.jSerialComm.SerialPortTimeoutException;
 
 public class RegInterface {
 	protected Shell shell;
@@ -93,12 +92,12 @@ public class RegInterface {
 			public void widgetSelected(SelectionEvent e) {
 				long addr = getNumber(address.getText(), decAddr.getSelection());
 				long val = getNumber(value.getText(), decVal.getSelection());
-				if (addr == -1){
-					Util.showError("Address is not a valid "+(decAddr.getSelection() ? "decimal" : "hex")+" number");
+				if (addr == -1) {
+					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number");
 					return;
 				}
-				if (val == -1){
-					Util.showError("Value is not a valid "+(decVal.getSelection() ? "decimal" : "hex")+" number");
+				if (val == -1) {
+					Util.showError("Value is not a valid " + (decVal.getSelection() ? "decimal" : "hex") + " number");
 					return;
 				}
 				RegisterInterface regInt = new RegisterInterface();
@@ -106,18 +105,9 @@ public class RegInterface {
 					Util.showError("Failed to connect to serial port!");
 					return;
 				}
-				try {
-					regInt.write((int)addr,(int)val);
-				} catch (SerialPortException e1) {
-					Util.showError("Failed to write data!");
-				} finally {
-					try {
-						regInt.disconnect();
-					} catch (SerialPortException e1) {
-						e1.printStackTrace();
-					}
-				}
-				
+				regInt.write((int) addr, (int) val);
+
+				regInt.disconnect();
 			}
 		});
 		GridData gd_btnNewButton_1 = new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1);
@@ -130,8 +120,8 @@ public class RegInterface {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				long addr = getNumber(address.getText(), decAddr.getSelection());
-				if (addr == -1){
-					Util.showError("Address is not a valid "+(decAddr.getSelection() ? "decimal" : "hex")+" number");
+				if (addr == -1) {
+					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number");
 					return;
 				}
 				RegisterInterface regInt = new RegisterInterface();
@@ -140,18 +130,14 @@ public class RegInterface {
 					return;
 				}
 				try {
-					int val = regInt.read((int)addr);
+					int val = regInt.read((int) addr);
 					value.setText(Integer.toString(val, decVal.getSelection() ? 10 : 16));
-				} catch (SerialPortException | SerialPortTimeoutException e1) {
+				} catch (SerialPortIOException | SerialPortTimeoutException e1) {
 					Util.showError("Failed to read data!");
 				} finally {
-					try {
-						regInt.disconnect();
-					} catch (SerialPortException e1) {
-						e1.printStackTrace();
-					}
+					regInt.disconnect();
 				}
-				
+
 			}
 		});
 		GridData gd_btnNewButton = new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1);
@@ -163,12 +149,12 @@ public class RegInterface {
 		shell.pack();
 		shell.setMinimumSize(shell.getSize());
 	}
-	
-	private long getNumber(String s, boolean dec){
+
+	private long getNumber(String s, boolean dec) {
 		try {
 			BigInteger bigint = new BigInteger(s, dec ? 10 : 16);
 			return bigint.longValue();
-		} catch (NumberFormatException|ArithmeticException e){
+		} catch (NumberFormatException | ArithmeticException e) {
 			return -1;
 		}
 	}

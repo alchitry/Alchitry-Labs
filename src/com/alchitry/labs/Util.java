@@ -16,7 +16,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -50,9 +50,8 @@ import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.widgets.CustomConsole;
-
-import jssc.SerialPort;
-import jssc.SerialPortList;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortIOException;
 
 public class Util {
 	private static Display display;
@@ -545,18 +544,30 @@ public class Util {
 			}
 		return t;
 	}
+	
+	public static String[] getSerialPortNames() {
+		SerialPort[] ports = SerialPort.getCommPorts();
+		String[] names = new String[ports.length];
+		for (int i = 0; i < ports.length; i++)
+			names[i] = ports[i].getSystemPortName();
+		return names;
+	}
 
-	public static SerialPort connect(String portName) throws Exception {
+	public static SerialPort connect(String portName, int baud) throws SerialPortIOException {
 		if (portName.equals(""))
-			throw new Exception("A serial port must be selected!");
-		if (!Arrays.asList(SerialPortList.getPortNames()).contains(portName)) {
-			throw new Exception("Port " + portName + " could not be found. Please select a different port.");
+			throw new InvalidParameterException("A serial port must be selected!");
+		SerialPort serialPort = SerialPort.getCommPort(portName);
+		if (serialPort == null) {
+			throw new SerialPortIOException("Port " + portName + " could not be found. Please select a different port.");
 
 		}
 
-		SerialPort serialPort = new SerialPort(portName);
 		serialPort.openPort();
-		serialPort.setParams(1000000, 8, 1, 0);
+		serialPort.setBaudRate(baud);
+		serialPort.setNumDataBits(8);
+		serialPort.setNumStopBits(1);
+		serialPort.setParity(0);
+		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 50000, 50000);
 
 		return serialPort;
 	}

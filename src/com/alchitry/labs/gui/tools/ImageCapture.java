@@ -23,9 +23,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.RegisterInterface;
-
-import jssc.SerialPortException;
-import jssc.SerialPortTimeoutException;
+import com.fazecast.jSerialComm.SerialPortIOException;
+import com.fazecast.jSerialComm.SerialPortTimeoutException;
 
 public class ImageCapture {
 	private final int WIDTH = 1600;
@@ -183,19 +182,15 @@ public class ImageCapture {
 									});
 								}
 
-							} catch (SerialPortException e) {
+							} catch (SerialPortIOException e) {
 								Util.print(e);
 								e.printStackTrace();
 							} catch (SerialPortTimeoutException e) {
 								e.printStackTrace();
 								Util.print(e);
 							} finally {
-								try {
-									reg.disconnect();
-								} catch (SerialPortException e) {
-									e.printStackTrace();
-									Util.print(e);
-								}
+								reg.disconnect();
+
 								Util.asyncExec(new Runnable() {
 									@Override
 									public void run() {

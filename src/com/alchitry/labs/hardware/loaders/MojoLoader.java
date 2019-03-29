@@ -11,10 +11,9 @@ import java.util.Arrays;
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
-
-import jssc.SerialPort;
-import jssc.SerialPortException;
-import jssc.SerialPortTimeoutException;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortIOException;
+import com.fazecast.jSerialComm.SerialPortTimeoutException;
 
 public class MojoLoader extends ProjectLoader {
 	private SerialPort serialPort;
@@ -23,14 +22,13 @@ public class MojoLoader extends ProjectLoader {
 
 	}
 
-	
-	private void restartMojo() throws InterruptedException, SerialPortException {
-		serialPort.setDTR(false);
+	private void restartMojo() throws InterruptedException, SerialPortIOException {
+		serialPort.clearDTR();
 		Thread.sleep(5);
 		for (int i = 0; i < 5; i++) {
-			serialPort.setDTR(false);
+			serialPort.clearDTR();
 			Thread.sleep(5);
-			serialPort.setDTR(true);
+			serialPort.setDTR();
 			Thread.sleep(5);
 		}
 	}
@@ -41,12 +39,9 @@ public class MojoLoader extends ProjectLoader {
 
 		Util.println("Error: " + e, true);
 		if (serialPort != null)
-			try {
-				serialPort.closePort();
-			} catch (SerialPortException e1) {
-			}
+			serialPort.closePort();
 	}
-	
+
 	private boolean connect() {
 		String port = Settings.pref.get(Settings.MOJO_PORT, null);
 		if (port == null) {
@@ -56,12 +51,23 @@ public class MojoLoader extends ProjectLoader {
 		Util.println("Connecting...");
 
 		try {
-			serialPort = Util.connect(port);
+			serialPort = Util.connect(port, 1000000);
 		} catch (Exception e) {
 			onError("Could not connect to port " + port + "!");
 			return false;
 		}
 		return true;
+	}
+
+	private boolean writeByte(byte b) {
+		return serialPort.writeBytes(new byte[] { b }, 1) == 1;
+	}
+
+	private byte readByte() throws SerialPortTimeoutException {
+		byte[] bbuf = new byte[1];
+		if (serialPort.readBytes(bbuf, 1) != 1)
+			throw new SerialPortTimeoutException("Timed out while reading a single byte");
+		return bbuf[0];
 	}
 
 	@Override
@@ -71,36 +77,30 @@ public class MojoLoader extends ProjectLoader {
 
 		try {
 			restartMojo();
-		} catch (InterruptedException | SerialPortException e) {
+		} catch (InterruptedException | SerialPortIOException e) {
 			onError(e.getMessage());
 			return;
 		}
 
+		Util.println("Erasing...");
+
+		byte[] dummyBuffer = new byte[serialPort.bytesAvailable()];
+		serialPort.readBytes(dummyBuffer, dummyBuffer.length); // flush the buffer
+
+		writeByte((byte) 'E');
+
 		try {
-			Util.println("Erasing...");
-
-			serialPort.readBytes(); // flush the buffer
-
-			serialPort.writeByte((byte) 'E'); // Erase flash
-
-			if (serialPort.readBytes(1, 10000)[0] != 'D') {
+			if (readByte() != 'D') {
 				onError("Mojo did not acknowledge flash erase!");
 				return;
 			}
-
-			Util.println("Done");
-
-		} catch (SerialPortException | SerialPortTimeoutException e) {
-			onError(e.getMessage());
-			return;
+		} catch (SerialPortTimeoutException e) {
+			Util.println(e.getMessage(), true);
 		}
 
-		try {
-			serialPort.closePort();
-		} catch (SerialPortException e) {
-			onError(e.getMessage());
-			return;
-		}
+		Util.println("Done");
+
+		serialPort.closePort();
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class MojoLoader extends ProjectLoader {
 
 		try {
 			restartMojo();
-		} catch (InterruptedException | SerialPortException e) {
+		} catch (InterruptedException | SerialPortIOException e) {
 			onError(e.getMessage());
 			try {
 				bin.close();
@@ -131,7 +131,8 @@ public class MojoLoader extends ProjectLoader {
 		}
 
 		try {
-			serialPort.readBytes(); // flush the buffer
+			byte[] dummyBuffer = new byte[serialPort.bytesAvailable()];
+			serialPort.readBytes(dummyBuffer, dummyBuffer.length); // flush the buffer
 
 			if (flash)
 				Util.println("Erasing flash...");
@@ -140,14 +141,14 @@ public class MojoLoader extends ProjectLoader {
 
 			if (flash) {
 				if (verify)
-					serialPort.writeByte((byte) 'V'); // Write to flash
+					writeByte((byte) 'V'); // Write to flash
 				else
-					serialPort.writeByte((byte) 'F');
+					writeByte((byte) 'F');
 			} else {
-				serialPort.writeByte((byte) 'R'); // Write to FPGA
+				writeByte((byte) 'R'); // Write to FPGA
 			}
 
-			if (serialPort.readBytes(1, 2000)[0] != 'R') {
+			if (readByte() != 'R') {
 				onError("Mojo did not respond! Make sure the port is correct.");
 				bin.close();
 				return;
@@ -161,9 +162,13 @@ public class MojoLoader extends ProjectLoader {
 				buff[i] = (byte) (length >> (i * 8) & 0xff);
 			}
 
-			serialPort.writeBytes(buff);
+			if (serialPort.writeBytes(buff, buff.length)!= buff.length) {
+				onError("Failed to write the transfer size!");
+				bin.close();
+				return;
+			}
 
-			if (serialPort.readBytes(1, 10000)[0] != 'O') {
+			if (readByte() != 'O') {
 				onError("Mojo did not acknowledge transfer size!");
 				bin.close();
 				return;
@@ -183,7 +188,7 @@ public class MojoLoader extends ProjectLoader {
 				if (avail == 0)
 					break;
 				int read = bin.read(data, 0, avail);
-				serialPort.writeBytes(Arrays.copyOf(data, read));
+				serialPort.writeBytes(Arrays.copyOf(data, read), read);
 				count += read;
 
 				if (count - oldCount > percent) {
@@ -196,7 +201,7 @@ public class MojoLoader extends ProjectLoader {
 			updateProgress(100);
 			Util.println("");
 
-			if (serialPort.readBytes(1, 2000)[0] != 'D') {
+			if (readByte() != 'D') {
 				onError("Mojo did not acknowledge the transfer!");
 				bin.close();
 				return;
@@ -207,12 +212,12 @@ public class MojoLoader extends ProjectLoader {
 			if (flash && verify) {
 				Util.println("Verifying...");
 				bin = new BufferedInputStream(new FileInputStream(file));
-				serialPort.writeByte((byte) 'S');
+				writeByte((byte) 'S');
 
 				int size = (int) (file.length() + 5);
 
 				int tmp;
-				if (((tmp = serialPort.readBytes(1, 2000)[0]) & 0xff) != 0xAA) {
+				if (((tmp = readByte()) & 0xff) != 0xAA) {
 					onError("Flash does not contain valid start byte! Got: " + tmp);
 					bin.close();
 					return;
@@ -220,7 +225,7 @@ public class MojoLoader extends ProjectLoader {
 
 				int flashSize = 0;
 				for (int i = 0; i < 4; i++) {
-					flashSize |= (((int) serialPort.readBytes(1, 2000)[0]) & 0xff) << (i * 8);
+					flashSize |= (((int) readByte()) & 0xff) << (i * 8);
 				}
 
 				if (flashSize != size) {
@@ -232,7 +237,7 @@ public class MojoLoader extends ProjectLoader {
 				count = 0;
 				oldCount = 0;
 				while ((num = bin.read()) != -1) {
-					int d = (((int) serialPort.readBytes(1, 2000)[0]) & 0xff);
+					int d = (((int) readByte()) & 0xff);
 					if (d != num) {
 						onError("Verification failed at byte " + count + " out of " + length + "\nExpected " + num + " got " + d);
 						bin.close();
@@ -250,8 +255,8 @@ public class MojoLoader extends ProjectLoader {
 			}
 
 			if (flash) {
-				serialPort.writeByte((byte) 'L');
-				if ((((int) serialPort.readBytes(1, 5000)[0]) & 0xff) != 'D') {
+				writeByte((byte) 'L');
+				if ((((int) readByte()) & 0xff) != 'D') {
 					onError("Could not load from flash!");
 					bin.close();
 					return;
@@ -259,21 +264,14 @@ public class MojoLoader extends ProjectLoader {
 			}
 
 			bin.close();
-		} catch (IOException | SerialPortException | SerialPortTimeoutException e) {
+		} catch (IOException e) {
 			onError(e.getMessage());
 			return;
 		}
 
 		Util.println("Done");
 
-		try {
-			serialPort.closePort();
-		} catch (SerialPortException e) {
-			onError(e.getMessage());
-			return;
-		}
-
-		
+		serialPort.closePort();
 	}
 
 }

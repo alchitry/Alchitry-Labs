@@ -7,9 +7,8 @@ import java.util.logging.Level;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.widgets.WaveSignal;
 import com.alchitry.labs.widgets.WaveSignal.TriggerType;
-
-import jssc.SerialPortException;
-import jssc.SerialPortTimeoutException;
+import com.fazecast.jSerialComm.SerialPortIOException;
+import com.fazecast.jSerialComm.SerialPortTimeoutException;
 
 public class LogicCapture extends RegisterInterface {
 	private static final int BASE_ADDR = 0xfffffff0;
@@ -36,7 +35,7 @@ public class LogicCapture extends RegisterInterface {
 			version = read(VERSION_ADDR);
 			if (version == 2)
 				nonce = (long) read(NONCE_ADDR) & 0xffffffffL;
-		} catch (SerialPortException e) {
+		} catch (SerialPortIOException e) {
 			Util.log.log(Level.SEVERE, "Failed to connect", e);
 			return false;
 		} catch (SerialPortTimeoutException e) {
@@ -62,7 +61,7 @@ public class LogicCapture extends RegisterInterface {
 		return version;
 	}
 
-	public byte[][] capture(boolean withTriggers, AtomicBoolean armed) throws SerialPortException, SerialPortTimeoutException {
+	public byte[][] capture(boolean withTriggers, AtomicBoolean armed) throws SerialPortIOException, SerialPortTimeoutException {
 		if (!updateDeviceInfo())
 			return null;
 		byte[][] dataArray = new byte[captureWidth][captureDepth];
@@ -94,7 +93,7 @@ public class LogicCapture extends RegisterInterface {
 		return bits;
 	}
 
-	public boolean updateTriggers(List<WaveSignal> signals) throws SerialPortException {
+	public boolean updateTriggers(List<WaveSignal> signals) throws SerialPortIOException {
 		if (!isConnected()) {
 			Util.log.log(Level.WARNING, "Failed to connect to Mojo!");
 			return false;
