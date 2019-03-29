@@ -439,18 +439,11 @@ public class Project {
 		return hs;
 	}
 
-	private boolean endsWithExt(String str, String[] ext) {
-		for (String e : ext)
-			if (str.endsWith(e))
-				return true;
-		return false;
-	}
-
 	private void removeUnsupportedConstraints(HashSet<String> constraints) {
 		String[] ext = boardType.getSupportedConstraintExtensions();
 		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
 			String c = it.next();
-			if (!endsWithExt(c, ext)) {
+			if (!Util.endsWithSuffixList(c, ext)) {
 				it.remove();
 				Util.println("Constraint \"" + c + "\" is of an unsupported type. It will be ignored.", true);
 			}

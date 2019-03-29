@@ -652,7 +652,7 @@ public class Util {
 		return process;
 	}
 
-	private static boolean endsWithSuffixList(String testString, String[] suffixList) {
+	public static boolean endsWithSuffixList(String testString, String[] suffixList) {
 		if (testString == null)
 			return false;
 		for (String suffix : suffixList) {
