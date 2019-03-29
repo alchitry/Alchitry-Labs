@@ -1,4 +1,4 @@
-package com.alchitry.labs.parsers.lucid.toVerilog;
+package com.alchitry.labs.parsers.tools.lucid.toVerilog;
 
 public class ReservedWords {
 

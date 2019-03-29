@@ -177,6 +177,33 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			if (cv != null)
 				widths.put(ctx, cv.getArrayWidth());
 			break;
+		case "$build":
+			if (cv != null)
+				widths.put(ctx, cv.getArrayWidth());
+			else if (ctx.expr().size() > 1) {
+				SignalWidth aw = widths.get(ctx.expr(0));
+				if (aw != null) {
+					if (!aw.isSimpleArray() || aw.getWidths().size() != 1) {
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.BUILD_MULTI_DIM);
+						break;
+					}
+					boolean error = false;
+					int[] dims = new int[ctx.expr().size() - 1];
+					for (int i = 1; i < ctx.expr().size(); i++) {
+						ConstValue dim = constExprParser.getValue(ctx.expr(i));
+						if (dim == null || !dim.isNumber()) {
+							error = true;
+							break;
+						}
+						dims[i - 1] = dim.getBigInt().intValue();
+					}
+					if (error)
+						break;
+
+					SignalWidth newWidth = aw.build(dims);
+					widths.put(ctx, newWidth);
+				}
+			}
 		case "$flatten":
 			if (cv != null)
 				widths.put(ctx, cv.getArrayWidth());

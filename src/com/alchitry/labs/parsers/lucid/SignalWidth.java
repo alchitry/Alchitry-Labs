@@ -29,6 +29,12 @@ public class SignalWidth implements Serializable {
 		widths.add(w);
 	}
 
+	public SignalWidth(int... ws) {
+		widths = new ArrayList<>();
+		for (int w : ws)
+			widths.add(w);
+	}
+
 	public SignalWidth(Collection<Integer> c) {
 		widths = new ArrayList<>(c);
 	}
@@ -197,6 +203,27 @@ public class SignalWidth implements Serializable {
 				w *= i;
 			return w;
 		}
+	}
+
+	public SignalWidth build(int... dimensions) {
+		if (!isSimpleArray() || widths.size() != 1)
+			return null;
+
+		int factor = 1;
+
+		for (int d : dimensions)
+			factor *= d;
+		int bits = widths.get(0);
+
+		if (bits % factor != 0)
+			return null;
+		
+		ArrayList<Integer> newDims = new ArrayList<>(dimensions.length+1);
+		for (int d : dimensions)
+			newDims.add(d);
+		newDims.add(bits/factor);
+
+		return new SignalWidth(newDims);
 	}
 
 	public SignalWidth flatten() {

@@ -1,4 +1,4 @@
-package com.alchitry.labs.parsers.lucid.toVerilog;
+package com.alchitry.labs.parsers.tools.lucid.toVerilog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -581,7 +581,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		if (cv != null) {
 			verilog.put(ctx, cv.toVerilog());
 		} else if (ctx.expr().size() > 0) {
-			if (function.equals("$flatten")) {
+			if (function.equals("$flatten") || function.equals("$build")) {
 				verilog.put(ctx, verilog.get(ctx.expr(0)));
 			} else {
 				StringBuilder sb = new StringBuilder();

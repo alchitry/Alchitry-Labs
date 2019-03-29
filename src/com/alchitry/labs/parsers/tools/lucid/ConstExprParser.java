@@ -414,39 +414,41 @@ public class ConstExprParser extends LucidBaseListener {
 			break;
 		case "$build":
 			if (args.length >= 2) {
-				boolean error = false;
-				if (args[0].isArray()) {
-					listener.reportError(ctx.FUNCTION_ID(), ErrorStrings.BUILD_MULTI_DIM);
-					error = true;
-				}
-				for (int i = 1; i < args.length; i++) {
-					if (args[i] != null) {
-						if (!args[i].isNumber()) {
-							listener.reportError(ctx.expr(i), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(i).getText(), args[i].toString()));
-							error = true;
-						}
-					} else {
+				if (args[0] != null) {
+					boolean error = false;
+					if (args[0].isArray()) {
+						listener.reportError(ctx.expr(0), ErrorStrings.BUILD_MULTI_DIM);
 						error = true;
 					}
+					for (int i = 1; i < args.length; i++) {
+						if (args[i] != null) {
+							if (!args[i].isNumber()) {
+								listener.reportError(ctx.expr(i), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(i).getText(), args[i].toString()));
+								error = true;
+							}
+						} else {
+							error = true;
+						}
+					}
+					if (error)
+						break;
+					int[] dims = new int[args.length - 1];
+
+					for (int i = 1; i < args.length; i++)
+						dims[dims.length - i] = args[i].getBigInt().intValue();
+
+					long factor = 1;
+					for (int d : dims)
+						factor *= d;
+
+					if (args[0].getWidth() % factor != 0) {
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.ARRAY_NOT_DIVISIBLE, ctx.expr(0).getText()));
+						break;
+					}
+
+					ConstValue builtValue = args[0].build(dims);
+					values.put(ctx, builtValue);
 				}
-				if (error)
-					break;
-				int[] dims = new int[args.length - 1];
-				
-				for (int i = 1; i < args.length; i++) 
-					dims[dims.length - i] = args[i].getBigInt().intValue();
-				
-				long factor = 1;
-				for (int d : dims)
-					factor *= d;
-				
-				if (args[0].getWidth() % factor != 0) {
-					listener.reportError(ctx.expr(0), String.format(ErrorStrings.ARRAY_NOT_DIVISIBLE, ctx.expr(0).getText()));
-					break;
-				}
-				
-				ConstValue builtValue = args[0].build(dims);
-				values.put(ctx, builtValue);
 			} else {
 				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_MIN_ARG_COUNT, ctx.FUNCTION_ID(), 2));
 			}
