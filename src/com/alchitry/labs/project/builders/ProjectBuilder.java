@@ -1,6 +1,8 @@
 package com.alchitry.labs.project.builders;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +69,7 @@ public abstract class ProjectBuilder {
 	}
 
 	public void build(Project project, boolean debug) {
+		BufferedWriter logWriter = null;
 		try {
 			MainWindow.mainWindow.setBuilding(true);
 			this.project = project;
@@ -122,6 +125,13 @@ public abstract class ProjectBuilder {
 				}
 			}
 
+			File logFile = new File(Util.assemblePath(workFolder, "build_output.log"));
+
+			if (logFile.createNewFile()) {
+				logWriter = new BufferedWriter(new FileWriter(logFile));
+				Util.setConsoleLogger(logWriter);
+			}
+
 			if (project.checkForErrors()) {
 				return;
 			}
@@ -149,7 +159,13 @@ public abstract class ProjectBuilder {
 			Util.print(e);
 			Util.log.log(Level.SEVERE, "Exception with project builder!", e);
 		} finally {
-
+			Util.setConsoleLogger(null);
+			if (logWriter != null)
+				try {
+					logWriter.close();
+				} catch (IOException e) {
+					Util.println("Failed to close log file!", true);
+				}
 			MainWindow.mainWindow.setBuilding(false);
 		}
 	}
@@ -295,11 +311,11 @@ public abstract class ProjectBuilder {
 		for (String cf : project.getConstraintFiles(true)) {
 			convertConstraintFile(cf, folder, srcFolder, constraintFiles);
 		}
-		
+
 		if (project.getBoard().isType(Board.CU))
 			constraintFiles = mergeConstraintFiles(constraintFiles);
 
-		return mergeConstraintFiles(constraintFiles);
+		return constraintFiles;
 	}
 
 	protected ArrayList<String> getVerilogFiles() throws IOException, ParseException {

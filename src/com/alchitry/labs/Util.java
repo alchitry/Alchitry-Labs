@@ -1,6 +1,7 @@
 package com.alchitry.labs;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -74,7 +75,9 @@ public class Util {
 	private static int envType = UNKNOWN;
 
 	public static final String[] sourceSuffixes = new String[] { ".v", ".luc" };
-	public static final String[] errorProviderSuffixes = new String[] {".v", ".luc", ".acf"};
+	public static final String[] errorProviderSuffixes = new String[] { ".v", ".luc", ".acf" };
+
+	private static BufferedWriter consoleLogger;
 
 	static {
 		String os = System.getProperty("os.name");
@@ -141,6 +144,10 @@ public class Util {
 
 	public static void setConsole(CustomConsole console) {
 		Util.console = console;
+	}
+
+	public static void setConsoleLogger(BufferedWriter stream) {
+		consoleLogger = stream;
 	}
 
 	public static CustomConsole getConsole() {
@@ -283,6 +290,14 @@ public class Util {
 	}
 
 	public static void print(final String text, final Color color) {
+		if (consoleLogger != null) {
+			try {
+				consoleLogger.write(text);
+			} catch (Exception e) {
+				e.printStackTrace();
+				consoleLogger = null;
+			}
+		}
 		if (isGUI) {
 			display.asyncExec(new Runnable() {
 				@Override
@@ -544,7 +559,7 @@ public class Util {
 			}
 		return t;
 	}
-	
+
 	public static String[] getSerialPortNames() {
 		SerialPort[] ports = SerialPort.getCommPorts();
 		String[] names = new String[ports.length];
@@ -646,7 +661,7 @@ public class Util {
 		}
 		return false;
 	}
-	
+
 	public static boolean isConstraintFile(String fileName) {
 		return isConstraintFile(fileName, null);
 	}
@@ -663,7 +678,7 @@ public class Util {
 	public static boolean isSourceFile(String fileName) {
 		return endsWithSuffixList(fileName, sourceSuffixes);
 	}
-	
+
 	public static boolean hasErrorProvider(String fileName) {
 		return endsWithSuffixList(fileName, errorProviderSuffixes);
 	}
