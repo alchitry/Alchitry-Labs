@@ -229,6 +229,28 @@ public class Project {
 		return null;
 	}
 
+	public boolean renameSourceFile(String oldName, String newName) {
+		return renameFile(oldName, newName, sourceFiles, SOURCE_FOLDER);
+	}
+
+	public boolean renameConstraintFile(String oldName, String newName) {
+		if (Boolean.TRUE.equals(constraintLib.get(oldName))) {
+			return false;
+		}
+		return renameFile(oldName, newName, constraintFiles, CONSTRAINTS_FOLDER);
+	}
+
+	private boolean renameFile(String oldName, String newName, HashSet<String> list, String folder) {
+		File oldFile = new File(projectFolder + File.separatorChar + folder + File.separatorChar + oldName);
+		File newFile = new File(projectFolder + File.separatorChar + folder + File.separatorChar + newName);
+		if (!oldFile.exists() || newFile.exists() || !oldFile.renameTo(newFile)) {
+			return false;
+		}
+		boolean ret = list.remove(oldName) && list.add(newName);
+		updateTree();
+		return ret;
+	}
+
 	public boolean removeSourceFile(String fileName) {
 		if (topSource.equals(fileName)) {
 			Util.showError("You can't delete the top file!");
