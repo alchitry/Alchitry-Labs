@@ -703,7 +703,6 @@ public class MainWindow {
 				case SourceFile.CONSTRAINT:
 					if ((filePath = project.addNewConstraintFile(file.fileName)) == null)
 						Util.showError("Could not create constraint file!");
-
 					break;
 				}
 
@@ -838,6 +837,7 @@ public class MainWindow {
 				}
 				tabFolder.opened = true;
 			}
+			codeEditor.grabFocus();
 
 			return true;
 		}
