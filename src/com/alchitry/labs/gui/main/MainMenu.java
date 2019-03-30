@@ -89,21 +89,29 @@ public class MainMenu {
 
 	private void buildFileMenu() {
 		Menu subMenu = createSubMenu(menu, "File");
-
-		createItem(subMenu, "New Project...", new SelectionAdapter() {
+		
+		createItem(subMenu, "New File...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				parent.createNewProject();
+				parent.addNewFile();
 			}
 		});
-
-		createItem(subMenu, "Open Project...", new SelectionAdapter() {
+		
+		createItem(subMenu, "Open File...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				parent.openProject();
+				FileDialog dialog = new FileDialog(parent.getShell(), SWT.MULTI);
+				dialog.setFilterExtensions(new String[] { "*.luc", "*.v", "*" });
+				String path = dialog.open();
+				if (path != null) {
+					String[] files = dialog.getFileNames();
+					String dir = dialog.getFilterPath();
+					for (String f : files)
+						parent.openFile(dir + File.separator + f, true);
+				}
 			}
 		});
-
+		
 		createItem(subMenu, "Import Files...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -126,26 +134,25 @@ public class MainMenu {
 				}
 			}
 		});
-
-		createItem(subMenu, "Open File...", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FileDialog dialog = new FileDialog(parent.getShell(), SWT.MULTI);
-				dialog.setFilterExtensions(new String[] { "*.luc", "*.v", "*" });
-				String path = dialog.open();
-				if (path != null) {
-					String[] files = dialog.getFileNames();
-					String dir = dialog.getFilterPath();
-					for (String f : files)
-						parent.openFile(dir + File.separator + f, true);
-				}
-			}
-		});
-
+		
 		createItem(subMenu, "Save", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((StyledCodeEditor) (parent.tabFolder.getSelectedControl())).save();
+			}
+		});
+
+		createItem(subMenu, "New Project...", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.createNewProject();
+			}
+		});
+
+		createItem(subMenu, "Open Project...", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.openProject();
 			}
 		});
 
