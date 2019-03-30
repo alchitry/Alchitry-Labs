@@ -605,11 +605,46 @@ public class Project {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				MainWindow.mainWindow.getCoreGen().launch(Project.this);
-
 			}
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_rename(CustomTree.TreeElement item, final Project.FileType type) {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("Rename");
+		mi.setData(item.getName());
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SourceFile file = new SourceFile();
+				file.fileName = (String) ((MenuItem) e.getSource()).getData();
+
+				switch (type) {
+					case CONSTRAINT:
+						if (constraintLib.get(file.fileName)) {
+							Util.showError("You can't rename library constraints!");
+							return;
+						}
+						break;
+					case COMPONENT:
+						Util.showError("You can't rename components!");
+						return;
+					case CORE:
+						Util.showError("You can't rename cores!");
+						return;
+				}
+
+				MainWindow.mainWindow.renameFile(file);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
 			}
 		});
 	}
@@ -677,6 +712,8 @@ public class Project {
 					i.dispose();
 				addMenuItem_newSource();
 				if (!item.isNode())
+					addMenuItem_rename(item, FileType.SOURCE);
+				if (!item.isNode())
 					addMenuItem_removeFile(item, FileType.SOURCE);
 			}
 		}
@@ -695,6 +732,8 @@ public class Project {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
 				addMenuItem_newConstraint();
+				if (!item.isNode())
+					addMenuItem_rename(item, FileType.CONSTRAINT);
 				if (!item.isNode())
 					addMenuItem_removeFile(item, FileType.CONSTRAINT);
 			}

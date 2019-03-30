@@ -92,7 +92,6 @@ public class NewSourceDialog extends Dialog {
 				grp_fileTypeSelect.setText("Select the type of file to add to your project");
 				grp_fileTypeSelect.setLayout(new FillLayout());
 
-
 				btn_lucidSourceFile = new Button(grp_fileTypeSelect, SWT.RADIO);
 				btn_lucidSourceFile.setText("Lucid Source");
 
