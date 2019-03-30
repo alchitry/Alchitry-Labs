@@ -277,6 +277,43 @@ public class Project {
 		return false;
 	}
 
+	public boolean renameFile(String fileName, String newName) {
+		if (Boolean.TRUE.equals(constraintLib.get(fileName)) || componentFiles.contains(fileName)) {
+			Util.showError("Can't rename a library file!");
+			return false;
+		}
+		if (constraintFiles.contains(fileName)) {
+			File fullPath = new File(Util.assemblePath(projectFile, CONSTRAINTS_FOLDER, fileName));
+			File newPath = new File(Util.assemblePath(projectFile, CONSTRAINTS_FOLDER, newName));
+			constraintFiles.remove(fileName);
+			try {
+				FileUtils.copyFile(fullPath, newPath);
+				fullPath.delete();
+			} catch (IOException e) {
+				Util.log.log(Level.SEVERE, "", e);
+				Util.showError("Failed to rename file!");
+			}
+			constraintFiles.add(newName);
+			updateTree();
+			return true;
+		} else if (sourceFiles.contains(fileName)) {
+			File fullPath = new File(Util.assemblePath(projectFile, SOURCE_FOLDER, fileName));
+			File newPath = new File(Util.assemblePath(projectFile, SOURCE_FOLDER, newName));
+			sourceFiles.remove(fileName);
+			try {
+				FileUtils.copyFile(fullPath, newPath);
+				fullPath.delete();
+			} catch (IOException e) {
+				Util.log.log(Level.SEVERE, "", e);
+				Util.showError("Failed to rename file!");
+			}
+			sourceFiles.add(newName);
+			updateTree();
+			return true;
+		}
+		return false;
+	}
+
 	private boolean copyTemplate(String path, String fileName) {
 		if (path.endsWith(".luc") || path.endsWith(".v")) {
 			File template;
@@ -1157,7 +1194,7 @@ public class Project {
 
 		projectFile = name + ".alp";
 		projectFolder = folder;
-		
+
 		if (folder == null || oldFolder == null || name == null) {
 			return false;
 		}
@@ -1177,7 +1214,7 @@ public class Project {
 		projectName = oldName;
 		projectFile = oldFile;
 		projectFolder = oldFolder;
-		
+
 		return true;
 	}
 

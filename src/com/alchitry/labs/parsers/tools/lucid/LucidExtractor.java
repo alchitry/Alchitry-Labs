@@ -258,7 +258,7 @@ public class LucidExtractor extends LucidBaseListener {
 	// }
 
 	public void parseAll(String file) {
-		fileName = file.substring(file.lastIndexOf(File.separatorChar)+1, file.lastIndexOf('.'));
+		fileName = file.substring(file.lastIndexOf(File.separatorChar) + 1, file.lastIndexOf('.'));
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		addToParser(listeners);
 		ParserCache.walk(file, listeners);
