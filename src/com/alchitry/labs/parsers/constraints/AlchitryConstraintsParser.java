@@ -2,24 +2,14 @@
 
 package com.alchitry.labs.parsers.constraints;
 
-import java.util.List;
-
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.atn.ATNDeserializer;
-import org.antlr.v4.runtime.atn.ParserATNSimulator;
-import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AlchitryConstraintsParser extends Parser {
@@ -377,39 +367,47 @@ public class AlchitryConstraintsParser extends Parser {
 			{
 			setState(45);
 			name();
-			setState(47);
+			setState(49);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==T__4) {
+			while (_la==T__4) {
+				{
 				{
 				setState(46);
 				array_index();
 				}
+				}
+				setState(51);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
 			}
-
-			setState(56);
+			setState(62);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__3) {
 				{
 				{
-				setState(49);
-				match(T__3);
-				setState(50);
-				name();
 				setState(52);
+				match(T__3);
+				setState(53);
+				name();
+				setState(57);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (_la==T__4) {
+				while (_la==T__4) {
 					{
-					setState(51);
+					{
+					setState(54);
 					array_index();
 					}
+					}
+					setState(59);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
 				}
-
 				}
 				}
-				setState(58);
+				setState(64);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -450,7 +448,7 @@ public class AlchitryConstraintsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(59);
+			setState(65);
 			name();
 			}
 		}
@@ -490,9 +488,9 @@ public class AlchitryConstraintsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(61);
+			setState(67);
 			number();
-			setState(62);
+			setState(68);
 			match(FREQ_UNIT);
 			}
 		}
@@ -529,11 +527,11 @@ public class AlchitryConstraintsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(64);
+			setState(70);
 			match(T__4);
-			setState(65);
+			setState(71);
 			match(INT);
-			setState(66);
+			setState(72);
 			match(T__5);
 			}
 		}
@@ -572,7 +570,7 @@ public class AlchitryConstraintsParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(68);
+			setState(74);
 			_la = _input.LA(1);
 			if ( !(_la==REAL || _la==INT) ) {
 			_errHandler.recoverInline(this);
@@ -596,24 +594,26 @@ public class AlchitryConstraintsParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21I\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21O\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2\7\2"+
 		"\27\n\2\f\2\16\2\32\13\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3\"\n\3\3\3\5\3%\n"+
-		"\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\6\3\6\5\6\62\n\6\3\6\3\6\3\6"+
-		"\5\6\67\n\6\7\69\n\6\f\6\16\6<\13\6\3\7\3\7\3\b\3\b\3\b\3\t\3\t\3\t\3"+
-		"\t\3\n\3\n\3\n\2\2\13\2\4\6\b\n\f\16\20\22\2\4\3\2\13\f\3\2\r\16\2F\2"+
-		"\30\3\2\2\2\4\35\3\2\2\2\6(\3\2\2\2\b-\3\2\2\2\n/\3\2\2\2\f=\3\2\2\2\16"+
-		"?\3\2\2\2\20B\3\2\2\2\22F\3\2\2\2\24\27\5\4\3\2\25\27\5\6\4\2\26\24\3"+
-		"\2\2\2\26\25\3\2\2\2\27\32\3\2\2\2\30\26\3\2\2\2\30\31\3\2\2\2\31\33\3"+
-		"\2\2\2\32\30\3\2\2\2\33\34\7\2\2\3\34\3\3\2\2\2\35\36\7\3\2\2\36\37\5"+
-		"\n\6\2\37!\5\f\7\2 \"\7\t\2\2! \3\2\2\2!\"\3\2\2\2\"$\3\2\2\2#%\7\n\2"+
-		"\2$#\3\2\2\2$%\3\2\2\2%&\3\2\2\2&\'\7\4\2\2\'\5\3\2\2\2()\7\5\2\2)*\5"+
-		"\n\6\2*+\5\16\b\2+,\7\4\2\2,\7\3\2\2\2-.\t\2\2\2.\t\3\2\2\2/\61\5\b\5"+
-		"\2\60\62\5\20\t\2\61\60\3\2\2\2\61\62\3\2\2\2\62:\3\2\2\2\63\64\7\6\2"+
-		"\2\64\66\5\b\5\2\65\67\5\20\t\2\66\65\3\2\2\2\66\67\3\2\2\2\679\3\2\2"+
-		"\28\63\3\2\2\29<\3\2\2\2:8\3\2\2\2:;\3\2\2\2;\13\3\2\2\2<:\3\2\2\2=>\5"+
-		"\b\5\2>\r\3\2\2\2?@\5\22\n\2@A\7\13\2\2A\17\3\2\2\2BC\7\7\2\2CD\7\16\2"+
-		"\2DE\7\b\2\2E\21\3\2\2\2FG\t\3\2\2G\23\3\2\2\2\t\26\30!$\61\66:";
+		"\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\6\3\6\7\6\62\n\6\f\6\16\6\65"+
+		"\13\6\3\6\3\6\3\6\7\6:\n\6\f\6\16\6=\13\6\7\6?\n\6\f\6\16\6B\13\6\3\7"+
+		"\3\7\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\n\3\n\3\n\2\2\13\2\4\6\b\n\f\16\20"+
+		"\22\2\4\3\2\13\f\3\2\r\16\2L\2\30\3\2\2\2\4\35\3\2\2\2\6(\3\2\2\2\b-\3"+
+		"\2\2\2\n/\3\2\2\2\fC\3\2\2\2\16E\3\2\2\2\20H\3\2\2\2\22L\3\2\2\2\24\27"+
+		"\5\4\3\2\25\27\5\6\4\2\26\24\3\2\2\2\26\25\3\2\2\2\27\32\3\2\2\2\30\26"+
+		"\3\2\2\2\30\31\3\2\2\2\31\33\3\2\2\2\32\30\3\2\2\2\33\34\7\2\2\3\34\3"+
+		"\3\2\2\2\35\36\7\3\2\2\36\37\5\n\6\2\37!\5\f\7\2 \"\7\t\2\2! \3\2\2\2"+
+		"!\"\3\2\2\2\"$\3\2\2\2#%\7\n\2\2$#\3\2\2\2$%\3\2\2\2%&\3\2\2\2&\'\7\4"+
+		"\2\2\'\5\3\2\2\2()\7\5\2\2)*\5\n\6\2*+\5\16\b\2+,\7\4\2\2,\7\3\2\2\2-"+
+		".\t\2\2\2.\t\3\2\2\2/\63\5\b\5\2\60\62\5\20\t\2\61\60\3\2\2\2\62\65\3"+
+		"\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64@\3\2\2\2\65\63\3\2\2\2\66\67\7\6"+
+		"\2\2\67;\5\b\5\28:\5\20\t\298\3\2\2\2:=\3\2\2\2;9\3\2\2\2;<\3\2\2\2<?"+
+		"\3\2\2\2=;\3\2\2\2>\66\3\2\2\2?B\3\2\2\2@>\3\2\2\2@A\3\2\2\2A\13\3\2\2"+
+		"\2B@\3\2\2\2CD\5\b\5\2D\r\3\2\2\2EF\5\22\n\2FG\7\13\2\2G\17\3\2\2\2HI"+
+		"\7\7\2\2IJ\7\16\2\2JK\7\b\2\2K\21\3\2\2\2LM\t\3\2\2M\23\3\2\2\2\t\26\30"+
+		"!$\63;@";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

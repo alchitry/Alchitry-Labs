@@ -37,7 +37,6 @@ public class PinConstraint {
 		PinConverter pc = board.getPinConverter();
 		
 		String portName = port + (isMultiBit ? ("[" + portBit + "]") : "");
-		sb.append("# ").append(portName).append(" => ").append(pin).append(System.lineSeparator());
 		
 		if (board.isType(Board.AU)) {
 			sb.append("set_property PACKAGE_PIN ").append(pc.getFPGAPin(pin)).append(" [get_ports {").append(portName).append("}]").append(System.lineSeparator());

@@ -4,11 +4,11 @@ module cu_top (
     output led [8],         // 8 user controllable LEDs
     input usb_rx,           // USB->Serial input
     output usb_tx,          // USB->Serial output
-    output io_led [24],     // LEDs on IO Shield
+    output io_led [3][8],   // LEDs on IO Shield
     output io_seg [8],      // 7-segment LEDs on IO Shield
     output io_sel [4],      // Digit select on IO Shield
     inout io_button [5],    // 5 buttons on IO Shield
-    inout io_dip [24]       // DIP switches on IO Shield
+    inout io_dip [3][8]     // DIP switches on IO Shield
   ) {
   
   sig rst;                  // reset signal
@@ -19,7 +19,7 @@ module cu_top (
     reset_conditioner reset_cond;
     
     pull_down button_pd (#SIZE(5), .in(io_button));
-    pull_down dip_pd (#SIZE(24), .in(io_dip));
+    pull_down_2d dip_pd (#DIM_1(8), #DIM_2(3), .in(io_dip));
   }
   
   always {
@@ -30,7 +30,7 @@ module cu_top (
     
     led = 8h00;             // turn LEDs off
     
-    io_led = 248h00;        // turn LEDs off
+    io_led = 3x{{8h00}};    // turn LEDs off
     io_seg = 8hff;          // turn segments off
     io_sel = 4hf;           // select no digits
   }

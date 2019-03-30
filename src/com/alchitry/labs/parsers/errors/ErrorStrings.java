@@ -172,5 +172,6 @@ public class ErrorStrings {
 	public static final String CONSTRAINT_UNSUPPORTED_ARRAY = "The port %s is of an unsupported type";
 	public static final String CONSTRAINT_UP_AND_DOWN = "Only pullup or pulldown can be specified for a single pin";
 	public static final String CONSTRAINT_UNKNOWN_UNIT = "Unknown frequency unit \"%s\"";
+	public static final String CONSTRAINT_MULTI_BIT = "Constraints can only be applied to a single bit";
 	
 }

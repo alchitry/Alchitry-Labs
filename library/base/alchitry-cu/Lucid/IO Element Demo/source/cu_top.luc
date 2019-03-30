@@ -4,11 +4,11 @@ module cu_top (
     output led [8],         // 8 user controllable LEDs
     input usb_rx,           // USB->Serial input
     output usb_tx,          // USB->Serial output
-    output io_led [24],     // LEDs on IO Shield
+    output io_led [3][8],   // LEDs on IO Shield
     output io_seg [8],      // 7-segment LEDs on IO Shield
     output io_sel [4],      // Digit select on IO Shield
     inout io_button [5],    // 5 buttons on IO Shield
-    inout io_dip [24]       // DIP switches on IO Shield
+    inout io_dip [3][8]     // DIP switches on IO Shield
   ) {
   
   sig rst;                  // reset signal
@@ -26,24 +26,24 @@ module cu_top (
       counter ctr (#SIZE(1), #DIV(24));
     }
     
-    pull_down dip_pd(#SIZE(24), .in(io_dip));
-    pull_down button_pd(#SIZE(5), .in(io_button));
+    pull_down button_pd (#SIZE(5), .in(io_button));
+    pull_down_2d dip_pd (#DIM_1(8), #DIM_2(3), .in(io_dip));
   }
   
   always {
-    reset_cond.in = ~rst_n;   // input raw inverted reset signal
-    rst = reset_cond.out;     // conditioned reset
+    reset_cond.in = ~rst_n;       // input raw inverted reset signal
+    rst = reset_cond.out;         // conditioned reset
     
     led = c{3b0, button_pd.out};  // connect buttons to LEDs
     
-    usb_tx = usb_rx;          // loop serial port
+    usb_tx = usb_rx;              // loop serial port
     
     edge_detector.in = ctr.value;
     dec_ctr.inc = edge_detector.out;
     seg.values = dec_ctr.digits;
     
-    io_seg = ~seg.seg; // connect segments to the driver
-    io_sel = ~seg.sel; // connect digit select to the driver
+    io_seg = ~seg.seg;   // connect segments to the driver
+    io_sel = ~seg.sel;   // connect digit select to the driver
     
     io_led = dip_pd.out; // connect the DIP switches to the LEDs
   }

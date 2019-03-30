@@ -218,6 +218,12 @@
     <module file="bin_to_dec.luc" name="Binary to Decimal">
       <description>This module converts a binary number into a series of decimal numbers. This is helpful for displaying a binary number on seven-segment displays or printing it to the USB port.</description>
     </module>
+    <module file="pull_down.luc" name="Pull Down">
+      <description>This module fakes a pulldown resistor by pulling an inout low periodically.</description>
+    </module>
+    <module file="pull_down_2d.luc" name="Pull Down 2D">
+      <description>This module fakes a pulldown resistor on a 2D array by pulling an inout low periodically.</description>
+    </module>
   </category>
   <category name="Definitions">
     <module file="memory_bus.luc" name="Memory Bus">

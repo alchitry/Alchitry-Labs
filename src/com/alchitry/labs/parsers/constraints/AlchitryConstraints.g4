@@ -13,7 +13,7 @@ clock: 'clock' port_name frequency ';';
 
 name: (BASIC_NAME | FREQ_UNIT);
 
-port_name: name array_index? ('.' name array_index?)*;
+port_name: name array_index* ('.' name array_index*)*;
 pin_name: name;
 frequency: number FREQ_UNIT;
 

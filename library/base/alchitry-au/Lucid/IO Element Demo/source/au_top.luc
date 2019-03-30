@@ -4,11 +4,11 @@ module au_top (
     output led [8],         // 8 user controllable LEDs
     input usb_rx,           // USB->Serial input
     output usb_tx,          // USB->Serial output
-    output io_led [24],     // LEDs on IO Shield
+    output io_led [3][8],   // LEDs on IO Shield
     output io_seg [8],      // 7-segment LEDs on IO Shield
     output io_sel [4],      // Digit select on IO Shield
     input io_button [5],    // 5 buttons on IO Shield
-    input io_dip [24]       // DIP switches on IO Shield
+    input io_dip [3][8]     // DIP switches on IO Shield
   ) {
   
   sig rst;                  // reset signal

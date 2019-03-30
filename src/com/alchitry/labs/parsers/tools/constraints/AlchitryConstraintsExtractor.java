@@ -152,6 +152,9 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 				Util.log.severe("Uknown " + ctx.getText());
 			}
 		}
+		
+		if (current != null && current.getTotalWidth() != 1)
+			errorListener.reportError(ctx, ErrorStrings.CONSTRAINT_MULTI_BIT);
 
 		return bitOffset;
 	}
