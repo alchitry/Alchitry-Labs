@@ -42,6 +42,7 @@ public class ErrorStrings {
 
 	public static final String SIG_UNDEFINED = "The signal \"%s\" does not belong to the signal \"%s\"";
 
+	public static final String MODULE_NAME_NOT_FILENAME = "The module name \"%s\" doesn't match the file name \"%s\"";
 	public static final String MODULE_NO_SIG_SELECTED = "Modules can not be accessed directly. You must select a signal with \".signame\" where \"signame\" is the name of an input or output of the module";
 	public static final String MODULE_SIG_UNDEFINED = "The signal \"%s\" does not belong to the module type \"%s\"";
 	public static final String MODULE_UNKNOWN_PARAM = "The parameter \"%s\" does not belong to the module \"%s\"";

@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -111,7 +112,9 @@ public class LucidExtractor extends LucidBaseListener {
 	private InstModule thisModule;
 
 	private ErrorListener errorListener;
-	
+
+	private String fileName;
+
 	public LucidExtractor(InstModule thisModule) {
 		this(thisModule, null);
 	}
@@ -122,7 +125,7 @@ public class LucidExtractor extends LucidBaseListener {
 
 	public LucidExtractor(LucidDictionary dict, InstModule thisModule, ErrorListener errListener) {
 		this.errorListener = errListener;
-		
+
 		if (this.errorListener == null)
 			this.errorListener = new DummyErrorListener();
 
@@ -255,6 +258,7 @@ public class LucidExtractor extends LucidBaseListener {
 	// }
 
 	public void parseAll(String file) {
+		fileName = file.substring(file.lastIndexOf(File.separatorChar)+1, file.lastIndexOf('.'));
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		addToParser(listeners);
 		ParserCache.walk(file, listeners);
@@ -366,11 +370,16 @@ public class LucidExtractor extends LucidBaseListener {
 	@Override
 	public void exitModule(ModuleContext ctx) {
 		if (ctx.name() != null) {
-			if (ctx.name().TYPE_ID() == null)
+			if (ctx.name().TYPE_ID() == null) {
 				errorListener.reportError(ctx.name(), String.format(ErrorStrings.NAME_NOT_TYPE, ctx.name().getText()));
+			} else if (fileName != null && !ctx.name().getText().equals(fileName)) {
+				errorListener.reportWarning(ctx.name(), String.format(ErrorStrings.MODULE_NAME_NOT_FILENAME, ctx.name().getText(), fileName));
+			}
 		}
 
-		for (Sig s : unusedSigs) {
+		for (
+
+		Sig s : unusedSigs) {
 			errorListener.reportWarning(s.getNode(), String.format(ErrorStrings.NEVER_USED, s.getName()));
 		}
 
@@ -408,8 +417,7 @@ public class LucidExtractor extends LucidBaseListener {
 					errorListener.reportError(entry.getValue().get(0).getNode(),
 							String.format(ErrorStrings.MODULE_INPUTS_NOT_ASSIGNED, getMissingSigString(entry.getValue())));
 				else
-					errorListener.reportError(entry.getValue().get(0).getNode(),
-							String.format(ErrorStrings.MODULE_INPUT_NOT_ASSIGNED, getMissingSigString(entry.getValue())));
+					errorListener.reportError(entry.getValue().get(0).getNode(), String.format(ErrorStrings.MODULE_INPUT_NOT_ASSIGNED, getMissingSigString(entry.getValue())));
 			}
 		}
 
@@ -425,7 +433,7 @@ public class LucidExtractor extends LucidBaseListener {
 		drivenSigs.addAll(writtenSigs);
 		writtenSigs = null;
 	}
-	
+
 	public boolean isFSM(String name) {
 		return Util.containsName(fsms, name);
 	}
@@ -815,8 +823,7 @@ public class LucidExtractor extends LucidBaseListener {
 						if (cv == null) {
 							errorListener.reportError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_PARSE_FAIL, p.getConstraint()));
 						} else if (cv.isZero()) {
-							errorListener.reportError(ctx.name(1),
-									String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, p.getConstraint(), p.getName(), p.getValue()));
+							errorListener.reportError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, p.getConstraint(), p.getName(), p.getValue()));
 						}
 					}
 
@@ -1106,8 +1113,7 @@ public class LucidExtractor extends LucidBaseListener {
 					errorListener.reportError(ctx.name(0), ErrorStrings.NAMESPACE_DIRECT);
 
 				if ((names.size() > 2 && !isWidth) || names.size() > 3)
-					errorListener.reportError(ctx.name(ctx.name().size() - 1),
-							String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(1).getText(), ctx.name(2).getText()));
+					errorListener.reportError(ctx.name(ctx.name().size() - 1), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(1).getText(), ctx.name(2).getText()));
 
 				if (consts == null)
 					errorListener.reportError(ctx.name(0), String.format(ErrorStrings.UNKNOWN_NAMESPACE, ctx.name(0).getText()));
