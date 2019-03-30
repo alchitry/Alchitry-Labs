@@ -115,7 +115,6 @@ public class MainMenu {
 		createItem(subMenu, "Import Files...", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println(MainWindow.getOpenProject());
 				if (MainWindow.getOpenProject() == null) {
 					Util.showError("A project must be open to import a file!");
 					return;

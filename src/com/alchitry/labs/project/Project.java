@@ -118,7 +118,7 @@ public class Project {
 
 	private enum FileType {
 		SOURCE, CONSTRAINT, COMPONENT, CORE
-	};
+	}
 
 	public Project(String name, String folder, String board, String lang) {
 		this();
@@ -229,6 +229,29 @@ public class Project {
 		return null;
 	}
 
+	public String renameSourceFile(String oldName, String newName) {
+		return renameFile(oldName, newName, sourceFiles, SOURCE_FOLDER);
+	}
+
+	public String renameConstraintFile(String oldName, String newName) {
+		if (Boolean.TRUE.equals(constraintLib.get(oldName))) {
+			return null;
+		}
+		return renameFile(oldName, newName, constraintFiles, CONSTRAINTS_FOLDER);
+	}
+
+	private String renameFile(String oldName, String newName, HashSet<String> list, String folder) {
+		File oldFile = new File(projectFolder + File.separatorChar + folder + File.separatorChar + oldName);
+		File newFile = new File(projectFolder + File.separatorChar + folder + File.separatorChar + newName);
+		if (!oldFile.exists() || newFile.exists() || !oldFile.renameTo(newFile)) {
+			return null;
+		}
+		list.remove(oldName);
+		list.add(newName);
+		updateTree();
+		return newFile.getAbsolutePath();
+	}
+
 	public boolean removeSourceFile(String fileName) {
 		if (topSource.equals(fileName)) {
 			Util.showError("You can't delete the top file!");
@@ -237,7 +260,7 @@ public class Project {
 		return removeFile(fileName, sourceFiles, SOURCE_FOLDER);
 	}
 
-	public boolean removeConstaintFile(String fileName) {
+	public boolean removeConstraintFile(String fileName) {
 		if (Boolean.TRUE.equals(constraintLib.get(fileName))) {
 			constraintLib.remove(fileName);
 			boolean ret = constraintFiles.remove(fileName);
@@ -476,18 +499,11 @@ public class Project {
 		return hs;
 	}
 
-	private boolean endsWithExt(String str, String[] ext) {
-		for (String e : ext)
-			if (str.endsWith(e))
-				return true;
-		return false;
-	}
-
 	private void removeUnsupportedConstraints(HashSet<String> constraints) {
 		String[] ext = boardType.getSupportedConstraintExtensions();
 		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
 			String c = it.next();
-			if (!endsWithExt(c, ext)) {
+			if (!Util.endsWithSuffixList(c, ext)) {
 				it.remove();
 				Util.println("Constraint \"" + c + "\" is of an unsupported type. It will be ignored.", true);
 			}
@@ -566,7 +582,111 @@ public class Project {
 		}
 	}
 
-	private void addRemoveFile(CustomTree.TreeElement item, final FileType type) {
+	private void addMenuItem_newSource() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("New source...");
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MainWindow.mainWindow.addNewFile();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_newConstraint() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("New constraint...");
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MainWindow.mainWindow.addNewFile();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_addComponent() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("Add component...");
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!isOpen()) {
+					Util.showError("You need to open or create a project first!");
+					return;
+				}
+				MainWindow.mainWindow.addComponents();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_launchCoreGen() {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("Launch CoreGen");
+		mi.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MainWindow.mainWindow.getCoreGen().launch(Project.this);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_rename(CustomTree.TreeElement item, final Project.FileType type) {
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("Rename");
+		mi.setData(item.getName());
+		mi.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SourceFile file = new SourceFile();
+				file.fileName = (String) ((MenuItem) e.getSource()).getData();
+
+				switch (type) {
+					case CONSTRAINT:
+						if (constraintLib.get(file.fileName)) {
+							Util.showError("You can't rename library constraints!");
+							return;
+						}
+						break;
+					case COMPONENT:
+						Util.showError("You can't rename components!");
+						return;
+					case CORE:
+						Util.showError("You can't rename cores!");
+						return;
+				}
+
+				MainWindow.mainWindow.renameFile(file);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+
+			}
+		});
+	}
+
+	private void addMenuItem_removeFile(CustomTree.TreeElement item, final FileType type) {
 		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
 		mi.setText("Remove " + item.getName());
 		mi.setData(item.getName());
@@ -584,7 +704,7 @@ public class Project {
 							Util.showError("Could not remove file!");
 						break;
 					case CONSTRAINT:
-						if (!removeConstaintFile(file))
+						if (!removeConstraintFile(file))
 							Util.showError("Could not remove file!");
 						break;
 					case COMPONENT:
@@ -627,21 +747,11 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("New source...");
-				mi.addSelectionListener(new SelectionListener() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						MainWindow.mainWindow.addNewFile();
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-
-					}
-				});
+				addMenuItem_newSource();
 				if (!item.isNode())
-					addRemoveFile(item, FileType.SOURCE);
+					addMenuItem_rename(item, FileType.SOURCE);
+				if (!item.isNode())
+					addMenuItem_removeFile(item, FileType.SOURCE);
 			}
 		}
 	};
@@ -658,21 +768,11 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("New constraint...");
-				mi.addSelectionListener(new SelectionListener() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						MainWindow.mainWindow.addNewFile();
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-
-					}
-				});
+				addMenuItem_newConstraint();
 				if (!item.isNode())
-					addRemoveFile(item, FileType.CONSTRAINT);
+					addMenuItem_rename(item, FileType.CONSTRAINT);
+				if (!item.isNode())
+					addMenuItem_removeFile(item, FileType.CONSTRAINT);
 			}
 		}
 	};
@@ -686,25 +786,9 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("Add component...");
-				mi.addSelectionListener(new SelectionListener() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						if (!isOpen()) {
-							Util.showError("You need to open or create a project first!");
-							return;
-						}
-						MainWindow.mainWindow.addComponents();
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-
-					}
-				});
+				addMenuItem_addComponent();
 				if (!item.isNode())
-					addRemoveFile(item, FileType.COMPONENT);
+					addMenuItem_removeFile(item, FileType.COMPONENT);
 			}
 		}
 	};
@@ -718,22 +802,9 @@ public class Project {
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
-				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("Launch CoreGen");
-				mi.addSelectionListener(new SelectionListener() {
-
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						MainWindow.mainWindow.getCoreGen().launch(Project.this);
-
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-					}
-				});
+				addMenuItem_launchCoreGen();
 				if (item.isNode() && !item.getName().equals(CORES_PARENT))
-					addRemoveFile(item, FileType.CORE);
+					addMenuItem_removeFile(item, FileType.CORE);
 			}
 		}
 	};

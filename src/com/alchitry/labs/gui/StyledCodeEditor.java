@@ -195,13 +195,6 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 		setFont(new Font(getDisplay(), "Ubuntu Mono", 12, SWT.NORMAL));
 
-		if (file != null)
-			fileName = file.substring(file.lastIndexOf(File.separatorChar) + 1);
-		else
-			fileName = "Untitled";
-
-		tabFolder.addTab(fileName, this);
-
 		if (indentProvider != null)
 			formatter = new AutoFormatter(this, indentProvider);
 
@@ -212,6 +205,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			addExtendedModifyListener(unindentProvider);
 
 		opened = openFile(file);
+
+		tabFolder.addTab(getTabTitle(), this);
 
 		addModifyListener(this);
 		addVerifyKeyListener(new HotKeys(this));
@@ -406,6 +401,14 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		return edited;
 	}
 
+	private String getTabTitle() {
+		return (edited ?  "*" : " ") + fileName;
+	}
+
+	private void refreshTabTitle() {
+		tabFolder.setText(this, getTabTitle());
+	}
+
 	public void formatText() {
 		if (formatter == null)
 			return;
@@ -431,6 +434,16 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		setFocus();
 	}
 
+	public void setPath(String path) {
+		filePath = path;
+		if (filePath != null) {
+			fileName = filePath.substring(filePath.lastIndexOf(File.separatorChar) + 1);
+		} else {
+			fileName = "Untitled";
+		}
+		refreshTabTitle();
+	}
+
 	private boolean openFile(String path) {
 		String fileContents;
 		if (path != null) {
@@ -445,8 +458,9 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			fileContents = "";
 		}
 
-		filePath = path;
+		setPath(path);
 		edited = false;
+		refreshTabTitle();
 		undoRedo.skipNext();
 		setText(fileContents);
 		tabFolder.setSelection(this);
@@ -468,9 +482,9 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 				return false;
 			}
 
-			filePath = path;
-			tabFolder.setText(this, fileName);
+			setPath(path);
 			edited = false;
+			refreshTabTitle();
 		}
 		try {
 			PrintWriter out = new PrintWriter(filePath);
@@ -480,10 +494,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			return false;
 		}
 
-		if (edited == true) {
-			tabFolder.setText(this, tabFolder.getText(this).substring(1));
-		}
 		edited = false;
+		refreshTabTitle();
 		MainWindow.mainWindow.updateErrors();
 		return true;
 	}
@@ -491,10 +503,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	@Override
 	public void modifyText(ModifyEvent e) {
 		if (e.widget == this) {
-			if (edited == false) {
-				tabFolder.setText(this, "*" + fileName);
-			}
 			edited = true;
+			refreshTabTitle();
 
 			// work around for selectAll -> delete bug
 			if (getText().isEmpty())

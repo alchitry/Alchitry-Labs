@@ -39,6 +39,7 @@ import com.alchitry.labs.gui.ConstraintsEditor;
 import com.alchitry.labs.gui.Images;
 import com.alchitry.labs.gui.NewProjectDialog;
 import com.alchitry.labs.gui.NewSourceDialog;
+import com.alchitry.labs.gui.RenameFileDialog;
 import com.alchitry.labs.gui.SerialPortSelector;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
@@ -703,7 +704,6 @@ public class MainWindow {
 				case SourceFile.CONSTRAINT:
 					if ((filePath = project.addNewConstraintFile(file.fileName)) == null)
 						Util.showError("Could not create constraint file!");
-
 					break;
 				}
 
@@ -718,6 +718,48 @@ public class MainWindow {
 			shlAlchitryLabs.setEnabled(true);
 		} else {
 			Util.showError("A project must be open to add a new file.");
+		}
+	}
+
+	public void renameFile(SourceFile oldFile) {
+		if (project.isOpen()) {
+			if (!project.getSourceFiles().contains(oldFile.fileName) && !project.getConstraintFiles(false).contains(oldFile.fileName)) {
+				Util.showError("You can only rename source file and non-library constraints!");
+			}
+			RenameFileDialog dialog = new RenameFileDialog(shlAlchitryLabs, oldFile, project.getBoard());
+			shlAlchitryLabs.setEnabled(false);
+			SourceFile newFile = dialog.open();
+			if (newFile != null) {
+				String filePath = null;
+				switch (newFile.type) {
+				case SourceFile.VERILOG:
+				case SourceFile.LUCID:
+					if ((filePath = project.renameSourceFile(oldFile.fileName, newFile.fileName)) == null)
+						Util.showError("Could not rename new source file!");
+					break;
+				case SourceFile.CONSTRAINT:
+					if ((filePath = project.renameConstraintFile(oldFile.fileName, newFile.fileName)) == null)
+						Util.showError("Could not rename constraint file!");
+					break;
+				}
+				for (TabChild editor : MainWindow.mainWindow.getTabs()) {
+					if (editor instanceof StyledCodeEditor) {
+						StyledCodeEditor styledCodeEditor = ((StyledCodeEditor) editor);
+						if (styledCodeEditor.getFileName().equals(oldFile.fileName)) {
+							styledCodeEditor.setPath(filePath);
+							break;
+						}
+					}
+				}
+				try {
+					project.saveXML();
+				} catch (IOException e) {
+					Util.showError("Failed to save project file!");
+				}
+			}
+			shlAlchitryLabs.setEnabled(true);
+		} else {
+			Util.showError("A project must be open to rename a file.");
 		}
 	}
 
@@ -838,6 +880,7 @@ public class MainWindow {
 				}
 				tabFolder.opened = true;
 			}
+			codeEditor.grabFocus();
 
 			return true;
 		}
