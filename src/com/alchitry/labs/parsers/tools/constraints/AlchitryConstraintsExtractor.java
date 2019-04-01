@@ -107,6 +107,11 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 			ParseTree pt = ctx.children.get(i);
 			if (pt instanceof Array_indexContext) {
 				Array_indexContext aic = (Array_indexContext) pt;
+				
+				if (current == null) {
+					errorListener.reportError(aic, ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
+					return 0;
+				}
 
 				if (!current.isArray()) {
 					errorListener.reportError(aic, ErrorStrings.BIT_SELECTOR_IN_NAME);
