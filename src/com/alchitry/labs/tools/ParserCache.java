@@ -29,7 +29,7 @@ import com.alchitry.labs.parsers.verilog.Verilog2001Lexer;
 import com.alchitry.labs.parsers.verilog.Verilog2001Parser;
 
 public class ParserCache {
-	private static HashMap<String, CacheEntry> treeMap = new HashMap<>();
+	private static HashMap<File, CacheEntry> treeMap = new HashMap<>();
 
 	private ParserCache() {
 	}
@@ -41,8 +41,8 @@ public class ParserCache {
 		public long timeStamp;
 		public List<ParseError> errors;
 
-		public CacheEntry(String f) {
-			file = new File(f);
+		public CacheEntry(File f) {
+			file = f;
 			timeStamp = -1;
 			errors = new ArrayList<>();
 		}
@@ -64,7 +64,7 @@ public class ParserCache {
 		}
 	}
 
-	static public void invalidate(String file) {
+	static public void invalidate(File file) {
 		synchronized (treeMap) {
 			CacheEntry entry = treeMap.get(file);
 			if (entry != null)
@@ -74,7 +74,7 @@ public class ParserCache {
 		}
 	}
 
-	static public ParseError[] getErrors(String file) {
+	static public ParseError[] getErrors(File file) {
 		CacheEntry entry;
 		synchronized (treeMap) {
 			entry = treeMap.get(file);
@@ -89,7 +89,7 @@ public class ParserCache {
 		}
 	}
 
-	static public CommonTokenStream getTokens(String file) {
+	static public CommonTokenStream getTokens(File file) {
 		CacheEntry entry;
 
 		synchronized (treeMap) {
@@ -108,13 +108,13 @@ public class ParserCache {
 
 	}
 	
-	static public ParseTree walk(String file, ParseTreeListener listener) {
+	static public ParseTree walk(File file, ParseTreeListener listener) {
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		listeners.add(listener);
 		return walk(file, listeners);
 	}
 
-	static public ParseTree walk(String file, List<ParseTreeListener> listeners) {
+	static public ParseTree walk(File file, List<ParseTreeListener> listeners) {
 		CacheEntry entry;
 
 		synchronized (treeMap) {
@@ -155,14 +155,13 @@ public class ParserCache {
 	}
 
 	static private ParseTree parseFile(final CacheEntry entry) throws IOException {
-		String filePath = entry.file.getPath();
 		String[] parts = entry.file.getName().split("\\.");
 		if (parts.length != 2) {
 			Util.log.severe("File \"" + entry.file.getName() + "\" suffix could not be detected.");
 			return null;
 		}
 
-		String text = Util.getFileText(filePath);
+		String text = Util.getFileText(entry.file);
 
 		if (text == null) {
 			Util.showError("Could not read file " + entry);

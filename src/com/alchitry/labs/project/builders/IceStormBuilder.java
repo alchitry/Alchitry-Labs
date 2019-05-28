@@ -13,8 +13,8 @@ public class IceStormBuilder extends ProjectBuilder {
 
 	@Override
 	protected void projectBuilder() throws Exception {
-		ArrayList<String> vFiles;
-		ArrayList<String> cFiles;
+		ArrayList<File> vFiles;
+		ArrayList<File> cFiles;
 		try {
 			vFiles = getVerilogFiles();
 			cFiles = getConstraintFiles();
@@ -28,18 +28,17 @@ public class IceStormBuilder extends ProjectBuilder {
 		if (cFiles == null) {
 			Util.showError("Error building the project", "Error with getting list of constraint files!");
 		}
-		String srcFolder = workFolder + File.separatorChar + "verilog";
 
-		String escapedWorkFolder = workFolder.replace(" ", "\\ ");
+		String escapedWorkFolder = workFolder.getAbsolutePath().replace(" ", "\\ ");
 		
-		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
+		String topModuleName = project.getTop().getName().substring(0, project.getTop().getName().lastIndexOf('.')) + "_0";
 
 		ArrayList<String> yosysCommand = new ArrayList<>();
 		yosysCommand.add(Util.getYosysCommand());
 		yosysCommand.add("-p");
 		yosysCommand.add("synth_ice40 -top " + topModuleName + " -blif " + escapedWorkFolder + File.separator + "alchitry.blif");
-		for (String file : vFiles)
-			yosysCommand.add(srcFolder + File.separatorChar + file);
+		for (File file : vFiles)
+			yosysCommand.add(file.getAbsolutePath());
 
 		Util.println(yosysCommand.toString());
 
@@ -60,9 +59,9 @@ public class IceStormBuilder extends ProjectBuilder {
 		arachneCommand.add(workFolder + File.separator + "alchitry.txt");
 
 		removeUnsupportedConstraints(cFiles);
-		for (String con : cFiles) {
+		for (File con : cFiles) {
 			arachneCommand.add("-p");
-			arachneCommand.add(con);
+			arachneCommand.add(con.getAbsolutePath());
 		}
 
 		arachneCommand.add(workFolder + File.separator + "alchitry.blif");
@@ -93,11 +92,11 @@ public class IceStormBuilder extends ProjectBuilder {
 		}
 	}
 
-	private void removeUnsupportedConstraints(List<String> constraints) {
+	private void removeUnsupportedConstraints(List<File> constraints) {
 		String ext = ".sdc";
-		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
-			String c = it.next();
-			if (c.endsWith(ext)) {
+		for (Iterator<File> it = constraints.iterator(); it.hasNext();) {
+			File c = it.next();
+			if (c.getName().endsWith(ext)) {
 				it.remove();
 				Util.println("Project IceStorm doesn't support .sdc constraints. \"" + c + "\" will be ignored.", true);
 			}

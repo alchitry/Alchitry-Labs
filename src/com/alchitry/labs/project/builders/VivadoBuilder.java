@@ -25,7 +25,7 @@ public class VivadoBuilder extends ProjectBuilder {
 
 	protected void projectBuilder() throws Exception {
 		BufferedWriter out = null;
-		String tclScript = workFolder + File.separatorChar + projectFile;
+		File tclScript = Util.assembleFile(workFolder, projectFile);
 
 		try {
 			FileWriter fstream = new FileWriter(tclScript);
@@ -59,16 +59,20 @@ public class VivadoBuilder extends ProjectBuilder {
 		cmd.add("-mode");
 		cmd.add("batch");
 		cmd.add("-source");
-		cmd.add(tclScript);
+		cmd.add(tclScript.getAbsolutePath());
+
+		Util.println("Starting Vivado...", Theme.infoTextColor);
 
 		builder = Util.runCommand(cmd);
 
 		builder.waitFor();
 
-		File binFile = new File(workFolder + File.separatorChar + projectDir + File.separatorChar + project.getProjectName() + File.separatorChar + project.getProjectName()
-				+ ".runs" + File.separatorChar + "impl_1" + File.separatorChar + project.getTop().split("\\.")[0] + "_0.bin");
+		Thread.sleep(150);
+
+		File binFile = Util.assembleFile(workFolder, projectDir, project.getProjectName(), project.getProjectName() + ".runs", "impl_1",
+				project.getTopModule().getName() + "_0.bin");
 		if (binFile.exists()) {
-			FileUtils.copyFile(binFile, new File(workFolder + File.separatorChar + "alchitry.bin"));
+			FileUtils.copyFile(binFile, Util.assembleFile(workFolder, "alchitry.bin"));
 			Util.println("");
 			Util.println("Finished building project.", Theme.successTextColor);
 		} else {
@@ -78,23 +82,20 @@ public class VivadoBuilder extends ProjectBuilder {
 
 	}
 
-	private String getSpacedList(Collection<String> list, String prefix) {
+	private String getSpacedList(Collection<File> list) {
 		StringBuilder builder = new StringBuilder();
-		for (String s : list) {
-			builder.append("\"").append(prefix).append(s).append("\" ");
+		for (File s : list) {
+			builder.append("\"").append(getSanitizedPath(s.getAbsolutePath())).append("\" ");
 		}
-		builder.deleteCharAt(builder.length() - 1);
 		return builder.toString();
 	}
-
 	//@formatter:off
 	/*
-	private String getSpacedListofCores(Collection<IPCore> list, String prefix) {
+	private String getSpacedListofCores(Collection<IPCore> list) {
 		StringBuilder builder = new StringBuilder();
 		for (IPCore core : list)
-			for (String s : core.getFiles()) {
-				if (!s.endsWith(".v"))
-					builder.append("\"").append(prefix).append(s).append("\" ");
+			for (File s : core.getFiles()) {
+				builder.append("\"").append(s.getAbsolutePath()).append("\" ");
 			}
 		builder.deleteCharAt(builder.length() - 1);
 		return builder.toString();
@@ -102,12 +103,20 @@ public class VivadoBuilder extends ProjectBuilder {
 	*/
 	//@formatter:on
 
+	private String getSanitizedPath(File f) {
+		return getSanitizedPath(f.getAbsolutePath());
+	}
+
+	private String getSanitizedPath(String f) {
+		return f.replace("\\", "/").replace(" ", "\\ ");
+	}
+
 	private boolean generateProjectFile(BufferedWriter file) throws IOException {
 		final String nl = System.lineSeparator();
 		final String ps = "/"; // the tcl script expects / for all OS's
 
-		ArrayList<String> vFiles;
-		ArrayList<String> cFiles;
+		ArrayList<File> vFiles;
+		ArrayList<File> cFiles;
 		try {
 			vFiles = getVerilogFiles();
 			cFiles = getConstraintFiles();
@@ -124,35 +133,30 @@ public class VivadoBuilder extends ProjectBuilder {
 			Util.showError("Error building the project", "Error with getting list of constraint files!");
 			return false;
 		}
-		String srcFolder = workFolder + File.separatorChar + "verilog";
 
-		file.write("set projDir \"" + workFolder.replace("\\", "/") + ps + projectDir + "\"" + nl);
+		file.write("set projDir \"" + getSanitizedPath(workFolder) + ps + projectDir + "\"" + nl);
 		file.write("set projName \"" + project.getProjectName() + "\"" + nl);
 		file.write("set topName top" + nl);
 		file.write("set device " + project.getBoard().getFPGAName() + nl);
 		file.write("if {[file exists \"$projDir" + ps + "$projName\"]} { file delete -force \"$projDir" + ps + "$projName\" }" + nl);
 		file.write("create_project $projName \"$projDir" + ps + "$projName\" -part $device" + nl);
 		file.write("set_property design_mode RTL [get_filesets sources_1]" + nl);
-		file.write("set verilogSources [list " + getSpacedList(vFiles, srcFolder.replace("\\", "/").replace(" ", "\\ ") + ps) + "]" + nl);
+		file.write("set verilogSources [list " + getSpacedList(vFiles) + "]" + nl);
 		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
-		file.write("set xdcSources [list ");
-		for (String cF : cFiles) {
-			file.write('"');
-			file.write(cF.replace('\\', '/').replace(" ", "\\ "));
-			file.write("\" ");
-		}
-		file.write("]" + nl);
+		file.write("set xdcSources [list " + getSpacedList(cFiles) + "]" + nl);
 		file.write("read_xdc $xdcSources" + nl);
 		if (project.getIPCores().size() > 0) {
-			String prefix = project.getIPCoreFolder().replace("\\", "/").replace(" ", "\\ ") + ps;
-			for (IPCore core : project.getIPCores())
-				for (String s : core.getFiles()) {
-					if (!s.endsWith(".v")) {
-						file.write("import_files -fileset [get_filesets sources_1] [list \"" + prefix + s + "\" ]" + nl);
-					} else if (s.endsWith(".xcix")) {
-						file.write("import_ip -srcset [get_filesets sources_1] [list \"" + prefix + s + "\"]" + nl);
-					}
+			for (IPCore core : project.getIPCores()) {
+				for (File s : core.getFiles()) {
+					file.write("import_ip -srcset [get_filesets sources_1] [list \"" + getSanitizedPath(s.getAbsolutePath()) + "\"]" + nl);
+					/*
+					if (s.getName().endsWith(".xcix"))
+						file.write("import_ip -srcset [get_filesets sources_1] [list \"" + getSanitizedPath(s.getAbsolutePath()) + "\"]" + nl);
+					else
+						file.write("import_files -fileset [get_filesets sources_1] [list \"" + getSanitizedPath(s.getAbsolutePath()) + "\" ]" + nl);
+						*/
 				}
+			}
 		}
 		file.write("set_property STEPS.WRITE_BITSTREAM.ARGS.BIN_FILE true [get_runs impl_1]" + nl);
 		file.write("update_compile_order -fileset sources_1" + nl);

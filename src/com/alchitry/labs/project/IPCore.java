@@ -6,18 +6,27 @@ import java.util.ArrayList;
 
 public class IPCore {
 	private String name;
-	private ArrayList<String> files;
+	private File stub;
+	private ArrayList<File> files;
 
 	public IPCore(String name) {
 		this.name = name;
 		files = new ArrayList<>();
 	}
 
-	public void addFile(String file) {
+	public void setStub(File stub) {
+		this.stub = stub;
+	}
+
+	public File getStub() {
+		return stub;
+	}
+
+	public void addFile(File file) {
 		files.add(file);
 	}
 
-	public final ArrayList<String> getFiles() {
+	public final ArrayList<File> getFiles() {
 		return files;
 	}
 
@@ -77,7 +86,7 @@ public class IPCore {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return name.hashCode();

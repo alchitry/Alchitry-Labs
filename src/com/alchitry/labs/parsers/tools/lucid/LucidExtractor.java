@@ -225,7 +225,7 @@ public class LucidExtractor extends LucidBaseListener {
 		return vars;
 	}
 
-	public List<InstModule> getInstModules(String file, List<Module> modules) {
+	public List<InstModule> getInstModules(File file, List<Module> modules) {
 		setModuleList(modules);
 		parseAll(file);
 		return instModules;
@@ -257,8 +257,8 @@ public class LucidExtractor extends LucidBaseListener {
 	// paramsParser.reset();
 	// }
 
-	public void parseAll(String file) {
-		fileName = file.substring(file.lastIndexOf(File.separatorChar) + 1, file.lastIndexOf('.'));
+	public void parseAll(File file) {
+		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		addToParser(listeners);
 		ParserCache.walk(file, listeners);
@@ -1417,14 +1417,14 @@ public class LucidExtractor extends LucidBaseListener {
 					}
 				} else if (Util.containsName(module.getOutputs(), sigName)) {
 					if (write) {
-						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, sigName));
 					}
 				} else if (Util.containsName(module.getInputs(), sigName)) {
 					if (read) {
-						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
+						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, sigName));
 					}
 				} else {
-					errorListener.reportError(names.get(1), String.format(ErrorStrings.MODULE_SIG_UNDEFINED, name, module.getName()));
+					errorListener.reportError(names.get(1), String.format(ErrorStrings.MODULE_SIG_UNDEFINED, sigName, module.getName()));
 				}
 
 				return;

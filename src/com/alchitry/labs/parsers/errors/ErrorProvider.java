@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.errors;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 		display = editor.getDisplay();
 	}
 	
-	public ArrayList<SyntaxError> getErrors(String file) {
+	public ArrayList<SyntaxError> getErrors(File file) {
 		errors.clear();
 		for (ParseError e : ParserCache.getErrors(file)) 
 			underline(e.token, null, e.msg, Theme.errorTextColor, SyntaxError.ERROR);
@@ -50,7 +51,7 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 	}
 
 	public void updateErrors() {
-		getErrors(editor.getFilePath());
+		getErrors(editor.getFile());
 
 		lineErrors.clear();
 		for (SyntaxError e : errors) {

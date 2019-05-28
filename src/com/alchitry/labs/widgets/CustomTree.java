@@ -1,5 +1,6 @@
 package com.alchitry.labs.widgets;
 
+import java.io.File;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -536,8 +537,15 @@ public class CustomTree extends Canvas {
 	}
 
 	public static class TreeLeaf extends TreeElement {
-		public TreeLeaf(String name) {
-			setName(name);
+		private File file;
+		
+		public TreeLeaf(File file) {
+			setName(file.getName());
+			this.file = file;
+		}
+		
+		public File getFile() {
+			return file;
 		}
 
 		@Override

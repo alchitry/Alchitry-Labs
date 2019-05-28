@@ -11,7 +11,6 @@ import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
 
-import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.project.Environment;
@@ -28,7 +27,7 @@ public class ISEBuilder extends ProjectBuilder {
 
 	protected void projectBuilder() throws Exception {
 		BufferedWriter out = null;
-		String tclScript = workFolder + File.separatorChar + projectFile;
+		File tclScript = Util.assembleFile(workFolder, projectFile);
 
 		try {
 			FileWriter fstream = new FileWriter(tclScript);
@@ -72,16 +71,16 @@ public class ISEBuilder extends ProjectBuilder {
 		cmd.add("-mode");
 		cmd.add("batch");
 		cmd.add("-source");
-		cmd.add(tclScript);
+		cmd.add(tclScript.getAbsolutePath());
 
 		builder = Util.runCommand(cmd);
 
 		builder.waitFor();
 
-		File binFile = new File(workFolder + File.separatorChar + projectDir + File.separatorChar + project.getProjectName() + File.separatorChar + project.getProjectName()
-				+ ".runs" + File.separatorChar + "impl_1" + File.separatorChar + project.getTop().split("\\.")[0] + "_0.bin");
+		File binFile = Util.assembleFile(workFolder, projectDir, project.getProjectName(), project.getProjectName() + ".runs", "impl_1",
+				project.getTop().getCanonicalPath().split("\\.")[0] + "_0.bin");
 		if (binFile.exists()) {
-			FileUtils.copyFile(binFile, new File(workFolder + File.separatorChar + "alchitry.bin"));
+			FileUtils.copyFile(binFile, Util.assembleFile(workFolder, "alchitry.bin"));
 			Util.println("");
 			Util.println("Finished building project.", Theme.successTextColor);
 		} else {
@@ -90,20 +89,19 @@ public class ISEBuilder extends ProjectBuilder {
 		}
 	}
 
-	private String getSpacedList(Collection<String> list, String prefix) {
+	private String getSpacedList(Collection<File> list) {
 		StringBuilder builder = new StringBuilder();
-		for (String s : list) {
-			builder.append("\"").append(prefix).append(s).append("\" ");
+		for (File s : list) {
+			builder.append("\"").append(s.getAbsolutePath()).append("\" ");
 		}
-		builder.deleteCharAt(builder.length() - 1);
 		return builder.toString();
 	}
 
-	private String getSpacedListofCores(Collection<IPCore> list, String prefix) {
+	private String getSpacedListofCores(Collection<IPCore> list) {
 		StringBuilder builder = new StringBuilder();
 		for (IPCore core : list)
-			for (String s : core.getFiles()) {
-				builder.append("\"").append(prefix).append(s).append("\" ");
+			for (File s : core.getFiles()) {
+				builder.append("\"").append(s.getAbsolutePath()).append("\" ");
 			}
 		builder.deleteCharAt(builder.length() - 1);
 		return builder.toString();
@@ -113,7 +111,7 @@ public class ISEBuilder extends ProjectBuilder {
 		final String nl = System.lineSeparator();
 		final String ps = "/"; // the tcl script expects / for all OS's
 
-		ArrayList<String> vFiles;
+		ArrayList<File> vFiles;
 		try {
 			vFiles = getVerilogFiles();
 		} catch (ParseException e) {
@@ -123,9 +121,9 @@ public class ISEBuilder extends ProjectBuilder {
 		if (vFiles == null || vFiles.size() == 0) {
 			Util.showError("Error building the project", "Error with getting list of Verilog files!");
 		}
-		String srcFolder = workFolder + File.separatorChar + "verilog";
 
-		file.write("set projDir \"" + workFolder.replace("\\", "/") + ps + projectDir + "\"" + nl);
+
+		file.write("set projDir \"" + workFolder.getAbsolutePath().replace("\\", "/") + ps + projectDir + "\"" + nl);
 		file.write("set projName \"" + project.getProjectName() + "\"" + nl);
 		file.write("set topName top" + nl);
 		file.write("set device " + project.getBoard().getFPGAName() + nl);
@@ -133,20 +131,17 @@ public class ISEBuilder extends ProjectBuilder {
 		file.write("create_project $projName \"$projDir" + ps + "$projName\" -part $device" + nl);
 		// file.write("set_property source_mgmt_mode None [current_project]" + nl);
 		file.write("set_property design_mode RTL [get_filesets sources_1]" + nl);
-		file.write("set verilogSources [list " + getSpacedList(vFiles, srcFolder.replace("\\", "/") + ps) + "]" + nl);
+		file.write("set verilogSources [list " + getSpacedList(vFiles).replace("\\", "/") + "]" + nl);
 		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
 		file.write("set ucfSources [list ");
-		HashSet<String> localUcf = project.getConstraintFiles(false);
-		if (localUcf.size() > 0)
-			file.write(getSpacedList(project.getConstraintFiles(false), project.getConstraintFolder().replace("\\", "/").replace(" ", "\\ ") + ps));
-		HashSet<String> libUcf = project.getConstraintFiles(true);
-		if (libUcf.size() > 0)
-			file.write(" " + getSpacedList(project.getConstraintFiles(true), Locations.COMPONENTS.replace("\\", "/").replace(" ", "\\ ") + ps));
+		HashSet<File> ucfFiles = project.getConstraintFiles();
+		if (ucfFiles.size() > 0)
+			file.write(getSpacedList(ucfFiles).replace("\\", "/").replace(" ", "\\ "));
 		file.write("]" + nl);
 		file.write("import_files -fileset [get_filesets constrs_1] -force -norecurse $ucfSources" + nl);
 		if (project.getIPCores().size() > 0) {
 			file.write(
-					"set coreSources [list " + getSpacedListofCores(project.getIPCores(), project.getIPCoreFolder().replace("\\", "/").replace(" ", "\\ ") + ps) + "]" + nl);
+					"set coreSources [list " + getSpacedListofCores(project.getIPCores()).replace("\\", "/").replace(" ", "\\ ") + "]" + nl);
 			file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $coreSources" + nl);
 		}
 		// file.write("set_property top " + project.getTop().split("\\.")[0] + " [get_property srcset [current_run]]" + nl);

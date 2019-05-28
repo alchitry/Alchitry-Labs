@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ import com.alchitry.labs.tools.ParserCache;
 
 public class LucidGlobalExtractor extends LucidBaseListener {
 	private List<SyntaxError> errors;
-	private HashMap<String, List<SyntaxError>> fileErrors;
+	private HashMap<File, List<SyntaxError>> fileErrors;
 	private HashMap<String, List<Constant>> globalConsts;
 	private HashMap<String, List<Struct>> globalStructs;
 	private List<Constant> consts;
@@ -41,7 +42,7 @@ public class LucidGlobalExtractor extends LucidBaseListener {
 		fileErrors = new HashMap<>();
 	}
 
-	public void parseGlobals(String file) {
+	public void parseGlobals(File file) {
 		errors = new ArrayList<>();
 		fileErrors.put(file, errors);
 		ParserCache.walk(file, this);
@@ -199,11 +200,11 @@ public class LucidGlobalExtractor extends LucidBaseListener {
 		errors.add(new SyntaxError(type, style, message, start, stop, line, offset));
 	}
 
-	public List<SyntaxError> getErrors(String file) {
+	public List<SyntaxError> getErrors(File file) {
 		return fileErrors.get(file);
 	}
 
-	public HashMap<String, List<SyntaxError>> getAllErrors() {
+	public HashMap<File, List<SyntaxError>> getAllErrors() {
 		return fileErrors;
 	}
 

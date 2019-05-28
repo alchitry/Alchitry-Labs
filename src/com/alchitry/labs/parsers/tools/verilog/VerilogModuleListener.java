@@ -43,7 +43,7 @@ public class VerilogModuleListener extends Verilog2001BaseListener {
 	public VerilogModuleListener() {
 	}
 
-	public List<Module> extractModules(String file) {
+	public List<Module> extractModules(File file) {
 		moduleList = null;
 		modules = new ArrayList<>();
 		instModules = new ArrayList<InstModule>();
@@ -59,7 +59,7 @@ public class VerilogModuleListener extends Verilog2001BaseListener {
 		constExpr = new VerilogConstExprParser(thisModule);
 		listeners.add(this);
 		listeners.add(constExpr);
-		ParserCache.walk(new File(thisModule.getType().getFolder() + File.separatorChar + thisModule.getType().getFileName()).getAbsolutePath(), listeners);
+		ParserCache.walk(thisModule.getType().getFile(), listeners);
 		return instModules;
 	}
 

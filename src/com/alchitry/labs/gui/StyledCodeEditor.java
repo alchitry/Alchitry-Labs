@@ -67,7 +67,7 @@ import com.alchitry.labs.widgets.TabHotKeys;
 
 public class StyledCodeEditor extends StyledText implements ModifyListener, TabChild {
 
-	private String filePath;
+	private File file;
 	private boolean edited;
 	private CustomTabs tabFolder;
 	private boolean opened;
@@ -94,7 +94,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 	private Menu rightClickMenu;
 
-	public StyledCodeEditor(CustomTabs parent, int style, String file, boolean write) {
+	public StyledCodeEditor(CustomTabs parent, int style, File file, boolean write) {
 		super(parent, style);
 		this.tabFolder = parent;
 		this.write = write;
@@ -126,7 +126,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 		if (file == null) {
 			undoRedo.skipNext();
-		} else if (file.endsWith(".luc")) {
+		} else if (file.getName().endsWith(".luc")) {
 			LucidDictionary dict = new LucidDictionary(this);
 			LucidErrorProvider lErrorChecker = new LucidErrorProvider(this, dict);
 			lineStyleListeners.add(lErrorChecker);
@@ -142,7 +142,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			indentProvider = nli;
 			isLucid = true;
 			autoComplete = new AutoComplete(this, dict);
-		} else if (file.endsWith(".v")) {
+		} else if (file.getName().endsWith(".v")) {
 			VerilogErrorProvider vErrorChecker = new VerilogErrorProvider(this);
 			lineStyleListeners.add(vErrorChecker);
 			addModifyListener(vErrorChecker);
@@ -153,7 +153,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			indentProvider = new VerilogIndentProvider();
 			newLineIndenter = new VerilogNewLineIndenter(this, undoRedo);
 			isVerilog = true;
-		} else if (file.endsWith(".acf")) {
+		} else if (file.getName().endsWith(".acf")) {
 			AlchitryConstraintsErrorProvider aErrorChecker = new AlchitryConstraintsErrorProvider(this);
 			lineStyleListeners.add(aErrorChecker);
 			addModifyListener(aErrorChecker);
@@ -177,7 +177,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 			autoComplete = new AutoComplete(this, dict);
 			isConstraint = true;
-		} else if (Util.isConstraintFile(file)) {
+		} else if (Util.isConstraintFile(file.getName())) {
 			isConstraint = true;
 			// TODO : native constraint checking
 		} else {
@@ -196,7 +196,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		setFont(new Font(getDisplay(), "Ubuntu Mono", 12, SWT.NORMAL));
 
 		if (file != null)
-			fileName = file.substring(file.lastIndexOf(File.separatorChar) + 1);
+			fileName = file.getName();
 		else
 			fileName = "Untitled";
 
@@ -319,7 +319,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				ParserCache.invalidate(getFilePath());
+				ParserCache.invalidate(file);
 			}
 		});
 	}
@@ -422,8 +422,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		setCaretOffset(caret);
 	}
 
-	public String getFilePath() {
-		return filePath;
+	public File getFile() {
+		return file;
 	}
 
 	public void grabFocus() {
@@ -431,10 +431,9 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		setFocus();
 	}
 
-	private boolean openFile(String path) {
+	private boolean openFile(File path) {
 		String fileContents;
 		if (path != null) {
-			path = new File(path).getAbsolutePath();
 			try {
 				fileContents = Util.readFile(path);
 			} catch (IOException e1) {
@@ -445,7 +444,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			fileContents = "";
 		}
 
-		filePath = path;
+		file = path;
 		edited = false;
 		undoRedo.skipNext();
 		setText(fileContents);
@@ -459,7 +458,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			return false;
 		}
 
-		if (filePath == null) {
+		if (file == null) {
 			FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
 			dialog.setFilterExtensions(new String[] { "*.luc", "*.v", "*" });
 			dialog.setText("Save File");
@@ -468,12 +467,12 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 				return false;
 			}
 
-			filePath = path;
+			file = new File(path);
 			tabFolder.setText(this, fileName);
 			edited = false;
 		}
 		try {
-			PrintWriter out = new PrintWriter(filePath);
+			PrintWriter out = new PrintWriter(file);
 			out.print(getText());
 			out.close();
 		} catch (FileNotFoundException e1) {

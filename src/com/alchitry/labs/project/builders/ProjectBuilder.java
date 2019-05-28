@@ -16,7 +16,6 @@ import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
 
-import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.SignalSelectionDialog;
 import com.alchitry.labs.gui.main.MainWindow;
@@ -37,7 +36,7 @@ import com.alchitry.labs.style.ParseException;
 public abstract class ProjectBuilder {
 
 	protected Project project;
-	protected String workFolder;
+	protected File workFolder;
 	protected Process builder;
 	protected ArrayList<ProjectSignal> debugSignals;
 	protected int samples;
@@ -73,7 +72,7 @@ public abstract class ProjectBuilder {
 		try {
 			MainWindow.mainWindow.setBuilding(true);
 			this.project = project;
-			workFolder = project.getFolder() + File.separatorChar + "work";
+			workFolder = Util.assembleFile(project.getFolder(), "work");
 
 			Util.clearConsole();
 			InstModule top = null;
@@ -114,11 +113,10 @@ public abstract class ProjectBuilder {
 					return;
 			}
 
-			File destDir = new File(workFolder);
-			if (destDir.exists())
-				FileUtils.deleteDirectory(destDir);
-			if (!destDir.exists() || !destDir.isDirectory()) {
-				boolean success = destDir.mkdir();
+			if (workFolder.exists())
+				FileUtils.deleteDirectory(workFolder);
+			if (!workFolder.exists() || !workFolder.isDirectory()) {
+				boolean success = workFolder.mkdir();
 				if (!success) {
 					Util.showError("Could not create project folder!");
 					return;
@@ -137,7 +135,7 @@ public abstract class ProjectBuilder {
 			}
 
 			if (debug) {
-				File debugDir = new File(workFolder + File.separatorChar + "debug");
+				File debugDir = Util.assembleFile(workFolder, "debug");
 				if (!debugDir.exists() || !debugDir.isDirectory()) {
 					boolean success = debugDir.mkdir();
 					if (!success) {
@@ -170,36 +168,34 @@ public abstract class ProjectBuilder {
 		}
 	}
 
-	private String getVerilogFile(String folder, String file, String srcFolder, List<Module> modules, InstModule im, List<InstModule> list) throws IOException {
-		String vName;
-		File src = new File(folder + File.separatorChar + file);
+	private File getVerilogFile(File file, File srcFolder, List<Module> modules, InstModule im, List<InstModule> list) throws IOException {
+		File vName;
 		if (im.getType().isNgc()) {
-			vName = file;
-			File dest = new File(srcFolder + File.separatorChar + file);
+			vName =  Util.assembleFile(srcFolder, file.getName());
 
-			if (!dest.exists() && !dest.createNewFile()) {
+			if (!vName.exists() && !vName.createNewFile()) {
 				Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
 				return null;
 			}
-			FileUtils.copyFile(new File(folder + File.separatorChar + file), dest);
-		} else if (file.endsWith(".luc")) {
-			vName = file.substring(0, file.length() - 4) + "_" + list.indexOf(im) + ".v";
-			File dest = new File(srcFolder + File.separatorChar + vName);
+			FileUtils.copyFile(file, vName);
+		} else if (file.getName().endsWith(".luc")) {
+			vName = Util.changeExt(file, "_" + list.indexOf(im) + ".v");
+			vName = Util.assembleFile(srcFolder, vName.getName());
 
-			if (!dest.exists() && !dest.createNewFile()) {
+			if (!vName.exists() && !vName.createNewFile()) {
 				Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
 				return null;
 			}
 
-			String verilog = LucidToVerilog.convert(src.getAbsolutePath(), modules, im, list);
-			FileUtils.writeStringToFile(dest, verilog);
-		} else if (file.endsWith(".v")) {
-			vName = file.substring(0, file.length() - 2) + "_" + list.indexOf(im) + ".v";
-			File dest = new File(srcFolder + File.separatorChar + vName);
+			String verilog = LucidToVerilog.convert(file, modules, im, list);
+			FileUtils.writeStringToFile(vName, verilog);
+		} else if (file.getName().endsWith(".v")) {
+			vName = Util.changeExt(file, "_" + list.indexOf(im) + ".v");
+			vName = Util.assembleFile(srcFolder, vName.getName());
 
-			String verilog = VerilogLucidModuleFixer.replaceModuleNames(im, src.getAbsolutePath(), modules, list);
+			String verilog = VerilogLucidModuleFixer.replaceModuleNames(im, file, modules, list);
 
-			FileUtils.writeStringToFile(dest, verilog);
+			FileUtils.writeStringToFile(vName, verilog);
 
 		} else {
 			Util.showError("Error building the project", "Unknown file type!");
@@ -209,15 +205,14 @@ public abstract class ProjectBuilder {
 		return vName;
 	}
 
-	private void convertConstraintFile(String file, String folder, String srcFolder, List<String> constraintFiles) throws IOException {
-		String fullPath = Util.assemblePath(folder, file);
-		if (file.endsWith(".acf")) {
+	private void convertConstraintFile(File file, List<File> constraintFiles) throws IOException {
+		if (file.getName().endsWith(".acf")) {
 			AlchitryConstraintsExtractor extractor = new AlchitryConstraintsExtractor();
-			extractor.parseAll(fullPath);
+			extractor.parseAll(file);
 			Board board = project.getBoard();
 			if (board.isType(Board.CU)) {
 				if (!extractor.getPinConstraints().isEmpty()) {
-					File pcf = new File(Util.assemblePath(srcFolder, file.substring(0, file.lastIndexOf('.')) + ".pcf"));
+					File pcf = Util.changeExt(file, ".pcf");
 					if (!pcf.exists() && !pcf.createNewFile()) {
 						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
 						return;
@@ -226,11 +221,11 @@ public abstract class ProjectBuilder {
 					for (PinConstraint pc : extractor.getPinConstraints())
 						sb.append(pc.getBoardConstraint(board));
 					FileUtils.write(pcf, sb.toString());
-					constraintFiles.add(pcf.getAbsolutePath());
+					constraintFiles.add(pcf);
 				}
 
 				if (!extractor.getClockConstraints().isEmpty()) {
-					File sdc = new File(Util.assemblePath(srcFolder, file.substring(0, file.lastIndexOf('.')) + ".sdc"));
+					File sdc = Util.changeExt(file, ".sdc");
 					if (!sdc.exists() && !sdc.createNewFile()) {
 						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
 						return;
@@ -239,11 +234,11 @@ public abstract class ProjectBuilder {
 					for (ClockConstraint cc : extractor.getClockConstraints())
 						sb.append(cc.getBoardConstraint(board));
 					FileUtils.write(sdc, sb.toString());
-					constraintFiles.add(sdc.getAbsolutePath());
+					constraintFiles.add(sdc);
 				}
 			} else if (board.isType(Board.AU)) {
 				if (!extractor.getPinConstraints().isEmpty() || !extractor.getClockConstraints().isEmpty()) {
-					File xdc = new File(Util.assemblePath(srcFolder, file.substring(0, file.lastIndexOf('.')) + ".xdc"));
+					File xdc = Util.assembleFile(workFolder, "constraint", Util.changeExt(file, ".xdc").getName());
 					if (!xdc.exists() && !xdc.createNewFile()) {
 						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
 						return;
@@ -254,43 +249,42 @@ public abstract class ProjectBuilder {
 					for (PinConstraint pc : extractor.getPinConstraints())
 						sb.append(pc.getBoardConstraint(board));
 					FileUtils.write(xdc, sb.toString());
-					constraintFiles.add(xdc.getAbsolutePath());
+					constraintFiles.add(xdc);
 				}
 			}
 		} else {
-			constraintFiles.add(fullPath);
+			constraintFiles.add(file);
 		}
 	}
 
-	private ArrayList<String> mergeConstraintFiles(List<String> files) throws IOException {
+	private ArrayList<File> mergeConstraintFiles(List<File> files) throws IOException {
 		HashMap<String, File> mergedFiles = new HashMap<>();
-		for (String cFile : files) {
-			String ext = cFile.substring(cFile.lastIndexOf('.'), cFile.length());
+		for (File cFile : files) {
+			String ext = cFile.getName().substring(cFile.getName().lastIndexOf('.'), cFile.getName().length());
 			if (!mergedFiles.containsKey(ext)) {
 				File f = new File(Util.assemblePath(workFolder, "constraint", "merged_constraint" + ext));
 				mergedFiles.put(ext, f);
 			}
 			File f = mergedFiles.get(ext);
-			FileUtils.write(f, FileUtils.readFileToString(new File(cFile)) + System.lineSeparator(), true);
+			FileUtils.write(f, FileUtils.readFileToString(cFile) + System.lineSeparator(), true);
 		}
 
-		ArrayList<String> mFiles = new ArrayList<>(mergedFiles.size());
+		ArrayList<File> mFiles = new ArrayList<>(mergedFiles.size());
 
 		Iterator<Entry<String, File>> it = mergedFiles.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<String, File> pair = (Map.Entry<String, File>) it.next();
-			mFiles.add(pair.getValue().getAbsolutePath());
+			mFiles.add(pair.getValue());
 		}
 
 		return mFiles;
 	}
 
-	protected ArrayList<String> getConstraintFiles() throws IOException, ParseException {
-		String srcFolder = workFolder + File.separatorChar + "constraint";
-		ArrayList<String> constraintFiles = new ArrayList<String>();
-		File destDir = new File(srcFolder);
-		if (!destDir.exists() || !destDir.isDirectory()) {
-			boolean success = destDir.mkdir();
+	protected ArrayList<File> getConstraintFiles() throws IOException, ParseException {
+		File srcFolder = Util.assembleFile(workFolder, "constraint");
+		ArrayList<File> constraintFiles = new ArrayList<>();
+		if (!srcFolder.exists() || !srcFolder.isDirectory()) {
+			boolean success = srcFolder.mkdir();
 			if (!success) {
 				Util.showError("Error building the project", "Could not create source folder!");
 				return null;
@@ -298,18 +292,12 @@ public abstract class ProjectBuilder {
 		}
 
 		// clean up old files
-		for (File f : destDir.listFiles()) {
+		for (File f : srcFolder.listFiles()) {
 			f.delete();
 		}
 
-		String folder = project.getConstraintFolder();
-
-		for (String cf : project.getConstraintFiles(false)) {
-			convertConstraintFile(cf, folder, srcFolder, constraintFiles);
-		}
-		folder = Locations.COMPONENTS;
-		for (String cf : project.getConstraintFiles(true)) {
-			convertConstraintFile(cf, folder, srcFolder, constraintFiles);
+		for (File cf : project.getConstraintFiles()) {
+			convertConstraintFile(cf, constraintFiles);
 		}
 
 		if (project.getBoard().isType(Board.CU))
@@ -318,12 +306,11 @@ public abstract class ProjectBuilder {
 		return constraintFiles;
 	}
 
-	protected ArrayList<String> getVerilogFiles() throws IOException, ParseException {
-		String srcFolder = workFolder + File.separatorChar + "verilog";
-		ArrayList<String> verilogFiles = new ArrayList<String>();
-		File destDir = new File(srcFolder);
-		if (!destDir.exists() || !destDir.isDirectory()) {
-			boolean success = destDir.mkdir();
+	protected ArrayList<File> getVerilogFiles() throws IOException, ParseException {
+		File srcFolder = Util.assembleFile(workFolder, "verilog");
+		ArrayList<File> verilogFiles = new ArrayList<>();
+		if (!srcFolder.exists() || !srcFolder.isDirectory()) {
+			boolean success = srcFolder.mkdir();
 			if (!success) {
 				Util.showError("Error building the project", "Could not create source folder!");
 				return null;
@@ -331,7 +318,7 @@ public abstract class ProjectBuilder {
 		}
 
 		// clean up old files
-		for (File f : destDir.listFiles()) {
+		for (File f : srcFolder.listFiles()) {
 			f.delete();
 		}
 
@@ -340,8 +327,7 @@ public abstract class ProjectBuilder {
 		List<Module> modules = project.getModules(debugSource);
 		Module topModule = null;
 		for (Module m : modules) {
-			String fileName = m.getFileName();
-			if (fileName != null && fileName.endsWith("_0_debug.luc")) {
+			if (srcFolder != null && srcFolder.getName().endsWith("_0_debug.luc")) {
 				topModule = m;
 				break;
 			}
@@ -351,13 +337,12 @@ public abstract class ProjectBuilder {
 		for (InstModule im : list) {
 			if (im.isPrimitive())
 				continue;
-			String folder = im.getType().getFolder();
-			String file = im.getType().getFileName();
-			String vFile = getVerilogFile(folder, file, srcFolder, modules, im, list);
+			File file = im.getType().getFile();
+			File vFile = getVerilogFile(file, srcFolder, modules, im, list);
 			if (vFile != null) {
 				verilogFiles.add(vFile);
 				if (im.getType().isNgc()) {
-					vFile = getVerilogFile(folder, file.substring(0, vFile.lastIndexOf(".")) + ".ngc", srcFolder, modules, im, list);
+					vFile = getVerilogFile(Util.changeExt(vFile, ".ngc"), srcFolder, modules, im, list);
 					verilogFiles.add(vFile);
 				}
 			}
@@ -418,7 +403,7 @@ public abstract class ProjectBuilder {
 				else
 					first = false;
 				sb.append(im.getName());
-				if (debugFiles.add(new DebugFile(im, new File(im.getType().getFolder() + File.separator + im.getType().getFileName()), sb.toString(), index)))
+				if (debugFiles.add(new DebugFile(im, im.getType().getFile(), sb.toString(), index)))
 					index++;
 			}
 		}
@@ -429,7 +414,7 @@ public abstract class ProjectBuilder {
 			File destFile = new File(debugDir.getPath() + File.separator + newName);
 			debugSource.add(destFile);
 
-			String modifiedFile = LucidDebugModifier.modifyForDebug(f.file.getPath(), debugSignals, f.instModule, f.instModule == topModule, debugFiles, nonce, samples);
+			String modifiedFile = LucidDebugModifier.modifyForDebug(f.file, debugSignals, f.instModule, f.instModule == topModule, debugFiles, nonce, samples);
 			try {
 				FileUtils.write(destFile, modifiedFile);
 			} catch (IOException e) {

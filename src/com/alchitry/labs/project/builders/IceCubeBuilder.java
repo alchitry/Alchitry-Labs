@@ -24,8 +24,8 @@ public class IceCubeBuilder extends ProjectBuilder {
 	@Override
 	protected void projectBuilder() throws Exception {
 		BufferedWriter out = null;
-		ArrayList<String> vFiles;
-		ArrayList<String> cFiles;
+		ArrayList<File> vFiles;
+		ArrayList<File> cFiles;
 		try {
 			vFiles = getVerilogFiles();
 			cFiles = getConstraintFiles();
@@ -114,7 +114,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 		builder = Util.runCommand(cmd);
 		builder.waitFor();
 
-		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
+		String topModuleName = project.getTop().getAbsolutePath().substring(0, project.getTop().getAbsolutePath().lastIndexOf('.')) + "_0";
 
 		File binFile = new File(Util.assemblePath(workFolder, IMP_DIR, "sbt", "outputs", "bitmap", topModuleName + "_bitmap.bin"));
 		if (binFile.exists()) {
@@ -175,23 +175,23 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write(nl);
 	}
 
-	private void generateTclScript(BufferedWriter file, List<String> cFiles) throws IOException {
+	private void generateTclScript(BufferedWriter file, List<File> cFiles) throws IOException {
 		final String nl = System.lineSeparator();
-		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
+		String topModuleName = project.getTop().getName().substring(0, project.getTop().getName().lastIndexOf('.')) + "_0";
 
 		file.write("#!usr/bin/tclsh8.4" + nl);
 		file.write(nl);
 		file.write("set device iCE40HX8K-CB132" + nl);
 		file.write("set top_module " + topModuleName + nl);
-		file.write("set proj_dir " + workFolder.replace("\\", "/").replace(" ", "\\ ") + nl);
+		file.write("set proj_dir " + workFolder.getAbsolutePath().replace("\\", "/").replace(" ", "\\ ") + nl);
 		file.write("set output_dir \"" + IMP_DIR + '"' + nl);
 		file.write("set edif_file \"" + topModuleName + '"' + nl);
 		file.write("set tool_options \":edifparser ");
 		
 		file.write("-y \\\"" );
-		for (String cf : cFiles)
-			if (cf.endsWith(".pcf"))
-				file.write(cf.replace("\\", "/").replace(" ", "\\ ") + " ");
+		for (File cf : cFiles)
+			if (cf.getName().endsWith(".pcf"))
+				file.write(cf.getAbsolutePath().replace("\\", "/").replace(" ", "\\ ") + " ");
 		file.write("\\\"\"\n");
 
 		file.write("set sbt_root $::env(SBT_DIR)" + nl);
@@ -202,20 +202,20 @@ public class IceCubeBuilder extends ProjectBuilder {
 
 	}
 
-	private void generateSynProjectFile(BufferedWriter file, List<String> vFiles, List<String> cFiles) throws IOException {
+	private void generateSynProjectFile(BufferedWriter file, List<File> vFiles, List<File> cFiles) throws IOException {
 		final String nl = System.lineSeparator();
-		final String srcFolder = workFolder + File.separatorChar + "verilog";
-		String topModuleName = project.getTop().substring(0, project.getTop().lastIndexOf('.')) + "_0";
+		final File srcFolder = Util.assembleFile(workFolder, "verilog");
+		String topModuleName = project.getTop().getName().substring(0, project.getTop().getName().lastIndexOf('.')) + "_0";
 
 		file.write("#project files" + nl);
 
-		String prefix = srcFolder.replace('\\', '/') + '/';
+		String prefix = srcFolder.getAbsolutePath().replace('\\', '/') + '/';
 
-		for (String vf : vFiles)
-			file.write("add_file -verilog -lib work \"" + prefix + vf + '"' + nl);
-		for (String cf : cFiles)
-			if (cf.endsWith(".sdc"))
-				file.write("add_file -constraint -lib work \"" + cf.replace("\\", "/").replace(" ", "\\ ") + '"' + nl);
+		for (File vf : vFiles)
+			file.write("add_file -verilog -lib work \"" + prefix + vf.getAbsolutePath() + '"' + nl);
+		for (File cf : cFiles)
+			if (cf.getName().endsWith(".sdc"))
+				file.write("add_file -constraint -lib work \"" + cf.getAbsolutePath().replace("\\", "/").replace(" ", "\\ ") + '"' + nl);
 
 		file.write("#options" + nl);
 		file.write("impl -add " + IMP_DIR + " -type fpga" + nl);

@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.errors;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class LucidErrorProvider extends ErrorProvider {
 	}
 
 	@Override
-	public ArrayList<SyntaxError> getErrors(String file) {
+	public ArrayList<SyntaxError> getErrors(File file) {
 		super.getErrors(file);
 		try {
 			MainWindow.getOpenProject().updateGlobals();
@@ -50,7 +51,7 @@ public class LucidErrorProvider extends ErrorProvider {
 		if (editor != null) {
 			List<SyntaxError> gErrors = null;
 			if (MainWindow.getOpenProject() != null)
-				gErrors = MainWindow.getOpenProject().getGlobalErrors(editor.getFilePath());
+				gErrors = MainWindow.getOpenProject().getGlobalErrors(editor.getFile());
 			if (gErrors != null)
 				errors.addAll(gErrors);
 		}

@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.verilog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class VerilogLucidModuleFixer {
 
 	}
 
-	public static String replaceModuleNames(InstModule thisModule, String file, List<Module> modules, List<InstModule> instModules) {
+	public static String replaceModuleNames(InstModule thisModule, File file, List<Module> modules, List<InstModule> instModules) {
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		CommonTokenStream tokens = ParserCache.getTokens(file);
 		VerilogConstExprParser cep = new VerilogConstExprParser(thisModule);
@@ -46,7 +47,7 @@ public class VerilogLucidModuleFixer {
 		return mrw.getText();
 	}
 
-	public static List<SyntaxError> getErrors(InstModule thisModule, String file, List<Module> modules, List<InstModule> instModules) {
+	public static List<SyntaxError> getErrors(InstModule thisModule, File file, List<Module> modules, List<InstModule> instModules) {
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		CommonTokenStream tokens = ParserCache.getTokens(file);
 		VerilogConstExprParser cep = new VerilogConstExprParser(thisModule);
@@ -96,7 +97,7 @@ public class VerilogLucidModuleFixer {
 				int i = Util.findByName(modules, name);
 				if (i >= 0) {
 					Module module = modules.get(i);
-					boolean isLucid = module.getFileName().endsWith(".luc");
+					boolean isLucid = module.getFile().getName().endsWith(".luc");
 					ArrayList<Param> params = new ArrayList<>(module.getParams());
 
 					if (ctx.parameter_value_assignment() != null) {

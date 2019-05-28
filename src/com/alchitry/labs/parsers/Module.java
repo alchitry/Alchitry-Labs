@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -13,8 +14,7 @@ public class Module implements Named, Serializable {
 	private ArrayList<Sig> inouts;
 	private ArrayList<Param> params;
 	private String name;
-	private String folder;
-	private String fileName;
+	private File file;
 	private Primitive primitive;
 	private boolean ngc;
 
@@ -44,8 +44,7 @@ public class Module implements Named, Serializable {
 		for (Param p : m.params)
 			params.add(new Param(p));
 		name = m.name;
-		folder = m.folder;
-		fileName = m.fileName;
+		file = m.file;
 	}
 	
 	public void setNgc(boolean ngc) {
@@ -77,20 +76,13 @@ public class Module implements Named, Serializable {
 		return name;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public File getFile() {
+		return file;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
 
-	public String getFolder() {
-		return folder;
-	}
-
-	public void setFolder(String folder) {
-		this.folder = folder;
+	public void setFile(File f) {
+		file = f;
 	}
 
 	public boolean hasSignal(Sig s) {

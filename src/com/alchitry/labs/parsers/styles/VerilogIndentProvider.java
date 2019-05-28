@@ -42,8 +42,8 @@ public class VerilogIndentProvider extends Verilog2001BaseListener implements In
 	}
 
 	public void updateIndentList(StyledCodeEditor editor) {
-		initWalk(editor, ParserCache.getTokens(editor.getFilePath()));
-		ParserCache.walk(editor.getFilePath(), this);
+		initWalk(editor, ParserCache.getTokens(editor.getFile()));
+		ParserCache.walk(editor.getFile(), this);
 	}
 
 	public int getTabs(int line) {

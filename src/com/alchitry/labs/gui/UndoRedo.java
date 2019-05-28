@@ -64,7 +64,7 @@ public class UndoRedo implements ExtendedModifyListener {
 	}
 
 	private void replace(Stack<Edit> popStack, Stack<Edit> pushStack) {
-		if (popStack.size() > 0) {
+		if (!editing && popStack.size() > 0) {
 			Edit edit = popStack.pop();
 			String replacedText = "";
 			if (edit.length > 0)
@@ -82,13 +82,11 @@ public class UndoRedo implements ExtendedModifyListener {
 	}
 
 	public void undo() {
-		if (!editing)
-			replace(undoStack, redoStack);
+		replace(undoStack, redoStack);
 	}
 
 	public void redo() {
-		if (!editing)
-			replace(redoStack, undoStack);
+		replace(redoStack, undoStack);
 	}
 
 	public boolean canUndo() {

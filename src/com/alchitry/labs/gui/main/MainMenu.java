@@ -1,6 +1,5 @@
 package com.alchitry.labs.gui.main;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
@@ -90,14 +89,14 @@ public class MainMenu {
 	private void buildFileMenu() {
 		Menu subMenu = createSubMenu(menu, "File");
 		
-		createItem(subMenu, "New File...", new SelectionAdapter() {
+		createItem(subMenu, "New File", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.addNewFile();
 			}
 		});
 		
-		createItem(subMenu, "Open File...", new SelectionAdapter() {
+		createItem(subMenu, "Open File", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog dialog = new FileDialog(parent.getShell(), SWT.MULTI);
@@ -107,12 +106,12 @@ public class MainMenu {
 					String[] files = dialog.getFileNames();
 					String dir = dialog.getFilterPath();
 					for (String f : files)
-						parent.openFile(dir + File.separator + f, true);
+						parent.openFile(Util.assembleFile(dir, f), true);
 				}
 			}
 		});
 		
-		createItem(subMenu, "Import Files...", new SelectionAdapter() {
+		createItem(subMenu, "Import Files", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println(MainWindow.getOpenProject());
@@ -127,7 +126,7 @@ public class MainMenu {
 					String[] files = dialog.getFileNames();
 					String dir = dialog.getFilterPath();
 					for (String f : files) {
-						if (!MainWindow.getOpenProject().importFile(dir + File.separator + f))
+						if (!MainWindow.getOpenProject().importFile(Util.assembleFile(dir, f)))
 							Util.showError("Failed to import \"" + f + "\"");
 					}
 					MainWindow.getOpenProject().updateTree();
@@ -142,21 +141,32 @@ public class MainMenu {
 			}
 		});
 
-		createItem(subMenu, "New Project...", new SelectionAdapter() {
+		createItem(subMenu, "Exit", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.close();
+			}
+		});
+	}
+
+	private void buildProjectMenu() {
+		Menu subMenu = createSubMenu(menu, "Project");
+		
+		createItem(subMenu, "New Project", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.createNewProject();
 			}
 		});
 
-		createItem(subMenu, "Open Project...", new SelectionAdapter() {
+		createItem(subMenu, "Open Project", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.openProject();
 			}
 		});
 
-		createItem(subMenu, "Clone Project...", new SelectionAdapter() {
+		createItem(subMenu, "Clone Project", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (MainWindow.project == null || !MainWindow.project.isOpen()) {
@@ -169,7 +179,7 @@ public class MainMenu {
 				if (p != null) {
 					try {
 						if (MainWindow.project.saveAsXML(p.getProjectFolder(), p.getProjectName()))
-							parent.openProject(p.getProjectFolder() + File.separatorChar + p.getProjectName() + ".alp");
+							parent.openProject(p.getProjectFile());
 						else
 							Util.showError("Failed to clone project! Project folder was null!");
 					} catch (IOException e1) {
@@ -181,18 +191,7 @@ public class MainMenu {
 			}
 		});
 
-		createItem(subMenu, "Exit", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				parent.close();
-			}
-		});
-	}
-
-	private void buildProjectMenu() {
-		Menu subMenu = createSubMenu(menu, "Project");
-
-		createItem(subMenu, "Add Components...", new SelectionAdapter() {
+		createItem(subMenu, "Add Components", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (MainWindow.project == null || !MainWindow.project.isOpen()) {
@@ -214,12 +213,41 @@ public class MainMenu {
 					parent.coreGen.launch(MainWindow.project);
 				}
 			});
+		
+		if (Board.isType(board, Board.AU))
+			createItem(subMenu, "Vivado IP Catalog", new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (MainWindow.project == null || !MainWindow.project.isOpen()) {
+						Util.showError("You need to open or create a project first!");
+						return;
+					}
+					parent.vivadoIP.launch(MainWindow.project);
+				}
+			});
+		
+		if (Board.isType(board, Board.AU))
+			createItem(subMenu, "Add Memory Controller", new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (MainWindow.project == null || !MainWindow.project.isOpen()) {
+						Util.showError("You need to open or create a project first!");
+						return;
+					}
+					try {
+						parent.vivadoIP.generateMigCore(MainWindow.project);
+					} catch (InterruptedException | IOException e1) {
+						Util.print(e1);
+						Util.showError("Failed to generate MIG core!");
+					}
+				}
+			});
 	}
 
 	private void buildToolsMenu() {
 		Menu subMenu = createSubMenu(menu, "Tools");
 
-		createItem(subMenu, "Flash Firmware...", new SelectionAdapter() {
+		createItem(subMenu, "Flash Firmware", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				BoardSelector selector = new BoardSelector(parent.getShell(), SWT.APPLICATION_MODAL);
@@ -241,7 +269,7 @@ public class MainMenu {
 			}
 		});
 
-		createItem(subMenu, "Serial Port Monitor...", new SelectionAdapter() {
+		createItem(subMenu, "Serial Port Monitor", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (parent.monitor == null || parent.monitor.isDisposed()) {
@@ -257,7 +285,7 @@ public class MainMenu {
 			}
 		});
 
-		createItem(subMenu, "Register Interface...", new SelectionAdapter() {
+		createItem(subMenu, "Register Interface", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (parent.display.isDisposed())
@@ -272,7 +300,7 @@ public class MainMenu {
 			}
 		});
 
-		createItem(subMenu, "Image Capture...", new SelectionAdapter() {
+		createItem(subMenu, "Image Capture", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (parent.imgCapture == null || parent.imgCapture.isDisposed()) {
@@ -285,7 +313,7 @@ public class MainMenu {
 		});
 
 		if (Board.isType(board, Board.MOJO))
-			createItem(subMenu, "Wave Capture...", new SelectionAdapter() {
+			createItem(subMenu, "Wave Capture", new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					parent.openWave();
@@ -297,42 +325,42 @@ public class MainMenu {
 		Menu subMenu = createSubMenu(menu, "Settings");
 
 		if (Board.isType(board, Board.MOJO))
-			createItem(subMenu, "Serial Port...", new SelectionAdapter() {
+			createItem(subMenu, "Serial Port", new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					parent.selectSerialPort();
 				}
 			});
 
-		createItem(subMenu, "ISE Location...", new SelectionAdapter() {
+		createItem(subMenu, "ISE Location", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateISELocation();
 			}
 		});
 
-		createItem(subMenu, "Vivado Location...", new SelectionAdapter() {
+		createItem(subMenu, "Vivado Location", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateVivadoLocation();
 			}
 		});
 
-		createItem(subMenu, "iCEcube2 Location...", new SelectionAdapter() {
+		createItem(subMenu, "iCEcube2 Location", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateIcecubeLocation();
 			}
 		});
 
-		createItem(subMenu, "iCEcube2 License Location...", new SelectionAdapter() {
+		createItem(subMenu, "iCEcube2 License Location", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateIcecubeLicenseLocation();
 			}
 		});
 
-		createItem(subMenu, "IceStorm Locations...", new SelectionAdapter() {
+		createItem(subMenu, "IceStorm Locations", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.updateYosysLocation();
@@ -361,7 +389,7 @@ public class MainMenu {
 
 		updateCuToolchainSelection();
 
-		createItem(subMenu, "Choose Theme...", new SelectionAdapter() {
+		createItem(subMenu, "Choose Theme", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ThemeSelectorDialog dialog = new ThemeSelectorDialog(parent.shlAlchitryLabs);
@@ -379,7 +407,7 @@ public class MainMenu {
 	private void buildHelpMenu() {
 		Menu subMenu = createSubMenu(menu, "Help");
 
-		createItem(subMenu, "Send Feedback...", new SelectionAdapter() {
+		createItem(subMenu, "Send Feedback", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FeedbackDialog feedbackDialog = new FeedbackDialog(parent.shlAlchitryLabs, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.CLOSE);
@@ -390,7 +418,7 @@ public class MainMenu {
 			}
 		});
 
-		createItem(subMenu, "About...", new SelectionAdapter() {
+		createItem(subMenu, "About", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				new WelcomeDialog(parent.getShell(), SWT.APPLICATION_MODAL).open();

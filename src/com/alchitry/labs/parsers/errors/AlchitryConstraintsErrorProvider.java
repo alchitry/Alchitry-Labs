@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.errors;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.alchitry.labs.gui.StyledCodeEditor;
@@ -16,7 +17,7 @@ public class AlchitryConstraintsErrorProvider extends ErrorProvider {
 	}
 
 	@Override
-	public ArrayList<SyntaxError> getErrors(String file) {
+	public ArrayList<SyntaxError> getErrors(File file) {
 		super.getErrors(file);
 		
 		AlchitryConstraintsExtractor ace = new AlchitryConstraintsExtractor(this);

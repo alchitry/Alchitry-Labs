@@ -208,7 +208,7 @@ public class NewProjectDialog extends Dialog {
 				}
 				if (clone) {
 					result = new Project();
-					result.setProjectFolder(workspace + File.separator + projectName);
+					result.setProjectFolder(Util.assembleFile(workspace, projectName));
 					result.setProjectName(projectName);
 				} else {
 					result = createProject(projectName, workspace, boardType, language, examples.getText());
@@ -316,8 +316,8 @@ public class NewProjectDialog extends Dialog {
 			return null;
 		}
 
-		File projFile = new File(destDir.getAbsolutePath() + File.separator + projFiles[0]);
-		File newProjFile = new File(destDir.getAbsolutePath() + File.separator + projectName + ".alp");
+		File projFile = Util.assembleFile(destDir, projFiles[0]);
+		File newProjFile = Util.assembleFile(destDir, projectName + ".alp");
 
 		if (!projFile.renameTo(newProjFile)) {
 			Util.showError("Could not rename project file!");
@@ -325,7 +325,7 @@ public class NewProjectDialog extends Dialog {
 		}
 
 		try {
-			project.openXML(newProjFile.getAbsolutePath());
+			project.openXML(newProjFile);
 		} catch (ParseException | IOException e2) {
 			Util.showError("Could not open project file!");
 			return null;

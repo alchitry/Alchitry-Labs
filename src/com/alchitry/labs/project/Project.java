@@ -12,6 +12,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,7 +25,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
@@ -78,6 +80,8 @@ import com.alchitry.labs.widgets.CustomTree.TreeNode;
 import com.alchitry.labs.widgets.TabChild;
 
 public class Project {
+	public static final int VERSION_ID = 2;
+
 	public static final String SOURCE_PARENT = "Source";
 	public static final String CONSTRAINTS_PARENT = "Constraints";
 	public static final String COMPONENTS_PARENT = "Components";
@@ -85,24 +89,23 @@ public class Project {
 
 	public static final String SOURCE_FOLDER = "source";
 	public static final String CONSTRAINTS_FOLDER = "constraint";
-	public static final String CORES_FOLDER = "coreGen";
+	public static final String CORES_FOLDER = "cores";
+	public static final String WORK_FOLDER = "work";
 
 	public static final String LANG_LUCID = "Lucid";
 	public static final String LANG_VERILOG = "Verilog";
 
-	private HashSet<String> sourceFiles;
-	private HashSet<String> constraintFiles;
-	private HashMap<String, Boolean> constraintLib;
-	private HashSet<String> componentFiles;
+	private HashSet<File> sourceFiles;
+	private HashSet<File> constraintFiles;
 	private HashSet<IPCore> ipCores;
 	private HashSet<Primitive> primitives;
 
 	private String language;
 
-	private String topSource;
+	private File topSource;
 	private String projectName;
-	private String projectFolder;
-	private String projectFile;
+	private File projectFolder;
+	private File projectFile;
 	private Board boardType;
 	private boolean open;
 	private CustomTree tree;
@@ -120,12 +123,12 @@ public class Project {
 		SOURCE, CONSTRAINT, COMPONENT, CORE
 	};
 
-	public Project(String name, String folder, String board, String lang) {
+	public Project(String name, File folder, String board, String lang) {
 		this();
 		projectName = name;
 		projectFolder = folder;
 		setBoardType(board);
-		projectFile = name + ".alp";
+		projectFile = new File(Util.assemblePath(folder.getAbsolutePath(), name + ".alp"));
 		language = lang;
 		open = true;
 
@@ -139,8 +142,6 @@ public class Project {
 		this.shell = shell;
 		sourceFiles = new HashSet<>();
 		constraintFiles = new HashSet<>();
-		constraintLib = new HashMap<>();
-		componentFiles = new HashSet<>();
 		ipCores = new HashSet<>();
 		primitives = new HashSet<>();
 		open = false;
@@ -164,8 +165,6 @@ public class Project {
 		open = false;
 		sourceFiles.clear();
 		constraintFiles.clear();
-		constraintLib.clear();
-		componentFiles.clear();
 		ipCores.clear();
 		primitives.clear();
 		topSource = null;
@@ -180,7 +179,7 @@ public class Project {
 		return language;
 	}
 
-	public String getFolder() {
+	public File getFolder() {
 		return projectFolder;
 	}
 
@@ -193,15 +192,14 @@ public class Project {
 	}
 
 	public String getBinFile() {
-		File binFile = new File(projectFolder + File.separatorChar + "work" + File.separatorChar + "alchitry.bin");
+		File binFile = new File(Util.assemblePath(projectFolder.getAbsolutePath(), WORK_FOLDER, "alchitry.bin"));
 		if (binFile.exists())
 			return binFile.getAbsolutePath();
 		return null;
 	}
 
-	private String addFile(String fileName, String folder, HashSet<String> list) {
-		File parentFolder = new File(Util.assemblePath(projectFolder, folder));
-		File file = new File(Util.assemblePath(projectFolder, folder, fileName));
+	private File createFile(File file, HashSet<File> list) {
+		File parentFolder = file.getParentFile();
 		try {
 			if (!parentFolder.exists()) {
 				if (!parentFolder.mkdir()) {
@@ -210,16 +208,16 @@ public class Project {
 				}
 			}
 			if (file.exists()) {
-				if (!Util.askQuestion("File " + fileName + " exists. Overwrite?"))
+				if (!Util.askQuestion("File " + file.getName() + " exists. Overwrite?"))
 					return null;
 
 				file.delete();
 			}
 			if (file.createNewFile()) {
-				if (!list.contains(fileName))
-					list.add(fileName);
+				if (!list.contains(file))
+					list.add(file);
 				updateTree();
-				return file.getAbsolutePath();
+				return file;
 			}
 		} catch (IOException e) {
 			Util.log.severe(ExceptionUtils.getStackTrace(e));
@@ -229,43 +227,37 @@ public class Project {
 		return null;
 	}
 
-	public boolean removeSourceFile(String fileName) {
-		if (topSource.equals(fileName)) {
+	public boolean isLibFile(File file) {
+		try {
+			File libVersion = Util.assembleFile(Locations.COMPONENTS, file.getName());
+			if (!libVersion.exists())
+				return false;
+			return Files.isSameFile(libVersion.toPath(), file.toPath());
+		} catch (IOException e) {
+			Util.log.log(Level.SEVERE, "", e);
+			return false;
+		}
+	}
+
+	private boolean removeFile(File file, HashSet<File> list) {
+		if (topSource.equals(file)) {
 			Util.showError("You can't delete the top file!");
 			return true;
 		}
-		return removeFile(fileName, sourceFiles, SOURCE_FOLDER);
-	}
-
-	public boolean removeConstaintFile(String fileName) {
-		if (Boolean.TRUE.equals(constraintLib.get(fileName))) {
-			constraintLib.remove(fileName);
-			boolean ret = constraintFiles.remove(fileName);
-			updateTree();
-			return ret;
-		}
-
-		return removeFile(fileName, constraintFiles, CONSTRAINTS_FOLDER);
-	}
-
-	private boolean removeFile(String fileName, HashSet<String> list, String folder) {
-		File file = new File(projectFolder + File.separatorChar + folder + File.separatorChar + fileName);
-		if (file.exists() && !file.delete()) {
+		if (!isLibFile(file) && file.exists() && !file.delete()) {
 			return false;
 		}
-		boolean ret = list.remove(fileName);
+		boolean ret = list.remove(file);
 		updateTree();
 		return ret;
 	}
 
-	public boolean removeComponentFile(String fileName) {
-		boolean ret = componentFiles.remove(fileName);
-		updateTree();
-		return ret;
+	public void removeAllIPCores() {
+		ipCores.clear();
 	}
 
 	public boolean removeIPCore(String coreName) {
-		if (IPCore.delete(coreName, projectFolder)) {
+		if (IPCore.delete(coreName, projectFolder.getAbsolutePath())) {
 			for (IPCore core : ipCores)
 				if (core.getName().equals(coreName)) {
 					ipCores.remove(core);
@@ -277,51 +269,47 @@ public class Project {
 		return false;
 	}
 
-	public boolean renameFile(String fileName, String newName) {
-		if (Boolean.TRUE.equals(constraintLib.get(fileName)) || componentFiles.contains(fileName)) {
+	public boolean renameFile(File file, File newFile) {
+		if (isLibFile(file)) {
 			Util.showError("Can't rename a library file!");
 			return false;
 		}
-		if (constraintFiles.contains(fileName)) {
-			File fullPath = new File(Util.assemblePath(projectFile, CONSTRAINTS_FOLDER, fileName));
-			File newPath = new File(Util.assemblePath(projectFile, CONSTRAINTS_FOLDER, newName));
-			constraintFiles.remove(fileName);
+		if (constraintFiles.contains(file)) {
+			constraintFiles.remove(file);
 			try {
-				FileUtils.copyFile(fullPath, newPath);
-				fullPath.delete();
+				FileUtils.copyFile(file, newFile);
+				file.delete();
 			} catch (IOException e) {
 				Util.log.log(Level.SEVERE, "", e);
 				Util.showError("Failed to rename file!");
 			}
-			constraintFiles.add(newName);
+			constraintFiles.add(newFile);
 			updateTree();
 			return true;
-		} else if (sourceFiles.contains(fileName)) {
-			File fullPath = new File(Util.assemblePath(projectFile, SOURCE_FOLDER, fileName));
-			File newPath = new File(Util.assemblePath(projectFile, SOURCE_FOLDER, newName));
-			sourceFiles.remove(fileName);
+		} else if (sourceFiles.contains(file)) {
+			sourceFiles.remove(file);
 			try {
-				FileUtils.copyFile(fullPath, newPath);
-				fullPath.delete();
+				FileUtils.copyFile(file, newFile);
+				file.delete();
 			} catch (IOException e) {
 				Util.log.log(Level.SEVERE, "", e);
 				Util.showError("Failed to rename file!");
 			}
-			sourceFiles.add(newName);
+			sourceFiles.add(newFile);
 			updateTree();
 			return true;
 		}
 		return false;
 	}
 
-	private boolean copyTemplate(String path, String fileName) {
-		if (path.endsWith(".luc") || path.endsWith(".v")) {
+	private boolean copyTemplate(File path, String fileName) {
+		if (path.getName().endsWith(".luc") || path.getName().endsWith(".v")) {
 			File template;
-			if (path.endsWith(".luc"))
+			if (path.getName().endsWith(".luc"))
 				template = new File(Locations.TEMPLATE_DIR + File.separator + "module.luc");
 			else
 				template = new File(Locations.TEMPLATE_DIR + File.separator + "module.v");
-			File dest = new File(path);
+			File dest = path;
 
 			if (!template.exists() || !dest.exists()) {
 				Util.println("Error: Could not open template or source file!", true);
@@ -350,9 +338,8 @@ public class Project {
 		return false;
 	}
 
-	public boolean importFile(String filePath) {
+	public boolean importFile(File src) {
 		File dest = null;
-		File src = new File(filePath);
 		String fileName = src.getName();
 		if (Util.isConstraintFile(fileName)) {
 			dest = new File(getConstraintFolder() + File.separator + fileName);
@@ -376,10 +363,10 @@ public class Project {
 			}
 		}
 
-		if (Util.isConstraintFile(fileName) && !constraintFiles.contains(fileName)) {
-			addExistingConstraintFile(fileName, false);
-		} else if (Util.isSourceFile(fileName) && !sourceFiles.contains(fileName)) {
-			addExistingSourceFile(fileName);
+		if (Util.isConstraintFile(fileName) && !constraintFiles.contains(src)) {
+			addExistingConstraintFile(src);
+		} else if (Util.isSourceFile(fileName) && !sourceFiles.contains(src)) {
+			addExistingSourceFile(src);
 		}
 
 		try {
@@ -391,67 +378,48 @@ public class Project {
 		return true;
 	}
 
-	public String addNewSourceFile(String fileName) {
-		String path = addFile(fileName, SOURCE_FOLDER, sourceFiles);
+	public File addNewSourceFile(String fileName) {
+		File path = createFile(Util.assembleFile(projectFolder, SOURCE_FOLDER, fileName), sourceFiles);
 		if (path == null)
 			return null;
 		copyTemplate(path, fileName);
 		return path;
 	}
 
-	public String addNewConstraintFile(String fileName) {
-		constraintLib.put(fileName, Boolean.FALSE);
-		return addFile(fileName, CONSTRAINTS_FOLDER, constraintFiles);
+	public File addNewConstraintFile(String fileName) {
+		File cFile = new File(Util.assemblePath(projectFolder, CONSTRAINTS_FOLDER, fileName));
+		return createFile(cFile, constraintFiles);
 	}
 
-	public String getSourceFolder() {
-		return projectFolder + File.separatorChar + SOURCE_FOLDER;
+	public File getSourceFolder() {
+		return Util.assembleFile(projectFolder, SOURCE_FOLDER);
 	}
 
-	public String getConstraintFolder() {
-		return projectFolder + File.separatorChar + CONSTRAINTS_FOLDER;
+	public File getConstraintFolder() {
+		return Util.assembleFile(projectFolder, CONSTRAINTS_FOLDER);
 	}
 
-	public String getIPCoreFolder() {
-		return projectFolder + File.separatorChar + CORES_FOLDER;
+	public File getIPCoreFolder() {
+		return Util.assembleFile(projectFolder, CORES_FOLDER);
 	}
 
-	public void addIPCore(String coreName) {
-		IPCore core = new IPCore(coreName);
+	public void addIPCore(IPCore core) {
 		if (ipCores.contains(core)) {
 			ipCores.remove(core);
 		}
-		File coreGenFolder = new File(projectFolder + File.separatorChar + CORES_FOLDER);
-		File[] fileList = coreGenFolder.listFiles();
-		for (File f : fileList) {
-			if (f.isFile()) {
-				String name = f.getName();
-				if (name.startsWith(coreName)) {
-					if (name.endsWith(".v") || name.endsWith(".ngc")) {
-						core.addFile(name);
-					}
-				}
-			}
-		}
+
 		ipCores.add(core);
 	}
 
-	public void addExistingSourceFile(String file) {
+	public void addExistingSourceFile(File file) {
 		sourceFiles.add(file);
 	}
 
-	public void addExistingConstraintFile(String file, boolean lib) {
-		constraintLib.put(file, Boolean.valueOf(lib));
+	public void addExistingConstraintFile(File file) {
 		constraintFiles.add(file);
 	}
 
-	public void addExistingComponentFile(String file) {
-		componentFiles.add(file);
-		if (file.endsWith(".ngc"))
-			componentFiles.add(file.substring(0, file.length() - 3) + "v");
-	}
-
-	public boolean setTopFile(String file) {
+	public boolean setTopFile(File file) {
 		if (sourceFiles.contains(file)) {
 			topSource = file;
 			return true;
@@ -459,34 +427,31 @@ public class Project {
 		return false;
 	}
 
-	public String getTop() {
+	public File getTop() {
 		return topSource;
 	}
 
-	public HashSet<String> getSourceFiles() {
+	public HashSet<File> getSourceFiles() {
 		return sourceFiles;
 	}
 
-	public HashSet<String> getConstraintFiles(boolean lib) {
-		HashSet<String> hs = new HashSet<>();
-		for (String s : constraintFiles)
-			if (Boolean.valueOf(lib).equals(constraintLib.get(s)))
-				hs.add(s);
+	public HashSet<File> getConstraintFiles() {
+		HashSet<File> hs = new HashSet<>(constraintFiles);
 		removeUnsupportedConstraints(hs);
 		return hs;
 	}
 
-	private boolean endsWithExt(String str, String[] ext) {
+	private boolean endsWithExt(File file, String[] ext) {
 		for (String e : ext)
-			if (str.endsWith(e))
+			if (file.getName().endsWith(e))
 				return true;
 		return false;
 	}
 
-	private void removeUnsupportedConstraints(HashSet<String> constraints) {
+	private void removeUnsupportedConstraints(HashSet<File> constraints) {
 		String[] ext = boardType.getSupportedConstraintExtensions();
-		for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
-			String c = it.next();
+		for (Iterator<File> it = constraints.iterator(); it.hasNext();) {
+			File c = it.next();
 			if (!endsWithExt(c, ext)) {
 				it.remove();
 				Util.println("Constraint \"" + c + "\" is of an unsupported type. It will be ignored.", true);
@@ -494,28 +459,20 @@ public class Project {
 		}
 	}
 
-	public boolean isConstraintFromLib(String c) {
-		return Boolean.TRUE.equals(constraintLib.get(c));
-	}
-
-	public HashSet<String> getComponentFiles(boolean debug) {
-		if (debug) {
-			HashSet<String> debugList = new HashSet<>(componentFiles);
-			debugList.add("reg_interface_debug.luc");
-			debugList.add("reg_interface.luc");
-			debugList.add("wave_capture.luc");
-			debugList.add("simple_dual_ram.v");
-			return debugList;
-		}
-
-		return componentFiles;
+	public HashSet<File> getDebugFiles() {
+		HashSet<File> debugList = new HashSet<>();
+		debugList.add(Util.assembleFile(Locations.COMPONENTS, "reg_interface_debug.luc"));
+		debugList.add(Util.assembleFile(Locations.COMPONENTS, "reg_interface.luc"));
+		debugList.add(Util.assembleFile(Locations.COMPONENTS, "wave_capture.luc"));
+		debugList.add(Util.assembleFile(Locations.COMPONENTS, "simple_dual_ram.luc"));
+		return debugList;
 	}
 
 	public HashSet<IPCore> getIPCores() {
 		return ipCores;
 	}
 
-	public String getProjectFolder() {
+	public File getProjectFolder() {
 		return projectFolder;
 	}
 
@@ -531,8 +488,8 @@ public class Project {
 		projectName = name;
 	}
 
-	public String getProjectFile() {
-		return projectFolder + File.separatorChar + projectFile;
+	public File getProjectFile() {
+		return projectFile;
 	}
 
 	public boolean setBoardType(String type) {
@@ -542,18 +499,18 @@ public class Project {
 		return true;
 	}
 
-	public void setProjectFolder(String folder) {
+	public void setProjectFolder(File folder) {
 		projectFolder = folder;
 	}
 
-	public void setProjectFile(String file) {
+	public void setProjectFile(File file) {
 		projectFile = file;
 	}
 
-	private class SortIgnoreCase implements Comparator<Object> {
+	private class SortFilesIgnoreCase implements Comparator<Object> {
 		public int compare(Object o1, Object o2) {
-			String s1 = (String) o1;
-			String s2 = (String) o2;
+			String s1 = ((File) o1).getName();
+			String s2 = ((File) o2).getName();
 			return s1.toLowerCase().compareTo(s2.toLowerCase());
 		}
 	}
@@ -566,33 +523,29 @@ public class Project {
 		}
 	}
 
-	private void addRemoveFile(CustomTree.TreeElement item, final FileType type) {
+	private void addRemoveFile(CustomTree.TreeLeaf item, final FileType type) {
 		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
 		mi.setText("Remove " + item.getName());
-		mi.setData(item.getName());
 		mi.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String file = (String) ((MenuItem) e.getSource()).getData();
+				File file = item.getFile();
 				boolean result = Util.askQuestion("Confirm Delete", "Are you sure you want to remove " + file + "?" + System.lineSeparator() + "This cannot be undone.");
 
 				if (result) {
 					switch (type) {
 					case SOURCE:
-						if (!removeSourceFile(file))
+					case COMPONENT:
+						if (!removeFile(file, sourceFiles))
 							Util.showError("Could not remove file!");
 						break;
 					case CONSTRAINT:
-						if (!removeConstaintFile(file))
+						if (!removeFile(file, constraintFiles))
 							Util.showError("Could not remove file!");
 						break;
-					case COMPONENT:
-						if (!removeComponentFile(file))
-							Util.showError("Could not remove component!");
-						break;
 					case CORE:
-						if (!removeIPCore(file))
+						if (!removeIPCore(item.getName()))
 							Util.showError("Could not remove IP Core!");
 						break;
 					}
@@ -623,7 +576,7 @@ public class Project {
 		public void handleEvent(Event event) {
 			CustomTree.TreeElement item = (CustomTree.TreeElement) event.data;
 			if (event.button == 1 && !item.isNode()) {
-				MainWindow.mainWindow.openFile(getSourceFolder() + File.separatorChar + item.getName(), true);
+				MainWindow.mainWindow.openFile(Util.assembleFile(getSourceFolder(), item.getName()), true);
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
@@ -641,7 +594,7 @@ public class Project {
 					}
 				});
 				if (!item.isNode())
-					addRemoveFile(item, FileType.SOURCE);
+					addRemoveFile((CustomTree.TreeLeaf) item, FileType.SOURCE);
 			}
 		}
 	};
@@ -651,10 +604,11 @@ public class Project {
 		public void handleEvent(Event event) {
 			CustomTree.TreeElement item = (CustomTree.TreeElement) event.data;
 			if (event.button == 1 && !item.isNode()) {
-				if (isConstraintFromLib(item.getName()))
-					MainWindow.mainWindow.openFile(Locations.COMPONENTS + File.separatorChar + item.getName(), false);
+				File compFile = Util.assembleFile(Locations.COMPONENTS, item.getName());
+				if (isLibFile(compFile))
+					MainWindow.mainWindow.openFile(compFile, false);
 				else
-					MainWindow.mainWindow.openFile(getConstraintFolder() + File.separatorChar + item.getName(), true);
+					MainWindow.mainWindow.openFile(Util.assembleFile(getConstraintFolder(), item.getName()), true);
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
@@ -672,7 +626,7 @@ public class Project {
 					}
 				});
 				if (!item.isNode())
-					addRemoveFile(item, FileType.CONSTRAINT);
+					addRemoveFile((CustomTree.TreeLeaf) item, FileType.CONSTRAINT);
 			}
 		}
 	};
@@ -682,7 +636,7 @@ public class Project {
 		public void handleEvent(Event event) {
 			CustomTree.TreeElement item = (CustomTree.TreeElement) event.data;
 			if (event.button == 1 && !item.isNode()) {
-				MainWindow.mainWindow.openFile(Locations.COMPONENTS + File.separatorChar + item.getName(), false);
+				MainWindow.mainWindow.openFile(Util.assembleFile(Locations.COMPONENTS, item.getName()), false);
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
@@ -704,7 +658,7 @@ public class Project {
 					}
 				});
 				if (!item.isNode())
-					addRemoveFile(item, FileType.COMPONENT);
+					addRemoveFile((CustomTree.TreeLeaf) item, FileType.COMPONENT);
 			}
 		}
 	};
@@ -714,26 +668,33 @@ public class Project {
 		public void handleEvent(Event event) {
 			CustomTree.TreeElement item = (CustomTree.TreeElement) event.data;
 			if (event.button == 1 && !item.isNode()) {
-				MainWindow.mainWindow.openFile(getFolder() + File.separatorChar + Project.CORES_FOLDER + File.separatorChar + item.getName(), true);
+				if (boardType.isType(Board.MOJO)) {
+					MainWindow.mainWindow.openFile(Util.assembleFile(getFolder(), CORES_FOLDER, item.getName()), true);
+				} else {
+					MainWindow.mainWindow.openFile(Util.assembleFile(getFolder(), CORES_FOLDER, item.getParent().getName(), item.getName()), true);
+				}
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
 					i.dispose();
 				MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
-				mi.setText("Launch CoreGen");
+				mi.setText("Recustomize core");
 				mi.addSelectionListener(new SelectionListener() {
 
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						MainWindow.mainWindow.getCoreGen().launch(Project.this);
-
+						if (boardType.isType(Board.MOJO))
+							MainWindow.mainWindow.getCoreGen().launch(Project.this);
+						else if (boardType.isType(Board.AU))
+							MainWindow.mainWindow.getVivadoIP().launch(Project.this);
 					}
 
 					@Override
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
-				if (item.isNode() && !item.getName().equals(CORES_PARENT))
-					addRemoveFile(item, FileType.CORE);
+				// TODO: Add removal of Mojo cores
+				// if (boardType.isType(Board.MOJO) && item.isNode() && !item.getName().equals(CORES_PARENT))
+				// addRemoveFile((CustomTree.TreeLeaf) item, FileType.CORE);
 			}
 		}
 	};
@@ -758,14 +719,21 @@ public class Project {
 			TreeNode sourceBranch = (TreeNode) projectNodes.get(0);
 			List<TreeElement> sourceLeafs = sourceBranch.getChildren();
 
-			ArrayList<String> files = new ArrayList<String>(sourceFiles);
-			Collections.sort(files, new SortIgnoreCase());
-			for (int i = 0; i < files.size(); i++) {
-				String source = files.get(i);
-				if (sourceLeafs.size() < i + 1 || !sourceLeafs.get(i).getName().equals(source)) {
-					TreeLeaf leaf = new TreeLeaf(source);
-					sourceBranch.add(i, leaf);
-					leaf.addClickListener(sourceListner);
+			ArrayList<File> libFiles = new ArrayList<>();
+			int leafCt = 0;
+
+			ArrayList<File> files = new ArrayList<>(sourceFiles);
+			Collections.sort(files, new SortFilesIgnoreCase());
+			for (File source : files) {
+				if (isLibFile(source)) {
+					libFiles.add(source);
+				} else {
+					if (sourceLeafs.size() < leafCt + 1 || !sourceLeafs.get(leafCt).getName().equals(source.getName())) {
+						TreeLeaf leaf = new TreeLeaf(source);
+						sourceBranch.add(leafCt, leaf);
+						leaf.addClickListener(sourceListner);
+					}
+					leafCt++;
 				}
 			}
 
@@ -773,8 +741,9 @@ public class Project {
 				sourceBranch.remove(sourceLeafs.size() - 1);
 
 			int categoryIdx = 1;
+			leafCt = 0;
 
-			if (componentFiles.size() > 0) {
+			if (libFiles.size() > 0) {
 				if (projectNodes.size() < categoryIdx + 1 || !projectNodes.get(categoryIdx).getName().equals(COMPONENTS_PARENT)) {
 					TreeNode compBranch = new TreeNode(COMPONENTS_PARENT);
 					compBranch.addClickListener(componentsListner);
@@ -784,17 +753,15 @@ public class Project {
 				TreeNode compBranch = (TreeNode) projectNodes.get(categoryIdx++);
 				List<TreeElement> compLeafs = compBranch.getChildren();
 
-				files = new ArrayList<String>(componentFiles);
-				Collections.sort(files, new SortIgnoreCase());
-				for (int i = 0; i < files.size(); i++) {
-					String comp = files.get(i);
-					if (compLeafs.size() < i + 1 || !compLeafs.get(i).getName().equals(comp)) {
+				for (File comp : libFiles) {
+					if (compLeafs.size() < leafCt + 1 || !compLeafs.get(leafCt).getName().equals(comp.getName())) {
 						TreeLeaf leaf = new TreeLeaf(comp);
-						compBranch.add(i, leaf);
+						compBranch.add(leafCt, leaf);
 						leaf.addClickListener(componentsListner);
 					}
+					leafCt++;
 				}
-				while (files.size() < compLeafs.size())
+				while (leafCt < compLeafs.size())
 					compBranch.remove(compLeafs.size() - 1);
 			}
 
@@ -822,16 +789,28 @@ public class Project {
 					TreeNode coreParent = (TreeNode) coreLeafs.get(j);
 					List<TreeElement> coreParentLeafs = coreParent.getChildren();
 
-					files = core.getFiles();
-					for (int i = 0; i < files.size(); i++) {
-						String file = files.get(i);
-						if (coreParentLeafs.size() < i + 1 || !coreParentLeafs.get(i).getName().equals(file)) {
-							TreeLeaf leaf = new TreeLeaf(file);
-							coreParent.add(i, leaf);
-							leaf.addClickListener(coresListner);
+					leafCt = 0;
+
+					if (core.getStub() != null) {
+						TreeLeaf leaf = new TreeLeaf(core.getStub());
+						coreParent.add(leafCt++, leaf);
+						leaf.addClickListener(coresListner);
+					} else {
+						ArrayList<File> cfiles = core.getFiles();
+						for (int i = 0; i < cfiles.size(); i++) {
+							File cfile = cfiles.get(i);
+							if (cfile.isFile()) {
+								if (coreParentLeafs.size() < i + 1 || !coreParentLeafs.get(i).getName().equals(cfile.getName())) {
+									TreeLeaf leaf = new TreeLeaf(cfile);
+									coreParent.add(leafCt, leaf);
+									leaf.addClickListener(coresListner);
+								}
+								leafCt++;
+							}
 						}
 					}
-					while (files.size() < coreParentLeafs.size())
+
+					while (leafCt < coreParentLeafs.size())
 						coreParent.remove(coreParentLeafs.size() - 1);
 				}
 				while (cores.size() < coreLeafs.size())
@@ -847,11 +826,11 @@ public class Project {
 			TreeNode ucfBranch = (TreeNode) projectNodes.get(categoryIdx++);
 			List<TreeElement> ucfLeafs = ucfBranch.getChildren();
 
-			files = new ArrayList<String>(constraintFiles);
-			Collections.sort(files, new SortIgnoreCase());
+			files = new ArrayList<>(constraintFiles);
+			Collections.sort(files, new SortFilesIgnoreCase());
 			for (int i = 0; i < files.size(); i++) {
-				String ucf = files.get(i);
-				if (ucfLeafs.size() < i + 1 || !ucfLeafs.get(i).getName().equals(ucf)) {
+				File ucf = files.get(i);
+				if (ucfLeafs.size() < i + 1 || !ucfLeafs.get(i).getName().equals(ucf.getName())) {
 					TreeLeaf leaf = new TreeLeaf(ucf);
 					ucfBranch.add(i, leaf);
 					leaf.addClickListener(constraintsListner);
@@ -876,13 +855,12 @@ public class Project {
 		tree.updateTree();
 	}
 
-	public void openXML(String xmlPath) throws ParseException, IOException {
+	public void openXML(File xmlFile) throws ParseException, IOException {
 		close();
 
 		SAXBuilder builder = new SAXBuilder();
-		File xmlFile = new File(xmlPath);
-		projectFolder = xmlFile.getParent();
-		projectFile = xmlFile.getName();
+		projectFolder = xmlFile.getParentFile();
+		projectFile = xmlFile;
 
 		Document document;
 		try {
@@ -915,6 +893,17 @@ public class Project {
 		else
 			language = langType.getValue();
 
+		int version = 0;
+		Attribute versionAttr = project.getAttribute(Tags.Attributes.version);
+		if (versionAttr != null)
+			try {
+				version = Integer.parseInt(versionAttr.getValue());
+				if (version > VERSION_ID) 
+					throw new ParseException("Project file is from a future version!");
+			} catch (NumberFormatException e) {
+				throw new ParseException("Invalid version ID!");
+			}
+
 		final List<Element> list = project.getChildren();
 		for (int i = 0; i < list.size(); i++) {
 			Element node = list.get(i);
@@ -930,17 +919,18 @@ public class Project {
 						if (att != null && att.getValue().equals("true")) {
 							if (topSource != null)
 								throw new ParseException("Multiple \"top\" source files");
-							topSource = file.getText();
+							topSource = Util.assembleFile(getSourceFolder(), file.getText());
 						}
-						sourceFiles.add(file.getText());
+						sourceFiles.add(Util.assembleFile(getSourceFolder(), file.getText()));
 						break;
 					case Tags.constraint:
 						att = file.getAttribute(Tags.Attributes.library);
-						constraintLib.put(file.getText(), Boolean.valueOf(att != null && att.getValue().equals("true")));
-						constraintFiles.add(file.getText());
+						boolean isLib = Boolean.valueOf(att != null && att.getValue().equals("true"));
+						File cstFile = Util.assembleFile(isLib ? Locations.COMPONENTS : getConstraintFolder(), file.getText());
+						constraintFiles.add(cstFile);
 						break;
 					case Tags.component:
-						componentFiles.add(file.getText());
+						sourceFiles.add(Util.assembleFile(Locations.COMPONENTS, file.getText()));
 						break;
 					case Tags.core:
 						final List<Element> cfiles = file.getChildren();
@@ -948,12 +938,18 @@ public class Project {
 						if (coreName == null)
 							throw new ParseException("Missing core name");
 
+						String coreDir = Util.assemblePath(projectFolder, CORES_FOLDER, coreName);
+
 						IPCore ipCore = new IPCore(coreName);
 						for (int k = 0; k < cfiles.size(); k++) {
 							Element cfile = cfiles.get(k);
+							File coreFile = new File(Util.assemblePath(coreDir, cfile.getText()));
 							switch (cfile.getName()) {
 							case Tags.source:
-								ipCore.addFile(cfile.getText());
+								ipCore.addFile(coreFile);
+								break;
+							case Tags.stub:
+								ipCore.setStub(coreFile);
 								break;
 							default:
 								throw new ParseException("Unknown tag in core " + cfile.getName());
@@ -971,46 +967,56 @@ public class Project {
 			}
 		}
 
+		if (version != VERSION_ID) {
+			if (Util.askQuestion("This project is from a previous version of the IDE. Would you like to attempt to update it?")) {
+				if (version == 0) {
+					File coresDir = new File(Util.assemblePath(getProjectFolder(), "coreGen"));
+					File newCoresDir = new File(Util.assemblePath(getProjectFolder(), CORES_FOLDER));
+					if (coresDir.exists() && coresDir.isDirectory())
+						if (!coresDir.renameTo(newCoresDir))
+							throw new ParseException("Failed to rename coreGen directory to cores");
+				}
+			} else {
+				throw new ParseException("Incompatible version ID!");
+			}
+		}
+
 		readDebugInfo();
 		open = true;
 	}
 
-	private List<Module> getVerilogModules(String folder, String file) throws IOException {
+	private List<Module> getVerilogModules(File file) throws IOException {
 		VerilogModuleListener converter = new VerilogModuleListener();
-		List<Module> modules = converter.extractModules(new File(folder + File.separatorChar + file).getAbsolutePath());
-		for (Module m : modules) {
-			m.setFileName(file);
-			m.setFolder(folder);
-		}
+		List<Module> modules = converter.extractModules(file);
+		for (Module m : modules)
+			m.setFile(file);
+
 		return modules;
 	}
 
-	private Module getLucidModule(String folder, String file) throws IOException {
+	private Module getLucidModule(File file) throws IOException {
 		LucidModuleExtractor converter = new LucidModuleExtractor();
-		Module m = converter.getModule(new File(folder + File.separatorChar + file).getAbsolutePath());
-		if (m != null) {
-			m.setFileName(file);
-			m.setFolder(folder);
-		}
+		Module m = converter.getModule(file);
+		if (m != null)
+			m.setFile(file);
+
 		return m;
 	}
 
-	private void addGlobals(Collection<String> files, String folder) throws IOException {
-		for (String file : files) {
-			if (file.endsWith(".luc")) {
-				globalExtractor.parseGlobals(new File(folder + File.separatorChar + file).getAbsolutePath());
+	private void addGlobals(Collection<File> files) throws IOException {
+		for (File file : files) {
+			if (file.getName().endsWith(".luc")) {
+				globalExtractor.parseGlobals(file);
 			}
 		}
 	}
 
 	public void updateGlobals() throws IOException {
 		globalExtractor.reset();
-		addGlobals(getSourceFiles(), getSourceFolder());
-		addGlobals(getComponentFiles(false), Locations.COMPONENTS);
-
+		addGlobals(getSourceFiles());
 	}
 
-	public List<SyntaxError> getGlobalErrors(String file) {
+	public List<SyntaxError> getGlobalErrors(File file) {
 		return globalExtractor.getErrors(file);
 	}
 
@@ -1022,34 +1028,25 @@ public class Project {
 		return globalExtractor.getStructs();
 	}
 
-	private void addModules(ArrayList<Module> modules, Collection<File> files) throws IOException {
-		for (File file : files) {
-			if (file.getName().endsWith(".luc")) {
-				Module m = getLucidModule(file.getParentFile().getPath(), file.getName());
-				if (m != null)
-					modules.add(m);
-			} else if (file.getName().endsWith(".v")) {
-				modules.addAll(getVerilogModules(file.getParentFile().getPath(), file.getName()));
-			}
+	private void addModule(ArrayList<Module> modules, File file) throws IOException {
+		if (file.getName().endsWith(".luc")) {
+			Module m = getLucidModule(file);
+			if (m != null)
+				modules.add(m);
+		} else if (file.getName().endsWith(".v")) {
+			List<Module> ml = getVerilogModules(file);
+			for (Module m : ml)
+				if (m.getName().endsWith("_bb"))
+					m.setNgc(true);
+			modules.addAll(ml);
+		} else if (file.getName().endsWith(".ngc")) {
+
 		}
 	}
 
-	private void addModules(ArrayList<Module> modules, Collection<String> files, String folder) throws IOException {
-		for (String file : files) {
-			if (file.endsWith(".luc")) {
-				Module m = getLucidModule(folder, file);
-				if (m != null)
-					modules.add(m);
-			} else if (file.endsWith(".v")) {
-				List<Module> ml = getVerilogModules(folder, file);
-				for (Module m : ml)
-					if (m.getName().endsWith("_bb"))
-						m.setNgc(true);
-				modules.addAll(ml);
-			} else if (file.endsWith(".ngc")) {
-
-			}
-		}
+	private void addModules(ArrayList<Module> modules, Collection<File> files) throws IOException {
+		for (File file : files)
+			addModule(modules, file);
 	}
 
 	private Module primToModule(Primitive p) {
@@ -1081,20 +1078,24 @@ public class Project {
 
 	public Module getTopModule() throws IOException {
 		List<Module> modules = getModules(null);
-		return getModuleFromFile(getSourceFolder(), topSource, modules);
+		return getModuleFromFile(topSource, modules);
 	}
 
 	public ArrayList<Module> getModules(List<File> debugFiles) throws IOException {
 		ArrayList<Module> modules = new ArrayList<Module>();
-		addModules(modules, getSourceFiles(), getSourceFolder());
-		addModules(modules, getComponentFiles(debugFiles != null), Locations.COMPONENTS);
+		addModules(modules, getSourceFiles());
+
 		if (debugFiles != null) {
+			addModules(modules, getDebugFiles());
 			addModules(modules, debugFiles);
 		}
 
-		String folder = getIPCoreFolder();
-		for (IPCore ipcore : getIPCores())
-			addModules(modules, ipcore.getFiles(), folder);
+		for (IPCore ipcore : getIPCores()) {
+			if (ipcore.getStub() != null)
+				addModule(modules, ipcore.getStub());
+			else
+				addModules(modules, ipcore.getFiles());
+		}
 
 		try {
 			HashMap<String, HashSet<Primitive>> prims = Primitive.getAvailable();
@@ -1109,9 +1110,9 @@ public class Project {
 		return modules;
 	}
 
-	private Module getModuleFromFile(String folder, String file, List<Module> list) {
+	private Module getModuleFromFile(File file, List<Module> list) {
 		for (Module m : list)
-			if (m.getFolder().equals(folder) && m.getFileName().equals(file))
+			if (m.getFile().equals(file))
 				return m;
 
 		return null;
@@ -1123,10 +1124,9 @@ public class Project {
 	}
 
 	private List<InstModule> getLucidInstModules(InstModule im, List<Module> modules) throws IOException {
-		String folder = im.getType().getFolder();
-		String file = im.getType().getFileName();
+		File file = im.getType().getFile();
 		LucidExtractor converter = new LucidExtractor(im);
-		return converter.getInstModules(new File(folder + File.separatorChar + file).getAbsolutePath(), modules);
+		return converter.getInstModules(file, modules);
 	}
 
 	public List<InstModule> getModuleList(List<Module> modules, boolean mergeDupes, Module topModule) throws IOException {
@@ -1134,7 +1134,7 @@ public class Project {
 		List<InstModule> outList = new ArrayList<>();
 
 		if (topModule == null) {
-			Module top = getModuleFromFile(getSourceFolder(), topSource, modules);
+			Module top = getModuleFromFile(topSource, modules);
 			if (top == null) {
 				Util.showError("Could not find top module file!");
 				return null;
@@ -1144,8 +1144,6 @@ public class Project {
 		} else {
 			queue.add(new InstModule(topModule.getName(), topModule, null));
 		}
-
-		Set<IPCore> ipCores = getIPCores();
 
 		while (!queue.isEmpty()) {
 			InstModule im = queue.remove();
@@ -1161,12 +1159,9 @@ public class Project {
 				for (InstModule m : list) {
 					boolean add = true;
 
-					// Skip IP Core files
-					for (IPCore ip : ipCores) {
-						String name = m.getType().getFileName();
-						if (ip.getFiles().contains(name))
-							add = false;
-					}
+					// Skip IP core files
+					if (m.getType().getFile().getCanonicalPath().startsWith(Util.assembleFile(projectFolder, Project.CORES_FOLDER).getCanonicalPath()))
+						add = false;
 
 					if (add && mergeDupes)
 						for (InstModule om : outList) {
@@ -1188,20 +1183,20 @@ public class Project {
 		return outList;
 	}
 
-	public boolean saveAsXML(String folder, String name) throws IOException {
-		String oldFolder = projectFolder;
-		String oldFile = projectFile;
-
-		projectFile = name + ".alp";
-		projectFolder = folder;
+	public boolean saveAsXML(File folder, String name) throws IOException {
+		File oldFolder = projectFolder;
+		File oldFile = projectFile;
 
 		if (folder == null || oldFolder == null || name == null) {
 			return false;
 		}
 
-		File srcDir = new File(oldFolder);
-		File dstDir = new File(projectFolder);
-		File oldProj = new File(projectFolder + File.separatorChar + oldFile);
+		projectFile = Util.assembleFile(folder, name + ".alp");
+		projectFolder = folder;
+
+		File srcDir = oldFolder;
+		File dstDir = projectFolder;
+		File oldProj = Util.assembleFile(dstDir, oldFile.getName());
 
 		FileUtils.copyDirectory(srcDir, dstDir);
 		oldProj.delete();
@@ -1219,40 +1214,47 @@ public class Project {
 	}
 
 	public void saveXML() throws IOException {
-		saveXML(projectFolder + File.separatorChar + projectFile);
+		saveXML(projectFile);
 	}
 
-	public void saveXML(String file) throws IOException {
+	public void saveXML(File file) throws IOException {
 		Element project = new Element(Tags.project);
 
 		project.setAttribute(new Attribute(Tags.Attributes.name, projectName));
 		project.setAttribute(new Attribute(Tags.Attributes.board, boardType.getName()));
 		project.setAttribute(new Attribute(Tags.Attributes.language, language));
+		project.setAttribute(new Attribute(Tags.Attributes.version, Integer.toString(VERSION_ID)));
 		Document doc = new Document(project);
 
 		Element source = new Element(Tags.files);
-		for (String sourceFile : sourceFiles) {
-			Element ele = new Element(Tags.source).setText(sourceFile);
-			if (sourceFile.equals(topSource))
-				ele.setAttribute(new Attribute(Tags.Attributes.top, "true"));
-			source.addContent(ele);
+		for (File sourceFile : sourceFiles) {
+			if (isLibFile(sourceFile)) {
+				source.addContent(new Element(Tags.component).setText(sourceFile.getName()));
+			} else {
+				Element ele = new Element(Tags.source).setText(sourceFile.getName());
+				if (sourceFile.equals(topSource))
+					ele.setAttribute(new Attribute(Tags.Attributes.top, "true"));
+				source.addContent(ele);
+			}
 		}
 
-		for (String ucfFile : constraintFiles) {
-			Element ele = new Element(Tags.constraint).setText(ucfFile);
-			if (Boolean.TRUE.equals(constraintLib.get(ucfFile)))
+		for (File ucfFile : constraintFiles) {
+			Element ele = new Element(Tags.constraint).setText(ucfFile.getName());
+			if (isLibFile(ucfFile))
 				ele.setAttribute(new Attribute(Tags.Attributes.library, "true"));
 			source.addContent(ele);
 		}
 
-		for (String compFile : componentFiles) {
-			source.addContent(new Element(Tags.component).setText(compFile));
-		}
-
 		for (IPCore core : ipCores) {
 			Element coreElement = new Element(Tags.core).setAttribute(Tags.Attributes.name, core.getName());
-			for (String corefile : core.getFiles()) {
-				coreElement.addContent(new Element(Tags.source).setText(corefile));
+			Path corePath = Paths.get(new File(Util.assemblePath(projectFolder, CORES_FOLDER, core.getName())).getAbsolutePath());
+			for (File corefile : core.getFiles()) {
+				String p = corePath.relativize(Paths.get(corefile.getAbsolutePath())).toString();
+				coreElement.addContent(new Element(Tags.source).setText(p));
+			}
+			if (core.getStub() != null) {
+				String p = corePath.relativize(Paths.get(core.getStub().getAbsolutePath())).toString();
+				coreElement.addContent(new Element(Tags.stub).setText(p));
 			}
 			source.addContent(coreElement);
 		}
@@ -1280,8 +1282,7 @@ public class Project {
 		debugInfo = dbi;
 
 		try {
-			ObjectOutputStream e = new ObjectOutputStream(new BufferedOutputStream(
-					new FileOutputStream(projectFolder + File.separatorChar + "work" + File.separatorChar + "debug" + File.separator + "debug.data")));
+			ObjectOutputStream e = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(Util.assembleFile(projectFolder, "work", "debug", "debug.data"))));
 			e.writeObject(dbi);
 			e.close();
 		} catch (Exception o) {
@@ -1291,7 +1292,7 @@ public class Project {
 
 	public boolean readDebugInfo() {
 		try {
-			File debugFile = new File(projectFolder + File.separatorChar + "work" + File.separatorChar + "debug" + File.separator + "debug.data");
+			File debugFile = Util.assembleFile(projectFolder, "work", "debug", "debug.data");
 			if (!debugFile.exists())
 				return false;
 			ObjectInputStream e = new ObjectInputStream(new BufferedInputStream(new FileInputStream(debugFile.getPath())));
@@ -1324,27 +1325,26 @@ public class Project {
 		thread.start();
 	}
 
-	private boolean checkforErrors(String folder, String file, boolean printErrors) throws IOException {
+	private boolean checkforErrors(File file, boolean printErrors) throws IOException {
 		boolean hasErrors = false;
 
 		if (Util.hasErrorProvider(file)) {
 			List<SyntaxError> errors = null;
-			String fullPath = new File(folder + File.separatorChar + file).getAbsolutePath();
-			if (file.endsWith(".luc")) {
+			if (file.getName().endsWith(".luc")) {
 				LucidErrorProvider errorChecker = new LucidErrorProvider();
-				errors = errorChecker.getErrors(fullPath);
-			} else if (file.endsWith(".v")) {
+				errors = errorChecker.getErrors(file);
+			} else if (file.getName().endsWith(".v")) {
 				VerilogErrorProvider errorChecker = new VerilogErrorProvider();
-				errors = errorChecker.getErrors(fullPath);
-			} else if (file.endsWith(".acf")) {
+				errors = errorChecker.getErrors(file);
+			} else if (file.getName().endsWith(".acf")) {
 				AlchitryConstraintsErrorProvider errorChecker = new AlchitryConstraintsErrorProvider();
-				errors = errorChecker.getErrors(fullPath);
+				errors = errorChecker.getErrors(file);
 			} else {
 				Util.println("Unknown source file extension " + file + "!", true);
 				return false;
 			}
 
-			List<SyntaxError> ge = getGlobalErrors(fullPath);
+			List<SyntaxError> ge = getGlobalErrors(file);
 
 			if (ge != null)
 				if (errors == null && ge.size() > 0)
@@ -1358,34 +1358,25 @@ public class Project {
 	}
 
 	private boolean checkForIMErrors(InstModule im, List<Module> modules, List<InstModule> instModules) {
-		String fullPath = new File(im.getType().getFolder() + File.separatorChar + im.getType().getFileName()).getAbsolutePath();
-		List<SyntaxError> errors = VerilogLucidModuleFixer.getErrors(im, fullPath, modules, instModules);
-		return addErrors(errors, im.getType().getFileName(), true);
+		File file = im.getType().getFile();
+		List<SyntaxError> errors = VerilogLucidModuleFixer.getErrors(im, file, modules, instModules);
+		return addErrors(errors, file, true);
 	}
 
 	public boolean checkForErrors() throws IOException {
 		updateGlobals();
-		String folder = getSourceFolder();
 		List<Module> modules = getModules(null);
 		List<InstModule> list = getModuleList(modules, true, null);
 		boolean hasErrors = false;
-		for (String file : getSourceFiles()) {
-			hasErrors = hasErrors | checkforErrors(folder, file, true);
-		}
-		folder = getConstraintFolder();
-		for (String file : getConstraintFiles(false)) {
-			hasErrors = hasErrors | checkforErrors(folder, file, true);
+		for (File file : getSourceFiles()) {
+			hasErrors = hasErrors | checkforErrors(file, true);
 		}
 		for (InstModule im : list)
-			if (!im.getType().isPrimitive() && im.getType().getFileName().endsWith(".v"))
+			if (!im.getType().isPrimitive() && im.getType().getFile().getName().endsWith(".v"))
 				hasErrors = hasErrors | checkForIMErrors(im, modules, list);
 
-		folder = Locations.COMPONENTS;
-		for (String file : getComponentFiles(false)) {
-			hasErrors = hasErrors | checkforErrors(folder, file, true);
-		}
-		for (String file : getConstraintFiles(true)) {
-			hasErrors = hasErrors | checkforErrors(folder, file, true);
+		for (File file : getConstraintFiles()) {
+			hasErrors = hasErrors | checkforErrors(file, true);
 		}
 
 		return hasErrors;
@@ -1410,7 +1401,7 @@ public class Project {
 		Util.print(text, color);
 	}
 
-	private boolean addErrors(List<SyntaxError> errors, String file, boolean printErrors) {
+	private boolean addErrors(List<SyntaxError> errors, File file, boolean printErrors) {
 		boolean hasErrors = false;
 		boolean hasWarnings = false;
 		boolean hasInfo = false;
@@ -1453,16 +1444,11 @@ public class Project {
 
 	public InstModule getLucidSourceTree() throws IOException {
 		updateGlobals();
-		String folder = getSourceFolder();
 		List<Module> modules = getModules(null);
 		List<InstModule> list = getModuleList(modules, false, null);
 
-		for (String file : getSourceFiles())
-			checkforErrors(folder, file, false);
-
-		folder = Locations.COMPONENTS;
-		for (String file : getComponentFiles(true))
-			checkforErrors(folder, file, false);
+		for (File file : getSourceFiles())
+			checkforErrors(file, false);
 
 		return list.get(0); // top level IM
 	}

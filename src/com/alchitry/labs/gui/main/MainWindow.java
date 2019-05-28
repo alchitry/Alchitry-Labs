@@ -51,6 +51,7 @@ import com.alchitry.labs.parsers.types.Constant;
 import com.alchitry.labs.project.CoreGen;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.project.SourceFile;
+import com.alchitry.labs.project.VivadoIP;
 import com.alchitry.labs.style.ParseException;
 import com.alchitry.labs.widgets.CustomConsole;
 import com.alchitry.labs.widgets.CustomTabs;
@@ -81,6 +82,7 @@ public class MainWindow {
 
 	public static MainWindow mainWindow;
 	protected CoreGen coreGen;
+	protected VivadoIP vivadoIP;
 
 	/**
 	 * Launch the application.
@@ -400,7 +402,7 @@ public class MainWindow {
 					bottomHeight = (int) Math.round((double) bottomSashForm.getClientArea().height * (double) weights[1] / (double) (weights[0] + weights[1])));
 
 			if (project.isOpen())
-				Settings.pref.put(Settings.OPEN_PROJECT, project.getProjectFile());
+				Settings.pref.put(Settings.OPEN_PROJECT, project.getProjectFile().getAbsolutePath());
 			else
 				Settings.pref.remove(Settings.OPEN_PROJECT);
 
@@ -436,6 +438,10 @@ public class MainWindow {
 
 	public CoreGen getCoreGen() {
 		return coreGen;
+	}
+	
+	public VivadoIP getVivadoIP() {
+		return vivadoIP;
 	}
 
 	public CustomTabs getTabFolder() {
@@ -481,6 +487,7 @@ public class MainWindow {
 					monitor.close();
 
 				coreGen.kill();
+				vivadoIP.kill();
 				saveSettings();
 				shlAlchitryLabs.getImage().dispose();
 				Theme.dispose();
@@ -612,9 +619,10 @@ public class MainWindow {
 		bottomHeight = Settings.pref.getInt(Settings.CONSOLE_HEIGHT, 200);
 
 		coreGen = new CoreGen();
+		vivadoIP = new VivadoIP();
 
 		if (oldProject != null)
-			openProject(oldProject);
+			openProject(new File(oldProject));
 
 		openFile(null, true);
 
@@ -624,6 +632,7 @@ public class MainWindow {
 	public void headlessInit() {
 		project = new Project();
 		coreGen = new CoreGen();
+		vivadoIP = new VivadoIP();
 	}
 
 	public void programProject(boolean flash, boolean verify) {
@@ -693,7 +702,7 @@ public class MainWindow {
 			shlAlchitryLabs.setEnabled(false);
 			SourceFile file = dialog.open();
 			if (file != null) {
-				String filePath = null;
+				File filePath = null;
 				switch (file.type) {
 				case SourceFile.VERILOG:
 				case SourceFile.LUCID:
@@ -768,7 +777,7 @@ public class MainWindow {
 		shlAlchitryLabs.setEnabled(true);
 	}
 
-	public void openProject(String path) {
+	public void openProject(File path) {
 		try {
 			project.openXML(path);
 			closeAllTabs();
@@ -794,10 +803,10 @@ public class MainWindow {
 		dialog.setFilterPath(Util.getWorkspace());
 		String path = dialog.open();
 		if (path != null)
-			openProject(path);
+			openProject(new File(path));
 	}
 
-	public void openProjectSilent(String path) throws ParseException, IOException {
+	public void openProjectSilent(File path) throws ParseException, IOException {
 		project.openXML(path);
 	}
 
@@ -816,23 +825,23 @@ public class MainWindow {
 		}
 	}
 
-	public boolean openFile(String path, boolean write) {
+	public boolean openFile(File file, boolean write) {
 		for (TabChild tab : tabs) {
 			if (tab instanceof StyledCodeEditor) {
 				StyledCodeEditor editor = (StyledCodeEditor) tab;
 
-				if (editor.getFilePath() != null && editor.getFilePath().equals(path)) {
+				if (editor.getFile() != null && editor.getFile().equals(file)) {
 					editor.grabFocus();
 					return true;
 				}
 			}
 		}
 
-		final StyledCodeEditor codeEditor = new StyledCodeEditor(tabFolder, SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL, path, write);
+		final StyledCodeEditor codeEditor = new StyledCodeEditor(tabFolder, SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL, file, write);
 
 		if (codeEditor.isOpen()) {
 			tabs.add(codeEditor);
-			if (path != null) {
+			if (file != null) {
 				if (!tabFolder.opened && !tabFolder.getTabChildren().get(0).isModified()) {
 					tabFolder.close(0);
 				}
@@ -899,12 +908,12 @@ public class MainWindow {
 
 	}
 
-	public String getEditorText(String path) {
+	public String getEditorText(File file) {
 		if (Util.isGUI)
 			for (TabChild tc : tabs) {
 				if (tc instanceof StyledCodeEditor) {
 					final StyledCodeEditor editor = (StyledCodeEditor) tc;
-					if (path.equals(editor.getFilePath())) {
+					if (file.equals(editor.getFile())) {
 						final StringBuilder sb = new StringBuilder();
 						Util.syncExec(new Runnable() {
 							@Override

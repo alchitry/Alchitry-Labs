@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.constraints;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 			this.errorListener = new DummyErrorListener();
 	}
 
-	public void parseAll(String file) {
+	public void parseAll(File file) {
 		ParserCache.walk(file, this);
 	}
 

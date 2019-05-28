@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.lucid.toVerilog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -128,7 +129,7 @@ public class LucidToVerilog extends LucidBaseListener {
 	private InstModule thisModule;
 	private List<InstModule> projModules;
 
-	public static String convert(String file, List<Module> modules, InstModule im, List<InstModule> list) {
+	public static String convert(File file, List<Module> modules, InstModule im, List<InstModule> list) {
 		LucidExtractor lec = new LucidExtractor(im);
 		lec.setModuleList(modules);
 		LucidToVerilog l2v = new LucidToVerilog(modules, lec, im, list);

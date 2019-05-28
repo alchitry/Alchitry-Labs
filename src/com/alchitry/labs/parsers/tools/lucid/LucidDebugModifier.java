@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ public class LucidDebugModifier {
 	private LucidDebugModifier() {
 	}
 
-	public static String modifyForDebug(String file, List<ProjectSignal> debugSignals, InstModule thisModule, boolean isTop, Collection<DebugFile> debugFiles, long nonce,
+	public static String modifyForDebug(File file, List<ProjectSignal> debugSignals, InstModule thisModule, boolean isTop, Collection<DebugFile> debugFiles, long nonce,
 			int samples) {
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		CommonTokenStream tokens = ParserCache.getTokens(file);

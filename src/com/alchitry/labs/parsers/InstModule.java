@@ -176,14 +176,14 @@ public class InstModule implements Named, Serializable {
 	}
 
 	public boolean isLucid() {
-		if (type.getFileName() != null)
-			return type.getFileName().endsWith(".luc");
+		if (type.getFile() != null)
+			return type.getFile().getName().endsWith(".luc");
 		return false;
 	}
 
 	public boolean isVerilog() {
-		if (type.getFileName() != null)
-			return type.getFileName().endsWith(".v");
+		if (type.getFile() != null)
+			return type.getFile().getName().endsWith(".v");
 		return false;
 	}
 

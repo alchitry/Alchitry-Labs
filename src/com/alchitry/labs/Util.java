@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -540,16 +541,16 @@ public class Util {
 		return f.getPath();
 	}
 
-	public static String readFile(String path) throws IOException {
+	public static String readFile(File path) throws IOException {
 		return readFile(path, Charset.defaultCharset());
 	}
 
-	public static String readFile(String path, Charset encoding) throws IOException {
-		byte[] encoded = Files.readAllBytes(Paths.get(path));
+	public static String readFile(File path, Charset encoding) throws IOException {
+		byte[] encoded = Files.readAllBytes(Paths.get(path.getAbsolutePath()));
 		return new String(encoded, encoding);
 	}
 
-	public static String getFileText(String file) {
+	public static String getFileText(File file) {
 		String t = MainWindow.mainWindow.getEditorText(file);
 		if (t == null)
 			try {
@@ -608,24 +609,53 @@ public class Util {
 		}
 	};
 
-	public static void startStreamPrinter(final InputStream s, final boolean red) {
+	public static void startStreamPrinter(final Process process, final InputStream s, final boolean red) {
 		Thread printer = new Thread() {
 			public void run() {
-				BufferedReader errorStream = new BufferedReader(new InputStreamReader(s));
-				String line;
+				StringBuffer stringBuffer = new StringBuffer(512);
+				CharBuffer buffer = CharBuffer.allocate(512);
+				InputStreamReader stream = new InputStreamReader(s);
 				try {
-					while ((line = errorStream.readLine()) != null) {
-						Util.println(line, red);
+					while (process.isAlive()) {
+						while (stream.ready()) {
+							int ct = stream.read(buffer);
+							buffer.flip();
+							if (ct == -1)
+								return;
+							String newText = buffer.toString();
+							stringBuffer.append(newText);
+							if (newText.contains("\n")) {
+								String[] lines = stringBuffer.toString().split("\\r?\\n", -2);
+								for (int i = 0; i < lines.length - 1; i++)
+									Util.println(lines[i], red);
+								stringBuffer.delete(0, stringBuffer.length() - lines[lines.length - 1].length());
+							}
+						}
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+						}
 					}
+
+					while (stream.ready()) {
+						int ct = stream.read(buffer);
+						buffer.flip();
+						if (ct == -1)
+							return;
+						stringBuffer.append(buffer.toString());
+
+					}
+					Util.print(new String(stringBuffer.toString()), red);
 				} catch (IOException e) {
 				} finally {
 					try {
-						errorStream.close();
+						stream.close();
 					} catch (IOException e) {
 					}
 				}
 			}
 		};
+		printer.setDaemon(true);
 		printer.start();
 	}
 
@@ -646,8 +676,8 @@ public class Util {
 			return null;
 		}
 
-		startStreamPrinter(process.getInputStream(), false);
-		startStreamPrinter(process.getErrorStream(), showRed);
+		startStreamPrinter(process, process.getInputStream(), false);
+		startStreamPrinter(process, process.getErrorStream(), showRed);
 
 		return process;
 	}
@@ -675,8 +705,16 @@ public class Util {
 		return endsWithSuffixList(fileName, set);
 	}
 
+	public static boolean isSourceFile(File file) {
+		return isSourceFile(file.getName());
+	}
+
 	public static boolean isSourceFile(String fileName) {
 		return endsWithSuffixList(fileName, sourceSuffixes);
+	}
+
+	public static boolean hasErrorProvider(File file) {
+		return hasErrorProvider(file.getName());
 	}
 
 	public static boolean hasErrorProvider(String fileName) {
@@ -714,8 +752,36 @@ public class Util {
 		return new Image(getDisplay(), imgstream);
 	}
 
+	public static String assembleLinuxPath(File parent, String... pieces) {
+		String out = parent.getAbsolutePath() + "/" + String.join("/", pieces);
+		return out.replace("//", "/"); // remove any duplicate separators
+	}
+
+	public static String assembleLinuxPath(String... pieces) {
+		String out = String.join("/", pieces);
+		return out.replace("//", "/"); // remove any duplicate separators
+	}
+
+	public static String assemblePath(File parent, String... pieces) {
+		String out = parent.getAbsolutePath() + File.separator + String.join(File.separator, pieces);
+		return out.replace(File.separator + File.separator, File.separator); // remove any duplicate separators
+	}
+
 	public static String assemblePath(String... pieces) {
 		String out = String.join(File.separator, pieces);
 		return out.replace(File.separator + File.separator, File.separator); // remove any duplicate separators
+	}
+
+	public static File assembleFile(File parent, String... pieces) {
+		return new File(assemblePath(parent, pieces));
+	}
+
+	public static File assembleFile(String... pieces) {
+		return new File(assemblePath(pieces));
+	}
+
+	public static File changeExt(File file, String ext) {
+		String name = file.getName();
+		return Util.assembleFile(file.getParent(),name.substring(0, name.lastIndexOf("."))+ext);
 	}
 }

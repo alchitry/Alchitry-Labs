@@ -217,15 +217,15 @@ public class ComponentsDialog extends Dialog {
 		 * file + "!"); return; } }
 		 */
 		for (String file : files) {
-			File srcFile = new File(Locations.COMPONENTS + File.separator + file);
+			File srcFile = Util.assembleFile(Locations.COMPONENTS, file);
 			if (!srcFile.exists()) {
 				Util.showError("The component " + file + " could not be found!");
 				return;
 			}
 			if (Util.isConstraintFile(file))
-				project.addExistingConstraintFile(file, true);
+				project.addExistingConstraintFile(srcFile);
 			else
-				project.addExistingComponentFile(file);
+				project.addExistingSourceFile(srcFile);
 		}
 
 		project.updateTree();

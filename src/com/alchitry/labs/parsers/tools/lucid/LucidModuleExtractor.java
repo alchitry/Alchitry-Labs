@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class LucidModuleExtractor extends LucidBaseListener {
 	public LucidModuleExtractor() {
 	}
 
-	public Module getModule(String file) {
+	public Module getModule(File file) {
 		ParserCache.walk(file, this);
 		return module;
 	}

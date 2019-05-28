@@ -32,19 +32,19 @@ public class Locations {
 
 	}
 
-	public static final String LIBRARY = progPrefix + "library";
-	public static final String BASE = LIBRARY + File.separator + "base";
-	public static final String COMPONENTS = LIBRARY + File.separator + "components";
-	public static final String FIRMWARE = LIBRARY + File.separator + "firmware";
+	public static final File LIBRARY = new File(progPrefix + "library");
+	public static final File BASE = new File(LIBRARY + File.separator + "base");
+	public static final File COMPONENTS = new File(LIBRARY + File.separator + "components");
+	public static final File FIRMWARE = new File(LIBRARY + File.separator + "firmware");
 
-	public static final String TOOLS = progPrefix + "tools";
-	public static final String BIN = TOOLS + File.separator + Util.osDir + File.separator + "bin";
-	public static final String ETC = TOOLS + File.separator + "etc";
-	public static final String LIB = TOOLS + File.separator + Util.osDir + File.separator + "lib";
+	public static final File TOOLS = new File(progPrefix + "tools");
+	public static final File BIN = new File(TOOLS + File.separator + Util.osDir + File.separator + "bin");
+	public static final File ETC = new File(TOOLS + File.separator + "etc");
+	public static final File LIB = new File(TOOLS + File.separator + Util.osDir + File.separator + "lib");
 
-	public static final String RESOURCES = progPrefix + "res";
+	public static final File RESOURCES = new File(progPrefix + "res");
 
-	public final static String TEMPLATE_DIR = BASE + File.separator + "templates";
+	public final static File TEMPLATE_DIR = new File(BASE + File.separator + "templates");
 
 	private Locations() {
 	}

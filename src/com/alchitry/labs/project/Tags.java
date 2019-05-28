@@ -7,6 +7,7 @@ public class Tags {
 	public final static String constraint = "constraint";
 	public final static String component = "component";
 	public final static String core = "core";
+	public final static String stub = "stub";
 	
 	public static class Attributes {
 		public final static String top = "top";
@@ -14,5 +15,6 @@ public class Tags {
 		public final static String board = "board";
 		public final static String language = "language";
 		public final static String library = "lib";
+		public static final String version = "version";
 	}
 }

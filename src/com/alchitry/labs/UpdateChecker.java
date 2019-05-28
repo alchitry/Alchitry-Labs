@@ -61,7 +61,7 @@ public class UpdateChecker {
 	public static boolean copyLibrary(String from) throws IOException {
 		File srcBaseFile = new File(from);
 		File srcLibFile = new File(from + "library");
-		File dstBaseFile = new File(Locations.LIBRARY);
+		File dstBaseFile = Locations.LIBRARY;
 
 		if (!Util.askQuestion("Update Library", "All files in " + dstBaseFile + " will be replaced with the new library files.\n\nContinue?"))
 			return false;

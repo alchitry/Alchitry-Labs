@@ -26,7 +26,7 @@ public class CoreGen {
 	}
 
 	public boolean projectExists(Project project) {
-		String projectPath = project.getFolder() + File.separatorChar + Project.CORES_FOLDER + File.separatorChar + PROJECT_FILE;
+		String projectPath = Util.assemblePath(project.getFolder(), Project.CORES_FOLDER, PROJECT_FILE);
 		File projFile = new File(projectPath);
 		return projFile.exists();
 	}
@@ -39,7 +39,7 @@ public class CoreGen {
 			String xilinx = Util.getISELocation();
 
 			if (xilinx == null) {
-				Util.showError("ISE's location must be set in the settings menu before you can build!");
+				Util.showError("ISE's location must be set in the settings menu before you can open CoreGen!");
 				return false;
 			}
 
@@ -48,9 +48,9 @@ public class CoreGen {
 
 			String coregen = xilinx + Environment.COREGEN_PATH;
 			Board board = project.getBoard();
-			String projSettingsFile = Locations.BASE + File.separatorChar + board.getExampleProjectDir() + File.separatorChar + "coregen_prop";
+			String projSettingsFile = Util.assemblePath(Locations.BASE, board.getExampleProjectDir(), "coregen_prop");
 
-			String coreGenDir = project.getFolder() + File.separatorChar + "coreGen";
+			String coreGenDir = Util.assemblePath(project.getFolder(), Project.CORES_FOLDER);
 			String coreGenProjFile = coreGenDir + File.separatorChar + PROJECT_FILE;
 			File coreGenFile = new File(coreGenDir);
 			if (!coreGenFile.exists())
@@ -154,13 +154,13 @@ public class CoreGen {
 						Util.showError("ISE's location must be set in the settings menu before you can build!");
 						return;
 					}
-					
+
 					if (!xilinx.endsWith(File.separator))
 						xilinx += File.separator;
 
 					String coregen = xilinx + Environment.COREGEN_PATH;
 
-					String projectFile = project.getFolder() + File.separatorChar + "coreGen" + File.separatorChar + "coregen.cgc";
+					String projectFile = Util.assemblePath(project.getFolder(), Project.CORES_FOLDER, "coregen.cgc");
 
 					ProcessBuilder pb = new ProcessBuilder(coregen, "-q", Util.tmpDir.toString(), "-p", projectFile);
 					// ProcessBuilder pb = new
@@ -242,12 +242,24 @@ public class CoreGen {
 					String line2 = reader.readLine();
 					if (line1 == null || line2 == null || !line2.equals("SUCCESS"))
 						continue;
-					final String coreName = line1.split(" ")[0];
+					String coreName = line1.split(" ")[0];
+					final IPCore core = new IPCore(coreName);
+					File coreFolder = project.getIPCoreFolder();
+					for (File cf : coreFolder.listFiles()) {
+						if (cf.isFile()) {
+							String name = cf.getName();
+							if (name.startsWith(coreName)) {
+								if (name.endsWith(".v") || name.endsWith(".ngc")) {
+									core.addFile(cf);
+								}
+							}
+						}
+					}
 					updated = true;
 					Util.syncExec(new Runnable() {
 						@Override
 						public void run() {
-							project.addIPCore(coreName);
+							project.addIPCore(core);
 						}
 					});
 					reader.close();
