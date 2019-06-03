@@ -175,4 +175,6 @@ public class ErrorStrings {
 	public static final String CONSTRAINT_UNKNOWN_UNIT = "Unknown frequency unit \"%s\"";
 	public static final String CONSTRAINT_MULTI_BIT = "Constraints can only be applied to a single bit";
 	
+	public static final String VALUE_BIGGER_THAN_INT = "The value %s can't fit into 32bits";
+	
 }

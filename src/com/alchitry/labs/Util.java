@@ -13,6 +13,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -51,6 +54,7 @@ import org.eclipse.swt.widgets.Text;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
+import com.alchitry.labs.parsers.BigFunctions;
 import com.alchitry.labs.widgets.CustomConsole;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortIOException;
@@ -336,6 +340,13 @@ public class Util {
 
 	public static Shell getShell() {
 		return shell;
+	}
+
+	public static int minWidthNum(BigInteger i) {
+		if (i.compareTo(BigInteger.ZERO) != 0)
+			return BigFunctions.ln(new BigDecimal(i), 10).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.FLOOR).intValue() + 1;
+		else
+			return 1;
 	}
 
 	public static int minWidthNum(long i) {
@@ -782,6 +793,6 @@ public class Util {
 
 	public static File changeExt(File file, String ext) {
 		String name = file.getName();
-		return Util.assembleFile(file.getParent(),name.substring(0, name.lastIndexOf("."))+ext);
+		return Util.assembleFile(file.getParent(), name.substring(0, name.lastIndexOf(".")) + ext);
 	}
 }

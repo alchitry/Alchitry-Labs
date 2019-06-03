@@ -1,6 +1,7 @@
 package com.alchitry.labs.parsers.tools.lucid.toVerilog;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -315,8 +316,8 @@ public class LucidToVerilog extends LucidBaseListener {
 					} else if (!hasParentType(ctx, Param_decContext.class) && !hasParentType(ctx, Param_conContext.class)) {
 						number = text;
 						try {
-							long i = Long.parseLong(number);
-							int size = (int) Util.minWidthNum(i);
+							BigInteger i = new BigInteger(number);
+							int size = Util.minWidthNum(i);
 							width = Integer.toString(size);
 							text = width + "'d" + number;
 						} catch (NumberFormatException e) {

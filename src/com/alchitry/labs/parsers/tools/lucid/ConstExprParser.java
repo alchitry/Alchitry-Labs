@@ -2,6 +2,7 @@ package com.alchitry.labs.parsers.tools.lucid;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.parsers.BigFunctions;
 import com.alchitry.labs.parsers.BitValue;
 import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.errors.ErrorListener;
@@ -352,7 +354,7 @@ public class ConstExprParser extends LucidBaseListener {
 					if (args[0].isNumber())
 						bi = args[0].getBigInt();
 					if (bi != null)
-						values.put(ctx, new ConstValue(BigDecimal.valueOf(Math.ceil(Math.log(bi.doubleValue()) / Math.log(2))).toBigInteger()));
+						values.put(ctx, new ConstValue(BigFunctions.ln(new BigDecimal(bi),32).divide(BigFunctions.LOG2,RoundingMode.HALF_UP).setScale(0,RoundingMode.CEILING).toBigInteger()));
 					else
 						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
 				} else {
@@ -378,8 +380,12 @@ public class ConstExprParser extends LucidBaseListener {
 					else
 						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
 
-					if (b1 != null && b2 != null)
-						values.put(ctx, new ConstValue(BigDecimal.valueOf(Math.pow(b1.doubleValue(), b2.doubleValue())).toBigInteger()));
+					try {
+						if (b1 != null && b2 != null)
+							values.put(ctx, new ConstValue(b1.pow(b2.intValueExact())));
+					} catch (ArithmeticException e) {
+						listener.reportError(ctx.expr(1), String.format(ErrorStrings.VALUE_BIGGER_THAN_INT, ctx.expr(1).getText()));
+					}
 
 				} else {
 					debugNullConstant(ctx);
@@ -492,7 +498,7 @@ public class ConstExprParser extends LucidBaseListener {
 
 					if (b1 != null && b2 != null) {
 						if (!b2.equals(BigInteger.ZERO))
-							values.put(ctx, new ConstValue(BigDecimal.valueOf(Math.ceil(b1.doubleValue() / b2.doubleValue())).toBigInteger()));
+							values.put(ctx, new ConstValue(b1.divide(b2)));
 						else
 							listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
 					}
