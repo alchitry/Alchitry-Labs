@@ -352,7 +352,7 @@ public class ConstExprParser extends LucidBaseListener {
 					if (args[0].isNumber())
 						bi = args[0].getBigInt();
 					if (bi != null)
-						values.put(ctx, new ConstValue((long) Math.ceil(Math.log(bi.doubleValue()) / Math.log(2))));
+						values.put(ctx, new ConstValue(BigDecimal.valueOf(Math.ceil(Math.log(bi.doubleValue()) / Math.log(2))).toBigInteger()));
 					else
 						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
 				} else {
