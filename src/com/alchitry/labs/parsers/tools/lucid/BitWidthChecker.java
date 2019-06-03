@@ -499,6 +499,22 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				ports.add(new Sig("rst", 1));
 				ports.add(new Sig("clk", 1));
 
+				for (AssignBlock block : lucid.getAssignBlock()) {
+					if (block != null) {
+						for (Connection c : block.connections) {
+							if (c.param && c.port.equals("INIT") && c.connectionNode.param_con() != null) {
+								SignalWidth conWidth = widths.get(c.connectionNode.param_con().expr());
+								if (!width.equals(conWidth)) {
+									if (block.instCon)
+										errorChecker.reportError(c.signalNode, String.format(ErrorStrings.PORT_DIM_MISMATCH, c.signal, "INIT"));
+									else
+										errorChecker.reportError(ctx, String.format(ErrorStrings.PORT_DIM_MISMATCH, c.signal, "INIT"));
+								}
+							}
+						}
+					}
+				}
+
 				checkConnectionWidths(instName, dc.name(), ports);
 			}
 		}

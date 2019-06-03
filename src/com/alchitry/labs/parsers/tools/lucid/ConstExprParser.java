@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -378,7 +379,7 @@ public class ConstExprParser extends LucidBaseListener {
 						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
 
 					if (b1 != null && b2 != null)
-						values.put(ctx, new ConstValue((long) Math.pow(b1.doubleValue(), b2.doubleValue())));
+						values.put(ctx, new ConstValue(BigDecimal.valueOf(Math.pow(b1.doubleValue(), b2.doubleValue())).toBigInteger()));
 
 				} else {
 					debugNullConstant(ctx);
@@ -491,7 +492,7 @@ public class ConstExprParser extends LucidBaseListener {
 
 					if (b1 != null && b2 != null) {
 						if (!b2.equals(BigInteger.ZERO))
-							values.put(ctx, new ConstValue((long) Math.ceil(b1.doubleValue() / b2.doubleValue())));
+							values.put(ctx, new ConstValue(BigDecimal.valueOf(Math.ceil(b1.doubleValue() / b2.doubleValue())).toBigInteger()));
 						else
 							listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
 					}
