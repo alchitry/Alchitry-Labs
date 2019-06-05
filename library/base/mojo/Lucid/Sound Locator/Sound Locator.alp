@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Sound Locator" board="Mojo" language="Lucid">
+<project name="Sound Locator" board="Mojo" language="Lucid" version="2">
   <files>
     <src>sound_locator.luc</src>
     <src top="true">mojo_top.luc</src>

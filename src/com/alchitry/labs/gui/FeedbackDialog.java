@@ -95,8 +95,8 @@ public class FeedbackDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				result = new EmailMessage();
 				result.email = emailText.getText();
-				if (result.email.equals(""))
-					result.email.equals("noreply@alchitry.com");
+				if (result.email.isEmpty())
+					result.email = "noreply@alchitry.com";
 				result.subject = "Feedback Report for " + MainWindow.VERSION + " from " + nameText.getText();
 				result.body = commentsText.getText();
 				shell.dispose();

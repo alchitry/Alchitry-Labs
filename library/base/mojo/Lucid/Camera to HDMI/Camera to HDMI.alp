@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Camera to HDMI" board="Mojo" language="Lucid">
+<project name="Camera to HDMI" board="Mojo" language="Lucid" version="2">
   <files>
     <src>img_capture.luc</src>
     <src top="true">mojo_top.luc</src>

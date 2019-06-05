@@ -123,6 +123,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 		undoRedo = new UndoRedo(this);
 		addExtendedModifyListener(undoRedo);
+		addVerifyListener(undoRedo);
 
 		if (file == null) {
 			undoRedo.skipNext();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="AVR Interface" board="Mojo" language="Lucid">
+<project name="AVR Interface" board="Mojo" language="Lucid" version="2">
   <files>
     <src top="true">mojo_top.luc</src>
     <constraint lib="true">mojo.ucf</constraint>
