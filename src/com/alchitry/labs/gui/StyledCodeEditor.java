@@ -329,8 +329,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	public void dispose() {
 		if (autoComplete != null)
 			autoComplete.dispose();
-		getFont().dispose();
 		search.dispose();
+		getFont().dispose();
 		super.dispose();
 	}
 

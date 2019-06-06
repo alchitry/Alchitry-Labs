@@ -72,22 +72,12 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 		parser.lucid();
 	}
 
-	private void addIndentstoLines(int start, int end) {
-		addIndentstoLines(start, end, 2);
+	private void addIndentsToLines(int start, int end) {
+		addIndentsToLines(start, end, 2);
 	}
 
-	private void addIndentstoLines(int start, int end, int num) {
+	private void addIndentsToLines(int start, int end, int num) {
 		for (int i = start + 1; i <= end; i++) {
-			tabs[i] += num;
-		}
-	}
-
-	private void addIndentsToEnd(int start, int end) {
-		addIndentsToEnd(start, end, 2);
-	}
-
-	private void addIndentsToEnd(int start, int end, int num) {
-		for (int i = getLineAtOffset(start) + 1; i <= getLineAtOffset(end); i++) {
 			tabs[i] += num;
 		}
 	}
@@ -101,15 +91,15 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 			int a = children.get(0).getSourceInterval().a;
 			int b = Math.max(children.get(children.size() - 1 - exclude).getSourceInterval().a, children.get(children.size() - 1 - exclude).getSourceInterval().b);
 			int c = Math.max(children.get(children.size() - 2 - exclude).getSourceInterval().a, children.get(children.size() - 2 - exclude).getSourceInterval().b);
-			int start = getLineAtOffset(tokens.get(a).getStartIndex());
-			int end = getLineAtOffset(Math.max(tokens.get(b).getStartIndex(), tokens.get(b).getStopIndex()));
+			int start = tokens.get(a).getLine()-1;
+			int end = tokens.get(b).getLine()-1;
 			int end2 = end;
 			if (c >= 0)
-				end2 = getLineAtOffset(Math.max(tokens.get(c).getStartIndex(), tokens.get(c).getStopIndex()));
+				end2 = tokens.get(c).getLine()-1;
 			if (end > end2)
-				addIndentstoLines(start, end - 1);
+				addIndentsToLines(start, end - 1);
 			else
-				addIndentstoLines(start, end);
+				addIndentsToLines(start, end);
 		}
 	}
 
@@ -123,7 +113,7 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 			int b = children.get(children.size() - 1 - exclude).getSourceInterval().b;
 			Token start = tokens.get(a);
 			Token end = tokens.get(b);
-			addIndentsToEnd(start.getStartIndex(), end.getStopIndex());
+			addIndentsToLines(start.getLine()-1, end.getLine()-1);
 		}
 	}
 
@@ -135,7 +125,7 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 		int endIdx = end.getStopIndex() - 2; // skip * and /
 		while (Character.isWhitespace(text.charAt(endIdx--)))
 			;
-		addIndentsToEnd(start.getStartIndex(), endIdx, 3);
+		addIndentsToLines(start.getLine()-1, getLineAtOffset(endIdx), 3);
 	}
 
 	@Override
@@ -144,7 +134,7 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 		for (IndentContext ic : ctx.indent()) {
 			if (ic.getChild(0).getText().equals("{")) {
 				Token end = tokens.get(ic.getChild(0).getSourceInterval().b);
-				addIndentsToEnd(start.getStartIndex(), end.getStartIndex());
+				addIndentsToLines(start.getLine()-1, end.getLine()-1);
 				break;
 			}
 		}

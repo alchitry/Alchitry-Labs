@@ -113,6 +113,8 @@ public class CustomSearch extends Composite {
 
 	@Override
 	public boolean setFocus() {
+		if (text.isDisposed())
+			return false;
 		return text.setFocus();
 	}
 }

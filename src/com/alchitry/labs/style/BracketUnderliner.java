@@ -7,6 +7,7 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 
+import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.CachedStyleListner;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.StyleUtil.StyleMerger;
@@ -22,8 +23,8 @@ public class BracketUnderliner extends CachedStyleListner implements CaretListen
 		editor = e;
 		oldStart = oldStop = -1;
 	}
-	
-	@Override 
+
+	@Override
 	public void lineGetStyle(LineStyleEvent event) {
 		super.lineGetStyle(event);
 	}
@@ -82,10 +83,12 @@ public class BracketUnderliner extends CachedStyleListner implements CaretListen
 					a[1] = oldStop;
 					a[2] = offidx;
 					a[3] = end;
-					editor.getDisplay().asyncExec(new Runnable() {
+					Util.asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
+							if (editor.isDisposed())
+								return;
 							for (int i = 0; i < a.length; i++) {
 								if (a[i] >= 0 && a[i] < editor.getCharCount())
 									editor.redrawRange(a[i], 1, true);
