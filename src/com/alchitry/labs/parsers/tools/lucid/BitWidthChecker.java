@@ -174,6 +174,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 		case "$clog2":
 		case "$pow":
 		case "$cdiv":
+		case "$resize":
 			if (cv != null)
 				widths.put(ctx, cv.getArrayWidth());
 			break;

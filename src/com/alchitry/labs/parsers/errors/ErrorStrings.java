@@ -130,6 +130,7 @@ public class ErrorStrings {
 	public static final String FUNCTION_MIN_ARG_COUNT = "The function \"%s\" requires at least %d argument(s)";
 	public static final String FUNCTION_NO_ARRAY = "The function \"%s\" can't be used on multidimensional arrays";
 	public static final String FUNCTION_ARG_ZERO = "The argument \"%s\" can't be zero";
+	public static final String FUNCTION_ARG_NEG = "The argument \"%s\" can't be negative";
 
 	public static final String EXPR_NOT_CONSTANT = "The expression \"%s\" must be constant";
 	public static final String NAME_NOT_CONST = "The name \"%s\" is not a constant name. Constants can only consist of capital letters and underscores";

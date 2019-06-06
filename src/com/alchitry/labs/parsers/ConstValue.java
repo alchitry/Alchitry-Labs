@@ -275,7 +275,7 @@ public class ConstValue implements Serializable {
 			throw (new IllegalArgumentException("Radix must be 16, 10, or 2"));
 		}
 	}
-	
+
 	public boolean isArray() {
 		return isArray;
 	}
@@ -427,7 +427,7 @@ public class ConstValue implements Serializable {
 	public int getMinWidth() {
 		if (isArray)
 			throw new IllegalStateException("The function getWidth() can't be used on arrays");
-		if (signed)
+		if (signed && value.get(value.size() - 1).equals(BitValue.B1))
 			for (int i = value.size() - 1; i >= 0; i--) {
 				if (value.get(i) != BitValue.B1)
 					return i + 2;
@@ -435,7 +435,7 @@ public class ConstValue implements Serializable {
 		else
 			for (int i = value.size() - 1; i >= 0; i--) {
 				if (value.get(i) != BitValue.B0)
-					return i + 1;
+					return i + 1 + (signed ? 1 : 0);
 			}
 		return 1;
 	}
@@ -770,9 +770,9 @@ public class ConstValue implements Serializable {
 		return BitValue.B0;
 
 	}
-	
+
 	private ConstValue build(List<BitValue> values, int[] dims) {
-		int d = dims[dims.length-1];
+		int d = dims[dims.length - 1];
 		int vCt = values.size();
 		int step = vCt / d;
 		ConstValue root = new ConstValue(true);
@@ -780,11 +780,11 @@ public class ConstValue implements Serializable {
 			throw new InvalidParameterException("Dimensions don't split evenly for build()");
 		if (dims.length == 1) {
 			for (int i = 0; i < d; i++) {
-				root.add(new ConstValue(values.subList(step*i, step*i+step)));
+				root.add(new ConstValue(values.subList(step * i, step * i + step)));
 			}
 		} else {
 			for (int i = 0; i < d; i++) {
-				root.add(build(values.subList(step*i, step*i+step),Arrays.copyOfRange(dims, 0, dims.length-1)));
+				root.add(build(values.subList(step * i, step * i + step), Arrays.copyOfRange(dims, 0, dims.length - 1)));
 			}
 		}
 		return root;
@@ -867,5 +867,21 @@ public class ConstValue implements Serializable {
 		else
 			Collections.reverse(value);
 		return this;
+	}
+
+	public ConstValue resize(int size) {
+		if (isArray)
+			throw new IllegalStateException("The function resize() can't be used on arrays");
+		ConstValue cv = new ConstValue(this);
+		int origWidth = cv.getWidth();
+		if (origWidth > size) {
+			cv.value.subList(size, cv.value.size()).clear();
+		} else if (origWidth < size) {
+			BitValue bv = cv.signed ? cv.value.get(cv.value.size() - 1) : BitValue.B0;
+			for (int i = 0; i < size - origWidth; i++) {
+				cv.value.add(bv);
+			}
+		}
+		return cv;
 	}
 }

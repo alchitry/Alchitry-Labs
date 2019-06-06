@@ -354,7 +354,8 @@ public class ConstExprParser extends LucidBaseListener {
 					if (args[0].isNumber())
 						bi = args[0].getBigInt();
 					if (bi != null)
-						values.put(ctx, new ConstValue(BigFunctions.ln(new BigDecimal(bi),32).divide(BigFunctions.LOG2,RoundingMode.HALF_UP).setScale(0,RoundingMode.CEILING).toBigInteger()));
+						values.put(ctx, new ConstValue(
+								BigFunctions.ln(new BigDecimal(bi), 32).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.CEILING).toBigInteger()));
 					else
 						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
 				} else {
@@ -503,6 +504,41 @@ public class ConstExprParser extends LucidBaseListener {
 							listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
 					}
 
+				} else {
+					debugNullConstant(ctx);
+					if (!c)
+						listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.CONST_FUNCTION, ctx.FUNCTION_ID()));
+				}
+			} else {
+				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 2));
+			}
+			break;
+		case "$resize":
+			if (args.length == 2) {
+				if (args[0] != null && args[1] != null) {
+					int size = 0;
+					if (args[1].isNumber())
+						try {
+							size = args[1].getBigInt().intValueExact();
+							if (size < 0)
+								listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NEG, ctx.expr(1).getText()));
+							if (size == 0)
+								listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
+						} catch (ArithmeticException e) {
+							listener.reportError(ctx.expr(1), String.format(ErrorStrings.VALUE_BIGGER_THAN_INT, ctx.expr(1).getText()));
+						}
+					else
+						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
+
+					if (!args[0].isArray()) {
+						if (size > 0) {
+							if (size < args[0].getMinWidth())
+								listener.reportWarning(ctx.expr(1), String.format(ErrorStrings.TRUNC_WARN, ctx.expr(0).getText(), size));
+							values.put(ctx, args[0].resize(size));
+						}
+					} else {
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_NO_ARRAY, ctx.FUNCTION_ID()));
+					}
 				} else {
 					debugNullConstant(ctx);
 					if (!c)
