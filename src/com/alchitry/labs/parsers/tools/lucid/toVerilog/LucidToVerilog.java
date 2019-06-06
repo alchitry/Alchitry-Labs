@@ -1875,7 +1875,13 @@ public class LucidToVerilog extends LucidBaseListener {
 						im = Util.getByName(extractor.getInstModules(), im.getName());
 						if (im.getModuleWidth() != null && im.isArray()) {
 							widths = new SignalWidth(widths);
-							widths.getWidths().addAll(0, im.getModuleWidth().getWidths());
+							if (widths.isStruct()) {
+								SignalWidth structWidth = widths;
+								widths = new SignalWidth(im.getModuleWidth().getWidths());
+								widths.setNext(structWidth);
+							} else {
+								widths.getWidths().addAll(0, im.getModuleWidth().getWidths());
+							}
 						}
 					}
 				}
