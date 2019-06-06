@@ -16,6 +16,7 @@ public class Struct implements Named, Serializable {
 		private static final long serialVersionUID = 5734287146840459803L;
 		public String name;
 		public SignalWidth width;
+		public boolean signed;
 		
 		public Member() {
 			
@@ -42,10 +43,18 @@ public class Struct implements Named, Serializable {
 		public void setWidth(SignalWidth w){
 			width = w;
 		}
+		
+		public boolean isSigned() {
+			return signed;
+		}
+		
+		public void setSigned(boolean signed) {
+			this.signed = signed;
+		}
 
 		@Override
 		public String toString() {
-			return name + " " + width.toString();
+			return (signed ? "signed" : "") + name + " " + width.toString();
 		}
 
 		@Override

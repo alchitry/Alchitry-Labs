@@ -154,6 +154,7 @@ public class LucidGlobalExtractor extends LucidBaseListener {
 					if (width.getDepth() == 0)
 						width.getWidths().add(1);
 					m.width = width;
+					m.signed = smc.SIGNED() != null;
 					struct.addMember(m);
 				}
 			}

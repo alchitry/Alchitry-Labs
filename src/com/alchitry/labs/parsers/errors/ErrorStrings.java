@@ -11,6 +11,8 @@ public class ErrorStrings {
 	public static final String PARAMETER_CONSTRAINT_PARSE_FAIL = "The constraint \"%s\" could not be parsed";
 	
 	public static final String NUMBER_PARSE_FAIL = "The value \"%s\" could not be parsed";
+	
+	public static final String SIGNED_STRUCT = "Structs cannot be signed";
 
 	public static final String DFF_MISSING_CLK = "The \"clk\" input to the DFF must be assigned";
 	public static final String DFF_NO_SIG_SELECTED = "DFFs can not be accessed directly. You must select a signal with \".d\" or \".q\"";

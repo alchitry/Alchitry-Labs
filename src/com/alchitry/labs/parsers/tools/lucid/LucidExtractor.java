@@ -356,7 +356,10 @@ public class LucidExtractor extends LucidBaseListener {
 						errorListener.reportError(smc.name(), ErrorStrings.STRUCT_MEMBER_CASE);
 
 					Struct.Member m = new Struct.Member(smc.name().getText());
+					m.signed = smc.SIGNED() != null;
 					m.width = bitWidthChecker.getArrayWidth(smc.array_size(), smc.struct_type());
+					if (m.width.hasStruct() && m.signed)
+						errorListener.reportError(smc.SIGNED(), ErrorStrings.SIGNED_STRUCT);
 					struct.addMember(m);
 				}
 			}
@@ -464,6 +467,8 @@ public class LucidExtractor extends LucidBaseListener {
 			else {
 				inputs.add(s);
 				s.setWidth(bitWidthChecker.getWidth(ctx));
+				if (s.isSigned() && s.getWidth().hasStruct())
+					errorListener.reportError(ctx.SIGNED(), ErrorStrings.SIGNED_STRUCT);
 				unusedSigs.add(s);
 				if (dictionary != null)
 					dictionary.add(s.getName());
@@ -484,6 +489,8 @@ public class LucidExtractor extends LucidBaseListener {
 			else {
 				outputs.add(s);
 				s.setWidth(bitWidthChecker.getWidth(ctx));
+				if (s.isSigned() && s.getWidth().hasStruct())
+					errorListener.reportError(ctx.SIGNED(), ErrorStrings.SIGNED_STRUCT);
 				reqSigs.add(s);
 				unusedSigs.add(s);
 				if (dictionary != null)
@@ -505,6 +512,8 @@ public class LucidExtractor extends LucidBaseListener {
 			else {
 				inouts.add(s);
 				s.setWidth(bitWidthChecker.getWidth(ctx));
+				if (s.isSigned() && s.getWidth().hasStruct())
+					errorListener.reportError(ctx.SIGNED(), ErrorStrings.SIGNED_STRUCT);
 				reqSigs.add(new Sig(ctx.name().getText() + ".enable", ctx));
 				reqSigs.add(new Sig(ctx.name().getText() + ".write", ctx));
 				unusedSigs.add(s);
@@ -602,6 +611,8 @@ public class LucidExtractor extends LucidBaseListener {
 					else {
 						sigs.add(sig);
 						sig.setWidth(bitWidthChecker.getWidth(dc));
+						if (sig.isSigned() && sig.getWidth().hasStruct())
+							errorListener.reportError(ctx.SIGNED(), ErrorStrings.SIGNED_STRUCT);
 						unusedSigs.add(sig);
 						if (dictionary != null)
 							dictionary.add(sig.getName());
@@ -845,14 +856,19 @@ public class LucidExtractor extends LucidBaseListener {
 					errorListener.reportError(dc.name(), String.format(ErrorStrings.NAME_NOT_TYPE, dc.name().getText()));
 
 				Dff dff = new Dff(dc.name().getText());
-				if (ctx.SIGNED() != null)
-					dff.setSigned(true);
+
 				if (nameUsed(dff.getName())) {
 					nameUsedError(dc.name());
 					return;
 				}
-				dffs.add(dff);
 				dff.setWidth(bitWidthChecker.getWidth(dc));
+				if (ctx.SIGNED() != null) {
+					dff.setSigned(true);
+					if (dff.getWidth().hasStruct()) {
+						errorListener.reportError(ctx.SIGNED(), ErrorStrings.SIGNED_STRUCT);
+					}
+				}
+				dffs.add(dff);
 				if (dictionary != null)
 					dictionary.add(dff.getName());
 

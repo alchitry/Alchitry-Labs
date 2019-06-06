@@ -1695,7 +1695,9 @@ public class LucidToVerilog extends LucidBaseListener {
 	}
 
 	// parses Dff or Sig width that may contain structs
-	private void parseComplexWidth(StringBuilder sb, SignalContext ctx, SignalWidth width, int offset) {
+	// returns true when the selected signal is signed
+	private boolean parseComplexWidth(StringBuilder sb, SignalContext ctx, SignalWidth width, int offset) {
+		boolean signed = false;
 		int childOffset = ctx.children.indexOf(ctx.name(offset - 1)) + 1;
 		StringBuilder bitOffset = new StringBuilder();
 		int bitWidth = bitWidthChecker.getWidth(ctx).getTotalWidth();
@@ -1756,6 +1758,8 @@ public class LucidToVerilog extends LucidBaseListener {
 					bitOffset.append("+");
 				else
 					first = false;
+
+				signed = signed | Util.getByName(current.getStruct().getMembers(), name).signed;
 				bitOffset.append(current.getStruct().getOffsetOfMember(name));
 				current = new SignalWidth(current.getStruct().getWidthOfMember(name));
 			} else if (pt instanceof TerminalNode) {
@@ -1767,6 +1771,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		if (bitOffset.length() > 0 || bitWidth != width.getTotalWidth()) {
 			sb.append("[").append(bitOffset.toString()).append("+").append(bitWidth - 1).append("-:").append(bitWidth).append("]");
 		}
+		return signed;
 	}
 
 	@Override
@@ -1775,6 +1780,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		boolean hasAttr = attribute.CONST_ID() != null;
 		boolean isWidth = attribute.getText().equals(Lucid.WIDTH_ATTR);
 		boolean isInstModule = false;
+		boolean signed = false;
 
 		if (ctx.name(0).CONST_ID() != null) { // it's a constant
 			ConstValue cv = exprParser.getValue(ctx);
@@ -1936,8 +1942,11 @@ public class LucidToVerilog extends LucidBaseListener {
 		}
 
 		if (offset < ctx.name().size() || ctx.bit_selection().size() != 0)
-			parseComplexWidth(sb, ctx, widths, offset);
-		verilog.put(ctx, sb.toString());
+			signed = parseComplexWidth(sb, ctx, widths, offset);
+		if (signed && !write)
+			verilog.put(ctx, "$signed(" + sb.toString() + ")");
+		else
+			verilog.put(ctx, sb.toString());
 	}
 
 	@Override

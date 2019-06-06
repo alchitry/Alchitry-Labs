@@ -67,7 +67,7 @@ inst_cons : '(' con_list ')';
 con_list  : connection (',' connection)*;
 connection: param_con | sig_con;
 
-struct_member: name struct_type? array_size*;
+struct_member: SIGNED? name struct_type? array_size*;
 struct_dec: 'struct' name '{' struct_member (',' struct_member)* '}';
 
 always_block: 'always' block;
