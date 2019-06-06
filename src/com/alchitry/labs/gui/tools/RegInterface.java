@@ -11,7 +11,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -19,6 +21,7 @@ import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.RegisterInterface;
 import com.fazecast.jSerialComm.SerialPortIOException;
 import com.fazecast.jSerialComm.SerialPortTimeoutException;
+import org.eclipse.swt.widgets.Combo;
 
 public class RegInterface {
 	protected Shell shell;
@@ -26,12 +29,20 @@ public class RegInterface {
 	private Text value;
 	private Button decAddr, hexAddr;
 	private Button decVal, hexVal;
+	private Combo combo;
+	private Label lblNewLabel_2;
+	private String port;
 
 	public RegInterface(Display display) {
 		createContents(display);
 		shell.open();
 		shell.layout();
 		shell.setFocus();
+	}
+
+	private void updatePorts() {
+		String[] ports = Util.getSerialPortNames();
+		combo.setItems(ports);
 	}
 
 	/**
@@ -41,6 +52,28 @@ public class RegInterface {
 		shell = new Shell(display, SWT.CLOSE | SWT.RESIZE | SWT.MIN | SWT.TITLE | SWT.MAX);
 		shell.setText("Register Interface");
 		shell.setLayout(new GridLayout(4, false));
+
+		lblNewLabel_2 = new Label(shell, SWT.NONE);
+		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_2.setText("Port:");
+
+		combo = new Combo(shell, SWT.NONE);
+		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		combo.addListener(SWT.Arm, new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				updatePorts();
+			}
+		});
+
+		combo.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				port = combo.getText();
+
+			}
+		});
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -93,16 +126,19 @@ public class RegInterface {
 				long addr = getNumber(address.getText(), decAddr.getSelection());
 				long val = getNumber(value.getText(), decVal.getSelection());
 				if (addr == -1) {
-					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number");
+					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number", shell);
+					setFocus();
 					return;
 				}
 				if (val == -1) {
-					Util.showError("Value is not a valid " + (decVal.getSelection() ? "decimal" : "hex") + " number");
+					Util.showError("Value is not a valid " + (decVal.getSelection() ? "decimal" : "hex") + " number", shell);
+					setFocus();
 					return;
 				}
 				RegisterInterface regInt = new RegisterInterface();
-				if (!regInt.connect(null)) {
-					Util.showError("Failed to connect to serial port!");
+				if (!regInt.connect(port)) {
+					Util.showError("Failed to connect to serial port!", shell);
+					setFocus();
 					return;
 				}
 				regInt.write((int) addr, (int) val);
@@ -121,19 +157,19 @@ public class RegInterface {
 			public void widgetSelected(SelectionEvent e) {
 				long addr = getNumber(address.getText(), decAddr.getSelection());
 				if (addr == -1) {
-					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number");
+					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number", shell);
 					return;
 				}
 				RegisterInterface regInt = new RegisterInterface();
-				if (!regInt.connect(null)) {
-					Util.showError("Failed to connect to serial port!");
+				if (!regInt.connect(port)) {
+					Util.showError("Failed to connect to serial port!", shell);
 					return;
 				}
 				try {
 					int val = regInt.read((int) addr);
 					value.setText(Integer.toString(val, decVal.getSelection() ? 10 : 16));
 				} catch (SerialPortIOException | SerialPortTimeoutException e1) {
-					Util.showError("Failed to read data!");
+					Util.showError("Failed to read data!", shell);
 				} finally {
 					regInt.disconnect();
 				}
@@ -148,6 +184,9 @@ public class RegInterface {
 
 		shell.pack();
 		shell.setMinimumSize(shell.getSize());
+
+		updatePorts();
+		combo.select(0);
 	}
 
 	private long getNumber(String s, boolean dec) {

@@ -213,9 +213,17 @@ public class Util {
 		showError("Error!", error);
 	}
 
+	public static void showError(final String error, final Shell shell) {
+		showError("Error!", error, shell);
+	}
+
 	public static void showError(final String title, final String error) {
+		showError(title, error, shell);
+	}
+
+	public static void showError(final String title, final String error, final Shell shell) {
 		if (isGUI) {
-			display.asyncExec(new Runnable() {
+			shell.getDisplay().asyncExec(new Runnable() {
 
 				@Override
 				public void run() {
@@ -232,12 +240,20 @@ public class Util {
 	}
 
 	public static void showInfo(final String text) {
-		showInfo("Info", text);
+		showInfo("Info", text, shell);
+	}
+
+	public static void showInfo(final String text, final Shell shell) {
+		showInfo("Info", text, shell);
 	}
 
 	public static void showInfo(final String title, final String text) {
+		showInfo(title, text, shell);
+	}
+
+	public static void showInfo(final String title, final String text, final Shell shell) {
 		if (isGUI) {
-			display.syncExec(new Runnable() {
+			shell.getDisplay().syncExec(new Runnable() {
 
 				@Override
 				public void run() {
