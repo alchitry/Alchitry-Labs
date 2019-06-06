@@ -976,6 +976,7 @@ public class Project {
 						if (!coresDir.renameTo(newCoresDir))
 							throw new ParseException("Failed to rename coreGen directory to cores");
 				}
+				saveXML();
 			} else {
 				throw new ParseException("Incompatible version ID!");
 			}
