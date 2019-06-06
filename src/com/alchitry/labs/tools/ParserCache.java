@@ -164,7 +164,7 @@ public class ParserCache {
 		String text = Util.getFileText(entry.file);
 
 		if (text == null) {
-			Util.showError("Could not read file " + entry);
+			Util.println("Could not read file " + entry, true);
 			return null;
 		}
 

@@ -353,11 +353,15 @@ public class ConstExprParser extends LucidBaseListener {
 					BigInteger bi = null;
 					if (args[0].isNumber())
 						bi = args[0].getBigInt();
-					if (bi != null)
-						values.put(ctx, new ConstValue(
-								BigFunctions.ln(new BigDecimal(bi), 32).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.CEILING).toBigInteger()));
-					else
+					if (bi != null) {
+						if (bi.compareTo(BigInteger.ZERO) != 0)
+							values.put(ctx, new ConstValue(
+									BigFunctions.ln(new BigDecimal(bi), 32).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.CEILING).toBigInteger()));
+						else
+							listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(0).getText(), args[0].toString()));
+					} else {
 						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
+					}
 				} else {
 					debugNullConstant(ctx);
 					if (!c)
@@ -498,10 +502,13 @@ public class ConstExprParser extends LucidBaseListener {
 						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
 
 					if (b1 != null && b2 != null) {
-						if (!b2.equals(BigInteger.ZERO))
-							values.put(ctx, new ConstValue(b1.divide(b2)));
-						else
+						if (!b2.equals(BigInteger.ZERO)) {
+							BigDecimal d1 = new BigDecimal(b1,10);
+							BigDecimal d2 = new BigDecimal(b2,10);
+							values.put(ctx, new ConstValue(d1.divide(d2, RoundingMode.HALF_UP).setScale(0, RoundingMode.CEILING).toBigInteger()));
+						} else {
 							listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
+						}
 					}
 
 				} else {

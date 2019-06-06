@@ -233,6 +233,10 @@ public class SignalWidth implements Serializable {
 	public boolean hasStruct() {
 		return isStruct() || (next != null && next.hasStruct());
 	}
+	
+	public boolean is1D() {
+		return isSimpleArray() && getDepth() == 1;
+	}
 
 	public int getDepth() {
 		int d = 1;
