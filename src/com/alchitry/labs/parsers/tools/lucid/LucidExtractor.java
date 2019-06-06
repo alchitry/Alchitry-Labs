@@ -1166,11 +1166,8 @@ public class LucidExtractor extends LucidBaseListener {
 					if (write) {
 						sigWritten(name + ".d", ctx);
 					}
-					if (ctx.getParent().getClass() != Assign_statContext.class) {
+					if (!hasAttr && read) {
 						errorListener.reportError(names.get(1), ErrorStrings.DFF_D_READ);
-					}
-					if (read) {
-						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
 					}
 				} else if (!hasAttr || names.get(1) != attribute) {
 					errorListener.reportError(names.get(1), String.format(ErrorStrings.DFF_INVALID_SIG, sig));
@@ -1225,11 +1222,8 @@ public class LucidExtractor extends LucidBaseListener {
 					if (write) {
 						sigWritten(name + ".d", ctx);
 					}
-					if (ctx.getParent().getClass() != Assign_statContext.class) {
+					if (!hasAttr && read) {
 						errorListener.reportError(names.get(1), ErrorStrings.FSM_D_READ);
-					}
-					if (read) {
-						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(1).getText()));
 					}
 				} else if (!hasAttr || names.get(1) != attribute) {
 					errorListener.reportError(names.get(1), String.format(ErrorStrings.FSM_INVALID_SIG, sig));
@@ -1380,7 +1374,7 @@ public class LucidExtractor extends LucidBaseListener {
 			InstModule iModule = Util.getByName(instModules, name);
 			if (iModule != null) {
 
-				if (!isWidth && read)
+				if (!hasAttr && read)
 					Util.removeByName(unusedSigs, names.get(0).getText());
 
 				Module module = iModule.getType();
@@ -1415,7 +1409,7 @@ public class LucidExtractor extends LucidBaseListener {
 						case "enable":
 						case "write":
 							if (!hasAttr) {
-								if (read)
+								if (!hasAttr && read)
 									errorListener.reportError(names.get(2), String.format(ErrorStrings.SIG_WRITE_ONLY, names.get(2).getText()));
 								if (write)
 									sigWritten(names.get(0).getText() + "." + names.get(1).getText() + "." + names.get(2), ctx);
@@ -1436,7 +1430,7 @@ public class LucidExtractor extends LucidBaseListener {
 						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_READ_ONLY, sigName));
 					}
 				} else if (Util.containsName(module.getInputs(), sigName)) {
-					if (read) {
+					if (!hasAttr && read) {
 						errorListener.reportError(names.get(1), String.format(ErrorStrings.SIG_WRITE_ONLY, sigName));
 					}
 				} else {
