@@ -67,9 +67,9 @@ module mig_wrapper (
     output ddr3_odt,
     // Inputs
     // Single-ended system clock
-    input              sys_clk_i,
+    input              sys_clk,
     // Single-ended iodelayctrl clk (reference clock)
-    input              clk_ref_i,
+    input              clk_ref,
     // user interface signalsa
     input<Memory.in>   mem_in,
     output<Memory.out> mem_out,
@@ -111,8 +111,8 @@ module mig_wrapper (
     mem_out.rdy = mig.app_rdy;
     mem_out.wr_rdy = mig.app_wdf_rdy;
     
-    mig.sys_clk_i = sys_clk_i;
-    mig.clk_ref_i = clk_ref_i;
+    mig.sys_clk_i = sys_clk;
+    mig.clk_ref_i = clk_ref;
     mig.sys_rst = sys_rst;
     
     sync_rst = mig.ui_clk_sync_rst;
