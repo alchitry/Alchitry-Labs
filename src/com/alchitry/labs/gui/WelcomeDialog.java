@@ -77,7 +77,7 @@ public class WelcomeDialog extends Dialog {
 						+ MainWindow.VERSION
 						+ " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
 						+ " at bugspray@alchitry.com\n\n"
-						+ "This version fixed a bug when parsing .acf files."
+						+ "This version has a ton of changes! Lots of bug fixes and added support for Vivado IP."
 						+ "\n\nAs always, we hope you enjoy this version!");
 
 		Button btnOk = new Button(shell, SWT.NONE);
