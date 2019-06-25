@@ -152,8 +152,6 @@ public class FTDI {
 	private int baudrate;
 	private boolean bitbangEnabled;
 	private ByteBuffer readBuffer;
-	private int readBufferOffset;
-	private int readBufferRemaining;
 	private int readBufferChunksize;
 	private int writeBufferChunksize;
 	private int maxPacketSize;
@@ -256,8 +254,6 @@ public class FTDI {
 		baudrate = -1;
 		bitbangEnabled = false;
 		readBuffer = null;
-		readBufferOffset = 0;
-		readBufferRemaining = 0;
 		writeBufferChunksize = 4096;
 		maxPacketSize = 0;
 		detachMode = DetachMode.AUTO_DETACH_SIO_MODULE;
@@ -671,8 +667,7 @@ public class FTDI {
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_RESET_REQUEST, SIO_RESET_SIO, (short) interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
 			throw new LibUsbException("FTDI reset failed", -1);
 
-		readBufferOffset = 0;
-		readBufferRemaining = 0;
+		resetReadBuffer();
 	}
 
 	public void usbPurgeRxBuffer() {
@@ -682,8 +677,7 @@ public class FTDI {
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_RESET_REQUEST, SIO_RESET_PURGE_RX, (short) interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
 			throw new LibUsbException("FTDI purge of RX buffer failed", -1);
 
-		readBufferOffset = 0;
-		readBufferRemaining = 0;
+		resetReadBuffer();
 	}
 
 	public void usbPurgeTxBuffer() {
@@ -970,6 +964,7 @@ public class FTDI {
 			packet_size = ftdi.maxPacketSize;
 
 			actual_length = transfer.actualLength();
+			ftdi.readBuffer.limit(actual_length);
 
 			if (actual_length > 2) {
 				// skip FTDI status bytes.
@@ -979,30 +974,35 @@ public class FTDI {
 				// printf("actual_length = %X, num_of_chunks = %X, chunk_remains = %X, readbuffer_offset = %X\n", actual_length, num_of_chunks, chunk_remains,
 				// ftdi->readbuffer_offset);
 
-				ftdi.readBufferOffset += 2;
+				ftdi.readBuffer.position(ftdi.readBuffer.position()+2);
 				actual_length -= 2;
 
 				if (actual_length > packet_size - 2) {
+					byte[] buffer = new byte[ftdi.readBuffer.remaining()];
+					ftdi.readBuffer.get(buffer);
 					for (i = 1; i < num_of_chunks; i++)
-						System.arraycopy(ftdi.readBuffer.array(), ftdi.readBufferOffset + packet_size * i, ftdi.readBuffer.array(),
-								ftdi.readBufferOffset + (packet_size - 2) * i, packet_size - 2);
+						System.arraycopy(buffer, packet_size * i, buffer, (packet_size - 2) * i, packet_size - 2);
 					if (chunk_remains > 2) {
-						System.arraycopy(ftdi.readBuffer.array(), ftdi.readBufferOffset + packet_size * i, ftdi.readBuffer.array(),
-								ftdi.readBufferOffset + (packet_size - 2) * i, chunk_remains - 2);
+						System.arraycopy(buffer, packet_size * i, buffer, (packet_size - 2) * i, chunk_remains - 2);
 						actual_length -= 2 * num_of_chunks;
-					} else
+					} else {
 						actual_length -= 2 * (num_of_chunks - 1) + chunk_remains;
+					}
+					ftdi.readBuffer.clear();
+					ftdi.readBuffer.put(buffer, 0, actual_length);
+					ftdi.readBuffer.limit(actual_length);
+					ftdi.readBuffer.rewind();
 				}
 
-				if (actual_length > 0) {
+				if (ftdi.readBuffer.remaining() > 0) {
 					// data still fits in buf?
 					if (tc.offset + actual_length <= tc.buf.length) {
-						System.arraycopy(ftdi.readBuffer.array(), ftdi.readBufferOffset, tc.buf, tc.offset, actual_length);
+						ftdi.readBuffer.get(tc.buf, tc.offset, ftdi.readBuffer.remaining());
 						// printf("buf[0] = %X, buf[1] = %X\n", buf[0], buf[1]);
 						tc.offset += actual_length;
 
-						ftdi.readBufferOffset = 0;
-						ftdi.readBufferRemaining = 0;
+						ftdi.readBuffer.clear();
+						ftdi.readBuffer.limit(0);
 
 						/* Did we read exactly the right amount of bytes? */
 						if (tc.offset == tc.buf.length) {
@@ -1014,23 +1014,16 @@ public class FTDI {
 					} else {
 						// only copy part of the data or size <= readbuffer_chunksize
 						int part_size = tc.buf.length - tc.offset;
-						System.arraycopy(ftdi.readBuffer.array(), ftdi.readBufferOffset, tc.buf, tc.offset, part_size);
+						ftdi.readBuffer.get(tc.buf, tc.offset, part_size);
 						tc.offset += part_size;
 
-						ftdi.readBufferOffset += part_size;
-						ftdi.readBufferRemaining = actual_length - part_size;
-
-						/*
-						 * printf("Returning part: %d - size: %d - offset: %d - actual_length: %d - remaining: %d\n", part_size, size, offset, actual_length,
-						 * ftdi->readbuffer_remaining);
-						 */
 						tc.completed.put(0, 1);
 						return;
 					}
 				}
 			}
 
-			ftdi.readBuffer.reset();
+			ftdi.readBuffer.clear();
 
 			if (transfer.status() == LibUsb.TRANSFER_CANCELLED)
 				tc.completed.put(0, LibUsb.TRANSFER_CANCELLED);
@@ -1125,11 +1118,8 @@ public class FTDI {
 		tc.ftdi = this;
 		tc.buf = buf;
 
-		if (buf.length <= readBufferRemaining) {
-			System.arraycopy(readBuffer.array(), readBufferOffset, buf, 0, buf.length);
-
-			readBufferRemaining -= buf.length;
-			readBufferOffset += buf.length;
+		if (buf.length <= readBuffer.remaining()) {
+			readBuffer.get(buf);
 
 			tc.completed.put(0, 1);
 			tc.offset = buf.length;
@@ -1138,9 +1128,9 @@ public class FTDI {
 		}
 
 		tc.completed.put(0, 0);
-		if (readBufferRemaining != 0) {
-			System.arraycopy(readBuffer.array(), readBufferOffset, buf, 0, readBufferRemaining);
-			tc.offset = readBufferRemaining;
+		if (readBuffer.remaining() != 0) {
+			tc.offset = readBuffer.remaining();
+			readBuffer.get(buf, 0, readBuffer.remaining());
 		} else {
 			tc.offset = 0;
 		}
@@ -1149,9 +1139,7 @@ public class FTDI {
 		if (transfer == null)
 			return null;
 
-		readBufferRemaining = 0;
-		readBufferOffset = 0;
-		readBuffer.reset();
+		resetReadBuffer();
 
 		LibUsb.fillBulkTransfer(transfer, device, outEndPoint, readBuffer, readDataCallback, tc, readTimeout);
 		transfer.setType(LibUsb.TRANSFER_TYPE_BULK);
@@ -1226,31 +1214,23 @@ public class FTDI {
 			throw new LibUsbException("max_packet_size is bogus (zero)", -1);
 
 		// everything we want is still in the readbuffer?
-		if (buf.length <= readBufferRemaining) {
-			System.arraycopy(readBuffer.array(), readBufferOffset, buf, 0, buf.length);
-
-			// Fix offsets
-			readBufferRemaining -= buf.length;
-			readBufferOffset += buf.length;
-
+		if (buf.length <= readBuffer.remaining()) {
+			readBuffer.get(buf);
 			return buf.length;
 		}
 		// something still in the readbuffer, but not enough to satisfy 'size'?
-		if (readBufferRemaining != 0) {
-			System.arraycopy(readBuffer.array(), readBufferOffset, buf, 0, readBufferRemaining);
-
-			// Fix offset
-			offset += readBufferRemaining;
+		if (readBuffer.remaining() != 0) {
+			offset += readBuffer.remaining();
+			readBuffer.get(buf,0,readBuffer.remaining());	
 		}
 		// do the actual USB read
 		while (offset < buf.length && actual_length > 0) {
-			readBufferRemaining = 0;
-			readBufferOffset = 0;
-			readBuffer.reset();
+			readBuffer.clear();
 			/* returns how much received */
-			actual_length_buf.reset();
+			actual_length_buf.clear();
 			ret = LibUsb.bulkTransfer(device, outEndPoint, readBuffer, actual_length_buf, readTimeout);
 			actual_length = actual_length_buf.get();
+			readBuffer.limit(actual_length);
 			if (ret < 0)
 				throw new LibUsbException("usb bulk read failed", ret);
 
@@ -1260,28 +1240,33 @@ public class FTDI {
 				num_of_chunks = actual_length / packet_size;
 				chunk_remains = actual_length % packet_size;
 
-				readBufferOffset += 2;
+				readBuffer.position(readBuffer.position()+2);
 				actual_length -= 2;
 
 				if (actual_length > packet_size - 2) {
+					byte[] buffer = new byte[readBuffer.remaining()];
+					readBuffer.get(buffer);
 					for (i = 1; i < num_of_chunks; i++)
-						System.arraycopy(readBuffer.array(), readBufferOffset + packet_size * i, readBuffer.array(), readBufferOffset + (packet_size - 2) * i,
-								packet_size - 2);
+						System.arraycopy(buffer, packet_size * i, buffer, (packet_size - 2) * i, packet_size - 2);
 					if (chunk_remains > 2) {
-						System.arraycopy(readBuffer.array(), readBufferOffset + packet_size * i, readBuffer.array(), readBufferOffset + (packet_size - 2) * i,
-								chunk_remains - 2);
+						System.arraycopy(buffer, packet_size * i, buffer, (packet_size - 2) * i, chunk_remains - 2);
 						actual_length -= 2 * num_of_chunks;
-					} else
+					} else {
 						actual_length -= 2 * (num_of_chunks - 1) + chunk_remains;
+					}
+					readBuffer.clear();
+					readBuffer.put(buffer, 0, actual_length);
+					readBuffer.limit(actual_length);
+					readBuffer.rewind();
 				}
 			} else if (actual_length <= 2) {
 				// no more data to read?
 				return offset;
 			}
-			if (actual_length > 0) {
+			if (readBuffer.remaining() > 0) {
 				// data still fits in buf?
 				if (offset + actual_length <= buf.length) {
-					System.arraycopy(readBuffer.array(), readBufferOffset, buf, offset, actual_length);
+					readBuffer.get(buf, offset, actual_length);
 					offset += actual_length;
 
 					/* Did we read exactly the right amount of bytes? */
@@ -1290,12 +1275,8 @@ public class FTDI {
 				} else {
 					// only copy part of the data or size <= readbuffer_chunksize
 					int part_size = buf.length - offset;
-					System.arraycopy(readBuffer.array(), readBufferOffset, buf, offset, part_size);
-
-					readBufferOffset += part_size;
-					readBufferRemaining = actual_length - part_size;
+					readBuffer.get(buf,offset,part_size);
 					offset += part_size;
-
 					return offset;
 				}
 			}
@@ -1303,10 +1284,13 @@ public class FTDI {
 		// never reached
 		return -127;
 	}
+	
+	private void resetReadBuffer() {
+		readBuffer.clear();
+		readBuffer.limit(0);
+	}
 
 	public void readDataSetChunkSize(int chunksize) {
-		readBufferOffset = 0;
-		readBufferRemaining = 0;
 		/*
 		 * We can't set readbuffer_chunksize larger than MAX_BULK_BUFFER_LENGTH, which is defined in libusb-1.0. Otherwise, each USB read request will be divided into multiple
 		 * URBs. This will cause issues on Linux kernel older than 2.6.32.
@@ -1314,6 +1298,7 @@ public class FTDI {
 		if (Util.isLinux && chunksize > 16384)
 			chunksize = 16384;
 		readBuffer = ByteBuffer.allocateDirect(chunksize);
+		readBuffer.limit(0);
 		readBufferChunksize = chunksize;
 	}
 
