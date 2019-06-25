@@ -178,7 +178,7 @@ public class SerialMonitor {
 
 	private void selectDefaultPort() {
 		String[] ports = combo.getItems();
-		String defPort = Settings.pref.get(Settings.MOJO_PORT, null);
+		String defPort = Settings.pref.get(Settings.SERIAL_PORT, null);
 		if (defPort != null) {
 			for (int i = 0; i < ports.length; i++) {
 				if (ports[i].equals(defPort)) {

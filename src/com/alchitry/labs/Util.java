@@ -610,7 +610,7 @@ public class Util {
 		serialPort.setNumDataBits(8);
 		serialPort.setNumStopBits(1);
 		serialPort.setParity(0);
-		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 50000, 50000);
+		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 20000, 20000);
 
 		return serialPort;
 	}

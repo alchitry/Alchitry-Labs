@@ -43,7 +43,7 @@ public class MojoLoader extends ProjectLoader {
 	}
 
 	private boolean connect() {
-		String port = Settings.pref.get(Settings.MOJO_PORT, null);
+		String port = Settings.pref.get(Settings.SERIAL_PORT, null);
 		if (port == null) {
 			Util.showError("You need to select the serial port the board is connected to in the settings menu.");
 			return false;

@@ -31,3 +31,4 @@ local.properties
 !lib/**/*.jar
 !tools/**/bin
 /synlog.tcl
+/docs/

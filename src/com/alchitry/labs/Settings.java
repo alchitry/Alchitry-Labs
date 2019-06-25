@@ -7,7 +7,7 @@ public class Settings {
 
 	public static final String VERSION = "VERSION";
 	public static final String LIB_VERSION = "LIB_VERSION";
-	public static final String MOJO_PORT = "MOJO_PORT";
+	public static final String SERIAL_PORT = "SERIAL_PORT";
 	public static final String WINDOW_WIDTH = "WINDOW_WIDTH";
 	public static final String WINDOW_HEIGHT = "WINDOW_HEIGHT";
 	public static final String FILE_LIST_WIDTH = "FILE_LIST_WIDTH";

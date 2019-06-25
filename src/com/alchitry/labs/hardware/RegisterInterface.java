@@ -21,13 +21,14 @@ public class RegisterInterface {
 
 	public boolean connect(String port) {
 		if (port == null)
-			port = Settings.pref.get(Settings.MOJO_PORT, null);
+			port = Settings.pref.get(Settings.SERIAL_PORT, null);
 		if (port == null) {
 			Util.showError("You need to select the serial port the Mojo is connected to in the settings menu.");
 			return false;
 		}
 		try {
 			serialPort = Util.connect(port, 1000000);
+			serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 3000, 3000);
 		} catch (SerialPortIOException e) {
 			return false;
 		}

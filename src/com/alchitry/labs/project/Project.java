@@ -737,7 +737,7 @@ public class Project {
 				}
 			}
 
-			while (files.size() < sourceLeafs.size())
+			while (leafCt < sourceLeafs.size())
 				sourceBranch.remove(sourceLeafs.size() - 1);
 
 			int categoryIdx = 1;

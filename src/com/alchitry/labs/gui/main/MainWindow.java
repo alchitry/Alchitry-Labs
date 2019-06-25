@@ -2,6 +2,7 @@ package com.alchitry.labs.gui.main;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,9 +89,11 @@ public class MainWindow {
 	 * Launch the application.
 	 * 
 	 * @param args
+	 * @throws UnsupportedEncodingException
+	 * @throws InterruptedException
 	 * @wbp.parser.entryPoint
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnsupportedEncodingException, InterruptedException {
 		parseCommand(args);
 
 		Util.isGUI = true;
@@ -105,6 +108,7 @@ public class MainWindow {
 			if (mainWindow != null)
 				mainWindow.saveOnCrash();
 		}
+
 		return;
 	}
 
@@ -166,7 +170,6 @@ public class MainWindow {
 				break;
 			}
 		}
-		
 
 		if (Util.getEnvType() == Util.UNKNOWN) {
 			if (args.length == 2 && args[0].equals("-u")) {
@@ -356,15 +359,15 @@ public class MainWindow {
 		updateFileLocation("The next dialog will ask you for the location of iCEcube2's license file. You need to get your own file from Lattcie's website.",
 				Util.getIceCubeLicenseFile(), Settings.ICECUBE_LICENSE);
 	}
-	
+
 	public void updateYosysLocation() {
 		updateFileLocation("The next dialog will ask for the location of the Yosys executable.", Settings.pref.get(Settings.YOSYS_LOC, null), Settings.YOSYS_LOC);
 	}
-	
+
 	public void updateArachneLocation() {
 		updateFileLocation("The next dialog will ask for the location of the Arachne PNR executable.", Settings.pref.get(Settings.ARACHNE_LOC, null), Settings.ARACHNE_LOC);
 	}
-	
+
 	public void updateIcepackLocation() {
 		updateFileLocation("The next dialog will ask for the location of the IcePack executable.", Settings.pref.get(Settings.ICEPACK_LOC, null), Settings.ICEPACK_LOC);
 	}
@@ -439,7 +442,7 @@ public class MainWindow {
 	public CoreGen getCoreGen() {
 		return coreGen;
 	}
-	
+
 	public VivadoIP getVivadoIP() {
 		return vivadoIP;
 	}
@@ -816,7 +819,7 @@ public class MainWindow {
 			SerialPortSelector dialog = new SerialPortSelector(shlAlchitryLabs, ports);
 			String port = dialog.open();
 			if (port != null)
-				Settings.pref.put(Settings.MOJO_PORT, port);
+				Settings.pref.put(Settings.SERIAL_PORT, port);
 		} else {
 			MessageBox box = new MessageBox(shlAlchitryLabs, SWT.ICON_ERROR | SWT.OK);
 			box.setText("No Serial Ports Detected!");
