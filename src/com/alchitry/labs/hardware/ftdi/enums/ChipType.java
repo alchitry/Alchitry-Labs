@@ -16,7 +16,7 @@
 package com.alchitry.labs.hardware.ftdi.enums;
 
 /**
- * Enumerated list of recognized FTDI chip types supported in this library.
+ * Enumerated list of recognized Ftdi chip types supported in this library.
  *
  * @author Jesse Caulfield
  */

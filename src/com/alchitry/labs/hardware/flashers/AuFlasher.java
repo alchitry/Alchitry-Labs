@@ -14,7 +14,7 @@ public class AuFlasher extends Flasher {
 
 	@Override
 	public void flash() {
-		if (!Util.askQuestion("Warning", "Make sure that only one FTDI device is plugged in before proceeding!"))
+		if (!Util.askQuestion("Warning", "Make sure that only one Ftdi device is plugged in before proceeding!"))
 			return;
 		thread = new Thread(new Runnable() {
 

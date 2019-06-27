@@ -1,6 +1,6 @@
 package com.alchitry.labs.hardware.ftdi;
 
-public class FTDI_EEPROM {
+public class FtdiEeprom {
 	public static final int FTDI_MAX_EEPROM_SIZE = 256;
 	public static final int MAX_POWER_MILLIAMP_PER_UNIT = 2;
 	

@@ -32,7 +32,7 @@ import com.alchitry.labs.hardware.ftdi.enums.LineParity;
 import com.alchitry.labs.hardware.ftdi.enums.LineStopbit;
 import com.alchitry.labs.hardware.ftdi.enums.PortInterfaceType;
 
-public class FTDI {
+public class Ftdi {
 	/* Shifting commands IN MPSSE Mode */
 	public static final byte MPSSE_WRITE_NEG = (byte) 0x01; /* Write TDI/DO on negative TCK/SK edge */
 	public static final byte MPSSE_BITMODE = (byte) 0x02; /* Write bits, not bytes */
@@ -42,7 +42,7 @@ public class FTDI {
 	public static final byte MPSSE_DO_READ = (byte) 0x20; /* Read TDO/DI */
 	public static final byte MPSSE_WRITE_TMS = (byte) 0x40; /* Write TMS/CS */
 
-	/* FTDI MPSSE commands */
+	/* Ftdi MPSSE commands */
 	public static final byte SET_BITS_LOW = (byte) 0x80;
 	/* BYTE DATA */
 	/* BYTE Direction */
@@ -140,7 +140,7 @@ public class FTDI {
 		public IntBuffer completed = BufferUtils.allocateIntBuffer();
 		public byte[] buf;
 		public int offset;
-		public FTDI ftdi;
+		public Ftdi ftdi;
 		public Transfer transfer;
 	}
 
@@ -162,7 +162,7 @@ public class FTDI {
 	private byte outEndPoint;
 
 	private BitMode bitMode;
-	private FTDI_EEPROM eeprom;
+	private FtdiEeprom eeprom;
 	private DetachMode detachMode;
 
 	/** Invert TXD# */
@@ -263,11 +263,11 @@ public class FTDI {
 
 		setInterface(PortInterfaceType.INTERFACE_ANY);
 		bitMode = BitMode.BITBANG;
-		eeprom = new FTDI_EEPROM();
+		eeprom = new FtdiEeprom();
 		readDataSetChunkSize(4096);
 	}
 
-	public FTDI() {
+	public Ftdi() {
 		init();
 	}
 
@@ -456,7 +456,7 @@ public class FTDI {
 				if (detachErrno == LibUsb.ERROR_ACCESS)
 					throw new LibUsbException("inappropriate permissions on device!", -8);
 				else
-					throw new LibUsbException("unable to set usb configuration. Make sure the default FTDI driver is not in use", -3);
+					throw new LibUsbException("unable to set usb configuration. Make sure the default Ftdi driver is not in use", -3);
 			}
 		}
 
@@ -465,7 +465,7 @@ public class FTDI {
 			if (detachErrno == LibUsb.ERROR_ACCESS)
 				throw new LibUsbException("inappropriate permissions on device!", -8);
 			else
-				throw new LibUsbException("unable to claim usb device. Make sure the default FTDI driver is not in use", -5);
+				throw new LibUsbException("unable to claim usb device. Make sure the default Ftdi driver is not in use", -5);
 		}
 
 		try {
@@ -665,7 +665,7 @@ public class FTDI {
 			throw new LibUsbException("USB device unavailable", -2);
 
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_RESET_REQUEST, SIO_RESET_SIO, (short) interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
-			throw new LibUsbException("FTDI reset failed", -1);
+			throw new LibUsbException("Ftdi reset failed", -1);
 
 		resetReadBuffer();
 	}
@@ -675,7 +675,7 @@ public class FTDI {
 			throw new LibUsbException("USB device unavailable", -2);
 
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_RESET_REQUEST, SIO_RESET_PURGE_RX, (short) interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
-			throw new LibUsbException("FTDI purge of RX buffer failed", -1);
+			throw new LibUsbException("Ftdi purge of RX buffer failed", -1);
 
 		resetReadBuffer();
 	}
@@ -685,7 +685,7 @@ public class FTDI {
 			throw new LibUsbException("USB device unavailable", -2);
 
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_RESET_REQUEST, SIO_RESET_PURGE_TX, (short) interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
-			throw new LibUsbException("FTDI purge of TX buffer failed", -1);
+			throw new LibUsbException("Ftdi purge of TX buffer failed", -1);
 	}
 
 	public void usbPurgeBuffers() {
@@ -958,7 +958,7 @@ public class FTDI {
 		@Override
 		public void processTransfer(Transfer transfer) {
 			TransferControl tc = (TransferControl) transfer.userData();
-			FTDI ftdi = tc.ftdi;
+			Ftdi ftdi = tc.ftdi;
 			int packet_size, actual_length, num_of_chunks, chunk_remains, i, ret;
 
 			packet_size = ftdi.maxPacketSize;
@@ -967,7 +967,7 @@ public class FTDI {
 			ftdi.readBuffer.limit(actual_length);
 
 			if (actual_length > 2) {
-				// skip FTDI status bytes.
+				// skip Ftdi status bytes.
 				// Maybe stored in the future to enable modem use
 				num_of_chunks = actual_length / packet_size;
 				chunk_remains = actual_length % packet_size;
@@ -1040,7 +1040,7 @@ public class FTDI {
 		@Override
 		public void processTransfer(Transfer transfer) {
 			TransferControl tc = (TransferControl) transfer.userData();
-			FTDI ftdi = tc.ftdi;
+			Ftdi ftdi = tc.ftdi;
 
 			tc.offset += transfer.actualLength();
 
@@ -1235,13 +1235,14 @@ public class FTDI {
 				throw new LibUsbException("usb bulk read failed", ret);
 
 			if (actual_length > 2) {
-				// skip FTDI status bytes.
+				// skip Ftdi status bytes.
 				// Maybe stored in the future to enable modem use
 				num_of_chunks = actual_length / packet_size;
 				chunk_remains = actual_length % packet_size;
-
+				
 				readBuffer.position(readBuffer.position()+2);
 				actual_length -= 2;
+
 
 				if (actual_length > packet_size - 2) {
 					byte[] buffer = new byte[readBuffer.remaining()];
@@ -1261,6 +1262,7 @@ public class FTDI {
 				}
 			} else if (actual_length <= 2) {
 				// no more data to read?
+				resetReadBuffer();
 				return offset;
 			}
 			if (readBuffer.remaining() > 0) {

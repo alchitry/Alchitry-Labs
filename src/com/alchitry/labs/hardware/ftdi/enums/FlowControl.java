@@ -25,7 +25,7 @@ package com.alchitry.labs.hardware.ftdi.enums;
  * that some form of handshaking be used.
  * <p>
  * It is strongly encouraged that flow control is used because it is impossible
- * to ensure that the FTDI driver will always be scheduled. The chip can buffer
+ * to ensure that the Ftdi driver will always be scheduled. The chip can buffer
  * up to 384 bytes of data. Windows can 'starve' the driver program of time if
  * it is doing other things. The most obvious example of this is moving an
  * application around the screen with the mouse by grabbing its task bar. This
