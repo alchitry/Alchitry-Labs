@@ -146,7 +146,7 @@ public class VivadoIP {
 					Util.println("Looking for new cores...");
 					checkForNewCores(project);
 				} catch (Exception e) {
-					Util.print(e);
+					Util.logException(e);
 				}
 			}
 		};
@@ -233,7 +233,7 @@ public class VivadoIP {
 					Util.println("Looking for new cores...", Theme.infoTextColor);
 					checkForNewCores(project);
 				} catch (Exception e) {
-					Util.print(e);
+					Util.logException(e);
 				}
 				try {
 					Thread.sleep(150);

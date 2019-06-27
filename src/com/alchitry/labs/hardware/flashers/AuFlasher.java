@@ -7,7 +7,7 @@ import com.alchitry.labs.Util;
 
 public class AuFlasher extends Flasher {
 	protected String firmwareFile;
-	
+
 	public AuFlasher() {
 		firmwareFile = "au_ftdi.data";
 	}
@@ -21,22 +21,21 @@ public class AuFlasher extends Flasher {
 			@Override
 			public void run() {
 				Util.clearConsole();
-				
+
 				List<String> cmd = new ArrayList<>();
 				cmd.add(Util.getAlchitryLoaderCommand());
-				
+
 				cmd.add("-b");
 				cmd.add("0");
 
 				cmd.add("-u");
 				cmd.add(Util.assemblePath("tools", "etc", firmwareFile));
-				
+
 				try {
 					Util.runCommand(cmd).waitFor();
 					Util.showInfo("Unplug and replug the board now for the firmware update to take effect!");
 				} catch (InterruptedException e) {
-					Util.showError("Interrupted exception while eraseing flash!");
-					Util.print(e);
+					Util.logException(e, "Interrupted exception while eraseing flash!");
 				}
 			}
 		});

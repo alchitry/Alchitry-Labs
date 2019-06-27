@@ -1,8 +1,5 @@
 package com.alchitry.labs.hardware.ftdi;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.ftdi.JtagState.Transistions;
 import com.alchitry.labs.hardware.ftdi.enums.BitMode;
 
@@ -67,7 +64,7 @@ public class Jtag {
 	private void configJtag() {
 		final int clockDivisor = 0x05DB; // Value of clock divisor, SCL Frequency = 60/((1+0x05DB)*2) (MHz) = 20khz
 		// Set up the Hi-Speed specific commands for the FTx232H
-		ftdi.writeData(new byte[] { (byte) 0x8D, (byte) 0x97, (byte) 0x8D });
+		ftdi.writeData(new byte[] { (byte) 0x8A, (byte) 0x97, (byte) 0x8D });
 		// Set initial states of the MPSSE interface - low byte, both pin directions and output values
 		ftdi.writeData(new byte[] { (byte) 0x80, (byte) 0x08, (byte) 0x0B });
 		// Set initial states of the MPSSE interface - high byte, both pin directions and output values
@@ -81,7 +78,7 @@ public class Jtag {
 	public void setFreq(double freq) {
 		int clockDivisor = (int) (30.0 / (freq / 1000000.0) - 1.0);
 		// set TCK = 60MHz /((1 + [(1 +0xValueH*256) OR 0xValueL])*2)
-		ftdi.writeData(new byte[] { (byte) 0x86, (byte) (clockDivisor & 0xff), (byte) ((clockDivisor >> 8) & 0xff) });
+		ftdi.writeData(new byte[] { (byte) 0x86, (byte) (clockDivisor & 0xff), (byte) ((clockDivisor >>> 8) & 0xff) });
 	}
 
 	public void resetState() {
@@ -101,6 +98,25 @@ public class Jtag {
 			}
 		}
 		currentState = state;
+	}
+
+	private void readDataWithTimeout(byte[] data) {
+		byte[] buffer = new byte[data.length];
+		int reqBytes = data.length;
+		int offset = 0;
+		long startTime = System.currentTimeMillis();
+		while (reqBytes > 0) {
+			if (buffer.length != reqBytes)
+				buffer = new byte[reqBytes];
+			int ct = ftdi.readData(buffer);
+			if (ct > 0) {
+				System.arraycopy(buffer, 0, data, offset, ct);
+				offset += ct;
+				reqBytes -= ct;
+			}
+			if (System.currentTimeMillis() - startTime > 2000)
+				throw new JtagException("Reading " + data.length + " bytes took longer than 2 seconds!");
+		}
 	}
 
 	public void shiftData(int bitCount, byte[] tdi, byte[] tdo, byte[] mask) {
@@ -125,15 +141,15 @@ public class Jtag {
 			throw new JtagException("tdo or mask lengths do not match tdi lenght");
 
 		if (bitCount < 9) {
-			ftdi.writeData(new byte[] { (byte) (read ? 0x3B : 0x1B), (byte) (bitCount - 2), tdi[0] });
-			byte lastBit = (byte) ((tdi[0] >> ((bitCount - 1) % 8)) & 0x01);
-			ftdi.writeData(new byte[] { (byte) (read ? 0x6E : 0x4E), 0x00, (byte) (0x03 | (lastBit << 7)) });
+			if (bitCount > 1)
+				ftdi.writeData(new byte[] { (byte) (read ? 0x3B : 0x1B), (byte) (bitCount - 2), tdi[0] });
+			byte lastBit = (byte) ((tdi[0] >>> ((bitCount - 1) % 8)) & 0x01);
+			ftdi.writeData(new byte[] { (byte) (read ? 0x6E : 0x4B), 0x00, (byte) (0x03 | (lastBit << 7)) });
 
 			if (read) {
 				byte[] inputBuffer = new byte[2];
-				if (ftdi.readData(inputBuffer) != 2)
-					throw new JtagException("failed to read two bytes");
-				tdoBuffer[0] = (byte) ((inputBuffer[0] >> (8 - (bitCount - 1))) | (inputBuffer[1] >> (7 - (bitCount - 1))));
+				readDataWithTimeout(inputBuffer);
+				tdoBuffer[0] = (byte) (inputBuffer[1] >>> (8 - bitCount));
 				tdoBytes = 1;
 			}
 		} else {
@@ -160,14 +176,10 @@ public class Jtag {
 				offset += bct;
 
 				if (read) {
-					int bytesToRead = bct;
-					byte[] readBuffer = new byte[bytesToRead];
-					while (bytesToRead > 0) {
-						int count = ftdi.readData(readBuffer);
-						bytesToRead -= count;
-						System.arraycopy(readBuffer, 0, tdoBuffer, tdoBytes, count);
-						tdoBytes += count;
-					}
+					byte[] readBuffer = new byte[bct];
+					readDataWithTimeout(readBuffer);
+					System.arraycopy(readBuffer, 0, tdoBuffer, tdoBytes, bct);
+					tdoBytes += bct;
 				}
 			}
 
@@ -178,21 +190,21 @@ public class Jtag {
 			}
 
 			byte lastBit = (byte) ((tdi[reqBytes - 1] >> ((bitCount - 1) % 8)) & 0x01);
-			ftdi.writeData(new byte[] { (byte) (read ? 0x6e : 0x4E), (byte) 0, (byte) (0x03 | (lastBit << 7)) });
+			ftdi.writeData(new byte[] { (byte) (read ? 0x6E : 0x4B), (byte) 0, (byte) (0x03 | (lastBit << 7)) });
 
 			if (read) {
 				int bytesToRead = (fullBytes * 8 + 1 != bitCount) ? 2 : 1;
 				byte[] readBuffer = new byte[bytesToRead];
-				if (ftdi.readData(readBuffer) != 2)
-					throw new JtagException("failed to read final two bytes");
-				tdoBuffer[tdoBytes] = (byte) ((readBuffer[1] >> (8 - (partialBits - 1))) | (readBuffer[0] >> (7 - (partialBits - 1))));
+				readDataWithTimeout(readBuffer);
+				tdoBuffer[tdoBytes] = (byte) ((readBuffer[1] >>> (8 - (partialBits - 1))) | (readBuffer[0] >>> (7 - (partialBits - 1))));
 			}
 		}
 
 		if (read) {
 			for (int i = 0; i < tdo.length; i++)
 				if ((tdoBuffer[tdoBuffer.length - 1 - i] & mask[i]) != (tdo[i] & mask[i])) {
-					throw new JtagException("TDO didn't match. Got " + Util.bytesToHex(tdoBuffer) + " expected " + Util.bytesToHex(tdo) + " with mask " + Util.bytesToHex(mask) + " at byte " + i);
+					throw new JtagException(
+							String.format("TDO didn't match. Got %02X expected %02X with mask %02X at byte %d", tdoBuffer[tdoBuffer.length - 1 - i], tdo[i], mask[i], i));
 				}
 
 		}

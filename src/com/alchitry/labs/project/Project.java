@@ -358,7 +358,7 @@ public class Project {
 			try {
 				FileUtils.copyFile(src, dest);
 			} catch (IOException e) {
-				Util.print(e);
+				Util.logException(e, "Failed to copy file!");
 				return false;
 			}
 		}
@@ -1468,8 +1468,7 @@ public class Project {
 					try {
 						builder.build(Project.this, debug);
 					} catch (Exception e) {
-						Util.print(e);
-						Util.log.log(Level.SEVERE, "Exception with project builder!", e);
+						Util.logException(e, "Exception with project builder!");
 					}
 				}
 			};

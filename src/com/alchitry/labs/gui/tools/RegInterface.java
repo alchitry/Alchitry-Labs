@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -21,7 +22,6 @@ import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.RegisterInterface;
 import com.fazecast.jSerialComm.SerialPortIOException;
 import com.fazecast.jSerialComm.SerialPortTimeoutException;
-import org.eclipse.swt.widgets.Combo;
 
 public class RegInterface {
 	protected Shell shell;

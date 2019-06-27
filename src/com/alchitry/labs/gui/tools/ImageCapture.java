@@ -183,11 +183,9 @@ public class ImageCapture {
 								}
 
 							} catch (SerialPortIOException e) {
-								Util.print(e);
-								e.printStackTrace();
+								Util.logException(e);
 							} catch (SerialPortTimeoutException e) {
-								e.printStackTrace();
-								Util.print(e);
+								Util.logException(e);
 							} finally {
 								reg.disconnect();
 

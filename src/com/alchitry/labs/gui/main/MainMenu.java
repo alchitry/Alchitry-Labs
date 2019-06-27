@@ -88,14 +88,14 @@ public class MainMenu {
 
 	private void buildFileMenu() {
 		Menu subMenu = createSubMenu(menu, "File");
-		
+
 		createItem(subMenu, "New File", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				parent.addNewFile();
 			}
 		});
-		
+
 		createItem(subMenu, "Open File", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -110,7 +110,7 @@ public class MainMenu {
 				}
 			}
 		});
-		
+
 		createItem(subMenu, "Import Files", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -133,7 +133,7 @@ public class MainMenu {
 				}
 			}
 		});
-		
+
 		createItem(subMenu, "Save", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -151,7 +151,7 @@ public class MainMenu {
 
 	private void buildProjectMenu() {
 		Menu subMenu = createSubMenu(menu, "Project");
-		
+
 		createItem(subMenu, "New Project", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -213,7 +213,7 @@ public class MainMenu {
 					parent.coreGen.launch(MainWindow.project);
 				}
 			});
-		
+
 		if (Board.isType(board, Board.AU))
 			createItem(subMenu, "Vivado IP Catalog", new SelectionAdapter() {
 				@Override
@@ -225,7 +225,7 @@ public class MainMenu {
 					parent.vivadoIP.launch(MainWindow.project);
 				}
 			});
-		
+
 		if (Board.isType(board, Board.AU))
 			createItem(subMenu, "Add Memory Controller", new SelectionAdapter() {
 				@Override
@@ -237,7 +237,7 @@ public class MainMenu {
 					try {
 						parent.vivadoIP.generateMigCore(MainWindow.project);
 					} catch (InterruptedException | IOException e1) {
-						Util.print(e1);
+						Util.logException(e1, "Failed to generate MIG core!");
 						Util.showError("Failed to generate MIG core!");
 					}
 				}

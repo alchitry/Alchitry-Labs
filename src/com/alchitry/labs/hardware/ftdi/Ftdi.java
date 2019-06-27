@@ -149,7 +149,6 @@ public class Ftdi {
 	private int readTimeout;
 	private int writeTimeout;
 	private ChipType type;
-	private int baudrate;
 	private boolean bitbangEnabled;
 	private ByteBuffer readBuffer;
 	private int readBufferChunksize;
@@ -161,7 +160,6 @@ public class Ftdi {
 	private byte inEndPoint;
 	private byte outEndPoint;
 
-	private BitMode bitMode;
 	private FtdiEeprom eeprom;
 	private DetachMode detachMode;
 
@@ -251,7 +249,6 @@ public class Ftdi {
 		readTimeout = 5000;
 		writeTimeout = 5000;
 		type = ChipType.TYPE_BM;
-		baudrate = -1;
 		bitbangEnabled = false;
 		readBuffer = null;
 		writeBufferChunksize = 4096;
@@ -262,7 +259,6 @@ public class Ftdi {
 			throw new LibUsbException("LibUsb.init() failed", -3);
 
 		setInterface(PortInterfaceType.INTERFACE_ANY);
-		bitMode = BitMode.BITBANG;
 		eeprom = new FtdiEeprom();
 		readDataSetChunkSize(4096);
 	}
@@ -871,8 +867,6 @@ public class Ftdi {
 
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_SET_BAUDRATE_REQUEST, res.value, res.index, EMPTY_BUF, writeTimeout) < 0)
 			throw new LibUsbException("Setting new baudrate failed", -2);
-
-		this.baudrate = baudrate;
 	}
 
 	public void setLineProperty(LineDatabit bits, LineStopbit sbit, LineParity parity) {
@@ -974,7 +968,7 @@ public class Ftdi {
 				// printf("actual_length = %X, num_of_chunks = %X, chunk_remains = %X, readbuffer_offset = %X\n", actual_length, num_of_chunks, chunk_remains,
 				// ftdi->readbuffer_offset);
 
-				ftdi.readBuffer.position(ftdi.readBuffer.position()+2);
+				ftdi.readBuffer.position(ftdi.readBuffer.position() + 2);
 				actual_length -= 2;
 
 				if (actual_length > packet_size - 2) {
@@ -1221,7 +1215,7 @@ public class Ftdi {
 		// something still in the readbuffer, but not enough to satisfy 'size'?
 		if (readBuffer.remaining() != 0) {
 			offset += readBuffer.remaining();
-			readBuffer.get(buf,0,readBuffer.remaining());	
+			readBuffer.get(buf, 0, readBuffer.remaining());
 		}
 		// do the actual USB read
 		while (offset < buf.length && actual_length > 0) {
@@ -1239,10 +1233,9 @@ public class Ftdi {
 				// Maybe stored in the future to enable modem use
 				num_of_chunks = actual_length / packet_size;
 				chunk_remains = actual_length % packet_size;
-				
-				readBuffer.position(readBuffer.position()+2);
-				actual_length -= 2;
 
+				readBuffer.position(readBuffer.position() + 2);
+				actual_length -= 2;
 
 				if (actual_length > packet_size - 2) {
 					byte[] buffer = new byte[readBuffer.remaining()];
@@ -1263,6 +1256,7 @@ public class Ftdi {
 			} else if (actual_length <= 2) {
 				// no more data to read?
 				resetReadBuffer();
+
 				return offset;
 			}
 			if (readBuffer.remaining() > 0) {
@@ -1277,7 +1271,7 @@ public class Ftdi {
 				} else {
 					// only copy part of the data or size <= readbuffer_chunksize
 					int part_size = buf.length - offset;
-					readBuffer.get(buf,offset,part_size);
+					readBuffer.get(buf, offset, part_size);
 					offset += part_size;
 					return offset;
 				}
@@ -1286,7 +1280,7 @@ public class Ftdi {
 		// never reached
 		return -127;
 	}
-	
+
 	private void resetReadBuffer() {
 		readBuffer.clear();
 		readBuffer.limit(0);
@@ -1316,7 +1310,6 @@ public class Ftdi {
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_SET_BITMODE_REQUEST, usbVal, interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
 			throw new LibUsbException("unable to configure bitbang mode. Perhaps not a BM type chip?", -1);
 
-		bitMode = mode;
 		bitbangEnabled = !BitMode.RESET.equals(mode);
 	}
 

@@ -20,8 +20,7 @@ public class AuLoader extends ProjectLoader {
 		try {
 			Util.runCommand(cmd).waitFor();
 		} catch (InterruptedException e) {
-			Util.showError("Interrupted exception while eraseing flash!");
-			Util.print(e);
+			Util.logException(e,"Interrupted exception while eraseing flash!");
 		}
 	}
 
@@ -47,8 +46,7 @@ public class AuLoader extends ProjectLoader {
 		try {
 			Util.runCommand(cmd).waitFor();
 		} catch (InterruptedException e) {
-			Util.showError("Interrupted exception while eraseing flash!");
-			Util.print(e);
+			Util.logException(e,"Interrupted exception while eraseing flash!");
 		}
 	}
 

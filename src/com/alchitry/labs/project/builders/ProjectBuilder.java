@@ -154,8 +154,7 @@ public abstract class ProjectBuilder {
 			projectBuilder();
 
 		} catch (Exception e) {
-			Util.print(e);
-			Util.log.log(Level.SEVERE, "Exception with project builder!", e);
+			Util.logException(e,"Exception with project builder!");
 		} finally {
 			Util.setConsoleLogger(null);
 			if (logWriter != null)
