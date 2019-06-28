@@ -838,4 +838,12 @@ public class Util {
 		}
 		return data;
 	}
+
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			Util.logException(e, "Sleep interrupted but not important!");
+		}
+	}
 }

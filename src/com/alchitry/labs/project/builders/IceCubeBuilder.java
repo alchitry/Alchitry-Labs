@@ -23,6 +23,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 
 	@Override
 	protected void projectBuilder() throws Exception {
+		Util.println("Starting iceCube2...",Theme.infoTextColor);
 		BufferedWriter out = null;
 		ArrayList<File> vFiles;
 		ArrayList<File> cFiles;
@@ -113,10 +114,9 @@ public class IceCubeBuilder extends ProjectBuilder {
 
 		builder = Util.runCommand(cmd);
 		builder.waitFor();
+		Util.sleep(100);
 
-		String topModuleName = project.getTop().getAbsolutePath().substring(0, project.getTop().getAbsolutePath().lastIndexOf('.')) + "_0";
-
-		File binFile = new File(Util.assemblePath(workFolder, IMP_DIR, "sbt", "outputs", "bitmap", topModuleName + "_bitmap.bin"));
+		File binFile = new File(Util.assemblePath(workFolder, IMP_DIR, "sbt", "outputs", "bitmap", project.getTopModule().getName() + "_0_bitmap.bin"));
 		if (binFile.exists()) {
 			FileUtils.copyFile(binFile, new File(Util.assemblePath(workFolder, "alchitry.bin")));
 			Util.println("");
@@ -204,15 +204,12 @@ public class IceCubeBuilder extends ProjectBuilder {
 
 	private void generateSynProjectFile(BufferedWriter file, List<File> vFiles, List<File> cFiles) throws IOException {
 		final String nl = System.lineSeparator();
-		final File srcFolder = Util.assembleFile(workFolder, "verilog");
 		String topModuleName = project.getTop().getName().substring(0, project.getTop().getName().lastIndexOf('.')) + "_0";
 
 		file.write("#project files" + nl);
 
-		String prefix = srcFolder.getAbsolutePath().replace('\\', '/') + '/';
-
 		for (File vf : vFiles)
-			file.write("add_file -verilog -lib work \"" + prefix + vf.getAbsolutePath() + '"' + nl);
+			file.write("add_file -verilog -lib work \"" + vf.getAbsolutePath() + '"' + nl);
 		for (File cf : cFiles)
 			if (cf.getName().endsWith(".sdc"))
 				file.write("add_file -constraint -lib work \"" + cf.getAbsolutePath().replace("\\", "/").replace(" ", "\\ ") + '"' + nl);

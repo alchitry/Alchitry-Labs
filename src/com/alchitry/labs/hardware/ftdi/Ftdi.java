@@ -1201,6 +1201,25 @@ public class Ftdi {
 		return writeBufferChunksize;
 	}
 
+	public void readDataWithTimeout(byte[] data) {
+		byte[] buffer = new byte[data.length];
+		int reqBytes = data.length;
+		int offset = 0;
+		long startTime = System.currentTimeMillis();
+		while (reqBytes > 0) {
+			if (buffer.length != reqBytes)
+				buffer = new byte[reqBytes];
+			int ct = readData(buffer);
+			if (ct > 0) {
+				System.arraycopy(buffer, 0, data, offset, ct);
+				offset += ct;
+				reqBytes -= ct;
+			}
+			if (System.currentTimeMillis() - startTime > readTimeout)
+				throw new LibUsbException("Reading " + data.length + " bytes took longer than 2 seconds!", -1);
+		}
+	}
+
 	public int readData(byte[] buf) {
 		int offset = 0, ret, i, num_of_chunks, chunk_remains;
 		int packet_size;
