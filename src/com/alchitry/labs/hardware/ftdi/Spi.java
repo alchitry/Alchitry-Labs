@@ -269,7 +269,7 @@ public class Spi extends Mpsse {
 		flashPowerDown();
 		flashReleaseReset();
 		Util.sleep(250);
-		Util.println("Done...", Theme.successTextColor);
+		Util.println("Done.", Theme.successTextColor);
 	}
 
 	public void writeBin(String binFile) throws IOException {
@@ -313,7 +313,7 @@ public class Spi extends Mpsse {
 		flashReleaseReset();
 		Util.sleep(250);
 
-		Util.println("Done...", Theme.successTextColor);
+		Util.println("Done.", Theme.successTextColor);
 	}
 
 }

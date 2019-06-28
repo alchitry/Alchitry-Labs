@@ -211,7 +211,7 @@ public abstract class ProjectBuilder {
 			Board board = project.getBoard();
 			if (board.isType(Board.CU)) {
 				if (!extractor.getPinConstraints().isEmpty()) {
-					File pcf = Util.changeExt(file, ".pcf");
+					File pcf = Util.assembleFile(workFolder, "constraint", Util.changeExt(file, ".pcf").getName());
 					if (!pcf.exists() && !pcf.createNewFile()) {
 						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
 						return;
@@ -224,7 +224,7 @@ public abstract class ProjectBuilder {
 				}
 
 				if (!extractor.getClockConstraints().isEmpty()) {
-					File sdc = Util.changeExt(file, ".sdc");
+					File sdc = Util.assembleFile(workFolder, "constraint", Util.changeExt(file, ".sdc").getName());
 					if (!sdc.exists() && !sdc.createNewFile()) {
 						Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
 						return;
