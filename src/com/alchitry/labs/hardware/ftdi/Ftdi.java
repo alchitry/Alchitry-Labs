@@ -328,8 +328,18 @@ public class Ftdi {
 	public void setUsbDev(DeviceHandle dev) {
 		device = dev;
 	}
+	
+	public int usbCountDevices(short vendor, short product, String description, String serial) {
+		List<Device> devices = usbFindAll(vendor, product, description, serial);
+		int ct = devices.size();
+		listFree(devices);
+		return ct;
+	}
 
-	public List<Device> usbFindAll(short vendor, short product) {
+	public List<Device> usbFindAll(short vendor, short product, String description, String serial) {
+		if (device != null) {
+			throw new LibUsbException("Can't search for another device when one is already open!", -1);
+		}
 		// Read the USB device list
 		DeviceList list = new DeviceList();
 		int result = LibUsb.getDeviceList(null, list);
@@ -339,16 +349,44 @@ public class Ftdi {
 
 		try {
 			// Iterate over all devices and scan for the right one
-			for (Device device : list) {
+			for (Device dev : list) {
 				DeviceDescriptor desc = new DeviceDescriptor();
-				result = LibUsb.getDeviceDescriptor(device, desc);
+				result = LibUsb.getDeviceDescriptor(dev, desc);
 				if (result != LibUsb.SUCCESS)
 					throw new LibUsbException("Unable to read device descriptor", result);
 				if (((vendor != 0 || product != 0) && desc.idVendor() == vendor && desc.idProduct() == product)
 						|| ((vendor == 0 && product == 0) && (desc.idVendor() == (short) 0x403) && (desc.idProduct() == (short) 0x6001 || desc.idProduct() == (short) 0x6010
 								|| desc.idProduct() == (short) 0x6011 || desc.idProduct() == (short) 0x6014 || desc.idProduct() == (short) 0x6015))) {
-					devices.add(device);
-					LibUsb.refDevice(device);
+					device = new DeviceHandle();
+					if (LibUsb.open(dev, device) < 0)
+						throw new LibUsbException("LibUsb.open() failed", -4);
+
+					if (description != null) {
+						String sDesc = LibUsb.getStringDescriptor(device, desc.iProduct());
+						if (sDesc == null) {
+							UsbCloseInternal();
+							throw new LibUsbException("unalbe to fetch product description", -8);
+						}
+						if (!description.equals(sDesc)) {
+							UsbCloseInternal();
+							continue;
+						}
+					}
+					if (serial != null) {
+						String sSer = LibUsb.getStringDescriptor(device, desc.iSerialNumber());
+						if (sSer == null) {
+							UsbCloseInternal();
+							throw new LibUsbException("unalbe to fetch serial number", -9);
+						}
+						if (!serial.equals(sSer)) {
+							UsbCloseInternal();
+							continue;
+						}
+					}
+					UsbCloseInternal();
+
+					devices.add(dev);
+					LibUsb.refDevice(dev);
 				}
 			}
 		} finally {

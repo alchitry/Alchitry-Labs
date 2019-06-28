@@ -9,7 +9,7 @@ import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.hardware.ftdi.enums.FlashCommand;
 import com.alchitry.labs.hardware.ftdi.enums.MpsseCommand;
 
-public class Spi extends Mpsse {
+public class LatticeSpi extends Mpsse {
 	//private static final byte DATA_TMS = (byte) 0x40; /* When set use TMS mode */
 	private static final byte DATA_IN = (byte) 0x20; /* When set read data (Data IN) */
 	private static final byte DATA_OUT = (byte) 0x10; /* When set write data (Data OUT) */
@@ -18,7 +18,7 @@ public class Spi extends Mpsse {
 	private static final byte DATA_BITS = (byte) 0x02; /* When set count bits not bytes */
 	private static final byte DATA_OCN = (byte) 0x01; /* When set update data on negative clock edge */
 
-	public Spi(Ftdi ftdi) {
+	public LatticeSpi(Ftdi ftdi) {
 		super(ftdi);
 		init();
 	}

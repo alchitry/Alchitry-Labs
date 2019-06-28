@@ -7,22 +7,19 @@ import org.usb4java.LibUsbException;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.hardware.ftdi.Ftdi;
-import com.alchitry.labs.hardware.ftdi.XilinxJtag;
 import com.alchitry.labs.hardware.ftdi.Mpsse.MpsseException;
-import com.alchitry.labs.hardware.ftdi.enums.PortInterfaceType;
+import com.alchitry.labs.hardware.ftdi.XilinxJtag;
 
-public class AuLoader extends ProjectLoader {
+public class AuLoader extends AlchitryLoader {
 
 	@Override
 	protected void eraseFlash() {
 		Ftdi ftdi = null;
 		try {
-			ftdi = new Ftdi();
-			ftdi.setInterface(PortInterfaceType.INTERFACE_A);
-			if (!ftdi.usbOpen(0x0403, 0x6010, "Alchitry Au", null)) {
-				Util.println("Couldn't find device!", true);
+			ftdi = openDevice();
+			if (ftdi == null) 
 				return;
-			}
+			
 			XilinxJtag xil = new XilinxJtag(ftdi);
 			xil.checkIDCODE();
 			try {
@@ -48,12 +45,10 @@ public class AuLoader extends ProjectLoader {
 
 		Ftdi ftdi = null;
 		try {
-			ftdi = new Ftdi();
-			ftdi.setInterface(PortInterfaceType.INTERFACE_A);
-			if (!ftdi.usbOpen(0x0403, 0x6010, "Alchitry Au", null)) {
-				Util.println("Couldn't find device!", true);
+			ftdi = openDevice();
+			if (ftdi == null) 
 				return;
-			}
+			
 			XilinxJtag xil = new XilinxJtag(ftdi);
 			xil.checkIDCODE();
 			try {
@@ -69,6 +64,11 @@ public class AuLoader extends ProjectLoader {
 				ftdi.usbClose();
 			}
 		}
+	}
+
+	@Override
+	protected String getDeviceDesciption() {
+		return "Alchitry Au";
 	}
 
 }
