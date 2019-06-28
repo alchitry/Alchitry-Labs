@@ -253,7 +253,7 @@ public class Ftdi {
 		readBuffer = null;
 		writeBufferChunksize = 4096;
 		maxPacketSize = 0;
-		detachMode = DetachMode.AUTO_DETACH_SIO_MODULE;
+		detachMode = DetachMode.AUTO_DETACH_REATACH_SIO_MODULE;
 
 		if (LibUsb.init(context) < 0)
 			throw new LibUsbException("LibUsb.init() failed", -3);
@@ -265,6 +265,14 @@ public class Ftdi {
 
 	public Ftdi() {
 		init();
+	}
+
+	public void setDetachMode(DetachMode mode) {
+		if (device != null) {
+			if (!mode.equals(detachMode))
+				throw new LibUsbException("Detach mode can not be changed on an already open device", -3);
+		}
+		detachMode = mode;
 	}
 
 	public void setInterface(PortInterfaceType newInterface) {

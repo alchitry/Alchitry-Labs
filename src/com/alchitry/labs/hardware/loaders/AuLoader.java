@@ -1,53 +1,55 @@
 package com.alchitry.labs.hardware.loaders;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.hardware.ftdi.Ftdi;
+import com.alchitry.labs.hardware.ftdi.XilinxJtag;
+import com.alchitry.labs.hardware.ftdi.enums.PortInterfaceType;
 
 public class AuLoader extends ProjectLoader {
 
 	@Override
 	protected void eraseFlash() {
-		List<String> cmd = new ArrayList<>();
-		cmd.add(Util.getAlchitryLoaderCommand());
-		cmd.add("-e");
-		cmd.add("-p");
-		cmd.add(Util.assemblePath("tools", "etc", "au_loader.bin"));
-		cmd.add("-t");
-		cmd.add("au");
-		
-		try {
-			Util.runCommand(cmd).waitFor();
-		} catch (InterruptedException e) {
-			Util.logException(e,"Interrupted exception while eraseing flash!");
+		Ftdi ftdi = new Ftdi();
+		ftdi.setInterface(PortInterfaceType.INTERFACE_A);
+		if (!ftdi.usbOpen(0x0403, 0x6010, "Alchitry Au", null)) {
+			Util.println("Couldn't find device!",true);
+			return;
 		}
+		XilinxJtag xil = new XilinxJtag(ftdi);
+		xil.checkIDCODE();
+		try {
+			xil.eraseFlash();
+		} catch (IOException e) {
+			Util.logException(e);
+			Util.println("Failed to erase flash!", true);
+		}
+		ftdi.usbClose();
 	}
 
 	@Override
 	protected void program(String binFile, boolean flash, boolean verify) {
-		List<String> cmd = new ArrayList<>();
-		cmd.add(Util.getAlchitryLoaderCommand());
-		cmd.add("-p");
-		cmd.add(Util.assemblePath("tools", "etc", "au_loader.bin"));
-		cmd.add("-t");
-		cmd.add("au");
-
-		if (flash) 
-			cmd.add("-f");
-		else
-			cmd.add("-r");
-		cmd.add(binFile);
-		
 		if (verify) {
-			Util.println("Verify isn't currently supported on the Au!", true);
+			Util.println("Verify isn't currently supported on the Au!", Theme.infoTextColor);
 		}
 		
-		try {
-			Util.runCommand(cmd).waitFor();
-		} catch (InterruptedException e) {
-			Util.logException(e,"Interrupted exception while eraseing flash!");
+		Ftdi ftdi = new Ftdi();
+		ftdi.setInterface(PortInterfaceType.INTERFACE_A);
+		if (!ftdi.usbOpen(0x0403, 0x6010, "Alchitry Au", null)) {
+			Util.println("Couldn't find device!",true);
+			return;
 		}
+		XilinxJtag xil = new XilinxJtag(ftdi);
+		xil.checkIDCODE();
+		try {
+			xil.writeBin(binFile, flash);
+		} catch (IOException e) {
+			Util.logException(e);
+			Util.println("Failed to write bin file!", true);
+		}
+		ftdi.usbClose();
 	}
 
 }

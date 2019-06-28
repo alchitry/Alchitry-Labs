@@ -234,6 +234,11 @@ public class AlchitryAuPinConverter extends PinConverter {
 			return "P6";
 		case "CLOCK":
 			return "N14";
+			
+		case "VP":
+			return "H8";
+		case "VN":
+			return "J7";
 
 		case "USB_RX":
 			return "P16";

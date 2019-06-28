@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.xilinx;
+package com.alchitry.labs.hardware.ftdi;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -8,9 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.hardware.ftdi.Ftdi;
-import com.alchitry.labs.hardware.ftdi.Jtag;
-import com.alchitry.labs.hardware.ftdi.JtagState;
+import com.alchitry.labs.gui.Theme;
 
 public class XilinxJtag {
 	private static final String LOADER_FILE;
@@ -138,7 +136,9 @@ public class XilinxJtag {
 	}
 	
 	private void erase() throws IOException {
+		Util.println("Loading bridge configuration...");
 		loadBin(LOADER_FILE);
+		Util.println("Erasing...");
 		jtag.setFreq(1500000);
 		setIR(Instruction.USER1);
 		shiftDR(1, new byte[] {0}, null, null);
@@ -153,14 +153,17 @@ public class XilinxJtag {
 		erase();
 		setIR(Instruction.JPROGRAM); // reset the FPGA
 		jtag.resetState();
+		Util.println("Done.",Theme.successTextColor);
 	}
 
 	public void writeBin(String binFile, boolean flash) throws IOException {
 		if (flash) {
 			erase(); // configure the FPGA with the bridge and erase the flash
+			Util.println("Writing flash...");
 			setIR(Instruction.USER2);
 			byte[] binData = Files.readAllBytes(Paths.get(binFile));
 			shiftDR(binData.length*8, binData, null, null);
+			Util.println("Resetting FPGA...");
 			jtag.resetState();
 			try {
 				Thread.sleep(100);
@@ -169,8 +172,10 @@ public class XilinxJtag {
 			}
 			setIR(Instruction.JPROGRAM);
 		} else {
+			Util.println("Loading bin...");
 			loadBin(binFile);
 		}
 		jtag.resetState();
+		Util.println("Done.",Theme.successTextColor);
 	}
 }

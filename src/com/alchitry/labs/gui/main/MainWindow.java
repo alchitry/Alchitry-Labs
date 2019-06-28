@@ -93,7 +93,7 @@ public class MainWindow {
 	 * @throws InterruptedException
 	 * @wbp.parser.entryPoint
 	 */
-	public static void main(String[] args) throws UnsupportedEncodingException, InterruptedException {
+	public static void main(String[] args){
 		parseCommand(args);
 
 		Util.isGUI = true;
