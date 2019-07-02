@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.ftdi.enums;
+package com.alchitry.labs.hardware.usb.ftdi.enums;
 
 public enum EepromValue {
 	VENDOR_ID(0),

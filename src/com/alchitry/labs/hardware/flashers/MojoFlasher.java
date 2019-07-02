@@ -9,16 +9,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.sql.rowset.serial.SerialException;
-
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.SerialPortSelector;
 import com.alchitry.labs.gui.main.MainWindow;
-import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortIOException;
+import com.alchitry.labs.hardware.usb.MojoSerial;
+import com.alchitry.labs.hardware.usb.UsbUtil;
 
 public class MojoFlasher extends Flasher {
 
@@ -193,19 +192,18 @@ public class MojoFlasher extends Flasher {
 		thread.start();
 	}
 
-	private static boolean touchForCDCReset(String iname) throws SerialException {
-		SerialPort serialPort = null;
+	private static boolean touchForCDCReset(String iname) {
+		MojoSerial mojo = null;
 		try {
-			serialPort = Util.connect(iname, 1200);
-			serialPort.clearDTR();
-			serialPort.closePort();
+			mojo = UsbUtil.openMojoSerial();
+			mojo.setBaudrate(1200);
+			mojo.setDtrRts(false, true);
 			return true;
-		} catch (SerialPortIOException e) {
-			Util.log.severe(e.getMessage());
+		} catch (LibUsbException e) {
+
 		} finally {
-			if (serialPort != null && serialPort.isOpen()) {
-				serialPort.closePort();
-			}
+			if (mojo != null)
+				mojo.usbClose();
 		}
 		return false;
 	}

@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alchitry.labs.hardware.ftdi.enums;
+package com.alchitry.labs.hardware.usb.ftdi.enums;
 
 /**
- * Break type for ftdi_set_line_property2()
+ * Port interface for chips with multiple interfaces
  *
  * @author Jesse Caulfield
  */
-public enum LineBreak {
+public enum PortInterfaceType {
 
-  BREAK_OFF(0), BREAK_ON(1);
-  private final int breakType;
+	INTERFACE_ANY(0), INTERFACE_A(1), INTERFACE_B(2), INTERFACE_C(3), INTERFACE_D(4);
+	private final short index;
 
-  private LineBreak(int breakType) {
-    this.breakType = breakType;
-  }
+	private PortInterfaceType(int index) {
+		this.index = (short) index;
+	}
 
-  public int getBreakType() {
-    return breakType;
-  }
+	public short getIndex() {
+		return index;
+	}
 
 }

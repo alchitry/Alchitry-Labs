@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.ftdi.enums;
+package com.alchitry.labs.hardware.usb.ftdi.enums;
 
 public enum MpsseCommand {
 	SETB_LOW((byte) 0x80), /* Set Data bits LowByte */

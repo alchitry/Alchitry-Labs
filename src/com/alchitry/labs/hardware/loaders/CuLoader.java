@@ -6,16 +6,18 @@ import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.hardware.ftdi.Ftdi;
-import com.alchitry.labs.hardware.ftdi.LatticeSpi;
-import com.alchitry.labs.hardware.ftdi.Mpsse.MpsseException;
+import com.alchitry.labs.hardware.usb.UsbUtil;
+import com.alchitry.labs.hardware.usb.ftdi.Ftdi;
+import com.alchitry.labs.hardware.usb.ftdi.LatticeSpi;
+import com.alchitry.labs.hardware.usb.ftdi.Mpsse.MpsseException;
+import com.alchitry.labs.hardware.usb.ftdi.enums.PortInterfaceType;
 
-public class CuLoader extends AlchitryLoader {
+public class CuLoader extends ProjectLoader {
 	@Override
 	protected void eraseFlash() {
 		Ftdi ftdi = null;
 		try {
-			ftdi = openDevice();
+			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DESC);
 			if (ftdi == null)
 				return;
 
@@ -40,7 +42,7 @@ public class CuLoader extends AlchitryLoader {
 
 		Ftdi ftdi = null;
 		try {
-			ftdi = openDevice();
+			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DESC);
 			if (ftdi == null)
 				return;
 
@@ -59,10 +61,4 @@ public class CuLoader extends AlchitryLoader {
 			}
 		}
 	}
-
-	@Override
-	protected String getDeviceDesciption() {
-		return "Alchitry Cu";
-	}
-
 }

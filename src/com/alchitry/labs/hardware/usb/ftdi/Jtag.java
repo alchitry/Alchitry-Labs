@@ -1,7 +1,7 @@
-package com.alchitry.labs.hardware.ftdi;
+package com.alchitry.labs.hardware.usb.ftdi;
 
-import com.alchitry.labs.hardware.ftdi.JtagState.Transistions;
-import com.alchitry.labs.hardware.ftdi.enums.MpsseCommand;
+import com.alchitry.labs.hardware.usb.ftdi.JtagState.Transistions;
+import com.alchitry.labs.hardware.usb.ftdi.enums.MpsseCommand;
 
 public class Jtag extends Mpsse {
 	private JtagState currentState = JtagState.RUN_TEST_IDLE;;

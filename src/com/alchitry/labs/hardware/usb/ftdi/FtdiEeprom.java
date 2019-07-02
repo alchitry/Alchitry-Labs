@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.ftdi;
+package com.alchitry.labs.hardware.usb.ftdi;
 
 public class FtdiEeprom {
 	public static final int FTDI_MAX_EEPROM_SIZE = 256;

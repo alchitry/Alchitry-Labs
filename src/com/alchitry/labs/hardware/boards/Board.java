@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
 import com.alchitry.labs.hardware.pinout.PinConverter;
+import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.widgets.IoRegion;
 
@@ -28,6 +29,9 @@ public abstract class Board {
 			for (String ext : b.getSupportedConstraintExtensions())
 				constraintExtensions.add(ext);
 	}
+	
+	
+	public abstract UsbDescriptor getUsbDesciptor();
 
 	public abstract String getFPGAName();
 

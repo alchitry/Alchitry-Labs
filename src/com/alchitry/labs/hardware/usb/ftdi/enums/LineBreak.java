@@ -13,31 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alchitry.labs.hardware.ftdi.enums;
+package com.alchitry.labs.hardware.usb.ftdi.enums;
 
 /**
- * Enumerated list of recognized Ftdi chip types supported in this library.
+ * Break type for ftdi_set_line_property2()
  *
  * @author Jesse Caulfield
  */
-public enum ChipType {
+public enum LineBreak {
 
-  TYPE_AM(0),
-  TYPE_BM(1),
-  TYPE_2232C(2),
-  TYPE_R(3),
-  TYPE_2232H(4),
-  TYPE_4232H(5),
-  TYPE_232H(6),
-  TYPE_230X(7);
-  private final int chipType;
+  BREAK_OFF(0), BREAK_ON(1);
+  private final int breakType;
 
-  private ChipType(int chipType) {
-    this.chipType = chipType;
+  private LineBreak(int breakType) {
+    this.breakType = breakType;
   }
 
-  public int getChipType() {
-    return chipType;
+  public int getBreakType() {
+    return breakType;
   }
 
 }

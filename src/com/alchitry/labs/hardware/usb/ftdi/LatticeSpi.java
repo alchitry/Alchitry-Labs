@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.ftdi;
+package com.alchitry.labs.hardware.usb.ftdi;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -6,8 +6,8 @@ import java.nio.file.Paths;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.hardware.ftdi.enums.FlashCommand;
-import com.alchitry.labs.hardware.ftdi.enums.MpsseCommand;
+import com.alchitry.labs.hardware.usb.ftdi.enums.FlashCommand;
+import com.alchitry.labs.hardware.usb.ftdi.enums.MpsseCommand;
 
 public class LatticeSpi extends Mpsse {
 	//private static final byte DATA_TMS = (byte) 0x40; /* When set use TMS mode */

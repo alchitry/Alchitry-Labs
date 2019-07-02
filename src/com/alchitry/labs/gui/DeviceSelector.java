@@ -5,6 +5,8 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -14,7 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.main.MainWindow;
 
 public class DeviceSelector extends Dialog {
 
@@ -28,7 +30,7 @@ public class DeviceSelector extends Dialog {
 
 		@Override
 		public void run() {
-			DeviceSelector selector = new DeviceSelector(Util.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			DeviceSelector selector = new DeviceSelector(MainWindow.mainWindow.getShell(), 0);
 			result = selector.open(entries);
 		}
 
@@ -73,7 +75,7 @@ public class DeviceSelector extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
+		shell = new Shell(getParent().getDisplay(), getStyle() | SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		shell.setSize(450, 300);
 		shell.setText(getText());
 		shell.setLayout(new GridLayout(3, false));
@@ -122,5 +124,11 @@ public class DeviceSelector extends Dialog {
 		});
 
 		shell.pack();
+		
+		Rectangle parentSize = getParent().getBounds();
+		Rectangle shellSize = shell.getBounds();
+		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
+		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
+		shell.setLocation(new Point(locationX, locationY));
 	}
 }

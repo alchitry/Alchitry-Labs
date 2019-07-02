@@ -13,26 +13,23 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.usb4java.LibUsbException;
 
-import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.widgets.CustomCombo;
-import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
-import com.fazecast.jSerialComm.SerialPortEvent;
-import com.fazecast.jSerialComm.SerialPortIOException;
+import com.alchitry.labs.hardware.usb.UsbSerial;
+import com.alchitry.labs.hardware.usb.UsbUtil;
 
 public class SerialMonitor {
 
 	protected Object result;
 	protected Shell shell;
 	protected StyledText text;
-	protected CustomCombo combo;
+	// protected CustomCombo combo;
 	private int cursorPos;
 
-	private SerialPort port;
+	private UsbSerial port;
 	private boolean ignoreText;
 
 	/**
@@ -64,28 +61,6 @@ public class SerialMonitor {
 		shell.setForeground(Theme.comboBackgroundColor);
 		shell.setImage(SWTResourceManager.getImage(MainWindow.class, "/images/icon.png"));
 
-		combo = new CustomCombo(shell, SWT.NONE);
-		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		combo.addListener(SWT.Arm, new Listener() {
-
-			@Override
-			public void handleEvent(Event event) {
-				updatePorts();
-			}
-		});
-
-		combo.addListener(SWT.Selection, new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				String p = combo.getSelection();
-				if (p != null) {
-					reset();
-					disconnect();
-					connect();
-				}
-			}
-		});
-
 		cursorPos = 0;
 		text = new StyledText(shell, SWT.V_SCROLL | SWT.H_SCROLL);
 		text.setAlwaysShowScrollBars(false);
@@ -103,7 +78,7 @@ public class SerialMonitor {
 					if (t.isEmpty() && len > 0) {
 						t = "\b";
 					}
-					port.writeBytes(t.getBytes(), t.getBytes().length);
+					port.writeData(t.getBytes());
 
 				}
 				{
@@ -122,47 +97,51 @@ public class SerialMonitor {
 
 		ignoreText = false;
 
-		updatePorts();
-		selectDefaultPort();
+		connect();
 	}
 
 	private void connect() {
-		String p = combo.getSelection();
-		if (p != null) {
-			port = null;
-			try {
-				port = Util.connect(p, 1000000);
-				port.addDataListener(new SerialPortDataListener() {
-
-					@Override
-					public void serialEvent(SerialPortEvent event) {
-						if (port.bytesAvailable() > 0) {
-							byte[] buff = new byte[port.bytesAvailable()];
-							int ct = port.readBytes(buff, buff.length);
-							final String rx = new String(Arrays.copyOfRange(buff, 0, ct));
-							shell.getDisplay().asyncExec(new Runnable() {
+		port = UsbUtil.openSerial();
+		if (port == null) {
+			Util.showError("Could not connect to a serial device!");
+			shell.dispose();
+			return;
+		}
+		port.setTimeouts(100, 2000);
+		Thread t = new Thread() {
+			public void run() {
+				byte buffer[] = new byte[1];
+				while (!shell.isDisposed()) {
+					try {
+						int len = port.readData(buffer);
+						if (len > 0) {
+							String rx = new String(Arrays.copyOfRange(buffer, 0, len));
+							shell.getDisplay().syncExec(new Runnable() {
 								@Override
 								public void run() {
 									addText(rx);
 								}
 							});
-
+						}
+					} catch (LibUsbException e) {
+						if (!e.getMessage().contains("timed out")) {
+							shell.getDisplay().syncExec(new Runnable() {
+								@Override
+								public void run() {
+									if (!shell.isDisposed()) {
+										Util.showError("Error reading the serial port!");
+										shell.dispose();
+									}
+								}
+							});
 						}
 					}
-
-					@Override
-					public int getListeningEvents() {
-						return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
-					}
-				});
-				reset();
-			} catch (SerialPortIOException e) {
-				e.printStackTrace();
-				port = null;
-				Util.showError("Connection Error", e.getMessage());
-				shell.dispose();
+				}
 			}
-		}
+		};
+		t.setDaemon(true);
+		t.start();
+
 	}
 
 	public void close() {
@@ -171,22 +150,9 @@ public class SerialMonitor {
 
 	private void disconnect() {
 		if (port != null) {
-			port.closePort();
+			port.usbClose();
 		}
 		port = null;
-	}
-
-	private void selectDefaultPort() {
-		String[] ports = combo.getItems();
-		String defPort = Settings.pref.get(Settings.SERIAL_PORT, null);
-		if (defPort != null) {
-			for (int i = 0; i < ports.length; i++) {
-				if (ports[i].equals(defPort)) {
-					combo.select(i);
-					break;
-				}
-			}
-		}
 	}
 
 	public void enable(boolean e) {
@@ -199,11 +165,6 @@ public class SerialMonitor {
 				shell.setEnabled(false);
 			disconnect();
 		}
-	}
-
-	private void updatePorts() {
-		String[] ports = Util.getSerialPortNames();
-		combo.setItems(ports);
 	}
 
 	public void setFocus() {

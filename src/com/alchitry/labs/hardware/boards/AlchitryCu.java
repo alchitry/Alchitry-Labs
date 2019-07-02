@@ -5,6 +5,7 @@ import com.alchitry.labs.hardware.loaders.CuLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
 import com.alchitry.labs.hardware.pinout.AlchitryCuPinConverter;
 import com.alchitry.labs.hardware.pinout.PinConverter;
+import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
 import com.alchitry.labs.project.builders.IceCubeBuilder;
 import com.alchitry.labs.project.builders.IceStormBuilder;
 import com.alchitry.labs.project.builders.ProjectBuilder;
@@ -72,5 +73,11 @@ public class AlchitryCu extends Board {
 	public PinConverter getPinConverter() {
 		return new AlchitryCuPinConverter();
 	}
+	
+	private static UsbDescriptor usbDescription = new UsbDescriptor("Alchitry Cu", (short) 0x0403, (short) 0x6010, "Alchitry Cu");
 
+	@Override
+	public UsbDescriptor getUsbDesciptor() {
+		return usbDescription;
+	}
 }

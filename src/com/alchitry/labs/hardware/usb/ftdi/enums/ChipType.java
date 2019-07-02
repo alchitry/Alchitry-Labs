@@ -13,24 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alchitry.labs.hardware.ftdi.enums;
+package com.alchitry.labs.hardware.usb.ftdi.enums;
 
 /**
- * Port interface for chips with multiple interfaces
+ * Enumerated list of recognized Ftdi chip types supported in this library.
  *
  * @author Jesse Caulfield
  */
-public enum PortInterfaceType {
+public enum ChipType {
 
-	INTERFACE_ANY(0), INTERFACE_A(1), INTERFACE_B(2), INTERFACE_C(3), INTERFACE_D(4);
-	private final short index;
+  TYPE_AM(0),
+  TYPE_BM(1),
+  TYPE_2232C(2),
+  TYPE_R(3),
+  TYPE_2232H(4),
+  TYPE_4232H(5),
+  TYPE_232H(6),
+  TYPE_230X(7);
+  private final int chipType;
 
-	private PortInterfaceType(int index) {
-		this.index = (short) index;
-	}
+  private ChipType(int chipType) {
+    this.chipType = chipType;
+  }
 
-	public short getIndex() {
-		return index;
-	}
+  public int getChipType() {
+    return chipType;
+  }
 
 }

@@ -21,7 +21,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -57,8 +56,6 @@ import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.parsers.BigFunctions;
 import com.alchitry.labs.widgets.CustomConsole;
-import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortIOException;
 
 public class Util {
 	private static Display display;
@@ -592,33 +589,6 @@ public class Util {
 				Util.log.severe(ExceptionUtils.getStackTrace(e));
 			}
 		return t;
-	}
-
-	public static String[] getSerialPortNames() {
-		SerialPort[] ports = SerialPort.getCommPorts();
-		String[] names = new String[ports.length];
-		for (int i = 0; i < ports.length; i++)
-			names[i] = ports[i].getSystemPortName();
-		return names;
-	}
-
-	public static SerialPort connect(String portName, int baud) throws SerialPortIOException {
-		if (portName.equals(""))
-			throw new InvalidParameterException("A serial port must be selected!");
-		SerialPort serialPort = SerialPort.getCommPort(portName);
-		if (serialPort == null) {
-			throw new SerialPortIOException("Port " + portName + " could not be found. Please select a different port.");
-
-		}
-
-		serialPort.openPort();
-		serialPort.setBaudRate(baud);
-		serialPort.setNumDataBits(8);
-		serialPort.setNumStopBits(1);
-		serialPort.setParity(0);
-		serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 20000, 20000);
-
-		return serialPort;
 	}
 
 	public static final VerifyListener integerVerifier = new VerifyListener() {

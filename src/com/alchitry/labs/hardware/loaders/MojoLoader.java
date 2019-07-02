@@ -8,28 +8,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import com.alchitry.labs.Settings;
+import org.usb4java.LibUsbException;
+
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.main.MainWindow;
-import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortIOException;
-import com.fazecast.jSerialComm.SerialPortTimeoutException;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.hardware.usb.MojoSerial;
+import com.alchitry.labs.hardware.usb.UsbUtil;
 
 public class MojoLoader extends ProjectLoader {
-	private SerialPort serialPort;
+	private MojoSerial mojo;
 
 	public MojoLoader() {
 
 	}
 
-	private void restartMojo() throws InterruptedException, SerialPortIOException {
-		serialPort.clearDTR();
-		Thread.sleep(5);
+	private void restartMojo() {
+		mojo.setDtrRts(false, true);
+		Util.sleep(5);
 		for (int i = 0; i < 5; i++) {
-			serialPort.clearDTR();
-			Thread.sleep(5);
-			serialPort.setDTR();
-			Thread.sleep(5);
+			mojo.setDtrRts(false, true);
+			Util.sleep(5);
+			mojo.setDtrRts(true, true);
+			Util.sleep(5);
 		}
 	}
 
@@ -38,35 +38,34 @@ public class MojoLoader extends ProjectLoader {
 			e = "";
 
 		Util.println("Error: " + e, true);
-		if (serialPort != null)
-			serialPort.closePort();
+		if (mojo != null)
+			mojo.usbClose();
 	}
 
 	private boolean connect() {
-		String port = Settings.pref.get(Settings.SERIAL_PORT, null);
-		if (port == null) {
-			Util.showError("You need to select the serial port the board is connected to in the settings menu.");
-			return false;
-		}
 		Util.println("Connecting...");
-
 		try {
-			serialPort = Util.connect(port, 1000000);
-		} catch (Exception e) {
-			onError("Could not connect to port " + port + "!");
+			mojo = UsbUtil.openMojoSerial();
+		} catch (LibUsbException e) {
+			onError("Error while opening Mojo! " + e.getMessage());
 			return false;
 		}
+
+		if (mojo == null) {
+			Util.showError("Could not detect a Mojo!");
+			return false;
+		}
+
 		return true;
 	}
 
 	private boolean writeByte(byte b) {
-		return serialPort.writeBytes(new byte[] { b }, 1) == 1;
+		return mojo.writeData(new byte[] { b }) == 1;
 	}
 
-	private byte readByte() throws SerialPortTimeoutException {
+	private byte readByte() {
 		byte[] bbuf = new byte[1];
-		if (serialPort.readBytes(bbuf, 1) != 1)
-			throw new SerialPortTimeoutException("Timed out while reading a single byte");
+		mojo.readDataWithTimeout(bbuf);
 		return bbuf[0];
 	}
 
@@ -75,32 +74,22 @@ public class MojoLoader extends ProjectLoader {
 		if (!connect())
 			return;
 
-		try {
-			restartMojo();
-		} catch (InterruptedException | SerialPortIOException e) {
-			onError(e.getMessage());
-			return;
-		}
+		restartMojo();
 
 		Util.println("Erasing...");
 
-		byte[] dummyBuffer = new byte[serialPort.bytesAvailable()];
-		serialPort.readBytes(dummyBuffer, dummyBuffer.length); // flush the buffer
+		mojo.flushReadBuffer();
 
 		writeByte((byte) 'E');
 
-		try {
-			if (readByte() != 'D') {
-				onError("Mojo did not acknowledge flash erase!");
-				return;
-			}
-		} catch (SerialPortTimeoutException e) {
-			Util.println(e.getMessage(), true);
+		if (readByte() != 'D') {
+			onError("Mojo did not acknowledge flash erase!");
+			return;
 		}
 
-		Util.println("Done");
+		Util.println("Done.",Theme.successTextColor);
 
-		serialPort.closePort();
+		mojo.usbClose();
 	}
 
 	@Override
@@ -117,22 +106,10 @@ public class MojoLoader extends ProjectLoader {
 			return;
 		}
 
-		try {
-			restartMojo();
-		} catch (InterruptedException | SerialPortIOException e) {
-			onError(e.getMessage());
-			try {
-				bin.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			MainWindow.mainWindow.enableMonitor(true);
-			return;
-		}
+		restartMojo();
 
 		try {
-			byte[] dummyBuffer = new byte[serialPort.bytesAvailable()];
-			serialPort.readBytes(dummyBuffer, dummyBuffer.length); // flush the buffer
+			mojo.flushReadBuffer();
 
 			if (flash)
 				Util.println("Erasing flash...");
@@ -162,7 +139,7 @@ public class MojoLoader extends ProjectLoader {
 				buff[i] = (byte) (length >> (i * 8) & 0xff);
 			}
 
-			if (serialPort.writeBytes(buff, buff.length)!= buff.length) {
+			if (mojo.writeData(buff) != buff.length) {
 				onError("Failed to write the transfer size!");
 				bin.close();
 				return;
@@ -188,7 +165,7 @@ public class MojoLoader extends ProjectLoader {
 				if (avail == 0)
 					break;
 				int read = bin.read(data, 0, avail);
-				serialPort.writeBytes(Arrays.copyOf(data, read), read);
+				mojo.writeData(Arrays.copyOf(data, read));
 				count += read;
 
 				if (count - oldCount > percent) {
@@ -269,9 +246,9 @@ public class MojoLoader extends ProjectLoader {
 			return;
 		}
 
-		Util.println("Done");
+		Util.println("Done.",Theme.successTextColor);
 
-		serialPort.closePort();
+		mojo.usbClose();
 	}
 
 }

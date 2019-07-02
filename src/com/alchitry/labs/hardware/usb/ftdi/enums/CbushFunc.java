@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.ftdi.enums;
+package com.alchitry.labs.hardware.usb.ftdi.enums;
 
 public enum CbushFunc {
 	CBUSH_TRISTATE, CBUSH_TXLED, CBUSH_RXLED, CBUSH_TXRXLED, CBUSH_PWREN, CBUSH_SLEEP, CBUSH_DRIVE_0, CBUSH_DRIVE1, CBUSH_IOMODE, CBUSH_TXDEN, CBUSH_CLK30, CBUSH_CLK15, CBUSH_CLK7_5;

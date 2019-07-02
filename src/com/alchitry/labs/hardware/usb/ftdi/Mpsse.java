@@ -1,7 +1,7 @@
-package com.alchitry.labs.hardware.ftdi;
+package com.alchitry.labs.hardware.usb.ftdi;
 
-import com.alchitry.labs.hardware.ftdi.enums.BitMode;
-import com.alchitry.labs.hardware.ftdi.enums.MpsseCommand;
+import com.alchitry.labs.hardware.usb.ftdi.enums.BitMode;
+import com.alchitry.labs.hardware.usb.ftdi.enums.MpsseCommand;
 
 public abstract class Mpsse {
 	protected Ftdi ftdi;

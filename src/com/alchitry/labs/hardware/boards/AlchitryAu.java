@@ -4,6 +4,7 @@ import com.alchitry.labs.hardware.loaders.AuLoader;
 import com.alchitry.labs.hardware.loaders.ProjectLoader;
 import com.alchitry.labs.hardware.pinout.AlchitryAuPinConverter;
 import com.alchitry.labs.hardware.pinout.PinConverter;
+import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
 import com.alchitry.labs.project.builders.ProjectBuilder;
 import com.alchitry.labs.project.builders.VivadoBuilder;
 import com.alchitry.labs.widgets.IoRegion;
@@ -19,6 +20,8 @@ public class AlchitryAu extends Board {
 			new IoRegion("USB", 7, 0.00189230769230769, 0.107711111111111, 0.137446153846154, 0.221177777777778),
 			new IoRegion("Flash", 8, 0.756538461538461, 0.566666666666667, 0.135384615384615, 0.111111111111111),
 			new IoRegion("RAM", 9, 0.769230769230769, 0.233333333333333, 0.123076923076923, 0.311111111111111), };
+	
+	
 
 	public AlchitryAu() {
 		ioRegions[0].signals = new String[] { "A2", "A3", "A5", "A6", "A8", "A9", "A11", "A12", "A14", "A15", "A17", "A18", "A20", "A21", "A23", "A24", "A27", "A28", "A30",
@@ -77,6 +80,13 @@ public class AlchitryAu extends Board {
 	@Override
 	public PinConverter getPinConverter() {
 		return new AlchitryAuPinConverter();
+	}
+	
+	private static UsbDescriptor usbDescription = new UsbDescriptor("Alchitry Au", (short) 0x0403, (short) 0x6010, "Alchitry Au");
+
+	@Override
+	public UsbDescriptor getUsbDesciptor() {
+		return usbDescription;
 	}
 
 }

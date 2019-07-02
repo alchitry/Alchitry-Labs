@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.ftdi;
+package com.alchitry.labs.hardware.usb.ftdi;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

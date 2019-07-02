@@ -1,4 +1,4 @@
-package com.alchitry.labs.hardware.ftdi;
+package com.alchitry.labs.hardware.usb.ftdi;
 
 import java.util.LinkedList;
 import java.util.Queue;
