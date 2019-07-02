@@ -40,7 +40,6 @@ import com.alchitry.labs.gui.ConstraintsEditor;
 import com.alchitry.labs.gui.Images;
 import com.alchitry.labs.gui.NewProjectDialog;
 import com.alchitry.labs.gui.NewSourceDialog;
-import com.alchitry.labs.gui.SerialPortSelector;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.WaveForm;
@@ -811,21 +810,6 @@ public class MainWindow {
 
 	public void openProjectSilent(File path) throws ParseException, IOException {
 		project.openXML(path);
-	}
-
-	public void selectSerialPort() {
-		String[] ports = Util.getSerialPortNames();
-		if (ports.length > 0) {
-			SerialPortSelector dialog = new SerialPortSelector(shlAlchitryLabs, ports);
-			String port = dialog.open();
-			if (port != null)
-				Settings.pref.put(Settings.SERIAL_PORT, port);
-		} else {
-			MessageBox box = new MessageBox(shlAlchitryLabs, SWT.ICON_ERROR | SWT.OK);
-			box.setText("No Serial Ports Detected!");
-			box.setMessage("No serial ports were detected. Make sure your Mojo is connected and the drivers are loaded.");
-			box.open();
-		}
 	}
 
 	public boolean openFile(File file, boolean write) {

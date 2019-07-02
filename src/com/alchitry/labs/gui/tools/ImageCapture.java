@@ -20,11 +20,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.RegisterInterface;
-import com.fazecast.jSerialComm.SerialPortIOException;
-import com.fazecast.jSerialComm.SerialPortTimeoutException;
 
 public class ImageCapture {
 	private final int WIDTH = 1600;
@@ -145,7 +144,7 @@ public class ImageCapture {
 						RegisterInterface reg = new RegisterInterface();
 						PaletteData palette = new PaletteData(0xFF0000, 0x00FF00, 0x0000FF);
 						final ImageData image = new ImageData(width, height, 24, palette);
-						if (reg.connect(null))
+						if (reg.connect())
 							try {
 								reg.write(address, 0); // start capture
 								try {
@@ -182,9 +181,7 @@ public class ImageCapture {
 									});
 								}
 
-							} catch (SerialPortIOException e) {
-								Util.logException(e);
-							} catch (SerialPortTimeoutException e) {
+							} catch (LibUsbException e) {
 								Util.logException(e);
 							} finally {
 								reg.disconnect();

@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Images;
@@ -33,8 +34,6 @@ import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.ProjectSignal;
 import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.widgets.WaveSignal.TriggerType;
-import com.fazecast.jSerialComm.SerialPortIOException;
-import com.fazecast.jSerialComm.SerialPortTimeoutException;
 
 public class Waves extends Canvas {
 	private List<WaveSignal> signals;
@@ -242,7 +241,7 @@ public class Waves extends Canvas {
 					debugInfo = MainWindow.getOpenProject().getDebugInfo();
 					LogicCapture lc = new LogicCapture();
 					try {
-						if (lc.connect(null)) {
+						if (lc.connect()) {
 							if (!lc.updateDeviceInfo()) {
 								Util.showError("Failed to get wave capture information!");
 								return;
@@ -321,7 +320,7 @@ public class Waves extends Canvas {
 				public void run() {
 					LogicCapture lc = new LogicCapture();
 					try {
-						if (lc.connect(null)) {
+						if (lc.connect()) {
 							if (!lc.updateDeviceInfo()) {
 								Util.showError("Failed to get wave capture information!");
 								return;
@@ -359,10 +358,8 @@ public class Waves extends Canvas {
 						} else {
 							Util.showError("Failed to connect to Mojo!");
 						}
-					} catch (SerialPortIOException e1) {
+					} catch (LibUsbException e1) {
 						Util.showError(e1.getMessage());
-					} catch (SerialPortTimeoutException e) {
-						Util.showError(e.getMessage());
 					} finally {
 						lc.disconnect();
 					}

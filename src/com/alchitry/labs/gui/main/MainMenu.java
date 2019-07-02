@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Shell;
 import com.alchitry.labs.Reporter;
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.BoardSelector;
 import com.alchitry.labs.gui.EmailMessage;
 import com.alchitry.labs.gui.FeedbackDialog;
 import com.alchitry.labs.gui.NewProjectDialog;
@@ -24,9 +23,6 @@ import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
 import com.alchitry.labs.hardware.boards.Board;
-import com.alchitry.labs.hardware.flashers.AuFlasher;
-import com.alchitry.labs.hardware.flashers.CuFlasher;
-import com.alchitry.labs.hardware.flashers.MojoFlasher;
 import com.alchitry.labs.project.Project;
 
 public class MainMenu {
@@ -247,28 +243,6 @@ public class MainMenu {
 	private void buildToolsMenu() {
 		Menu subMenu = createSubMenu(menu, "Tools");
 
-		createItem(subMenu, "Flash Firmware", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				BoardSelector selector = new BoardSelector(parent.getShell(), SWT.APPLICATION_MODAL);
-				Board b = selector.open();
-				if (b == null)
-					return;
-
-				switch (b.getType()) {
-				case Board.AU:
-					new AuFlasher().flash();
-					break;
-				case Board.CU:
-					new CuFlasher().flash();
-					break;
-				case Board.MOJO:
-					new MojoFlasher().flash();
-					break;
-				}
-			}
-		});
-
 		createItem(subMenu, "Serial Port Monitor", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -323,14 +297,6 @@ public class MainMenu {
 
 	private void buildSettingsMenu() {
 		Menu subMenu = createSubMenu(menu, "Settings");
-
-		if (Board.isType(board, Board.MOJO))
-			createItem(subMenu, "Serial Port", new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					parent.selectSerialPort();
-				}
-			});
 
 		createItem(subMenu, "ISE Location", new SelectionAdapter() {
 			@Override
