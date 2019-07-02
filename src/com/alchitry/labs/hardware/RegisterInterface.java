@@ -23,6 +23,7 @@ public class RegisterInterface {
 		if (serialPort == null)
 			return false;
 		serialPort.setBaudrate(1000000);
+		serialPort.setTimeouts(1000, 1000);
 		return true;
 	}
 

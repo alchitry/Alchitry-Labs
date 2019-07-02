@@ -103,7 +103,6 @@ public class SerialMonitor {
 	private void connect() {
 		port = UsbUtil.openSerial();
 		if (port == null) {
-			Util.showError("Could not connect to a serial device!");
 			shell.dispose();
 			return;
 		}
