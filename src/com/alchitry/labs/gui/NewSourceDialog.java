@@ -203,6 +203,15 @@ public class NewSourceDialog extends Dialog {
 					box.open();
 					return;
 				}
+				String name = result.fileName.substring(0, result.fileName.lastIndexOf('.'));
+				if (name.isEmpty()) {
+					result = null;
+					MessageBox box = new MessageBox(shell, SWT.OK);
+					box.setText("Invalid Options");
+					box.setMessage("The file's name can't be blank.");
+					box.open();
+					return;
+				}
 				shell.close();
 			}
 		});

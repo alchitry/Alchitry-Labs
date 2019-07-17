@@ -8,7 +8,7 @@ public class ErrorStrings {
 	public static final String UNDECLARED_MODULE = "The module \"%s\" could not be found";
 
 	public static final String PARAMETER_CONSTRAINT_FAILED = "The constraint \"%s\" for parameter \"%s\" with value \"%s\" failed";
-	public static final String PARAMETER_CONSTRAINT_PARSE_FAIL = "The constraint \"%s\" could not be parsed";
+	public static final String PARAMETER_CONSTRAINT_PARSE_FAIL = "The constraint \"%s\" could not be parsed with value \"%s\"";
 	
 	public static final String NUMBER_PARSE_FAIL = "The value \"%s\" could not be parsed";
 	
@@ -95,10 +95,10 @@ public class ErrorStrings {
 
 	public static final String VALUE_TOO_BIG = "The value \"%s\" is wider than %s bits and it will be truncated";
 
-	public static final String OP_GT_ARRAY = "The greater than operator \">\" can't be used on arrays";
-	public static final String OP_LT_ARRAY = "The less than operator \"<\" can't be used on arrays";
-	public static final String OP_GTE_ARRAY = "The greater than or equal operator \">=\" can't be used on arrays";
-	public static final String OP_LTE_ARRAY = "The less than or equal operator \"<=\" can't be used on arrays";
+	public static final String OP_GT_NOT_NUMBER = "The greater than operator \">\" can only be used on simple values";
+	public static final String OP_LT_NOT_NUMBER = "The less than operator \"<\" can only be used on simple values";
+	public static final String OP_GTE_NOT_NUMBER = "The greater than or equal operator \">=\" can only be used on simple values";
+	public static final String OP_LTE_NOT_NUMBER = "The less than or equal operator \"<=\" can only be used on simple values";
 	public static final String OP_EQ_DIM_MISMATCH = "The dimensions of both arrays must match for the equal operator";
 	public static final String OP_NEQ_DIM_MISMATCH = "The dimensions of both arrays must match for the not equal operator";
 	public static final String OP_TERN_DIM_MISMATCH = "The dimensions of both results must match for the ternary operator";

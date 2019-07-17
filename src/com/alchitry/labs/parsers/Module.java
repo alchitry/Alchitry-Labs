@@ -28,6 +28,7 @@ public class Module implements Named, Serializable {
 		outputs = new ArrayList<>();
 		inouts = new ArrayList<>();
 		params = new ArrayList<>();
+		name = "";
 	}
 	
 	public Module(Module m){

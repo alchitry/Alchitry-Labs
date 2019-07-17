@@ -210,6 +210,7 @@ public class NewProjectDialog extends Dialog {
 					result = new Project();
 					result.setProjectFolder(Util.assembleFile(workspace, projectName));
 					result.setProjectName(projectName);
+					result.setProjectFile(Util.assembleFile(workspace, projectName, projectName + ".alp"));
 				} else {
 					result = createProject(projectName, workspace, boardType, language, examples.getText());
 				}
@@ -230,11 +231,11 @@ public class NewProjectDialog extends Dialog {
 		}
 
 		shlNewProject.pack();
-		
+
 		Rectangle parentSize = getParent().getBounds();
 		Rectangle shellSize = shlNewProject.getBounds();
-		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
-		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
+		int locationX = (parentSize.width - shellSize.width) / 2 + parentSize.x;
+		int locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y;
 		shlNewProject.setLocation(new Point(locationX, locationY));
 
 		updateExamples(); // update list

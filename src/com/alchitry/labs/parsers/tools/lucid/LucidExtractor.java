@@ -565,7 +565,7 @@ public class LucidExtractor extends LucidBaseListener {
 					if (constraint.isZero()) {
 						ConstValue cv = constExprParser.getValue(ctx.param_name().expr());
 						errorListener.reportError(ctx.param_constraint(),
-								String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, ctx.param_constraint().getText(), p.getName(), cv.toString()));
+								String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, ctx.param_constraint().getText(), p.getName(), String.valueOf(cv)));
 					}
 				}
 			}
@@ -832,7 +832,7 @@ public class LucidExtractor extends LucidBaseListener {
 						ConstValue cv = ConstExprParser.parseExpr(p.getConstraint(), cp, null, null);
 
 						if (cv == null) {
-							errorListener.reportError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_PARSE_FAIL, p.getConstraint()));
+							errorListener.reportError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_PARSE_FAIL, p.getConstraint(), p.getValue()));
 						} else if (cv.isZero()) {
 							errorListener.reportError(ctx.name(1), String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, p.getConstraint(), p.getName(), p.getValue()));
 						}

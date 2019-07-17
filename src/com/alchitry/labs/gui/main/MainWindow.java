@@ -59,7 +59,7 @@ import com.alchitry.labs.widgets.CustomTree;
 import com.alchitry.labs.widgets.TabChild;
 
 public class MainWindow {
-	public static final String VERSION = "1.0.8";
+	public static final String VERSION = "1.1.0";
 	public static final String LIB_VERSION = "1.0.0";
 
 	protected final Display display = Display.getDefault();

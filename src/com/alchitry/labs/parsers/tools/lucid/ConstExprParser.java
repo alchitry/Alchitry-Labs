@@ -126,11 +126,11 @@ public class ConstExprParser extends LucidBaseListener {
 	}
 
 	private void debug(ParserRuleContext ctx) {
-		// listener.reportDebug(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
+		listener.reportDebug(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
 	}
 
 	private void debugNullConstant(ParserRuleContext ctx) {
-		// listener.reportDebug(ctx, "This should have a known value!");
+		listener.reportDebug(ctx, "This should have a known value!");
 	}
 
 	@Override
@@ -1114,21 +1114,21 @@ public class ConstExprParser extends LucidBaseListener {
 
 			switch (operand) {
 			case "<":
-				if (op1.isArray())
-					listener.reportError(ctx.expr(0), ErrorStrings.OP_LT_ARRAY);
-				if (op2.isArray())
-					listener.reportError(ctx.expr(1), ErrorStrings.OP_LT_ARRAY);
-				if (op1.isArray() || op2.isArray())
+				if (!op1.isSimple())
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_LT_NOT_NUMBER);
+				if (!op2.isSimple())
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_LT_NOT_NUMBER);
+				if (!op1.isSimple() || !op2.isSimple())
 					return;
 
 				cv.setValue(op1.lessThan(op2));
 				break;
 			case ">":
-				if (op1.isArray())
-					listener.reportError(ctx.expr(0), ErrorStrings.OP_GT_ARRAY);
-				if (op2.isArray())
-					listener.reportError(ctx.expr(1), ErrorStrings.OP_GT_ARRAY);
-				if (op1.isArray() || op2.isArray())
+				if (!op1.isSimple())
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_GT_NOT_NUMBER);
+				if (!op2.isSimple())
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_GT_NOT_NUMBER);
+				if (!op1.isSimple() || !op2.isSimple())
 					return;
 
 				cv.setValue(op2.lessThan(op1));
@@ -1153,21 +1153,21 @@ public class ConstExprParser extends LucidBaseListener {
 				cv.setValue(ConstValue.Equal(op1, op2).not());
 				break;
 			case ">=":
-				if (op1.isArray())
-					listener.reportError(ctx.expr(0), ErrorStrings.OP_GTE_ARRAY);
-				if (op2.isArray())
-					listener.reportError(ctx.expr(1), ErrorStrings.OP_GTE_ARRAY);
-				if (op1.isArray() || op2.isArray())
+				if (!op1.isSimple())
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_GTE_NOT_NUMBER);
+				if (!op2.isSimple())
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_GTE_NOT_NUMBER);
+				if (!op1.isSimple() || !op2.isSimple())
 					return;
 
 				cv.setValue(op2.lessThan(op1).or(ConstValue.Equal(op1, op2)));
 				break;
 			case "<=":
-				if (op1.isArray())
-					listener.reportError(ctx.expr(0), ErrorStrings.OP_LTE_ARRAY);
-				if (op2.isArray())
-					listener.reportError(ctx.expr(1), ErrorStrings.OP_LTE_ARRAY);
-				if (op1.isArray() || op2.isArray())
+				if (!op1.isSimple())
+					listener.reportError(ctx.expr(0), ErrorStrings.OP_LTE_NOT_NUMBER);
+				if (!op2.isSimple())
+					listener.reportError(ctx.expr(1), ErrorStrings.OP_LTE_NOT_NUMBER);
+				if (!op1.isSimple() || !op2.isSimple())
 					return;
 
 				cv.setValue(op1.lessThan(op2).or(ConstValue.Equal(op1, op2)));
@@ -1298,7 +1298,7 @@ public class ConstExprParser extends LucidBaseListener {
 					ConstValue cv = cp.getValue(signal);
 					if (cv == null)
 						cv = pp.getValue(signal);
-					if (cv != null)
+					if (cv != null && !cv.isStruct())
 						return cv.getArrayWidth();
 				}
 				return sw;
@@ -1316,7 +1316,7 @@ public class ConstExprParser extends LucidBaseListener {
 					ConstValue cv = cp.getValue(signal);
 					if (cv == null)
 						cv = pp.getValue(signal);
-					if (cv != null)
+					if (cv != null && !cv.isStruct())
 						return cv.getArrayWidth();
 				}
 				return sw;

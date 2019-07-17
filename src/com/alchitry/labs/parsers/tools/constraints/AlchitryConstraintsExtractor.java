@@ -108,7 +108,7 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 			ParseTree pt = ctx.children.get(i);
 			if (pt instanceof Array_indexContext) {
 				Array_indexContext aic = (Array_indexContext) pt;
-				
+
 				if (current == null) {
 					errorListener.reportError(aic, ErrorStrings.ARRAY_INDEX_DIM_MISMATCH);
 					return 0;
@@ -120,7 +120,7 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 				}
 
 				int bWidth = current.getWidths().remove(0);
-				
+
 				if (aic.INT() == null) {
 					return 0;
 				}
@@ -158,7 +158,7 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 				Util.log.severe("Uknown " + ctx.getText());
 			}
 		}
-		
+
 		if (current != null && current.getTotalWidth() != 1)
 			errorListener.reportError(ctx, ErrorStrings.CONSTRAINT_MULTI_BIT);
 
@@ -225,10 +225,11 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
 
 		int bit = 0;
 
-		Sig portSig = portSignals.get(portSignals.indexOf(new Sig(port)));
-		if (portSig == null) {
+		int portIdx = portSignals.indexOf(new Sig(port));
+		if (portIdx < 0) {
 			errorListener.reportError(ctx.port_name(), String.format(ErrorStrings.CONSTRAINT_PORT_UNKNOWN, port));
 		} else {
+			Sig portSig = portSignals.get(portIdx);
 			bit = parseComplexWidth(ctx.port_name(), portSig.getWidth());
 		}
 

@@ -142,7 +142,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				if (pw != null && mw != null) {
 					if (pw.is1D() && mw.is1D()) {
 						if (pw.getWidth() > mw.getWidth())
-							errorChecker.reportWarning(smc.expr(), String.format(ErrorStrings.TRUNC_WARN,smc.expr().getText(), smc.name().getText()));
+							errorChecker.reportWarning(smc.expr(), String.format(ErrorStrings.TRUNC_WARN, smc.expr().getText(), smc.name().getText()));
 					} else if (!pw.equals(mw)) {
 						errorChecker.reportError(smc, String.format(ErrorStrings.PORT_DIM_MISMATCH, smc.expr().getText(), smc.name().getText()));
 					}
@@ -790,6 +790,11 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 	@Override
 	public SignalWidth getWidth(String signal) {
+		ConstValue width = constExprParser.parseExpr(signal);
+		if (width != null) {
+			return new SignalWidth(width);
+		}
+		
 		SignalWidth w = widthMap.get(signal);
 		if (w == null) {
 			if (Util.containsName(lucid.getInouts(), signal))
@@ -1358,31 +1363,31 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				if (w1.getDepth() != 1 || !w1.isSimpleArray())
 					switch (operand) {
 					case "<":
-						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_LT_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_LT_NOT_NUMBER);
 						break;
 					case ">":
-						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_GT_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_GT_NOT_NUMBER);
 						break;
 					case "<=":
-						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_LTE_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_LTE_NOT_NUMBER);
 						break;
 					case ">=":
-						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_GTE_ARRAY);
+						errorChecker.reportError(ctx.expr(0), ErrorStrings.OP_GTE_NOT_NUMBER);
 						break;
 					}
 				if (w2.getDepth() != 1 || !w2.isSimpleArray())
 					switch (operand) {
 					case "<":
-						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_LT_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_LT_NOT_NUMBER);
 						break;
 					case ">":
-						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_GT_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_GT_NOT_NUMBER);
 						break;
 					case "<=":
-						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_LTE_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_LTE_NOT_NUMBER);
 						break;
 					case ">=":
-						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_GTE_ARRAY);
+						errorChecker.reportError(ctx.expr(1), ErrorStrings.OP_GTE_NOT_NUMBER);
 						break;
 					}
 			}

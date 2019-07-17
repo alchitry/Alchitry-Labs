@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.types.Struct;
 
 public class SignalWidth implements Serializable {
@@ -49,6 +50,13 @@ public class SignalWidth implements Serializable {
 
 	public SignalWidth(String t) {
 		text = t;
+	}
+
+	public SignalWidth(ConstValue cv) {
+		if (cv.isStruct())
+			struct = cv.getStruct();
+		else
+			widths = cv.getWidths();
 	}
 
 	@Override
@@ -217,11 +225,11 @@ public class SignalWidth implements Serializable {
 
 		if (bits % factor != 0)
 			return null;
-		
-		ArrayList<Integer> newDims = new ArrayList<>(dimensions.length+1);
+
+		ArrayList<Integer> newDims = new ArrayList<>(dimensions.length + 1);
 		for (int d : dimensions)
 			newDims.add(d);
-		newDims.add(bits/factor);
+		newDims.add(bits / factor);
 
 		return new SignalWidth(newDims);
 	}
@@ -233,7 +241,7 @@ public class SignalWidth implements Serializable {
 	public boolean hasStruct() {
 		return isStruct() || (next != null && next.hasStruct());
 	}
-	
+
 	public boolean is1D() {
 		return isSimpleArray() && getDepth() == 1;
 	}

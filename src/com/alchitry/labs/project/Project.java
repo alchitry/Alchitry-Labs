@@ -1217,6 +1217,21 @@ public class Project {
 
 		String oldName = projectName;
 		projectName = name;
+		
+		// Need to update core file references before saving so they don't point to the old project
+		for (IPCore core : ipCores) {
+			Path oldCorePath = Paths.get(new File(Util.assemblePath(oldFolder, CORES_FOLDER, core.getName())).getAbsolutePath());
+			ArrayList<File> updatedFiles = new ArrayList<>(core.getFiles().size());
+			for (File corefile : core.getFiles()) {
+				String p = oldCorePath.relativize(Paths.get(corefile.getAbsolutePath())).toString();
+				updatedFiles.add(Util.assembleFile(projectFolder, CORES_FOLDER, core.getName(), p));
+			}
+			core.setFiles(updatedFiles);
+			if (core.getStub() != null) {
+				String p = oldCorePath.relativize(Paths.get(core.getStub().getAbsolutePath())).toString();
+				core.setStub(Util.assembleFile(projectFolder, CORES_FOLDER, core.getName(), p));
+			}
+		}
 
 		saveXML();
 
@@ -1330,7 +1345,7 @@ public class Project {
 				Util.clearConsole();
 				try {
 					if (!checkForErrors()) {
-						Util.println("No errors detected.");
+						Util.println("No errors detected.", Theme.successTextColor);
 					}
 				} catch (IOException e) {
 				}

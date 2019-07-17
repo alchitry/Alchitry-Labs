@@ -29,6 +29,10 @@ public class IPCore {
 	public final ArrayList<File> getFiles() {
 		return files;
 	}
+	
+	public void setFiles(ArrayList<File> files) {
+		this.files = files;
+	}
 
 	public String getName() {
 		return name;

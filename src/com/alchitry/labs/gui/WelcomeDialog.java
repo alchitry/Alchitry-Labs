@@ -72,13 +72,10 @@ public class WelcomeDialog extends Dialog {
 
 		Label lblReleaseInfo = new Label(shell, SWT.WRAP);
 		lblReleaseInfo.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, true, 1, 1));
-		lblReleaseInfo
-				.setText("Welcome to version "
-						+ MainWindow.VERSION
-						+ " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
-						+ " at bugspray@alchitry.com\n\n"
-						+ "This version has a ton of changes! Lots of bug fixes and added support for Vivado IP."
-						+ "\n\nAs always, we hope you enjoy this version!");
+		lblReleaseInfo.setText("Welcome to version " + MainWindow.VERSION + " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
+				+ " at bugspray@alchitry.com\n\n"
+				+ "This version has a ton of changes! The debugger is now avaible for the Au. You can also now declare struct constants. The biggest changes by far were to the underlying USB interface. You no longer need to specify a COM port for the boards. They will be automatically detected!"
+				+ "\n\nAs always, we hope you enjoy this version!");
 
 		Button btnOk = new Button(shell, SWT.NONE);
 		btnOk.addSelectionListener(new SelectionAdapter() {
@@ -91,11 +88,11 @@ public class WelcomeDialog extends Dialog {
 		gd_btnOk.widthHint = 100;
 		btnOk.setLayoutData(gd_btnOk);
 		btnOk.setText("Ok");
-		
+
 		Rectangle parentSize = getParent().getBounds();
 		Rectangle shellSize = shell.getBounds();
-		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
-		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
+		int locationX = (parentSize.width - shellSize.width) / 2 + parentSize.x;
+		int locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y;
 		shell.setLocation(new Point(locationX, locationY));
 	}
 
