@@ -17,7 +17,7 @@ public class CuLoader extends ProjectLoader {
 	protected void eraseFlash() {
 		Ftdi ftdi = null;
 		try {
-			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DESC);
+			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DEVICES);
 			if (ftdi == null)
 				return;
 
@@ -42,7 +42,7 @@ public class CuLoader extends ProjectLoader {
 
 		Ftdi ftdi = null;
 		try {
-			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DESC);
+			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DEVICES);
 			if (ftdi == null)
 				return;
 

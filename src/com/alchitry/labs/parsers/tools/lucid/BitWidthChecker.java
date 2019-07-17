@@ -48,6 +48,7 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNegateContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNumContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprShiftContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprSignalContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprStructContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprTernaryContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Fsm_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.FunctionContext;
@@ -62,6 +63,8 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_nameContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Sig_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.SignalContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_constContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_member_constContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_typeContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Type_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_decContext;
@@ -95,11 +98,11 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	}
 
 	private void debug(ParserRuleContext ctx) {
-		// errorChecker.onTokenDebugFound(ctx, ctx.getText() + " = " + (widths.get(ctx) == null ? "null" : widths.get(ctx).toString()));
+		// errorChecker.reportDebug(ctx, ctx.getText() + " = " + (widths.get(ctx) == null ? "null" : widths.get(ctx).toString()));
 	}
 
 	private void debugNullConstant(ParserRuleContext ctx) {
-		// errorChecker.onTokenDebugFound(ctx, "This should have a known value!");
+		// errorChecker.reportDebug(ctx, "This should have a known value!");
 	}
 
 	@Override
@@ -119,6 +122,33 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 
 	public BoundsProvider getBoundsProvider() {
 		return boundsProvider;
+	}
+
+	@Override
+	public void exitStruct_type(Struct_typeContext sctx) {
+		SignalWidth sw = getArrayWidth(new ArrayList<Array_sizeContext>(), sctx);
+		widths.put(sctx, sw);
+	}
+
+	@Override
+	public void exitStruct_const(Struct_constContext sctx) {
+		SignalWidth sw = widths.get(sctx.struct_type());
+		widths.put(sctx, sw);
+
+		for (Struct_member_constContext smc : sctx.struct_member_const()) {
+			if (smc.expr() != null && smc.name() != null) {
+				SignalWidth pw = widths.get(smc.expr());
+				SignalWidth mw = sw.getStruct().getWidthOfMember(smc.name().getText());
+				if (pw != null && mw != null) {
+					if (pw.is1D() && mw.is1D()) {
+						if (pw.getWidth() > mw.getWidth())
+							errorChecker.reportWarning(smc.expr(), String.format(ErrorStrings.TRUNC_WARN,smc.expr().getText(), smc.name().getText()));
+					} else if (!pw.equals(mw)) {
+						errorChecker.reportError(smc, String.format(ErrorStrings.PORT_DIM_MISMATCH, smc.expr().getText(), smc.name().getText()));
+					}
+				}
+			}
+		}
 	}
 
 	public SignalWidth getArrayWidth(List<Array_sizeContext> ctx, Struct_typeContext sctx) {
@@ -602,6 +632,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				if (w == null) {
 					if (listener != null)
 						listener.reportError((NameContext) pt, String.format(ErrorStrings.UNKNOWN_STRUCT_NAME, name, width.getStruct()));
+					return false;
 				} else {
 					width.set(w);
 				}
@@ -939,6 +970,12 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	public void exitExprNum(ExprNumContext ctx) {
 		if (constExprParser.getValue(ctx) != null)
 			widths.put(ctx, new SignalWidth(constExprParser.getValue(ctx).getWidths()));
+		debug(ctx);
+	}
+
+	@Override
+	public void exitExprStruct(ExprStructContext ctx) {
+		widths.put(ctx, widths.get(ctx.struct_const()));
 		debug(ctx);
 	}
 

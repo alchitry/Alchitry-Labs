@@ -31,6 +31,8 @@ param_constraint: expr;
 
 array_size: '[' expr ']';
 struct_type: '<' name ('.' name)? '>';
+struct_member_const: name '(' expr ')';
+struct_const: struct_type '(' struct_member_const (',' struct_member_const)* ')';
 
 module_body: '{' stat* '}';
 
@@ -69,6 +71,7 @@ connection: param_con | sig_con;
 
 struct_member: SIGNED? name struct_type? array_size*;
 struct_dec: 'struct' name '{' struct_member (',' struct_member)* '}';
+
 
 always_block: 'always' block;
 
@@ -110,6 +113,7 @@ number: HEX | BIN | DEC | INT | STRING;
 expr
   : signal                                      #ExprSignal
   | number                                      #ExprNum
+  | struct_const                                #ExprStruct
   | function                                    #ExprFunction
   | '(' expr ')'                                #ExprGroup
   | 'c{' expr (',' expr)* '}'                   #ExprConcat

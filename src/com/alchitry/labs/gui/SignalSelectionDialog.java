@@ -14,6 +14,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -35,12 +36,13 @@ import com.alchitry.labs.parsers.types.Fsm;
 import com.alchitry.labs.project.DebugInfo;
 
 public class SignalSelectionDialog extends Dialog {
-	protected ArrayList<ProjectSignal> result;
-	protected int samples;
+	protected DebugInfo result;
 	protected Shell shell;
 
 	private InstModule top;
 	private Tree tree;
+	private Combo comboClock;
+	private Text samplesText;
 
 	/**
 	 * Create the dialog.
@@ -58,7 +60,7 @@ public class SignalSelectionDialog extends Dialog {
 	 * 
 	 * @return the result
 	 */
-	public ArrayList<ProjectSignal> open(InstModule topModule) {
+	public DebugInfo open(InstModule topModule) {
 		top = topModule;
 		createContents();
 		shell.open();
@@ -72,10 +74,6 @@ public class SignalSelectionDialog extends Dialog {
 		return result;
 	}
 
-	public int getSamples() {
-		return samples;
-	}
-
 	/**
 	 * Create contents of the dialog.
 	 */
@@ -84,22 +82,19 @@ public class SignalSelectionDialog extends Dialog {
 		shell.setMinimumSize(new Point(600, 500));
 		shell.setSize(450, 300);
 		shell.setText(getText());
-		shell.setLayout(new GridLayout(3, false));
+		shell.setLayout(new GridLayout(2, false));
 
 		tree = new Tree(shell, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		GridData gd_tree = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+		GridData gd_tree = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		gd_tree.widthHint = 196;
 		tree.setLayoutData(gd_tree);
 
 		tree.addListener(SWT.Selection, checkListener);
-		buildTree(tree);
 		TreeItem ti = new TreeItem(tree, SWT.NONE);
 		ti.setText(top.getName());
 		ti.setData(top);
 		addChildren(top, ti);
 		ti.setExpanded(true);
-
-		preSelect(ti);
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -130,9 +125,33 @@ public class SignalSelectionDialog extends Dialog {
 					e.doit = false;
 			}
 		});
+		shell.pack();
+
+		Rectangle parentSize = getParent().getBounds();
+		Rectangle shellSize = shell.getBounds();
+		int locationX = (parentSize.width - shellSize.width) / 2 + parentSize.x;
+		int locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y;
+		shell.setLocation(new Point(locationX, locationY));
+
+		Label lblNewLabel_1 = new Label(shell, SWT.NONE);
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_1.setText("Sample Clock:");
+
+		comboClock = new Combo(shell, SWT.READ_ONLY);
+		comboClock.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for (Sig s : top.getInputs())
+			comboClock.add(s.getName());
+		for (Sig s : top.getSigs())
+			comboClock.add(s.getName());
+		
+		for (int i = 0; i < comboClock.getItemCount(); i++)
+			if (comboClock.getItem(i).equals("clk")) {
+				comboClock.select(i);
+				break;
+			}
 
 		Composite composite = new Composite(shell, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 2, 1));
 		composite.setLayout(new GridLayout(2, false));
 
 		Button btnCancel = new Button(composite, SWT.NONE);
@@ -153,46 +172,49 @@ public class SignalSelectionDialog extends Dialog {
 			}
 		});
 
-		Button btnAdd = new Button(composite, SWT.NONE);
+		Button btnDebug = new Button(composite, SWT.NONE);
 		GridData gd_btnAdd = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_btnAdd.widthHint = 100;
-		btnAdd.setLayoutData(gd_btnAdd);
-		btnAdd.setSize(100, 31);
-		btnAdd.setText("Debug");
-		btnAdd.addListener(SWT.Selection, new Listener() {
+		btnDebug.setLayoutData(gd_btnAdd);
+		btnDebug.setSize(100, 31);
+		btnDebug.setText("Debug");
+		btnDebug.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				if (samplesText.getText().isEmpty()) {
 					Util.showError("Samples can not be empty!");
 					return;
 				}
-				samples = Integer.parseInt(samplesText.getText());
+				int samples = Integer.parseInt(samplesText.getText());
 				if (samples <= 0) {
 					Util.showError("Samples must be a positve integer!");
 					return;
 				}
+				
+				result = new DebugInfo();
+				result.setSamples(samples);
+				Sig clock = Util.getByName(top.getInputs(), comboClock.getText());
+				if (clock == null)
+					clock = Util.getByName(top.getSigs(), comboClock.getText());
+				ProjectSignal ps = new ProjectSignal();
+				ps.append(top);
+				ps.setSig(clock);
+				result.setClock(ps);
 				getSelected();
 				shell.close();
 			}
 		});
 
-		composite.pack();
-		shell.pack();
+		preSelect(ti);
 		
-		Rectangle parentSize = getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
-		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
-		shell.setLocation(new Point(locationX, locationY));
+		composite.pack();
 	}
 
 	private void getSelected() {
-		result = new ArrayList<>();
 		List<InstModule> path = new ArrayList<>();
 		TreeItem top = tree.getItem(0);
 		path.add((InstModule) top.getData());
 		addChildren(top, path);
-
 	}
 
 	private void addChildren(TreeItem parent, List<InstModule> path) {
@@ -202,7 +224,7 @@ public class SignalSelectionDialog extends Dialog {
 					ProjectSignal ps = new ProjectSignal();
 					ps.addAll(path);
 					ps.set(ti.getData());
-					result.add(ps);
+					result.getSignals().add(ps);
 				}
 			} else {
 				path.add((InstModule) ti.getData());
@@ -212,7 +234,7 @@ public class SignalSelectionDialog extends Dialog {
 		}
 	}
 
-	static void checkPath(TreeItem item, boolean checked, boolean grayed) {
+	private static void checkPath(TreeItem item, boolean checked, boolean grayed) {
 		if (item == null)
 			return;
 		if (grayed) {
@@ -234,7 +256,7 @@ public class SignalSelectionDialog extends Dialog {
 		checkPath(item.getParentItem(), checked, grayed);
 	}
 
-	static void checkItems(TreeItem item, boolean checked) {
+	private static void checkItems(TreeItem item, boolean checked) {
 		item.setGrayed(false);
 		item.setChecked(checked);
 		TreeItem[] items = item.getItems();
@@ -262,7 +284,6 @@ public class SignalSelectionDialog extends Dialog {
 			}
 		}
 	};
-	private Text samplesText;
 
 	private void addChildren(InstModule mod, TreeItem parent) {
 		List<Sig> inputs = mod.getInputs();
@@ -320,6 +341,8 @@ public class SignalSelectionDialog extends Dialog {
 		if (di == null)
 			return;
 
+		samplesText.setText(Integer.toString(di.getSamples()));
+
 		for (ProjectSignal s : di.getSignals()) {
 			TreeItem ti = root;
 			for (int i = 1; i < s.getPath().size(); i++) {
@@ -341,8 +364,5 @@ public class SignalSelectionDialog extends Dialog {
 			}
 
 		}
-	}
-
-	private void buildTree(Tree tree) {
 	}
 }

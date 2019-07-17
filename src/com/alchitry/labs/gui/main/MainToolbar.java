@@ -108,11 +108,11 @@ public class MainToolbar {
 				}
 			});
 
-		if (Board.isType(board, Board.MOJO))
+		if (Board.isType(board, Board.MOJO | Board.AU))
 			createButton(Images.debugIcon, Images.debugIconHover, "Debug Project", new Listener() {
 				@Override
 				public void handleEvent(Event event) {
-					if (MainWindow.getOpenProject() != null) {
+					if (MainWindow.getOpenProject() == null) {
 						Util.showError("A project must be opened before you can build it!");
 						return;
 					}

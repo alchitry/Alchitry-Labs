@@ -7,10 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.omg.CosNaming.IstringHelper;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
+import com.alchitry.labs.parsers.types.Struct;
+import com.alchitry.labs.parsers.types.Struct.Member;
 
 public class ConstValue implements Serializable {
 	/**
@@ -18,6 +24,8 @@ public class ConstValue implements Serializable {
 	 */
 	private static final long serialVersionUID = -4659118146920352487L;
 	private boolean isArray;
+	private Struct struct;
+	private HashMap<String, ConstValue> structValues;
 	private ArrayList<BitValue> value;
 	private ArrayList<ConstValue> values;
 	private boolean signed = false;
@@ -33,21 +41,38 @@ public class ConstValue implements Serializable {
 		this.isArray = isArray;
 	}
 
+	public ConstValue(Struct struct) {
+		setStruct(struct);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof ConstValue) {
-			if (((ConstValue) o).signed != signed)
+			ConstValue cv = (ConstValue) o;
+			if (cv.signed != signed)
 				return false;
-			if (((ConstValue) o).value != null) {
-				if (!((ConstValue) o).value.equals(value))
+			if (cv.value != null) {
+				if (!cv.value.equals(value))
 					return false;
 			} else if (value != null) {
 				return false;
 			}
-			if (((ConstValue) o).values != null) {
-				if (!((ConstValue) o).values.equals(values))
+			if (cv.values != null) {
+				if (!cv.values.equals(values))
 					return false;
 			} else if (values != null) {
+				return false;
+			}
+			if (cv.struct != null) {
+				if (!cv.struct.equals(struct))
+					return false;
+			} else if (struct != null) {
+				return false;
+			}
+			if (cv.structValues != null) {
+				if (!cv.structValues.equals(structValues))
+					return false;
+			} else if (structValues != null) {
 				return false;
 			}
 			return true;
@@ -59,7 +84,9 @@ public class ConstValue implements Serializable {
 	public int hashCode() {
 		int h1 = value == null ? 0 : value.hashCode();
 		int h2 = values == null ? 0 : values.hashCode();
-		return (isArray ? 51613846 : 0) ^ (h1 | h2) ^ (signed ? 135413 : 0);
+		int h3 = structValues == null ? 0 : structValues.hashCode();
+		int h4 = struct == null ? 0 : struct.hashCode();
+		return (isArray ? 51613846 : 0) ^ h1 ^ h2 ^ h3 ^ h4 ^ (signed ? 135413 : 0);
 	}
 
 	public ConstValue(long i) {
@@ -94,10 +121,13 @@ public class ConstValue implements Serializable {
 	public ConstValue(ConstValue cv) {
 		isArray = cv.isArray;
 		signed = cv.signed;
+		struct = cv.struct;
 		if (cv.value != null)
 			value = new ArrayList<>(cv.value);
 		if (cv.values != null)
 			values = new ArrayList<>(cv.values);
+		if (cv.structValues != null)
+			structValues = new HashMap<>(cv.structValues);
 	}
 
 	public ConstValue(List<BitValue> list) {
@@ -122,6 +152,23 @@ public class ConstValue implements Serializable {
 
 	public ConstValue(BigInteger bigInt, int width) {
 		constructFromBigInt(bigInt, width);
+	}
+
+	public void setStruct(Struct struct) {
+		this.struct = struct;
+		structValues = new HashMap<>();
+	}
+
+	public Struct getStruct() {
+		return struct;
+	}
+
+	public boolean isStruct() {
+		return struct != null;
+	}
+
+	public HashMap<String, ConstValue> getStructValues() {
+		return structValues;
 	}
 
 	public void setSigned(boolean isSigned) {
@@ -376,9 +423,15 @@ public class ConstValue implements Serializable {
 		}
 		return values.get(i);
 	}
+	
+	public boolean isSimple() {
+		return !isArray() && !isStruct();
+	}
 
 	public boolean isNumber() {
 		if (isArray)
+			return false;
+		if (struct != null)
 			return false;
 		for (BitValue bv : value)
 			switch (bv) {
@@ -394,7 +447,9 @@ public class ConstValue implements Serializable {
 
 	public BigInteger getBigInt() {
 		if (isArray)
-			throw new IllegalStateException("The function getValue() can't be used on arrays");
+			throw new IllegalStateException("The function getBigInt() can't be used on arrays");
+		if (struct != null)
+			throw new IllegalStateException("The function getBigInt() can't be used on structs");
 
 		if (!isNumber())
 			throw new IllegalStateException("The value is not a number (it contains x and z values)");
@@ -420,13 +475,17 @@ public class ConstValue implements Serializable {
 	public ArrayList<BitValue> getValue() {
 		if (isArray)
 			throw new IllegalStateException("The function getValue() can't be used on arrays");
+		if (struct != null)
+			throw new IllegalStateException("The function getValue() can't be used on structs");
 
 		return value;
 	}
 
 	public int getMinWidth() {
 		if (isArray)
-			throw new IllegalStateException("The function getWidth() can't be used on arrays");
+			throw new IllegalStateException("The function getMinWidth() can't be used on arrays");
+		if (struct != null)
+			throw new IllegalStateException("The function getMinWidth() can't be used on structs");
 		if (signed && value.get(value.size() - 1).equals(BitValue.B1))
 			for (int i = value.size() - 1; i >= 0; i--) {
 				if (value.get(i) != BitValue.B1)
@@ -441,12 +500,16 @@ public class ConstValue implements Serializable {
 	}
 
 	public int getWidth() {
+		if (struct != null)
+			throw new IllegalStateException("The function getWidth() can't be used on structs");
 		if (isArray)
 			return values.size();
 		return value.size();
 	}
 
 	public SignalWidth getArrayWidth() {
+		if (struct != null)
+			throw new IllegalStateException("The function getArrayWidth() can't be used on structs");
 		ConstValue cv = this;
 		SignalWidth width = new SignalWidth();
 
@@ -459,6 +522,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public void setValue(List<BitValue> v) {
+		if (struct != null)
+			throw new IllegalStateException("The function setValue() can't be used on structs");
 		if (isArray)
 			throw new IllegalStateException("The function setValue() can't be used on arrays");
 		value.clear();
@@ -466,6 +531,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public void setValue(BitValue v) {
+		if (struct != null)
+			throw new IllegalStateException("The function setValue() can't be used on structs");
 		if (isArray)
 			throw new IllegalStateException("The function setValue() can't be used on arrays");
 		value.clear();
@@ -473,6 +540,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public static ConstValue Or(ConstValue v1, ConstValue v2) {
+		if (v1.isStruct() || v2.isStruct())
+			throw new IllegalArgumentException("Arguments can't be structs");
 		if (!v1.getWidths().equals(v2.getWidths()))
 			throw new IllegalArgumentException("Arguments must have the same dimensions");
 
@@ -490,6 +559,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public static ConstValue And(ConstValue v1, ConstValue v2) {
+		if (v1.isStruct() || v2.isStruct())
+			throw new IllegalArgumentException("Arguments can't be structs");
 		if (!v1.getWidths().equals(v2.getWidths()))
 			throw new IllegalArgumentException("Arguments must have the same dimensions");
 
@@ -507,6 +578,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public static ConstValue Xor(ConstValue v1, ConstValue v2) {
+		if (v1.isStruct() || v2.isStruct())
+			throw new IllegalArgumentException("Arguments can't be structs");
 		if (!v1.getWidths().equals(v2.getWidths()))
 			throw new IllegalArgumentException("Arguments must have the same dimensions");
 
@@ -536,6 +609,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public static ConstValue Invert(ConstValue v) {
+		if (v.isStruct())
+			throw new IllegalArgumentException("Argument can't be a struct");
 		if (v.isArray()) {
 			ConstValue cv = new ConstValue(true);
 			for (int i = 0; i < v.getValues().size(); i++) {
@@ -550,6 +625,8 @@ public class ConstValue implements Serializable {
 	}
 
 	private static BitValue NotRecursive(ConstValue v) {
+		if (v.isStruct())
+			throw new IllegalArgumentException("Argument can't be a struct");
 		if (v.isArray()) {
 			boolean hasX = false;
 			for (int i = 0; i < v.getValues().size(); i++) {
@@ -569,6 +646,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public static ConstValue Not(ConstValue v) {
+		if (v.isStruct())
+			throw new IllegalArgumentException("Argument can't be a struct");
 		ConstValue cv = new ConstValue(NotRecursive(v));
 		return cv;
 	}
@@ -583,6 +662,17 @@ public class ConstValue implements Serializable {
 					return BitValue.B0;
 			}
 			return BitValue.B1;
+		} else if (v1.isStruct()) {
+			if (!v2.isStruct())
+				return BitValue.B0;
+			if (!v1.getStruct().equals(v2.getStruct()))
+				return BitValue.B0;
+			if (!v1.getStructValues().keySet().equals(v2.getStructValues().keySet()))
+				return BitValue.B0;
+			for (String key : v1.getStructValues().keySet())
+				if (Equal(v1.getStructValues().get(key), v2.getStructValues().get(key)) == BitValue.B0)
+					return BitValue.B0;
+			return BitValue.B1;
 		} else {
 			if (v1.isNegative() ^ v2.isNegative())
 				return BitValue.B0;
@@ -595,6 +685,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public static boolean Zero(ConstValue v) {
+		if (v.isStruct())
+			throw new IllegalArgumentException("Argument can't be a struct");
 		if (v.isArray) {
 			for (int i = 0; i < v.getValues().size(); i++) {
 				if (!Zero(v.get(i)))
@@ -621,6 +713,17 @@ public class ConstValue implements Serializable {
 				sb.append(values.get(i).toString());
 			}
 			sb.append("]");
+		} else if (struct != null) {
+			sb.append("<").append(struct.getName()).append(">(");
+			boolean first = true;
+			for (Map.Entry<String,ConstValue> entry : structValues.entrySet()) {
+				if (!first)
+					sb.append(", ");
+				else
+					first = false;
+				sb.append(entry.getKey()).append("(").append(entry.getValue().toString()).append(")");
+			}
+			sb.append(")");
 		} else {
 			if (isNumber()) {
 				sb.append(getBigInt().toString()).append(": ");
@@ -633,6 +736,8 @@ public class ConstValue implements Serializable {
 	public void shiftRight(int n, boolean signExtend) {
 		if (isArray)
 			throw new IllegalStateException("The function shiftRight() can't be used on arrays");
+		if (struct != null)
+			throw new IllegalStateException("The function shiftRight() can't be used on structs");
 
 		if (value.size() < n)
 			n = value.size();
@@ -652,12 +757,16 @@ public class ConstValue implements Serializable {
 	public void shiftLeft(int n) {
 		if (isArray)
 			throw new IllegalStateException("The function shiftLeft() can't be used on arrays");
+		if (struct != null)
+			throw new IllegalStateException("The function shiftLeft() can't be used on structs");
 
 		for (int i = 0; i < n; i++)
 			value.add(0, BitValue.B0);
 	}
 
 	public BitValue orReduce() {
+		if (struct != null)
+			throw new IllegalStateException("The function orReduce() can't be used on structs");
 		if (isArray) {
 			BitValue b = BitValue.B0;
 			for (int i = 0; i < values.size(); i++) {
@@ -676,6 +785,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public BitValue andReduce() {
+		if (struct != null)
+			throw new IllegalStateException("The function andReduce() can't be used on structs");
 		if (isArray) {
 			BitValue b = BitValue.B1;
 			for (int i = 0; i < values.size(); i++) {
@@ -694,6 +805,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public BitValue xorReduce() {
+		if (struct != null)
+			throw new IllegalStateException("The function xorReduce() can't be used on structs");
 		if (isArray) {
 			BitValue b = BitValue.B1;
 			for (int i = 0; i < values.size(); i++) {
@@ -724,6 +837,8 @@ public class ConstValue implements Serializable {
 	}
 
 	public boolean isNegative() {
+		if (struct != null)
+			throw new IllegalStateException("The function isNegative() can't be used on structs");
 		if (isArray)
 			throw new IllegalStateException("The function isNegative() can't be used on arrays");
 		if (signed && value.get(value.size() - 1) == BitValue.B1)
@@ -734,6 +849,8 @@ public class ConstValue implements Serializable {
 	public BitValue lessThan(ConstValue cv) {
 		if (cv.isArray || isArray)
 			throw new IllegalStateException("The function lessThan() can't be used on arrays");
+		if (struct != null)
+			throw new IllegalStateException("The function lessThan() can't be used on structs");
 
 		if (!isNumber() || !cv.isNumber())
 			return BitValue.Bx;
@@ -795,6 +912,8 @@ public class ConstValue implements Serializable {
 			throw new InvalidParameterException("Dimensions must be specified when building an array!");
 		if (isArray)
 			throw new InvalidParameterException("The function build() can't be called on array values!");
+		if (struct != null)
+			throw new IllegalStateException("The function build() can't be used on structs");
 		for (int d : dimensions)
 			if (d == 0)
 				throw new InvalidParameterException("Dimensions supplied to build() can't be 0!");
@@ -813,11 +932,21 @@ public class ConstValue implements Serializable {
 
 			}
 			return cv;
+		} else if (struct != null) {
+			ConstValue cv = new ConstValue(false);
+			for (Member m : struct.getMembers()) {
+				ConstValue c = structValues.get(m.name);
+				if (c.isArray)
+					cv.appendBits(c.flatten());
+				else
+					cv.appendBits(c);
+			}
+			return cv;
 		}
 		return this;
 	}
 
-	private String getHex(List<BitValue> list, int start) {
+	private static String getHex(List<BitValue> list, int start) {
 		int end = start + 4;
 		if (end > list.size())
 			end = list.size();
@@ -835,7 +964,7 @@ public class ConstValue implements Serializable {
 		StringBuilder sb = new StringBuilder();
 
 		boolean isNeg = false;
-		if (!isArray && isNegative())
+		if (!isArray && struct == null && isNegative())
 			isNeg = true;
 
 		if (isNeg || signed)
@@ -872,6 +1001,8 @@ public class ConstValue implements Serializable {
 	public ConstValue resize(int size) {
 		if (isArray)
 			throw new IllegalStateException("The function resize() can't be used on arrays");
+		if (struct != null)
+			throw new IllegalStateException("The function resize() can't be used on structs");
 		ConstValue cv = new ConstValue(this);
 		int origWidth = cv.getWidth();
 		if (origWidth > size) {

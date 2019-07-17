@@ -24,7 +24,7 @@ import com.alchitry.labs.parsers.types.Struct.Member;
 
 public class LucidDictionary extends Dictionary {
 	private static final String[] LUCID_KEYWORDS = { "module", "dff", "fsm", "input", "output", "inout", "signed", "for", "case", "if", "default", "const", "var", "sig",
-			"always", "else" };
+			"always", "else", "$clog2", "$pow", "$reverse", "$flatten", "$build", "$signed", "$unsigned", "$cdiv", "$resize"};
 
 	private List<Dff> dffs;
 	private List<Fsm> fsms;

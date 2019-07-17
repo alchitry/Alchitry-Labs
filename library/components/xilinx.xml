@@ -1,4 +1,28 @@
 <library>
+  <category name="Artix 7 Primitives">
+    <!-- BSCANE2 -->
+    <primitive name="BSCANE2">
+      <param name="JTAG_CHAIN" type="integer">
+        <range>
+          <min>1</min>
+          <max>4</max>
+        </range>
+      </param>
+      <port name="CAPTURE" direction="output" width="1"></port>
+      <port name="DRCK" direction="output" width="1"></port>
+      <port name="RESET" direction="output" width="1"></port>
+      <port name="RUNTEST" direction="output" width="1"></port>
+      <port name="SEL" direction="output" width="1"></port>
+      <port name="SHIFT" direction="output" width="1"></port>
+      <port name="TCK" direction="output" width="1"></port>
+      <port name="TDI" direction="output" width="1"></port>
+      <port name="TMS" direction="output" width="1"></port>
+      <port name="UPDATE" direction="output" width="1"></port>
+      <port name="TDO" direction="input" width="1"></port>
+    </primitive>
+  </category>
+
+
   <category name="Spartan 6 Primitives">
 
     <!-- ODDR2 -->

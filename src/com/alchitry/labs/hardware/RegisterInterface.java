@@ -1,9 +1,12 @@
 package com.alchitry.labs.hardware;
 
+import java.util.List;
+
 import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.hardware.usb.UsbSerial;
 import com.alchitry.labs.hardware.usb.UsbUtil;
+import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
 
 public class RegisterInterface {
 	private UsbSerial serialPort;
@@ -17,9 +20,13 @@ public class RegisterInterface {
 			return false;
 		return true;
 	}
-
+	
 	public boolean connect() {
-		serialPort = UsbUtil.openSerial();
+		return connect(UsbUtil.ALL_DEVICES);
+	}
+
+	public boolean connect(List<UsbDescriptor> devices) {
+		serialPort = UsbUtil.openSerial(devices);
 		if (serialPort == null)
 			return false;
 		serialPort.setBaudrate(1000000);

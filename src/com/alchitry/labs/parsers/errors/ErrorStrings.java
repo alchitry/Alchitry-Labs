@@ -180,4 +180,6 @@ public class ErrorStrings {
 	
 	public static final String VALUE_BIGGER_THAN_INT = "The value %s can't fit into 32bits";
 	
+	public static final String STRUCT_CONST_MISSING_VALUE = "The member \"%s\" was not assigned";
+	
 }

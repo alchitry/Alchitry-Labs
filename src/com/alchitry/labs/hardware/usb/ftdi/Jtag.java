@@ -1,5 +1,6 @@
 package com.alchitry.labs.hardware.usb.ftdi;
 
+import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.usb.ftdi.JtagState.Transistions;
 import com.alchitry.labs.hardware.usb.ftdi.enums.MpsseCommand;
 
@@ -29,7 +30,6 @@ public class Jtag extends Mpsse {
 		ftdi.writeData(new byte[] { MpsseCommand.LOOPBACK_DIS.getCommand() });
 	}
 
-
 	public void resetState() {
 		currentState = JtagState.CAPTURE_DR;
 		navitageToState(JtagState.TEST_LOGIC_RESET);
@@ -49,7 +49,9 @@ public class Jtag extends Mpsse {
 		currentState = state;
 	}
 
-	public void shiftData(int bitCount, byte[] tdi, byte[] tdo, byte[] mask) {
+	public void shiftData(int bitCount, byte[] tdi, byte[] tdo) {
+		if (bitCount == 0)
+			return;
 		switch (currentState) {
 		case SHIFT_DR:
 		case SHIFT_IR:
@@ -60,15 +62,13 @@ public class Jtag extends Mpsse {
 
 		int reqBytes = bitCount / 8 + ((bitCount % 8 > 0) ? 1 : 0);
 		boolean read = tdo != null;
-		byte[] tdoBuffer = null;
 		if (read) {
-			tdoBuffer = new byte[tdo.length];
-			ftdi.readData(tdoBuffer);
+			ftdi.readData(tdo);
 		}
 		int tdoBytes = 0;
 
-		if (read && (tdo.length != tdi.length || mask.length != tdi.length))
-			throw new MpsseException("tdo or mask lengths do not match tdi lenght");
+		if (read && (tdo.length != tdi.length))
+			throw new MpsseException("tdo length do not match tdi length");
 
 		if (bitCount < 9) {
 			if (bitCount > 1)
@@ -77,9 +77,9 @@ public class Jtag extends Mpsse {
 			ftdi.writeData(new byte[] { (byte) (read ? 0x6E : 0x4B), 0x00, (byte) (0x03 | (lastBit << 7)) });
 
 			if (read) {
-				byte[] inputBuffer = new byte[2];
+				byte[] inputBuffer = new byte[bitCount > 1 ? 2 : 1];
 				ftdi.readDataWithTimeout(inputBuffer);
-				tdoBuffer[0] = (byte) (inputBuffer[1] >>> (8 - bitCount));
+				tdo[0] = (byte) (inputBuffer[inputBuffer.length - 1] >>> (8 - bitCount));
 				tdoBytes = 1;
 			}
 		} else {
@@ -104,7 +104,7 @@ public class Jtag extends Mpsse {
 				if (read) {
 					byte[] readBuffer = new byte[bct];
 					ftdi.readDataWithTimeout(readBuffer);
-					System.arraycopy(readBuffer, 0, tdoBuffer, tdoBytes, bct);
+					System.arraycopy(readBuffer, 0, tdo, tdoBytes, bct);
 					tdoBytes += bct;
 				}
 			}
@@ -122,18 +122,13 @@ public class Jtag extends Mpsse {
 				int bytesToRead = (fullBytes * 8 + 1 != bitCount) ? 2 : 1;
 				byte[] readBuffer = new byte[bytesToRead];
 				ftdi.readDataWithTimeout(readBuffer);
-				tdoBuffer[tdoBytes] = (byte) ((readBuffer[1] >>> (8 - (partialBits - 1))) | (readBuffer[0] >>> (7 - (partialBits - 1))));
+				if (bytesToRead == 2)
+					tdo[tdoBytes] = (byte) (readBuffer[1] >>> (8 - (partialBits + 1)));
+				else
+					tdo[tdoBytes] = (byte) (readBuffer[0] >>> (8 - partialBits));
 			}
 		}
 
-		if (read) {
-			for (int i = 0; i < tdo.length; i++)
-				if ((tdoBuffer[tdoBuffer.length - 1 - i] & mask[i]) != (tdo[i] & mask[i])) {
-					throw new MpsseException(
-							String.format("TDO didn't match. Got %02X expected %02X with mask %02X at byte %d", tdoBuffer[tdoBuffer.length - 1 - i], tdo[i], mask[i], i));
-				}
-
-		}
 		switch (currentState) {
 		case SHIFT_DR:
 			currentState = JtagState.EXIT1_DR;
@@ -146,6 +141,28 @@ public class Jtag extends Mpsse {
 		}
 	}
 
+	public void shiftDataWithCheck(int bitCount, byte[] tdi, byte[] tdo, byte[] mask) {
+		boolean read = tdo != null;
+		byte[] tdoBuffer = null;
+		if (read)
+			tdoBuffer = new byte[tdo.length];
+
+		if (read && mask.length != tdi.length)
+			throw new MpsseException("mask length does not match tdi length");
+
+		shiftData(bitCount, tdi, tdoBuffer);
+
+		if (read) {
+			for (int i = 0; i < tdo.length; i++)
+				if ((tdoBuffer[tdoBuffer.length - 1 - i] & mask[i]) != (tdo[i] & mask[i])) {
+					throw new MpsseException(
+							String.format("TDO didn't match. Got %02X expected %02X with mask %02X at byte %d", tdoBuffer[tdoBuffer.length - 1 - i], tdo[i], mask[i], i));
+				}
+
+		}
+
+	}
+
 	public void sendClocks(long cycles) {
 		if (cycles / 8 > 65536) {
 			sendClocks(cycles - 65536 * 8);
@@ -153,6 +170,58 @@ public class Jtag extends Mpsse {
 		}
 		cycles /= 8;
 		ftdi.writeData(new byte[] { MpsseCommand.CLK_N8.getCommand(), (byte) ((cycles - 1) & 0xff), (byte) ((cycles - 1 >> 8) & 0xff) });
+	}
+
+	public void shiftDRWithCheck(int bits, String write, String read, String mask) {
+		byte[] bWrite, bRead = null, bMask = null;
+		bWrite = Util.stringToByte(write);
+		if (read != null)
+			bRead = Util.stringToByte(read);
+		if (mask != null)
+			bMask = Util.stringToByte(mask);
+		shiftDRWithCheck(bits, bWrite, bRead, bMask);
+	}
+
+	public void shiftDRWithCheck(int bits, byte[] write, byte[] read, byte[] mask) {
+		navitageToState(JtagState.SHIFT_DR);
+		shiftDataWithCheck(bits, write, read, mask);
+		navitageToState(JtagState.RUN_TEST_IDLE);
+	}
+
+	public void shiftIRWithCheck(int bits, String write, String read, String mask) {
+		byte[] bWrite, bRead = null, bMask = null;
+		bWrite = Util.stringToByte(write);
+		if (read != null)
+			bRead = Util.stringToByte(read);
+		if (mask != null)
+			bMask = Util.stringToByte(mask);
+		shiftIRWithCheck(bits, bWrite, bRead, bMask);
+	}
+
+	public void shiftIRWithCheck(int bits, byte[] write, byte[] read, byte[] mask) {
+		navitageToState(JtagState.SHIFT_IR);
+		shiftDataWithCheck(bits, write, read, mask);
+		navitageToState(JtagState.RUN_TEST_IDLE);
+	}
+
+	public void shiftIR(int bits, byte[] write) {
+		shiftIR(bits, write, null);
+	}
+
+	public void shiftIR(int bits, byte[] write, byte[] read) {
+		navitageToState(JtagState.SHIFT_IR);
+		shiftData(bits, write, read);
+		navitageToState(JtagState.RUN_TEST_IDLE);
+	}
+
+	public void shiftDR(int bits, byte[] write) {
+		shiftDR(bits, write, null);
+	}
+
+	public void shiftDR(int bits, byte[] write, byte[] read) {
+		navitageToState(JtagState.SHIFT_DR);
+		shiftData(bits, write, read);
+		navitageToState(JtagState.RUN_TEST_IDLE);
 	}
 
 }

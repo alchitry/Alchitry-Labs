@@ -22,13 +22,15 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Images;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.hardware.LogicCapture;
+import com.alchitry.labs.hardware.boards.Board;
+import com.alchitry.labs.hardware.debuggers.AuDebugger;
+import com.alchitry.labs.hardware.debuggers.Debugger;
+import com.alchitry.labs.hardware.debuggers.MojoDebugger;
 import com.alchitry.labs.parsers.BitValue;
 import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.ProjectSignal;
@@ -239,41 +241,38 @@ public class Waves extends Canvas {
 				@Override
 				public void run() {
 					debugInfo = MainWindow.getOpenProject().getDebugInfo();
-					LogicCapture lc = new LogicCapture();
+					Debugger lc = null;
+					Board board = MainWindow.getOpenProject().getBoard();
+					if (board.isType(Board.MOJO))
+						lc = new MojoDebugger();
+					else if (board.isType(Board.AU))
+						lc = new AuDebugger();
 					try {
-						if (lc.connect()) {
-							if (!lc.updateDeviceInfo()) {
-								Util.showError("Failed to get wave capture information!");
-								return;
-							}
+						lc.init();
+						lc.updateDeviceInfo();
 
-							if (debugInfo != null && lc.getNonce() != debugInfo.getNonce()) {
-								Util.println("Project debug nonce doesn't match loaded project! Expected " + debugInfo.getNonce() + " got " + lc.getNonce(), true);
-								debugInfo = null;
-							}
+						if (debugInfo != null && lc.getNonce() != debugInfo.getNonce()) {
+							Util.println("Project debug nonce doesn't match loaded project! Expected " + debugInfo.getNonce() + " got " + lc.getNonce(), true);
+							debugInfo = null;
+						}
 
-							version = lc.getVersion();
-							synchronized (signals) {
-								signals.clear();
-								if (debugInfo == null)
-									for (int i = 0; i < lc.getWidth(); i++) {
-										signals.add(new WaveSignal(getSignalAtBit(i), 1, false));
-									}
-								else
-									for (int i = debugInfo.getSignals().size() - 1; i >= 0; i--) {
-										ProjectSignal ps = debugInfo.getSignals().get(i);
-										signals.add(new WaveSignal(ps.getName(), ps.getTotalWidth(), ps.isSigned()));
-									}
-							}
-
-						} else {
-
-							Util.showError("Failed to connect to Mojo!");
+						version = lc.getVersion();
+						synchronized (signals) {
+							signals.clear();
+							if (debugInfo == null)
+								for (int i = 0; i < lc.getWidth(); i++) {
+									signals.add(new WaveSignal(getSignalAtBit(i), 1, false));
+								}
+							else
+								for (int i = debugInfo.getSignals().size() - 1; i >= 0; i--) {
+									ProjectSignal ps = debugInfo.getSignals().get(i);
+									signals.add(new WaveSignal(ps.getName(), ps.getTotalWidth(), ps.isSigned()));
+								}
 						}
 					} catch (Exception e) {
-						throw e;
+						Util.showError(e.getMessage());
 					} finally {
-						lc.disconnect();
+						lc.close();
 					}
 				}
 			});
@@ -318,50 +317,48 @@ public class Waves extends Canvas {
 			captureThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					LogicCapture lc = new LogicCapture();
+					Debugger lc = null;
+					Board board = MainWindow.getOpenProject().getBoard();
+					if (board.isType(Board.MOJO))
+						lc = new MojoDebugger();
+					else if (board.isType(Board.AU))
+						lc = new AuDebugger();
+
 					try {
-						if (lc.connect()) {
-							if (!lc.updateDeviceInfo()) {
-								Util.showError("Failed to get wave capture information!");
-								return;
-							}
-							if (lc.getWidth() != getNumBits(signals)) {
-								Util.showError("The number of signals detected, " + lc.getWidth() + ", does not match the expected number, " + signals.size()
-										+ ". Try connecting to the Mojo and try again.");
-								return;
-							}
+						lc.init();
+						lc.updateDeviceInfo();
+						if (lc.getWidth() != getNumBits(signals)) {
+							Util.showError("The number of signals detected, " + lc.getWidth() + ", does not match the expected number, " + signals.size()
+									+ ". Try connecting to the Mojo and try again.");
+							return;
+						}
 
-							if (!lc.updateTriggers(signals)) {
-								Util.showError("Failed to update triggers!");
-								return;
-							}
-							byte[][] data = lc.capture(triggersActive(), armed);
-							if (data != null) {
-								synchronized (signals) {
-									for (WaveSignal sig : signals)
-										sig.clearValues();
-									for (int i = 0; i < data[0].length; i++) {
-										int bit = 0;
+						lc.updateTriggers(signals);
 
-										for (WaveSignal sig : signals) {
-											sig.addValue(getValue(data, i, bit, sig.getWidth(), sig.isSigned()));
-											bit += sig.getWidth();
-										}
+						byte[][] data = lc.capture(triggersActive(), armed);
+						if (data != null) {
+							synchronized (signals) {
+								for (WaveSignal sig : signals)
+									sig.clearValues();
+								for (int i = 0; i < data[0].length; i++) {
+									int bit = 0;
+
+									for (WaveSignal sig : signals) {
+										sig.addValue(getValue(data, i, bit, sig.getWidth(), sig.isSigned()));
+										bit += sig.getWidth();
 									}
 								}
-								if (firstCapture) {
-									zoom = 50;
-									firstCapture = false;
-								}
 							}
-
-						} else {
-							Util.showError("Failed to connect to Mojo!");
+							if (firstCapture) {
+								zoom = 50;
+								firstCapture = false;
+							}
 						}
-					} catch (LibUsbException e1) {
+
+					} catch (Exception e1) {
 						Util.showError(e1.getMessage());
 					} finally {
-						lc.disconnect();
+						lc.close();
 					}
 					armed.set(false);
 					getDisplay().asyncExec(new Runnable() {

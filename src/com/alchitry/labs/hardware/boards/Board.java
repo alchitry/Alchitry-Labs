@@ -21,8 +21,8 @@ public abstract class Board {
 	public final static ArrayList<Board> boards = new ArrayList<>();
 
 	static {
-		boards.add(new AlchitryCu());
 		boards.add(new AlchitryAu());
+		boards.add(new AlchitryCu());
 		boards.add(new Mojo());
 		constraintExtensions = new HashSet<>();
 		for (Board b : boards)

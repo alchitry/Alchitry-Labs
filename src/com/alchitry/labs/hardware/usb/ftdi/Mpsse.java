@@ -57,7 +57,7 @@ public abstract class Mpsse {
 		return false;
 	}
 	
-	protected void setFreq(double freq) {
+	public void setFreq(double freq) {
 		int clockDivisor = (int) (30.0 / (freq / 1000000.0) - 1.0);
 		// set TCK = 60MHz /((1 + [(1 +0xValueH*256) OR 0xValueL])*2)
 		ftdi.writeData(new byte[] { MpsseCommand.SET_CLK_DIV.getCommand(), (byte) (clockDivisor & 0xff), (byte) ((clockDivisor >>> 8) & 0xff) });

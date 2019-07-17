@@ -38,8 +38,7 @@ public abstract class ProjectBuilder {
 	protected Project project;
 	protected File workFolder;
 	protected Process builder;
-	protected ArrayList<ProjectSignal> debugSignals;
-	protected int samples;
+	protected DebugInfo debugInfo;
 	protected List<File> debugSource;
 
 	protected abstract void projectBuilder() throws Exception;
@@ -84,32 +83,33 @@ public abstract class ProjectBuilder {
 
 				final InstModule ftop = project.getLucidSourceTree();
 				top = ftop;
-				boolean hasRegInt = false;
-				boolean hasDebugRegInt = false;
-				for (InstModule im : ftop.getChildren()) {
-					if (im.getType().getName().equals("reg_interface"))
-						hasRegInt = true;
-					else if (im.getType().getName().equals("reg_interface_debug"))
-						hasDebugRegInt = true;
-				}
-				if (hasDebugRegInt) {
-					Util.showError("Your project can't contain the reg_interface_debug module!");
-					return;
-				}
-				if (!hasRegInt) {
-					Util.showError("Your project must contain the reg_interface module in mojo_top!");
-					return;
+				if (project.getBoard().isType(Board.MOJO)) {
+					boolean hasRegInt = false;
+					boolean hasDebugRegInt = false;
+					for (InstModule im : ftop.getChildren()) {
+						if (im.getType().getName().equals("reg_interface"))
+							hasRegInt = true;
+						else if (im.getType().getName().equals("reg_interface_debug"))
+							hasDebugRegInt = true;
+					}
+					if (hasDebugRegInt) {
+						Util.showError("Your project can't contain the reg_interface_debug module!");
+						return;
+					}
+					if (!hasRegInt) {
+						Util.showError("Your project must contain the reg_interface module in mojo_top!");
+						return;
+					}
 				}
 				Util.syncExec(new Runnable() {
 					@Override
 					public void run() {
 						SignalSelectionDialog dialog = new SignalSelectionDialog(MainWindow.mainWindow.getShell());
-						debugSignals = dialog.open(ftop);
-						samples = dialog.getSamples();
+						debugInfo = dialog.open(ftop);
 					}
 				});
 
-				if (debugSignals == null)
+				if (debugInfo == null)
 					return;
 			}
 
@@ -147,14 +147,14 @@ public abstract class ProjectBuilder {
 				if ((debugSource = createDebugFiles(debugDir, top)) == null)
 					return;
 			} else {
-				debugSignals = null;
+				debugInfo = null;
 				debugSource = null;
 			}
 
 			projectBuilder();
 
 		} catch (Exception e) {
-			Util.logException(e,"Exception with project builder!");
+			Util.logException(e, "Exception with project builder!");
 		} finally {
 			Util.setConsoleLogger(null);
 			if (logWriter != null)
@@ -170,7 +170,7 @@ public abstract class ProjectBuilder {
 	private File getVerilogFile(File file, File srcFolder, List<Module> modules, InstModule im, List<InstModule> list) throws IOException {
 		File vName;
 		if (im.getType().isNgc()) {
-			vName =  Util.assembleFile(srcFolder, file.getName());
+			vName = Util.assembleFile(srcFolder, file.getName());
 
 			if (!vName.exists() && !vName.createNewFile()) {
 				Util.showError("Error building the project", "Impossible error? File exists but doesn't!");
@@ -326,7 +326,10 @@ public abstract class ProjectBuilder {
 		List<Module> modules = project.getModules(debugSource);
 		Module topModule = null;
 		for (Module m : modules) {
-			if (srcFolder != null && srcFolder.getName().endsWith("_0_debug.luc")) {
+			if (m.getFile() == null)
+				continue;
+			String fileName = m.getFile().getName();
+			if (fileName != null && fileName.endsWith("_0_debug.luc")) {
 				topModule = m;
 				break;
 			}
@@ -393,7 +396,7 @@ public abstract class ProjectBuilder {
 		HashSet<DebugFile> debugFiles = new HashSet<>();
 		List<File> debugSource = new ArrayList<>();
 		int index = 0;
-		for (ProjectSignal sig : debugSignals) {
+		for (ProjectSignal sig : debugInfo.getSignals()) {
 			StringBuilder sb = new StringBuilder();
 			boolean first = true;
 			for (InstModule im : sig.getPath()) {
@@ -406,14 +409,13 @@ public abstract class ProjectBuilder {
 					index++;
 			}
 		}
-		long nonce = (long) (Math.random() * 0xffffffffL);
 		for (DebugFile f : debugFiles) {
 			String origName = f.file.getName();
 			String newName = origName.substring(0, origName.length() - 4) + "_" + f.index + "_debug.luc"; // add index to name
 			File destFile = new File(debugDir.getPath() + File.separator + newName);
 			debugSource.add(destFile);
 
-			String modifiedFile = LucidDebugModifier.modifyForDebug(f.file, debugSignals, f.instModule, f.instModule == topModule, debugFiles, nonce, samples);
+			String modifiedFile = LucidDebugModifier.modifyForDebug(f.file, debugInfo, f.instModule, f.instModule == topModule, debugFiles);
 			try {
 				FileUtils.write(destFile, modifiedFile);
 			} catch (IOException e) {
@@ -423,7 +425,7 @@ public abstract class ProjectBuilder {
 			}
 		}
 
-		project.setDebugInfo(new DebugInfo(debugSignals, nonce));
+		project.setDebugInfo(debugInfo);
 
 		return debugSource;
 	}

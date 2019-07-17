@@ -1,16 +1,17 @@
-package com.alchitry.labs.hardware;
+package com.alchitry.labs.hardware.debuggers;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 
 import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.hardware.RegisterInterface;
+import com.alchitry.labs.hardware.usb.UsbUtil;
 import com.alchitry.labs.widgets.WaveSignal;
 import com.alchitry.labs.widgets.WaveSignal.TriggerType;
 
-public class LogicCapture extends RegisterInterface {
+public class MojoDebugger extends Debugger {
 	private static final int BASE_ADDR = 0xfffffff0;
 	private static final int STATUS_ADDR = BASE_ADDR;
 	private static final int DATA_ADDR = BASE_ADDR + 1;
@@ -20,54 +21,34 @@ public class LogicCapture extends RegisterInterface {
 	private static final int TRIGGER_ENABLE_ADDR = BASE_ADDR + 5;
 	private static final int NONCE_ADDR = BASE_ADDR + 14;
 	private static final int VERSION_ADDR = BASE_ADDR + 15;
-	private int captureWidth = -1;
-	private int captureDepth = -1;
-	private int version = -1;
-	private long nonce = -1;
+	
+	private RegisterInterface regInt;
 
-	public boolean updateDeviceInfo() {
-		if (!isConnected())
-			return false;
+	public void updateDeviceInfo() {
+		if (!regInt.isConnected())
+			throw new RuntimeException("device must be connected before updating info");
 
 		try {
-			captureWidth = read(WIDTH_ADDR);
-			captureDepth = read(DEPTH_ADDR);
-			version = read(VERSION_ADDR);
+			captureWidth = regInt.read(WIDTH_ADDR);
+			captureDepth = regInt.read(DEPTH_ADDR);
+			version = regInt.read(VERSION_ADDR);
 			if (version == 2)
-				nonce = (long) read(NONCE_ADDR) & 0xffffffffL;
+				nonce = (long) regInt.read(NONCE_ADDR) & 0xffffffffL;
 		} catch (LibUsbException e) {
-			Util.log.log(Level.SEVERE, "Failed to connect", e);
-			return false;
+			Util.logException(e, "Failed to connect");
 		}
-		return true;
-	}
-
-	public long getNonce() {
-		return nonce;
-	}
-
-	public int getWidth() {
-		return captureWidth;
-	}
-
-	public int getDepth() {
-		return captureDepth;
-	}
-
-	public int getVersion() {
-		return version;
 	}
 
 	public byte[][] capture(boolean withTriggers, AtomicBoolean armed) {
-		if (!updateDeviceInfo())
-			return null;
+		updateDeviceInfo();
+
 		byte[][] dataArray = new byte[captureWidth][captureDepth];
 
 		// ARM
-		write(STATUS_ADDR, withTriggers ? 0x01 : 0x02);
+		regInt.write(STATUS_ADDR, withTriggers ? 0x01 : 0x02);
 
 		// Wait for captured
-		while ((read(STATUS_ADDR) & (1 << 2)) == 0)
+		while ((regInt.read(STATUS_ADDR) & (1 << 2)) == 0)
 			if (!armed.get())
 				return null;
 
@@ -75,39 +56,28 @@ public class LogicCapture extends RegisterInterface {
 			long data = 0;
 			for (int j = 0; j < captureWidth; j++) {
 				if (j % 32 == 0)
-					data = read(DATA_ADDR);
+					data = regInt.read(DATA_ADDR);
 				dataArray[j][i] = (byte) ((data >> j % 32) & 1);
-			}
+			}	
 		}
 
 		return dataArray;
 	}
-	
-	private int getNumBits(List<WaveSignal> signals){
-		int bits = 0;
-		for (WaveSignal s : signals)
-			bits += s.getWidth();
-		return bits;
-	}
 
-	public boolean updateTriggers(List<WaveSignal> signals) {
-		if (!isConnected()) {
-			Util.log.log(Level.WARNING, "Failed to connect to Mojo!");
-			return false;
+	public void updateTriggers(List<WaveSignal> signals) {
+		if (!regInt.isConnected()) {
+			Util.println("Failed to connect to Mojo!", true);
+			return;
 		}
-		if (!updateDeviceInfo()) {
-			Util.log.log(Level.WARNING, "Failed to update capture width and depth info!");
-			return false;
-		}
+		updateDeviceInfo();
 		if (getNumBits(signals) != captureWidth) {
-			Util.log.log(Level.WARNING, "Signals provided do not match expected width!");
-			return false;
+			Util.println("Signals provided do not match expected width!", true);
 		}
 
 		int i = 0;
 		for (WaveSignal sig : signals) {
 			for (int bit = 0; bit < sig.getWidth(); bit++) {
-				write(TRIGGER_INDEX_ADDR, i);
+				regInt.write(TRIGGER_INDEX_ADDR, i);
 				int triggerValue = 0;
 				for (TriggerType trig : sig.getTriggers(bit)) {
 					switch (trig) {
@@ -124,11 +94,24 @@ public class LogicCapture extends RegisterInterface {
 						triggerValue |= 1 << 3;
 					}
 				}
-				write(TRIGGER_ENABLE_ADDR, triggerValue);
+				regInt.write(TRIGGER_ENABLE_ADDR, triggerValue);
 				i++;
 			}
 		}
+	}
 
-		return true;
+	@Override
+	public void init() {
+		if (regInt != null)
+			throw new RuntimeException("init has already been called");
+		regInt = new RegisterInterface();
+		if (!regInt.connect(UsbUtil.MOJO_DEVICES))
+			throw new RuntimeException("Failed to connect to device");
+	}
+
+	@Override
+	public void close() {
+		if (!regInt.disconnect())
+			throw new RuntimeException("Failed to disconnect from device");
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.usb4java.Device;
 import org.usb4java.LibUsb;
+import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.DeviceSelector.DeviceSelectorRunnable;
@@ -19,8 +20,11 @@ public class UsbUtil {
 	public static UsbDescriptor MOJO_DESC = new Mojo().getUsbDesciptor();
 	public static UsbDescriptor AU_DESC = new AlchitryAu().getUsbDesciptor();
 	public static UsbDescriptor CU_DESC = new AlchitryCu().getUsbDesciptor();
-	public static List<UsbDescriptor> ALL_DEVICES = Arrays
-			.asList(new UsbDescriptor[] { MOJO_DESC, AU_DESC, CU_DESC });
+	public static List<UsbDescriptor> ALL_DEVICES = Arrays.asList(new UsbDescriptor[] { MOJO_DESC, AU_DESC, CU_DESC });
+	public static List<UsbDescriptor> MOJO_DEVICES = Arrays.asList(new UsbDescriptor[] { MOJO_DESC });
+	public static List<UsbDescriptor> ALCHITRY_DEVICES = Arrays.asList(new UsbDescriptor[] { AU_DESC, CU_DESC });
+	public static List<UsbDescriptor> AU_DEVICES = Arrays.asList(new UsbDescriptor[] { AU_DESC });
+	public static List<UsbDescriptor> CU_DEVICES = Arrays.asList(new UsbDescriptor[] { CU_DESC });
 
 	public static class UsbDescriptor {
 		public short vid;
@@ -34,12 +38,6 @@ public class UsbUtil {
 			this.name = name;
 			this.product = product;
 		}
-	}
-
-	public static DeviceEntry getDevice(UsbDescriptor board) {
-		List<UsbDescriptor> list = new ArrayList<>();
-		list.add(board);
-		return getDevice(list);
 	}
 
 	public static DeviceEntry getDevice(List<UsbDescriptor> boards) {
@@ -86,45 +84,54 @@ public class UsbUtil {
 		return null;
 	}
 
-	public static Ftdi openFtdiDevice(PortInterfaceType iface, UsbDescriptor board) {
-		Ftdi ftdi = new Ftdi();
-		ftdi.setInterface(iface);
-		DeviceEntry dev = getDevice(board);
-		if (dev == null) {
+	public static Ftdi openFtdiDevice(PortInterfaceType iface, List<UsbDescriptor> board) {
+		try {
+			Ftdi ftdi = new Ftdi();
+			ftdi.setInterface(iface);
+			DeviceEntry dev = getDevice(board);
+			if (dev == null) {
+				return null;
+			}
+			ftdi.usbOpenDev(dev.device);
+			LibUsb.unrefDevice(dev.device);
+
+			return ftdi;
+		} catch (LibUsbException e) {
+			Util.logException(e);
 			return null;
 		}
-		ftdi.usbOpenDev(dev.device);
-		LibUsb.unrefDevice(dev.device);
-
-		return ftdi;
 	}
 
 	public static MojoSerial openMojoSerial() {
-		MojoSerial mojo = new MojoSerial();
-		DeviceEntry dev = getDevice(new Mojo().getUsbDesciptor());
-		if (dev == null) {
+		UsbSerial ser = openSerial(MOJO_DEVICES);
+		if (ser == null)
 			return null;
-		}
-		mojo.usbOpenDev(dev.device);
-		LibUsb.unrefDevice(dev.device);
-
-		return mojo;
+		return (MojoSerial) ser;
 	}
 
 	public static UsbSerial openSerial() {
-		DeviceEntry dev = getDevice(ALL_DEVICES);
-		if (dev == null)
+		return openSerial(ALL_DEVICES);
+	}
+
+	public static UsbSerial openSerial(List<UsbDescriptor> devices) {
+		try {
+			DeviceEntry dev = getDevice(devices);
+			if (dev == null)
+				return null;
+			UsbSerial device = null;
+			if (dev.description == MOJO_DESC) {
+				device = new MojoSerial();
+			} else {
+				device = new Ftdi();
+				((Ftdi) device).setInterface(PortInterfaceType.INTERFACE_B);
+			}
+			device.usbOpenDev(dev.device);
+			LibUsb.unrefDevice(dev.device);
+			return device;
+		} catch (LibUsbException e) {
+			Util.logException(e);
 			return null;
-		UsbSerial device = null;
-		if (dev.description == MOJO_DESC) {
-			device = new MojoSerial();
-		} else {
-			device = new Ftdi();
-			((Ftdi)device).setInterface(PortInterfaceType.INTERFACE_B);
 		}
-		device.usbOpenDev(dev.device);
-		LibUsb.unrefDevice(dev.device);
-		return device;
 	}
 
 }

@@ -11,6 +11,8 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.TokenStreamRewriter;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
+import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.ProjectSignal;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
@@ -18,6 +20,7 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.ModuleContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Module_instContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Port_listContext;
 import com.alchitry.labs.parsers.tools.verilog.VerilogConstExprParser;
+import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.project.builders.ProjectBuilder.DebugFile;
 import com.alchitry.labs.tools.ParserCache;
 
@@ -26,12 +29,11 @@ public class LucidDebugModifier {
 	private LucidDebugModifier() {
 	}
 
-	public static String modifyForDebug(File file, List<ProjectSignal> debugSignals, InstModule thisModule, boolean isTop, Collection<DebugFile> debugFiles, long nonce,
-			int samples) {
+	public static String modifyForDebug(File file, DebugInfo debugInfo, InstModule thisModule, boolean isTop, Collection<DebugFile> debugFiles) {
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		CommonTokenStream tokens = ParserCache.getTokens(file);
 		VerilogConstExprParser cep = new VerilogConstExprParser(thisModule);
-		DebugWalker mrw = new DebugWalker(thisModule, debugSignals, tokens, isTop, debugFiles, nonce, samples);
+		DebugWalker mrw = new DebugWalker(thisModule, debugInfo, tokens, isTop, debugFiles);
 		listeners.add(mrw);
 		listeners.add(cep);
 
@@ -41,21 +43,18 @@ public class LucidDebugModifier {
 
 	private static class DebugWalker extends LucidBaseListener {
 		private InstModule thisModule;
-		private List<ProjectSignal> debugSignals;
+		private DebugInfo debugInfo;
 		private TokenStreamRewriter rewriter;
 		private boolean isTop;
 		private Collection<DebugFile> debugFiles;
-		private long nonce;
-		private int samples;
+		private Board board;
 
-		public DebugWalker(InstModule thisModule, List<ProjectSignal> debugSignals, TokenStream tokens, boolean isTop, Collection<DebugFile> debugFiles, long nonce,
-				int samples) {
+		public DebugWalker(InstModule thisModule, DebugInfo debugInfo, TokenStream tokens, boolean isTop, Collection<DebugFile> debugFiles) {
 			this.thisModule = thisModule;
-			this.debugSignals = debugSignals;
+			this.debugInfo = debugInfo;
 			this.isTop = isTop;
 			this.debugFiles = debugFiles;
-			this.nonce = nonce;
-			this.samples = samples;
+			board = MainWindow.getOpenProject().getBoard();
 			rewriter = new TokenStreamRewriter(tokens);
 		}
 
@@ -65,7 +64,7 @@ public class LucidDebugModifier {
 
 		private int getTotalDebugWidth(InstModule module) {
 			int width = 0;
-			for (ProjectSignal s : debugSignals) {
+			for (ProjectSignal s : debugInfo.getSignals()) {
 				if (s.getPath().contains(module)) {
 					width += s.getTotalWidth();
 				}
@@ -87,7 +86,7 @@ public class LucidDebugModifier {
 		}
 
 		private InstModule hasChildInstModule(String name) {
-			for (ProjectSignal s : debugSignals) {
+			for (ProjectSignal s : debugInfo.getSignals()) {
 				int index = s.getPath().indexOf(thisModule);
 				if (index >= 0 && index < s.getPath().size() - 1) {
 					InstModule child = s.getPath().get(index + 1);
@@ -105,7 +104,7 @@ public class LucidDebugModifier {
 			if (child != null)
 				rewriter.insertAfter(ctx.name(0).getStop(), "_" + getIndex(child) + "_debug");
 
-			if (isTop) {
+			if (isTop && board.isType(Board.MOJO)) {
 				InstModule regInterfaceMod = null;
 				for (InstModule im : thisModule.getChildren())
 					if (im.getType().getName().equals("reg_interface")) {
@@ -120,9 +119,9 @@ public class LucidDebugModifier {
 					} else if (ctx.inst_cons().con_list().connection().size() > 0) {
 						sb.append(",");
 					}
-					sb.append("#NONCE(").append(nonce).append("), ");
+					sb.append("#NONCE(").append(debugInfo.getNonce()).append("), ");
 					sb.append("#DATA_WIDTH(").append(getTotalDebugWidth(thisModule));
-					sb.append("), #CAPTURE_DEPTH(").append(samples).append(")");
+					sb.append("), #CAPTURE_DEPTH(").append(debugInfo.getSamples()).append(")");
 					if (ctx.inst_cons() == null) {
 						sb.append(")");
 						rewriter.insertAfter(ctx.getStop(), sb.toString());
@@ -139,23 +138,35 @@ public class LucidDebugModifier {
 				rewriter.insertAfter(ctx.name().getStop(), "_" + getIndex(thisModule) + "_debug");
 
 			StringBuilder sb = new StringBuilder();
+
+			if (isTop && board.isType(Board.AU)) {
+				sb.append("au_debugger debugger (#NONCE(").append(debugInfo.getNonce()).append("), ");
+				sb.append("#DATA_WIDTH(").append(getTotalDebugWidth(thisModule));
+				sb.append("), #CAPTURE_DEPTH(").append(debugInfo.getSamples()).append("), ");
+				sb.append(".clk(").append(debugInfo.getClock().getName()).append("));");
+			}
+
 			sb.append("always ");
 			if (isTop) {
-				InstModule regInterfaceMod = null;
-				for (InstModule im : thisModule.getChildren())
-					if (im.getType().getName().equals("reg_interface")) {
-						regInterfaceMod = im;
-						break;
-					}
-				sb.append(regInterfaceMod.getName());
-				sb.append(".debug");
+				if (board.isType(Board.MOJO)) {
+					InstModule regInterfaceMod = null;
+					for (InstModule im : thisModule.getChildren())
+						if (im.getType().getName().equals("reg_interface")) {
+							regInterfaceMod = im;
+							break;
+						}
+					sb.append(regInterfaceMod.getName());
+					sb.append(".debug");
+				} else {
+					sb.append("debugger.data");
+				}
 			} else {
 				sb.append("debug__");
 			}
 			sb.append(" = c{");
 			boolean first = true;
 			HashSet<InstModule> includedMods = new HashSet<>();
-			for (ProjectSignal s : debugSignals) {
+			for (ProjectSignal s : debugInfo.getSignals()) {
 				if (s.getPath().contains(thisModule)) {
 					boolean isSig = s.getPath().get(s.getPath().size() - 1) == thisModule;
 

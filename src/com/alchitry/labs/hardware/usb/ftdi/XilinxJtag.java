@@ -23,7 +23,7 @@ public class XilinxJtag {
 		LOADER_FILE = loaderBin;
 	}
 
-	private enum Instruction {
+	public enum Instruction {
 		EXTEST((byte) 0x26), EXTEST_PULSE((byte) 0x3C), EXTEST_TRAIN((byte) 0x3D), SAMPLE((byte) 0x01), USER1((byte) 0x02), USER2((byte) 0x03), USER3((byte) 0x22), USER4(
 				(byte) 0x23), CFG_OUT((byte) 0x04), CFG_IN((byte) 0x05), USERCODE((byte) 0x08), IDCODE((byte) 0x09), HIGHZ_IO((byte) 0x0A), JPROGRAM((byte) 0x0B), JSTART(
 						(byte) 0x0C), JSHUTDOWN((byte) 0x0D), XADC_DRP((byte) 0x37), ISC_ENABLE((byte) 0x10), ISC_PROGRAM((byte) 0x11), XSC_PROGRAM_KEY(
@@ -50,48 +50,14 @@ public class XilinxJtag {
 		jtag.resetState();
 	}
 
-	private void setIR(Instruction inst) {
-		jtag.navitageToState(JtagState.SHIFT_IR);
-		jtag.shiftData(6, new byte[] { inst.getCode() }, null, null);
-		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
-	}
-
-	private void shiftDR(int bits, String write, String read, String mask) {
-		byte[] bWrite, bRead = null, bMask = null;
-		bWrite = Util.stringToByte(write);
-		if (read != null)
-			bRead = Util.stringToByte(read);
-		if (mask != null)
-			bMask = Util.stringToByte(mask);
-		shiftDR(bits, bWrite, bRead, bMask);
-	}
-
-	private void shiftDR(int bits, byte[] write, byte[] read, byte[] mask) {
-		jtag.navitageToState(JtagState.SHIFT_DR);
-		jtag.shiftData(bits, write, read, mask);
-		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
-	}
-
-	private void shiftIR(int bits, String write, String read, String mask) {
-		byte[] bWrite, bRead = null, bMask = null;
-		bWrite = Util.stringToByte(write);
-		if (read != null)
-			bRead = Util.stringToByte(read);
-		if (mask != null)
-			bMask = Util.stringToByte(mask);
-		shiftIR(bits, bWrite, bRead, bMask);
-	}
-
-	private void shiftIR(int bits, byte[] write, byte[] read, byte[] mask) {
-		jtag.navitageToState(JtagState.SHIFT_IR);
-		jtag.shiftData(bits, write, read, mask);
-		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
+	public void setIR(Instruction inst) {
+		jtag.shiftIR(6, new byte[] { inst.getCode() });
 	}
 
 	public void checkIDCODE() {
 		ftdi.usbPurgeBuffers();
 		setIR(Instruction.IDCODE);
-		shiftDR(32, "00000000", "0362D093", "0FFFFFFF");
+		jtag.shiftDRWithCheck(32, "00000000", "0362D093", "0FFFFFFF");
 	}
 
 	private byte reverse(byte b) {
@@ -119,11 +85,11 @@ public class XilinxJtag {
 
 		// config/jprog/poll
 		jtag.sendClocks(10000);
-		shiftIR(6, "14", "11", "31");
+		jtag.shiftIRWithCheck(6, "14", "11", "31");
 
 		// config/slr
 		setIR(Instruction.CFG_IN);
-		shiftDR(binData.length * 8, binData, null, null);
+		jtag.shiftDR(binData.length * 8, binData);
 
 		// config/start
 		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
@@ -131,17 +97,17 @@ public class XilinxJtag {
 		setIR(Instruction.JSTART);
 		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
 		jtag.sendClocks(100);
-		shiftIR(6, "09", "31", "11");
+		jtag.shiftIRWithCheck(6, "09", "31", "11");
 		jtag.navitageToState(JtagState.TEST_LOGIC_RESET);
 	}
-	
+
 	private void erase() throws IOException {
 		Util.println("Loading bridge configuration...");
 		loadBin(LOADER_FILE);
 		Util.println("Erasing...");
 		jtag.setFreq(1500000);
 		setIR(Instruction.USER1);
-		shiftDR(1, new byte[] {0}, null, null);
+		jtag.shiftDR(1, new byte[] { 0 });
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
@@ -153,7 +119,7 @@ public class XilinxJtag {
 		erase();
 		setIR(Instruction.JPROGRAM); // reset the FPGA
 		jtag.resetState();
-		Util.println("Done.",Theme.successTextColor);
+		Util.println("Done.", Theme.successTextColor);
 	}
 
 	public void writeBin(String binFile, boolean flash) throws IOException {
@@ -162,7 +128,7 @@ public class XilinxJtag {
 			Util.println("Writing flash...");
 			setIR(Instruction.USER2);
 			byte[] binData = Files.readAllBytes(Paths.get(binFile));
-			shiftDR(binData.length*8, binData, null, null);
+			jtag.shiftDR(binData.length * 8, binData);
 			Util.println("Resetting FPGA...");
 			jtag.resetState();
 			try {
@@ -176,6 +142,6 @@ public class XilinxJtag {
 			loadBin(binFile);
 		}
 		jtag.resetState();
-		Util.println("Done.",Theme.successTextColor);
+		Util.println("Done.", Theme.successTextColor);
 	}
 }

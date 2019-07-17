@@ -198,6 +198,30 @@ public class LucidBaseListener implements LucidListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterStruct_member_const(LucidParser.Struct_member_constContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStruct_member_const(LucidParser.Struct_member_constContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterStruct_const(LucidParser.Struct_constContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitStruct_const(LucidParser.Struct_constContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterModule_body(LucidParser.Module_bodyContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -817,6 +841,18 @@ public class LucidBaseListener implements LucidListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprAndOr(LucidParser.ExprAndOrContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExprStruct(LucidParser.ExprStructContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExprStruct(LucidParser.ExprStructContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

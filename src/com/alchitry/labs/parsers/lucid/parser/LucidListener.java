@@ -160,6 +160,26 @@ public interface LucidListener extends ParseTreeListener {
 	 */
 	void exitStruct_type(LucidParser.Struct_typeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link LucidParser#struct_member_const}.
+	 * @param ctx the parse tree
+	 */
+	void enterStruct_member_const(LucidParser.Struct_member_constContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LucidParser#struct_member_const}.
+	 * @param ctx the parse tree
+	 */
+	void exitStruct_member_const(LucidParser.Struct_member_constContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LucidParser#struct_const}.
+	 * @param ctx the parse tree
+	 */
+	void enterStruct_const(LucidParser.Struct_constContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LucidParser#struct_const}.
+	 * @param ctx the parse tree
+	 */
+	void exitStruct_const(LucidParser.Struct_constContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link LucidParser#module_body}.
 	 * @param ctx the parse tree
 	 */
@@ -721,6 +741,18 @@ public interface LucidListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExprAndOr(LucidParser.ExprAndOrContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExprStruct}
+	 * labeled alternative in {@link LucidParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprStruct(LucidParser.ExprStructContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExprStruct}
+	 * labeled alternative in {@link LucidParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprStruct(LucidParser.ExprStructContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ExprArray}
 	 * labeled alternative in {@link LucidParser#expr}.

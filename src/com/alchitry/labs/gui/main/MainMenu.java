@@ -286,7 +286,7 @@ public class MainMenu {
 			}
 		});
 
-		if (Board.isType(board, Board.MOJO))
+		if (Board.isType(board, Board.MOJO | Board.AU))
 			createItem(subMenu, "Wave Capture", new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {

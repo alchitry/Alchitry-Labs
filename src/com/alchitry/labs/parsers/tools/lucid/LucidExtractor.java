@@ -1107,9 +1107,6 @@ public class LucidExtractor extends LucidBaseListener {
 				if (write)
 					errorListener.reportError(ctx, ErrorStrings.CONST_READ_ONLY);
 
-				if (ctx.name().size() > 1 && !ctx.name(1).getText().equals(Lucid.WIDTH_ATTR))
-					errorListener.reportError(ctx.name(0), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(0).getText(), ctx.name(1).getText()));
-
 				if (!Util.containsName(constants, ctx.name(0).getText()))
 					errorListener.reportError(ctx.name(0), ErrorStrings.UNDECLARED_CONST);
 				else {
@@ -1127,9 +1124,6 @@ public class LucidExtractor extends LucidBaseListener {
 
 				if (names.size() < 2)
 					errorListener.reportError(ctx.name(0), ErrorStrings.NAMESPACE_DIRECT);
-
-				if ((names.size() > 2 && !isWidth) || names.size() > 3)
-					errorListener.reportError(ctx.name(ctx.name().size() - 1), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(1).getText(), ctx.name(2).getText()));
 
 				if (consts == null)
 					errorListener.reportError(ctx.name(0), String.format(ErrorStrings.UNKNOWN_NAMESPACE, ctx.name(0).getText()));

@@ -63,6 +63,7 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNegateContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNumContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprShiftContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprSignalContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprStructContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprTernaryContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.For_statContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Fsm_decContext;
@@ -97,6 +98,7 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatModuleInstContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatSigContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatStructContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatVarContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_constContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Type_decContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_assignContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_decContext;
@@ -598,6 +600,16 @@ public class LucidToVerilog extends LucidBaseListener {
 	}
 
 	@Override
+	public void exitStruct_const(Struct_constContext ctx) {
+		ConstValue cv = getValue(ctx);
+
+		if (cv != null)
+			verilog.put(ctx, cv.toVerilog());
+		else
+			Util.println("Failed to get verilog value of struct constant \"" + ctx.getText() + "\"!", true);
+	}
+
+	@Override
 	public void exitExprNum(ExprNumContext ctx) {
 		ConstValue cv = getValue(ctx);
 
@@ -605,6 +617,16 @@ public class LucidToVerilog extends LucidBaseListener {
 			verilog.put(ctx, cv.toVerilog());
 		else
 			verilog.put(ctx, verilog.get(ctx.number()));
+	}
+
+	@Override
+	public void exitExprStruct(ExprStructContext ctx) {
+		ConstValue cv = getValue(ctx);
+
+		if (cv != null)
+			verilog.put(ctx, cv.toVerilog());
+		else
+			verilog.put(ctx, verilog.get(ctx.struct_const()));
 	}
 
 	@Override

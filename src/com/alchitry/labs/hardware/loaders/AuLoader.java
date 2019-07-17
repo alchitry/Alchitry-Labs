@@ -8,8 +8,8 @@ import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 import com.alchitry.labs.hardware.usb.ftdi.Ftdi;
-import com.alchitry.labs.hardware.usb.ftdi.XilinxJtag;
 import com.alchitry.labs.hardware.usb.ftdi.Mpsse.MpsseException;
+import com.alchitry.labs.hardware.usb.ftdi.XilinxJtag;
 import com.alchitry.labs.hardware.usb.ftdi.enums.PortInterfaceType;
 
 public class AuLoader extends ProjectLoader {
@@ -18,7 +18,7 @@ public class AuLoader extends ProjectLoader {
 	protected void eraseFlash() {
 		Ftdi ftdi = null;
 		try {
-			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.AU_DESC);
+			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.AU_DEVICES);
 			if (ftdi == null) 
 				return;
 			
@@ -47,7 +47,7 @@ public class AuLoader extends ProjectLoader {
 
 		Ftdi ftdi = null;
 		try {
-			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.AU_DESC);
+			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.AU_DEVICES);
 			if (ftdi == null) 
 				return;
 			

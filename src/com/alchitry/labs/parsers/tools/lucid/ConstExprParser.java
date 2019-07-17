@@ -47,13 +47,18 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNegateContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNumContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprShiftContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprSignalContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprStructContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprTernaryContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.FunctionContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.NumberContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_constraintContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.SignalContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_constContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_member_constContext;
 import com.alchitry.labs.parsers.types.Constant;
+import com.alchitry.labs.parsers.types.Struct;
+import com.alchitry.labs.parsers.types.Struct.Member;
 
 public class ConstExprParser extends LucidBaseListener {
 	private ErrorListener listener;
@@ -121,11 +126,11 @@ public class ConstExprParser extends LucidBaseListener {
 	}
 
 	private void debug(ParserRuleContext ctx) {
-		// listener.onTokenDebugFound(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
+		// listener.reportDebug(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
 	}
 
 	private void debugNullConstant(ParserRuleContext ctx) {
-		// listener.onTokenDebugFound(ctx, "This should have a known value!");
+		// listener.reportDebug(ctx, "This should have a known value!");
 	}
 
 	@Override
@@ -194,21 +199,35 @@ public class ConstExprParser extends LucidBaseListener {
 				}
 
 				constant.put(ctx, true);
-			} else if (ctx.name(0).SPACE_ID() != null && ctx.name().size() == 2 && ctx.name(1).CONST_ID() != null) {
-				HashMap<String, List<Constant>> gC = MainWindow.getGlobalConstants();
-				List<Constant> consts = gC.get(ctx.name(0).getText());
-				if (consts != null) {
-					Constant c = Util.getByName(consts, ctx.name(1).getText());
-					if (c != null) {
-						constant.put(ctx, true);
-						cv = c.getValue();
-					}
-				}
-			} else if (ctx.name().size() == 1) { // is constant
+			} else { // should be constant
 				constant.put(ctx, true);
-				cv = constParser.getValue(ctx.name(0).getText());
-				if (cv == null)
-					cv = paramsParser.getValue(ctx.name(0).getText());
+				int nameOffset = 1;
+				if (ctx.name(0).SPACE_ID() != null && ctx.name().size() >= 2) {
+					nameOffset = 2;
+					HashMap<String, List<Constant>> gC = MainWindow.getGlobalConstants();
+					List<Constant> consts = gC.get(ctx.name(0).getText());
+					if (consts != null) {
+						Constant c = Util.getByName(consts, ctx.name(1).getText());
+						if (c != null)
+							cv = c.getValue();
+					}
+				} else if (ctx.name(0).CONST_ID() != null) {
+					cv = constParser.getValue(ctx.name(0).getText());
+					if (cv == null)
+						cv = paramsParser.getValue(ctx.name(0).getText());
+				}
+				if (cv != null)
+					for (int i = nameOffset; i < ctx.name().size(); i++) {
+						if (!cv.isStruct()) {
+							listener.reportError(ctx.name(i), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(i - 1).getText(), ctx.name(i).getText()));
+							break;
+						}
+						cv = cv.getStructValues().get(ctx.name(i).getText());
+						if (cv == null) {
+							listener.reportError(ctx.name(i), String.format(ErrorStrings.CONST_NO_MEMBERS, ctx.name(i - 1).getText(), ctx.name(i).getText()));
+							break;
+						}
+					}
 			}
 
 			if (cv != null) {
@@ -257,6 +276,44 @@ public class ConstExprParser extends LucidBaseListener {
 		}
 		values.put(ctx, values.get(ctx.expr()));
 		constant.put(ctx, constant.get(ctx.expr()));
+	}
+
+	@Override
+	public void exitStruct_const(Struct_constContext ctx) {
+		constant.put(ctx, true);
+		SignalWidth width = bitWidthChecker.getWidth(ctx.struct_type());
+		if (!width.isStruct()) {
+			listener.reportError(ctx.struct_type(), String.format(ErrorStrings.UNKNOWN_STRUCT, ctx.struct_type().getText()));
+			return;
+		}
+		Struct struct = width.getStruct();
+		ConstValue cv = new ConstValue(struct);
+		boolean error = false;
+		for (Struct_member_constContext smc : ctx.struct_member_const()) {
+			if (smc.expr() == null || smc.name() == null)
+				continue;
+			ConstValue value = values.get(smc.expr());
+			if (value == null) {
+				listener.reportError(smc.expr(), String.format(ErrorStrings.EXPR_NOT_CONSTANT, smc.expr().getText()));
+				error = true;
+				continue;
+			}
+			Member m = Util.getByName(struct.getMembers(), smc.name().getText());
+			if (m == null) {
+				listener.reportError(smc.name(), String.format(ErrorStrings.NOT_A_MEMBER, smc.name().getText(), struct.getName()));
+				error = true;
+				continue;
+			}
+			if (m.getWidth().is1D() && value.isSimple())
+				value = value.resize(m.getWidth().getWidth());
+			cv.getStructValues().put(smc.name().getText(), value);
+		}
+		if (!error)
+			for (Member m : struct.getMembers()) {
+				if (!cv.getStructValues().containsKey(m.getName()))
+					listener.reportError(ctx, String.format(ErrorStrings.STRUCT_CONST_MISSING_VALUE, m.getName()));
+			}
+		values.put(ctx, cv);
 	}
 
 	@Override
@@ -418,7 +475,6 @@ public class ConstExprParser extends LucidBaseListener {
 			if (args.length == 1) {
 				if (args[0] != null) {
 					values.put(ctx, args[0].flatten());
-					System.out.println("Flattened: " + values.get(ctx));
 				}
 			} else {
 				listener.reportError(ctx.FUNCTION_ID(), String.format(ErrorStrings.FUNCTION_ARG_COUNT, ctx.FUNCTION_ID(), 1));
@@ -503,8 +559,8 @@ public class ConstExprParser extends LucidBaseListener {
 
 					if (b1 != null && b2 != null) {
 						if (!b2.equals(BigInteger.ZERO)) {
-							BigDecimal d1 = new BigDecimal(b1,10);
-							BigDecimal d2 = new BigDecimal(b2,10);
+							BigDecimal d1 = new BigDecimal(b1, 10);
+							BigDecimal d2 = new BigDecimal(b2, 10);
 							values.put(ctx, new ConstValue(d1.divide(d2, RoundingMode.HALF_UP).setScale(0, RoundingMode.CEILING).toBigInteger()));
 						} else {
 							listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(1).getText()));
@@ -568,6 +624,13 @@ public class ConstExprParser extends LucidBaseListener {
 	public void exitExprSignal(ExprSignalContext ctx) {
 		values.put(ctx, values.get(ctx.signal()));
 		constant.put(ctx, constant.get(ctx.signal()));
+		debug(ctx);
+	}
+
+	@Override
+	public void exitExprStruct(ExprStructContext ctx) {
+		values.put(ctx, values.get(ctx.struct_const()));
+		constant.put(ctx, constant.get(ctx.struct_const()));
 		debug(ctx);
 	}
 

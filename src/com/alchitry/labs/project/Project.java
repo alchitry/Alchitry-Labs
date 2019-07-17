@@ -461,10 +461,18 @@ public class Project {
 
 	public HashSet<File> getDebugFiles() {
 		HashSet<File> debugList = new HashSet<>();
-		debugList.add(Util.assembleFile(Locations.COMPONENTS, "reg_interface_debug.luc"));
-		debugList.add(Util.assembleFile(Locations.COMPONENTS, "reg_interface.luc"));
-		debugList.add(Util.assembleFile(Locations.COMPONENTS, "wave_capture.luc"));
-		debugList.add(Util.assembleFile(Locations.COMPONENTS, "simple_dual_ram.luc"));
+		if (boardType.isType(Board.MOJO)) {
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "reg_interface_debug.luc"));
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "reg_interface.luc"));
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "wave_capture.luc"));
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "simple_dual_ram.v"));
+		} else if (boardType.isType(Board.AU)) {
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "au_debugger.luc"));
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "reset_conditioner.luc"));
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "async_fifo.luc"));
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "pipeline.luc"));
+			debugList.add(Util.assembleFile(Locations.COMPONENTS, "simple_dual_ram.v"));
+		}
 		return debugList;
 	}
 
@@ -898,7 +906,7 @@ public class Project {
 		if (versionAttr != null)
 			try {
 				version = Integer.parseInt(versionAttr.getValue());
-				if (version > VERSION_ID) 
+				if (version > VERSION_ID)
 					throw new ParseException("Project file is from a future version!");
 			} catch (NumberFormatException e) {
 				throw new ParseException("Invalid version ID!");
@@ -1030,6 +1038,9 @@ public class Project {
 	}
 
 	private void addModule(ArrayList<Module> modules, File file) throws IOException {
+		for (Module m : modules)
+			if (m.getFile().getCanonicalPath().equals(file.getCanonicalPath()))
+				return;
 		if (file.getName().endsWith(".luc")) {
 			Module m = getLucidModule(file);
 			if (m != null)
@@ -1161,7 +1172,8 @@ public class Project {
 					boolean add = true;
 
 					// Skip IP core files
-					if (m.getType().getFile().getCanonicalPath().startsWith(Util.assembleFile(projectFolder, Project.CORES_FOLDER).getCanonicalPath()))
+					if (m.getType().getFile() == null
+							|| m.getType().getFile().getCanonicalPath().startsWith(Util.assembleFile(projectFolder, Project.CORES_FOLDER).getCanonicalPath()))
 						add = false;
 
 					if (add && mergeDupes)
@@ -1174,7 +1186,8 @@ public class Project {
 						}
 
 					if (add) {
-						queue.add(m);
+						if (!queue.contains(m))
+							queue.add(m);
 						im.addChild(m);
 					}
 				}
