@@ -174,6 +174,7 @@ public class SerialMonitor {
 		return shell.isDisposed();
 	}
 
+	@SuppressWarnings("unused")
 	private void reset() {
 		cursorPos = 0;
 		ignoreText = true;

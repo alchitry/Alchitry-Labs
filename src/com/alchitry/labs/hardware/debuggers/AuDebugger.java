@@ -3,10 +3,6 @@ package com.alchitry.labs.hardware.debuggers;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.management.RuntimeErrorException;
-
-import org.usb4java.LibUsbException;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 import com.alchitry.labs.hardware.usb.ftdi.Ftdi;
