@@ -1,9 +1,8 @@
 package com.alchitry.labs.hardware.usb.ftdi;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -11,17 +10,7 @@ import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 
 public class XilinxJtag {
-	private static final String LOADER_FILE;
-	static {
-		URL resource = XilinxJtag.class.getResource("/fpga/au_loader.bin");
-		String loaderBin = null;
-		try {
-			loaderBin = URLDecoder.decode(resource.getFile(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Failed to decode path for Au loader bin file!");
-		}
-		LOADER_FILE = loaderBin;
-	}
+	private static final String LOADER_FILE = "/fpga/au_loader.bin";
 
 	public enum Instruction {
 		EXTEST((byte) 0x26), EXTEST_PULSE((byte) 0x3C), EXTEST_TRAIN((byte) 0x3D), SAMPLE((byte) 0x01), USER1((byte) 0x02), USER2((byte) 0x03), USER3((byte) 0x22), USER4(
@@ -67,8 +56,27 @@ public class XilinxJtag {
 		return b;
 	}
 
+	private void loadBridge() throws IOException {
+		InputStream in = getClass().getResourceAsStream(LOADER_FILE);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+		byte[] buffer = new byte[1024];
+		int len;
+
+		// read bytes from the input stream and store them in buffer
+		while ((len = in.read(buffer)) != -1) {
+			// write bytes from the buffer into output stream
+			os.write(buffer, 0, len);
+		}
+		loadBin(os.toByteArray());
+	}
+
 	private void loadBin(String binPath) throws IOException {
 		byte[] binData = Files.readAllBytes(Paths.get(binPath));
+		loadBin(binData);
+	}
+
+	private void loadBin(byte[] binData) throws IOException {
 		for (int i = 0; i < binData.length; i++)
 			binData[i] = reverse(binData[i]);
 
@@ -103,7 +111,7 @@ public class XilinxJtag {
 
 	private void erase() throws IOException {
 		Util.println("Loading bridge configuration...");
-		loadBin(LOADER_FILE);
+		loadBridge();
 		Util.println("Erasing...");
 		jtag.setFreq(1500000);
 		setIR(Instruction.USER1);
