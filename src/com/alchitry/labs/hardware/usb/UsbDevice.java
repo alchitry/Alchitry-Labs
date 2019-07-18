@@ -213,13 +213,14 @@ public class UsbDevice {
 				}
 				if (vidPidMatch) {
 					device = new DeviceHandle();
-					if (LibUsb.open(dev, device) < 0)
-						throw new LibUsbException("LibUsb.open() failed", -4);
+					int code = LibUsb.open(dev, device);
+					if (code < 0)
+						throw new LibUsbException("LibUsb.open() failed", code);
 
 					String sDesc = LibUsb.getStringDescriptor(device, desc.iProduct());
 					if (sDesc == null) {
 						UsbCloseInternal(device);
-						throw new LibUsbException("unalbe to fetch product description", -8);
+						throw new LibUsbException("unable to fetch product description", -8);
 					}
 					UsbDescriptor match = null;
 					for (UsbDescriptor udes : descriptions) {

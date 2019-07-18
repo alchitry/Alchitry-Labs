@@ -275,7 +275,7 @@ public class Ftdi extends UsbSerial {
 			usbReset();
 		} catch (LibUsbException e) {
 			UsbCloseInternal();
-			throw new LibUsbException("usbReset() failed", -6);
+			throw e;
 		}
 
 		try {
@@ -289,9 +289,9 @@ public class Ftdi extends UsbSerial {
 	public void usbReset() {
 		if (device == null)
 			throw new LibUsbException("USB device unavailable", -2);
-
-		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_RESET_REQUEST, SIO_RESET_SIO, (short) interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
-			throw new LibUsbException("Ftdi reset failed", -1);
+		int code;
+		if ((code = LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_RESET_REQUEST, SIO_RESET_SIO, (short) interfaceType.getIndex(), EMPTY_BUF, writeTimeout)) < 0)
+			throw new LibUsbException("Ftdi reset failed", code);
 
 		resetReadBuffer();
 	}

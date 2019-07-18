@@ -126,11 +126,11 @@ public class ConstExprParser extends LucidBaseListener {
 	}
 
 	private void debug(ParserRuleContext ctx) {
-		listener.reportDebug(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
+		//listener.reportDebug(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
 	}
 
 	private void debugNullConstant(ParserRuleContext ctx) {
-		listener.reportDebug(ctx, "This should have a known value!");
+		//listener.reportDebug(ctx, "This should have a known value!");
 	}
 
 	@Override

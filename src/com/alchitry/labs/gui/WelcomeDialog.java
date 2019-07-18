@@ -1,5 +1,8 @@
 package com.alchitry.labs.gui;
 
+import java.awt.Desktop;
+import java.net.URI;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
 
 public class WelcomeDialog extends Dialog {
@@ -94,6 +98,20 @@ public class WelcomeDialog extends Dialog {
 		int locationX = (parentSize.width - shellSize.width) / 2 + parentSize.x;
 		int locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y;
 		shell.setLocation(new Point(locationX, locationY));
+
+		if (Util.isWindows)
+			if (Util.askQuestion("Driver Update Required!",
+					"This version of Alchitry Labs now uses libUSB which requires the WinUSB driver to be installed for your boards.\n\n"
+							+ "Would you like to go to https://alchitry.com/pages/alchitry-labs for more information?")) {
+				Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+				if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+					try {
+						desktop.browse(new URI("https://alchitry.com/pages/alchitry-labs"));
+					} catch (Exception e) {
+						Util.logException(e);
+					}
+				}
+			}
 	}
 
 }
