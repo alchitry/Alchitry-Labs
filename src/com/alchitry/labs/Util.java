@@ -161,10 +161,12 @@ public class Util {
 		public boolean result;
 		private String title;
 		private String message;
+		private Shell shell;
 
-		public QuestionRunnable(String title, String message) {
+		public QuestionRunnable(String title, String message, Shell shell) {
 			this.title = title;
 			this.message = message;
+			this.shell = shell;
 		}
 
 		@Override
@@ -179,10 +181,14 @@ public class Util {
 	public static boolean askQuestion(String message) {
 		return askQuestion("Question?", message);
 	}
-
+	
 	public static boolean askQuestion(String title, String message) {
+		return askQuestion(title, message, shell);
+	}
+
+	public static boolean askQuestion(String title, String message, Shell shell) {
 		if (isGUI) {
-			QuestionRunnable question = new QuestionRunnable(title, message);
+			QuestionRunnable question = new QuestionRunnable(title, message, shell);
 			display.syncExec(question);
 			return question.result;
 		} else {
@@ -221,7 +227,7 @@ public class Util {
 
 	public static void showError(final String title, final String error, final Shell shell) {
 		if (isGUI) {
-			shell.getDisplay().asyncExec(new Runnable() {
+			shell.getDisplay().syncExec(new Runnable() {
 
 				@Override
 				public void run() {

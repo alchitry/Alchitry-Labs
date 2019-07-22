@@ -279,7 +279,7 @@ public class Ftdi extends UsbSerial {
 		}
 
 		try {
-			setBaudrate(9600);
+			setBaudrate(1000000);
 		} catch (LibUsbException e) {
 			UsbCloseInternal();
 			throw new LibUsbException("set baudrate failed", -7);
@@ -555,7 +555,7 @@ public class Ftdi extends UsbSerial {
 		return res;
 	}
 
-	public void setBaudrate(int baudrate) {
+	public int setBaudrate(int baudrate) {
 		BaudCalcResults res;
 
 		if (device == null)
@@ -570,11 +570,13 @@ public class Ftdi extends UsbSerial {
 			throw new LibUsbException("Silly baudrate <= 0.", -1);
 
 		// Check within tolerance (about 5%)
-		if ((res.bestBaud * 2 < baudrate /* Catch overflows */ ) || ((res.bestBaud < baudrate) ? (res.bestBaud * 21 < baudrate * 20) : (baudrate * 21 < res.bestBaud * 20)))
-			throw new LibUsbException("Unsupported baudrate. Note: bitbang baudrates are automatically multiplied by 4", -1);
+		if ((res.bestBaud * 2 < baudrate /* Catch overflows */ ))
+			throw new LibUsbException("Unsupported baudrate.", -1);
 
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_SET_BAUDRATE_REQUEST, res.value, res.index, EMPTY_BUF, writeTimeout) < 0)
 			throw new LibUsbException("Setting new baudrate failed", -2);
+
+		return res.bestBaud;
 	}
 
 	public void setLineProperty(LineDatabit bits, LineStopbit sbit, LineParity parity) {
@@ -749,6 +751,5 @@ public class Ftdi extends UsbSerial {
 		if (LibUsb.controlTransfer(device, FTDI_DEVICE_OUT_REQTYPE, SIO_SET_ERROR_CHAR_REQUEST, usbVal, interfaceType.getIndex(), EMPTY_BUF, writeTimeout) < 0)
 			throw new LibUsbException("setting error character failed", -1);
 	}
-
 
 }

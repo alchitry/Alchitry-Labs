@@ -1,7 +1,5 @@
 package com.alchitry.labs.hardware.usb;
 
-import java.nio.ByteBuffer;
-
 import org.usb4java.Device;
 import org.usb4java.DeviceDescriptor;
 import org.usb4java.DeviceHandle;
@@ -98,10 +96,12 @@ public class MojoSerial extends UsbSerial {
 	}
 
 	@Override
-	public void setBaudrate(int baud) {
-		ByteBuffer bbuf = ByteBuffer.allocateDirect(7);
-		bbuf.put(new byte[] { (byte) (baud & 0xff), (byte) ((baud >>> 8) & 0xff), (byte) ((baud >>> 16) & 0xff), (byte) ((baud >>> 24) & 0xff), 0x00, 0x00, 0x08 });
-		LibUsb.controlTransfer(device, DEVICE_OUT_REQUEST, CDC_SET_LINE_CODING, (short) 0, (short) 0, bbuf, writeTimeout);
+	public int setBaudrate(int baud) {
+		// The Mojo ignores baud rate requests
+		//ByteBuffer bbuf = ByteBuffer.allocateDirect(7);
+		//bbuf.put(new byte[] { (byte) (baud & 0xff), (byte) ((baud >>> 8) & 0xff), (byte) ((baud >>> 16) & 0xff), (byte) ((baud >>> 24) & 0xff), 0x00, 0x00, 0x08 });
+		//LibUsb.controlTransfer(device, DEVICE_OUT_REQUEST, CDC_SET_LINE_CODING, (short) 0, (short) 0, bbuf, writeTimeout);
+		return 1000000; // always sets 1000000 baud
 	}
 
 	@Override

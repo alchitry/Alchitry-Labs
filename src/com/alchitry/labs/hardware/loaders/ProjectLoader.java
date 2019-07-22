@@ -3,7 +3,6 @@ package com.alchitry.labs.hardware.loaders;
 import org.eclipse.swt.custom.StyledText;
 
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.main.MainWindow;
 
 public abstract class ProjectLoader {
 	protected abstract void eraseFlash();
@@ -44,20 +43,14 @@ public abstract class ProjectLoader {
 	}
 
 	public void load(final String binFile, final boolean flash, final boolean verify) {
-		MainWindow.mainWindow.enableMonitor(false);
 		Util.clearConsole();
 
 		program(binFile, flash, verify);
-
-		MainWindow.mainWindow.enableMonitor(true);
 	}
 
 	public void erase() {
-		MainWindow.mainWindow.enableMonitor(false);
 		Util.clearConsole();
 
 		eraseFlash();
-
-		MainWindow.mainWindow.enableMonitor(true);
 	}
 }

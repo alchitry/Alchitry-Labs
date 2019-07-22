@@ -9,15 +9,15 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.BaudDialog;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.hardware.usb.UsbSerial;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 
@@ -89,12 +89,6 @@ public class SerialMonitor {
 			}
 		});
 
-		shell.addListener(SWT.Dispose, new Listener() {
-			public void handleEvent(Event e) {
-				disconnect();
-			}
-		});
-
 		ignoreText = false;
 
 		connect();
@@ -105,6 +99,31 @@ public class SerialMonitor {
 		if (port == null) {
 			shell.dispose();
 			return;
+		}
+
+		if (!MainWindow.getOpenProject().getBoard().isType(Board.MOJO)) {
+			int baud = 1000000;
+			int setBaud = -1;
+			while (true) {
+				BaudDialog bd = new BaudDialog(Util.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				baud = bd.open(baud);
+				if (baud < 0) {
+					shell.dispose();
+					return;
+				}
+				try {
+					setBaud = port.setBaudrate(baud);
+				} catch (LibUsbException e) {
+					Util.showError("Failed to set baudrate!", e.getMessage(), Util.getShell());
+					continue;
+				}
+				if (setBaud == baud) {
+					break;
+				} else {
+					if (Util.askQuestion("Baud Mismatch", "The requested baudrate could not be set. The actual baudrate is " + setBaud + ". Is this acceptable?", Util.getShell()))
+						break;
+				}
+			}
 		}
 		port.setTimeouts(100, 2000);
 		Thread t = new Thread() {
@@ -118,7 +137,8 @@ public class SerialMonitor {
 							shell.getDisplay().syncExec(new Runnable() {
 								@Override
 								public void run() {
-									addText(rx);
+									if (!shell.isDisposed())
+										addText(rx);
 								}
 							});
 						}
@@ -136,6 +156,7 @@ public class SerialMonitor {
 						}
 					}
 				}
+				disconnect();
 			}
 		};
 		t.setDaemon(true);
@@ -152,18 +173,6 @@ public class SerialMonitor {
 			port.usbClose();
 		}
 		port = null;
-	}
-
-	public void enable(boolean e) {
-		if (e) {
-			connect();
-			if (!shell.isDisposed())
-				shell.setEnabled(true);
-		} else {
-			if (!shell.isDisposed())
-				shell.setEnabled(false);
-			disconnect();
-		}
 	}
 
 	public void setFocus() {

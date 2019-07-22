@@ -23,17 +23,17 @@ public class InstModule implements Named, Serializable {
 	private static final long serialVersionUID = 3100960916372359031L;
 	private Module type;
 	private String name;
-	private ArrayList<String> width;
-	private ArrayList<Param> params;
-	private ArrayList<Connection> connections;
+	private ArrayList<String> width = new ArrayList<>();
+	private ArrayList<Param> params = new ArrayList<>();
+	private ArrayList<Connection> connections = new ArrayList<>();
 	transient private ParserRuleContext declarationNode;
-	private ArrayList<InstModule> children;
+	private ArrayList<InstModule> children = new ArrayList<>();
 	private SignalWidth moduleWidth;
 	private boolean isArray;
-	private ArrayList<Dff> dffs;
-	private ArrayList<Fsm> fsms;
-	private ArrayList<Sig> sigs;
-	private ArrayList<Sig> drivenSigs;
+	private ArrayList<Dff> dffs = new ArrayList<>();
+	private ArrayList<Fsm> fsms = new ArrayList<>();
+	private ArrayList<Sig> sigs = new ArrayList<>();
+	private ArrayList<Sig> drivenSigs = new ArrayList<>();
 
 	public InstModule() {
 	}

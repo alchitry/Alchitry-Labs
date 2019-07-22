@@ -1,8 +1,5 @@
 package com.alchitry.labs.gui;
 
-import java.awt.Desktop;
-import java.net.URI;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -17,7 +14,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
 
 public class WelcomeDialog extends Dialog {
@@ -78,7 +74,7 @@ public class WelcomeDialog extends Dialog {
 		lblReleaseInfo.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, true, 1, 1));
 		lblReleaseInfo.setText("Welcome to version " + MainWindow.VERSION + " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
 				+ " at bugspray@alchitry.com\n\n"
-				+ "This version has a ton of changes! The debugger is now avaible for the Au. You can also now declare struct constants. The biggest changes by far were to the underlying USB interface. You no longer need to specify a COM port for the boards. They will be automatically detected!"
+				+ "This version adds baudrate setting for the serial port monitor."
 				+ "\n\nAs always, we hope you enjoy this version!");
 
 		Button btnOk = new Button(shell, SWT.NONE);
@@ -99,6 +95,8 @@ public class WelcomeDialog extends Dialog {
 		int locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y;
 		shell.setLocation(new Point(locationX, locationY));
 
+		//@formatter:off
+		/*
 		if (Util.isWindows)
 			if (Util.askQuestion("Driver Update Required!",
 					"This version of Alchitry Labs now uses libUSB which requires the WinUSB driver to be installed for your boards.\n\n"
@@ -112,6 +110,8 @@ public class WelcomeDialog extends Dialog {
 					}
 				}
 			}
+		*/
+		//@formatter:on
 	}
 
 }
