@@ -74,7 +74,7 @@ public class UsbDevice {
 	public interface StreamCallback {
 		void update(byte[] buffer, ProgressInfo progress, byte[] userData);
 	}
-	
+
 	protected static void UsbCloseInternal(DeviceHandle dev) {
 		if (dev != null) {
 			LibUsb.close(dev);
@@ -85,7 +85,7 @@ public class UsbDevice {
 	protected void UsbCloseInternal() {
 		UsbCloseInternal(device);
 	}
-	
+
 	static {
 		if (LibUsb.init(context) < 0)
 			throw new LibUsbException("LibUsb.init() failed", -3);
@@ -252,7 +252,7 @@ public class UsbDevice {
 		for (Device dev : devList)
 			LibUsb.unrefDevice(dev);
 	}
-	
+
 	public static void entryListFree(List<DeviceEntry> devList) {
 		for (DeviceEntry dev : devList)
 			LibUsb.unrefDevice(dev.device);
@@ -311,7 +311,7 @@ public class UsbDevice {
 
 		return packetSize;
 	}
-	
+
 	public void setTimeouts(int read, int write) {
 		readTimeout = read;
 		writeTimeout = write;
@@ -341,7 +341,11 @@ public class UsbDevice {
 		} else if (DetachMode.AUTO_DETACH_REATACH_SIO_MODULE.equals(detachMode)) {
 			if ((errno = LibUsb.setAutoDetachKernelDriver(device, true)) != LibUsb.SUCCESS)
 				detachErrno = errno;
+			if (detachErrno == LibUsb.ERROR_NOT_SUPPORTED)
+				if ((errno = LibUsb.detachKernelDriver(device, iface)) != LibUsb.SUCCESS)
+					detachErrno = errno;
 		}
+
 
 		if (LibUsb.getConfiguration(device, cfgBuf) < 0)
 			throw new LibUsbException("LibUsb.getConfiguration() failed", -12);
@@ -552,8 +556,9 @@ public class UsbDevice {
 				writeSize = data.length - offset;
 
 			buf.position(offset);
-			if (LibUsb.bulkTransfer(device, inEndPoint, buf, transferred, writeTimeout) < 0)
-				throw new LibUsbException("usb bulk write failed", -1);
+			int code;
+			if ((code = LibUsb.bulkTransfer(device, inEndPoint, buf, transferred, writeTimeout)) < 0)
+				throw new LibUsbException("usb bulk write failed", code);
 
 			offset += transferred.get();
 		}

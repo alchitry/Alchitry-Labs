@@ -56,12 +56,12 @@ public class MojoSerial extends UsbSerial {
 					detachErrno = errno;
 			}
 
-			if (LibUsb.claimInterface(device, iface) < 0) {
+			if (detachErrno < 0 && detachErrno != LibUsb.ERROR_NOT_SUPPORTED)
+				throw new LibUsbException("Failed to set detach mode.", detachErrno);
+
+			if ((errno = LibUsb.claimInterface(device, iface)) < 0) {
 				UsbCloseInternal();
-				if (detachErrno == LibUsb.ERROR_ACCESS)
-					throw new LibUsbException("inappropriate permissions on device!", -8);
-				else
-					throw new LibUsbException("unable to claim usb device. Make sure the default driver is not in use", -5);
+				throw new LibUsbException("unable to claim usb interface " + iface + ". Make sure the default driver is not in use", errno);
 			}
 		}
 
@@ -98,9 +98,9 @@ public class MojoSerial extends UsbSerial {
 	@Override
 	public int setBaudrate(int baud) {
 		// The Mojo ignores baud rate requests
-		//ByteBuffer bbuf = ByteBuffer.allocateDirect(7);
-		//bbuf.put(new byte[] { (byte) (baud & 0xff), (byte) ((baud >>> 8) & 0xff), (byte) ((baud >>> 16) & 0xff), (byte) ((baud >>> 24) & 0xff), 0x00, 0x00, 0x08 });
-		//LibUsb.controlTransfer(device, DEVICE_OUT_REQUEST, CDC_SET_LINE_CODING, (short) 0, (short) 0, bbuf, writeTimeout);
+		// ByteBuffer bbuf = ByteBuffer.allocateDirect(7);
+		// bbuf.put(new byte[] { (byte) (baud & 0xff), (byte) ((baud >>> 8) & 0xff), (byte) ((baud >>> 16) & 0xff), (byte) ((baud >>> 24) & 0xff), 0x00, 0x00, 0x08 });
+		// LibUsb.controlTransfer(device, DEVICE_OUT_REQUEST, CDC_SET_LINE_CODING, (short) 0, (short) 0, bbuf, writeTimeout);
 		return 1000000; // always sets 1000000 baud
 	}
 

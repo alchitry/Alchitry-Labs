@@ -54,6 +54,7 @@ module i2c_slave #(
     dff tx_flag;
     dff valid;
     dff capture_tx;
+    dff write_ack;
   }
   
   sig clk_rise, clk_fall;
@@ -126,6 +127,7 @@ module i2c_slave #(
         }
       state.READ_ACK:
         if (clk_rise){
+          write_ack.d = !sda_sync.q[2];
           ack = sda_sync.q[2];
           next = 1;
           capture_tx.d = 1;
@@ -133,7 +135,10 @@ module i2c_slave #(
         }
       state.READ_ACK_WAIT:
         if (clk_fall)
-          state.d = tx_flag.q ? state.WRITE_BYTE : state.READ_BYTE;
+          if (write_ack.q)
+            state.d = tx_flag.q ? state.WRITE_BYTE : state.READ_BYTE;
+          else
+            state.d = state.IDLE;
       
     }
     

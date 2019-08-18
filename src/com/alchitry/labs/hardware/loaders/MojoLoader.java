@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
@@ -71,25 +70,32 @@ public class MojoLoader extends ProjectLoader {
 
 	@Override
 	protected void eraseFlash() {
-		if (!connect())
-			return;
+		try {
+			if (!connect())
+				return;
 
-		restartMojo();
+			restartMojo();
 
-		Util.println("Erasing...");
+			Util.println("Erasing...");
 
-		mojo.flushReadBuffer();
+			mojo.flushReadBuffer();
 
-		writeByte((byte) 'E');
+			writeByte((byte) 'E');
 
-		if (readByte() != 'D') {
-			onError("Mojo did not acknowledge flash erase!");
-			return;
+			Util.println("Wrote E");
+
+			if (readByte() != 'D') {
+				onError("Mojo did not acknowledge flash erase!");
+				return;
+			}
+
+			Util.println("Done.", Theme.successTextColor);
+
+		} catch (Exception e) {
+			Util.logException(e);
+		} finally {
+			mojo.usbClose();
 		}
-
-		Util.println("Done.",Theme.successTextColor);
-
-		mojo.usbClose();
 	}
 
 	@Override
@@ -241,14 +247,16 @@ public class MojoLoader extends ProjectLoader {
 			}
 
 			bin.close();
-		} catch (IOException e) {
-			onError(e.getMessage());
+		} catch (Exception e) {
+			Util.logException(e);
 			return;
+		} finally {
+			mojo.usbClose();
 		}
 
-		Util.println("Done.",Theme.successTextColor);
+		Util.println("Done.", Theme.successTextColor);
 
-		mojo.usbClose();
+		
 	}
 
 }
