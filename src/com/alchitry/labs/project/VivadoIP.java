@@ -26,7 +26,8 @@ public class VivadoIP {
 	}
 
 	private boolean projectExists(Project project) {
-		String projectPath = Util.assemblePath(project.getProjectFolder(), Project.CORES_FOLDER, "managed_ip_project", "managed_ip_project.xpr");
+		String projectPath = Util.assemblePath(project.getProjectFolder(), Project.CORES_FOLDER, "managed_ip_project",
+				"managed_ip_project.xpr");
 		File projFile = new File(projectPath);
 		return projFile.exists();
 	}
@@ -181,10 +182,12 @@ public class VivadoIP {
 	public void generateMigCore(final Project project) throws InterruptedException, IOException {
 		String tclScript = Util.assemblePath(project.getProjectFolder(), Project.CORES_FOLDER, migFile);
 
-		String coresFolder = Util.assembleLinuxPath(project.getProjectFolder(), Project.CORES_FOLDER);
+		String coresFolder = Util.assembleLinuxPath(project.getProjectFolder(), Project.CORES_FOLDER).replace("\\",
+				"/");
 		String projectFile = Util.assembleLinuxPath(coresFolder, "managed_ip_project", "managed_ip_project.xpr");
 		String xciFile = Util.assembleLinuxPath(coresFolder, "mig_7series_0", "mig_7series_0.xci").replace(" ", "\\ ");
-		String migPrjFile = Util.assemblePath(Locations.COMPONENTS, "mig.prj").replace("\\", "/");
+		String migPrjFile = Util.assembleFile(project.getProjectFolder(),Project.CORES_FOLDER,"managed_ip_project").toPath().relativize(Util.assembleFile(Locations.COMPONENTS, "mig.prj").toPath()).toString().replace("\\", "/");
+		//String migPrjFile = Util.assembleLinuxPath(Locations.COMPONENTS, "mig.prj").replace("\\", "/");
 
 		final String nl = System.lineSeparator();
 
@@ -202,26 +205,43 @@ public class VivadoIP {
 					try (FileWriter fstream = new FileWriter(tclScript)) {
 						try (BufferedWriter out = new BufferedWriter(fstream)) {
 							out.write("open_project {" + projectFile + "}" + nl);
-							out.write("create_ip -name mig_7series -vendor xilinx.com -library ip -version 4.1 -module_name mig_7series_0 -dir {" + coresFolder + "}" + nl);
+							out.write(
+									"create_ip -name mig_7series -vendor xilinx.com -library ip -module_name mig_7series_0 -dir {"
+											+ coresFolder + "}" + nl);
 							out.write("set_property -dict [list CONFIG.XML_INPUT_FILE {" + migPrjFile
 									+ "} CONFIG.RESET_BOARD_INTERFACE {Custom} CONFIG.MIG_DONT_TOUCH_PARAM {Custom} CONFIG.BOARD_MIG_PARAM {Custom}] [get_ips mig_7series_0]"
 									+ nl);
 							out.write("generate_target all [get_files {" + xciFile + "}]" + nl);
 							out.write("catch { config_ip_cache -export [get_ips -all mig_7series_0] }" + nl);
-							out.write("export_ip_user_files -of_objects [get_files {" + xciFile + "}] -no_script -sync -force -quiet" + nl);
-							out.write("create_ip_run [get_files -of_objects [get_fileset sources_1] {" + xciFile + "}]" + nl);
+							out.write("export_ip_user_files -of_objects [get_files {" + xciFile
+									+ "}] -no_script -sync -force -quiet" + nl);
+							out.write("create_ip_run [get_files -of_objects [get_fileset sources_1] {" + xciFile + "}]"
+									+ nl);
 							out.write("launch_runs -jobs 16 mig_7series_0_synth_1" + nl);
 							out.write("wait_on_run mig_7series_0_synth_1" + nl);
 							out.write("export_simulation -of_objects [get_files {" + xciFile + "}] -directory {"
-									+ Util.assembleLinuxPath(coresFolder, "ip_user_files/sim_scripts}") + " -ip_user_files_dir {"
-									+ Util.assembleLinuxPath(coresFolder, "ip_user_files") + "} -ipstatic_source_dir {"
-									+ Util.assembleLinuxPath(coresFolder, "ip_user_files/ipstatic") + "} -lib_map_path [list {modelsim="
-									+ Util.assembleLinuxPath(coresFolder, "managed_ip_project/managed_ip_project.cache/compile_simlib/modelsim") + "} {questa="
-									+ Util.assembleLinuxPath(coresFolder, "managed_ip_project/managed_ip_project.cache/compile_simlib/questa") + "} {ies="
-									+ Util.assembleLinuxPath(coresFolder, "managed_ip_project/managed_ip_project.cache/compile_simlib/ies") + "} {xcelium="
-									+ Util.assembleLinuxPath(coresFolder, "managed_ip_project/managed_ip_project.cache/compile_simlib/xcelium") + "} {vcs="
-									+ Util.assembleLinuxPath(coresFolder, "managed_ip_project/managed_ip_project.cache/compile_simlib/vcs") + "} {riviera="
-									+ Util.assembleLinuxPath(coresFolder, "managed_ip_project/managed_ip_project.cache/compile_simlib/riviera")
+									+ Util.assembleLinuxPath(coresFolder, "ip_user_files/sim_scripts}")
+									+ " -ip_user_files_dir {" + Util.assembleLinuxPath(coresFolder, "ip_user_files")
+									+ "} -ipstatic_source_dir {"
+									+ Util.assembleLinuxPath(coresFolder, "ip_user_files/ipstatic")
+									+ "} -lib_map_path [list {modelsim="
+									+ Util.assembleLinuxPath(coresFolder,
+											"managed_ip_project/managed_ip_project.cache/compile_simlib/modelsim")
+									+ "} {questa="
+									+ Util.assembleLinuxPath(coresFolder,
+											"managed_ip_project/managed_ip_project.cache/compile_simlib/questa")
+									+ "} {ies="
+									+ Util.assembleLinuxPath(coresFolder,
+											"managed_ip_project/managed_ip_project.cache/compile_simlib/ies")
+									+ "} {xcelium="
+									+ Util.assembleLinuxPath(coresFolder,
+											"managed_ip_project/managed_ip_project.cache/compile_simlib/xcelium")
+									+ "} {vcs="
+									+ Util.assembleLinuxPath(coresFolder,
+											"managed_ip_project/managed_ip_project.cache/compile_simlib/vcs")
+									+ "} {riviera="
+									+ Util.assembleLinuxPath(coresFolder,
+											"managed_ip_project/managed_ip_project.cache/compile_simlib/riviera")
 									+ "}] -use_ip_compiled_libs -force -quiet" + nl);
 						}
 					}
@@ -269,7 +289,8 @@ public class VivadoIP {
 					core.setStub(stub);
 					Util.println("  Found stub file!");
 				} else {
-					Util.println("  Could not find stub file! Did you let synthesis finish before closing Vivado?", true);
+					Util.println("  Could not find stub file! Did you let synthesis finish before closing Vivado?",
+							true);
 				}
 				Util.syncExec(new Runnable() {
 					@Override
