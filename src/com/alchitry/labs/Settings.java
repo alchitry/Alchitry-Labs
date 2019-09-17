@@ -25,4 +25,5 @@ public class Settings {
 	public static final String ICEPACK_LOC = "ICEPACK_LOC";
 	public static final String YOSYS_LOC = "YOSYS_LOC";
 	public static final String ARACHNE_LOC = "ARACHNE_LOC";
+	public static final String EDITOR_FONT_SIZE = "EDITOR_FONT_SIZE";
 }

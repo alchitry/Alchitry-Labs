@@ -79,6 +79,7 @@
     <module file="ddr_arbiter.luc" name="DDR Arbiter">
       <description>This module allows you to connect multiple clients to a single DDR3 memory interface (the interface used by the DDR3 MIG). It uses a simple priority scheme where each client gets a unique priority (lower IDs = higher priority). This means it is possible for high priority clients to starve out low priority clients.</description>
       <depends>MIG Wrapper</depends>
+      <depends>Synchronous FIFO</depends>
     </module>
     <module file="mig_wrapper.luc" name="MIG Wrapper">
       <description>This module wraps the DDR3 MIG IP from Xilinx into a more convenient interface.</description>

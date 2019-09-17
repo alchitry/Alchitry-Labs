@@ -7,7 +7,6 @@ import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Control;
@@ -28,6 +27,7 @@ public class AutoComplete {
 	private StyledCodeEditor editor;
 	private final Dictionary dictionary;
 	private Point textLocation;
+	private boolean skip = false;
 
 	public AutoComplete(StyledCodeEditor editor, Dictionary dict) {
 		this.editor = editor;
@@ -40,7 +40,7 @@ public class AutoComplete {
 		popupShell.setForeground(Theme.autocompleteForegroundColor);
 		table.setBackground(Theme.autocompleteBackgroundColor);
 		table.setForeground(Theme.autocompleteForegroundColor);
-		table.setFont(new Font(display, "Ubuntu Mono", 12, SWT.NORMAL));
+		table.setFont(editor.getFont());
 
 		editor.addListener(SWT.KeyDown, keyDownListener);
 		editor.addListener(SWT.Modify, modifyListener);
@@ -79,6 +79,10 @@ public class AutoComplete {
 
 		textLocation = new Point(0, 0);
 	}
+	
+	public void updateFont() {
+		table.setFont(editor.getFont());
+	}
 
 	public void dispose() {
 		table.getFont().dispose();
@@ -89,6 +93,10 @@ public class AutoComplete {
 		if (popupShell.isDisposed())
 			return false;
 		return popupShell.isVisible();
+	}
+	
+	public void skipNext() {
+		skip = true;
 	}
 
 	private Listener keyDownListener = new Listener() {
@@ -117,6 +125,11 @@ public class AutoComplete {
 	private Listener modifyListener = new Listener() {
 		@Override
 		public void handleEvent(Event event) {
+			if (skip) {
+				skip = false;
+				return;
+			}
+			
 			String string = getWordAtCaret();
 			char preLetter = '\0';
 			if (textLocation.x > 0)
@@ -138,7 +151,7 @@ public class AutoComplete {
 				Point tb = table.computeSize(-1, -1, true);
 
 				Point p = display.map(editor, null, editor.getLocationAtOffset(editor.getCaretOffset() - string.length()));
-				popupShell.setBounds(p.x - 8, p.y + 17, tb.x, tb.y);
+				popupShell.setBounds(p.x - 8, (int) (p.y + 5 + editor.getFont().getFontData()[0].height), tb.x, tb.y);
 				popupShell.setVisible(true);
 			}
 

@@ -209,7 +209,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write("#project files" + nl);
 
 		for (File vf : vFiles)
-			file.write("add_file -verilog -lib work \"" + vf.getAbsolutePath() + '"' + nl);
+			file.write("add_file -verilog -lib work \"" + vf.getAbsolutePath().replace("\\", "/").replace(" ", "\\ ") + '"' + nl);
 		for (File cf : cFiles)
 			if (cf.getName().endsWith(".sdc"))
 				file.write("add_file -constraint -lib work \"" + cf.getAbsolutePath().replace("\\", "/").replace(" ", "\\ ") + '"' + nl);

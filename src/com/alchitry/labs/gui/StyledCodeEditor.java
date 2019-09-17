@@ -13,9 +13,13 @@ import org.eclipse.swt.custom.ExtendedModifyListener;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.StyledTextPrintOptions;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MenuAdapter;
@@ -31,12 +35,16 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.printing.PrintDialog;
+import org.eclipse.swt.printing.Printer;
+import org.eclipse.swt.printing.PrinterData;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import com.alchitry.labs.Settings;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.dictionaries.AlchitryConstraintsDictionary;
 import com.alchitry.labs.dictionaries.LucidDictionary;
@@ -69,6 +77,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 	private File file;
 	private boolean edited;
+	private boolean skipEdit;
 	private CustomTabs tabFolder;
 	private boolean opened;
 	private AutoFormatter formatter;
@@ -98,6 +107,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		super(parent, style);
 		this.tabFolder = parent;
 		this.write = write;
+		this.file = file;
 
 		search = new CustomSearch(parent, SWT.NONE);
 
@@ -194,7 +204,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		addModifyListener(styler);
 		setTabs(2);
 
-		setFont(new Font(getDisplay(), "Ubuntu Mono", 12, SWT.NORMAL));
+		updateFont();
 
 		if (file != null)
 			fileName = file.getName();
@@ -221,6 +231,27 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		highlighter = new TextHighligher(this);
 		lineStyleListeners.add(highlighter);
 		addModifyListener(highlighter);
+
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent event) {
+				if (event.keyCode == 'p' && event.stateMask == SWT.CTRL) {
+					print();
+				}
+			}
+		});
+
+		addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+			}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				MainWindow.mainWindow.lastActiveEditor = StyledCodeEditor.this;
+			}
+		});
 
 		doubleClick = new DoubleClickHighlighter(this, isLucid, isVerilog);
 
@@ -325,6 +356,13 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		});
 	}
 
+	public void updateFont() {
+		int fontSize = Settings.pref.getInt(Settings.EDITOR_FONT_SIZE, 12);
+		setFont(new Font(getDisplay(), "Ubuntu Mono", fontSize, SWT.NORMAL));
+		if (autoComplete != null)
+			autoComplete.updateFont();
+	}
+
 	@Override
 	public void dispose() {
 		if (autoComplete != null)
@@ -415,7 +453,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		int origLength = getLine(line).length();
 		int offset = caret - getOffsetAtLine(line);
 		formatter.fixIndent();
-		line = Math.min(line, getLineCount()-1);
+		line = Math.min(line, getLineCount() - 1);
 		caret = getOffsetAtLine(line);
 		int newLength = getLine(line).length();
 		offset += newLength - origLength;
@@ -490,6 +528,10 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 	@Override
 	public void modifyText(ModifyEvent e) {
+		if (skipEdit) {
+			skipEdit = false;
+			return;
+		}
 		if (e.widget == this) {
 			if (edited == false) {
 				tabFolder.setText(this, "*" + fileName);
@@ -515,7 +557,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		if (dir)
 			idx = StringUtils.indexOfIgnoreCase(text, word, start);
 		else {
-			idx = StringUtils.lastIndexOfIgnoreCase(text.substring(0, start > text.length() ? text.length() - 1 : start), word);
+			idx = StringUtils
+					.lastIndexOfIgnoreCase(text.substring(0, start > text.length() ? text.length() - 1 : start), word);
 		}
 
 		if (idx < 0) {
@@ -690,5 +733,28 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 				format.setEnabled(formatter != null);
 			}
 		});
+	}
+
+	public void print() {
+		PrintOptionsDialog optionsDialog = new PrintOptionsDialog(getShell(), SWT.DIALOG_TRIM);
+		StyledTextPrintOptions printOptions = optionsDialog.open();
+		if (printOptions == null)
+			return;
+		printOptions.jobName = fileName;
+		if (printOptions.header != null)
+			printOptions.header = "File: " + fileName;
+
+		PrintDialog dialog = new PrintDialog(getShell(), SWT.NULL);
+		PrinterData data = dialog.open();
+		if (data == null)
+			return;
+
+		Printer printer = new Printer(data);
+		Util.syncExec(print(printer, printOptions));
+		skipEdit = true;
+		undoRedo.skipNext();
+		if (autoComplete != null)
+			autoComplete.skipNext();
+		notifyListeners(SWT.Modify, new Event()); // for some reason this is needed as color data is disposed after printing
 	}
 }

@@ -74,7 +74,7 @@ public class WelcomeDialog extends Dialog {
 		lblReleaseInfo.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, true, 1, 1));
 		lblReleaseInfo.setText("Welcome to version " + MainWindow.VERSION + " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
 				+ " at bugspray@alchitry.com\n\n"
-				+ "This version fixes some bugs."
+				+ "This version adds printing, scalable editor text, and renamable files."
 				+ "\n\nAs always, we hope you enjoy this version!");
 
 		Button btnOk = new Button(shell, SWT.NONE);

@@ -49,6 +49,7 @@ import org.jdom2.output.XMLOutputter;
 
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.RenameDialog;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
@@ -64,6 +65,7 @@ import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.tools.lucid.LucidExtractor;
 import com.alchitry.labs.parsers.tools.lucid.LucidGlobalExtractor;
 import com.alchitry.labs.parsers.tools.lucid.LucidModuleExtractor;
+import com.alchitry.labs.parsers.tools.lucid.LucidModuleRenamer;
 import com.alchitry.labs.parsers.tools.verilog.VerilogLucidModuleFixer;
 import com.alchitry.labs.parsers.tools.verilog.VerilogModuleListener;
 import com.alchitry.labs.parsers.types.Constant;
@@ -352,7 +354,8 @@ public class Project {
 		boolean exists = dest.exists();
 
 		if (!dest.equals(src)) {
-			if (exists && !Util.askQuestion("File Exists", "A file with the same name as \"" + fileName + "\" exsists in the project. Overwrite this file?"))
+			if (exists && !Util.askQuestion("File Exists",
+					"A file with the same name as \"" + fileName + "\" exsists in the project. Overwrite this file?"))
 				return false;
 
 			try {
@@ -531,6 +534,62 @@ public class Project {
 		}
 	}
 
+	private void addRenameFile(CustomTree.TreeLeaf item) {
+		File file = item.getFile();
+		if (isLibFile(file))
+			return;
+		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
+		mi.setText("Raname " + item.getName());
+		mi.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				String ogFileName = file.getName();
+				String ogName = ogFileName.substring(0, ogFileName.lastIndexOf('.'));
+				String ogExt = ogFileName.substring(ogFileName.lastIndexOf('.'));
+
+				RenameDialog renameDialog = new RenameDialog(treeMenu.getShell(), SWT.DIALOG_TRIM);
+				String newName = renameDialog.open(ogName);
+
+				for (TabChild editor : MainWindow.mainWindow.getTabs()) {
+					if (editor instanceof StyledCodeEditor)
+						if (file.equals(((StyledCodeEditor) editor).getFile())) {
+							MainWindow.mainWindow.getTabFolder().close(editor); // close file if open
+							break;
+						}
+				}
+
+				File newFile = Util.assembleFile(file.getParent(), newName + ogExt);
+				if (!renameFile(file, newFile)) {
+					Util.showError("Failed to rename file!");
+					return;
+				}
+
+				if (ogExt.equals(".luc")) {
+					String newText = LucidModuleRenamer.renameModule(newFile, newName);
+					try {
+						FileUtils.write(newFile, newText, false);
+					} catch (IOException e1) {
+						Util.showError("Failed to rewrite module name!");
+					}
+				}
+
+				try {
+					saveXML();
+				} catch (IOException e1) {
+					Util.showError("Failed to save project file!");
+				}
+				MainWindow.mainWindow.updateErrors();
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+	}
+
 	private void addRemoveFile(CustomTree.TreeLeaf item, final FileType type) {
 		MenuItem mi = new MenuItem(treeMenu, SWT.NONE);
 		mi.setText("Remove " + item.getName());
@@ -539,7 +598,16 @@ public class Project {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				File file = item.getFile();
-				boolean result = Util.askQuestion("Confirm Delete", "Are you sure you want to remove " + file + "?" + System.lineSeparator() + "This cannot be undone.");
+				boolean result = Util.askQuestion("Confirm Delete", "Are you sure you want to remove " + file + "?"
+						+ System.lineSeparator() + "This cannot be undone.");
+
+				for (TabChild editor : MainWindow.mainWindow.getTabs()) {
+					if (editor instanceof StyledCodeEditor)
+						if (((StyledCodeEditor) editor).getFile().equals(file)) {
+							MainWindow.mainWindow.getTabFolder().close(editor); // close file if open
+							break;
+						}
+				}
 
 				if (result) {
 					switch (type) {
@@ -557,13 +625,7 @@ public class Project {
 							Util.showError("Could not remove IP Core!");
 						break;
 					}
-					for (TabChild editor : MainWindow.mainWindow.getTabs()) {
-						if (editor instanceof StyledCodeEditor)
-							if (((StyledCodeEditor) editor).getFileName().equals(file)) {
-								MainWindow.mainWindow.getTabFolder().close(editor); // close file if open
-								break;
-							}
-					}
+
 					try {
 						saveXML();
 					} catch (IOException e1) {
@@ -601,8 +663,10 @@ public class Project {
 
 					}
 				});
-				if (!item.isNode())
+				if (!item.isNode()) {
 					addRemoveFile((CustomTree.TreeLeaf) item, FileType.SOURCE);
+					addRenameFile((CustomTree.TreeLeaf) item);
+				}
 			}
 		}
 	};
@@ -633,8 +697,10 @@ public class Project {
 
 					}
 				});
-				if (!item.isNode())
+				if (!item.isNode()) {
 					addRemoveFile((CustomTree.TreeLeaf) item, FileType.CONSTRAINT);
+					addRenameFile((CustomTree.TreeLeaf) item);
+				}
 			}
 		}
 	};
@@ -679,7 +745,9 @@ public class Project {
 				if (boardType.isType(Board.MOJO)) {
 					MainWindow.mainWindow.openFile(Util.assembleFile(getFolder(), CORES_FOLDER, item.getName()), true);
 				} else {
-					MainWindow.mainWindow.openFile(Util.assembleFile(getFolder(), CORES_FOLDER, item.getParent().getName(), item.getName()), true);
+					MainWindow.mainWindow.openFile(
+							Util.assembleFile(getFolder(), CORES_FOLDER, item.getParent().getName(), item.getName()),
+							true);
 				}
 			} else if (event.button == 3) {
 				for (MenuItem i : treeMenu.getItems())
@@ -701,7 +769,8 @@ public class Project {
 					}
 				});
 				// TODO: Add removal of Mojo cores
-				// if (boardType.isType(Board.MOJO) && item.isNode() && !item.getName().equals(CORES_PARENT))
+				// if (boardType.isType(Board.MOJO) && item.isNode() &&
+				// !item.getName().equals(CORES_PARENT))
 				// addRemoveFile((CustomTree.TreeLeaf) item, FileType.CORE);
 			}
 		}
@@ -736,7 +805,8 @@ public class Project {
 				if (isLibFile(source)) {
 					libFiles.add(source);
 				} else {
-					if (sourceLeafs.size() < leafCt + 1 || !sourceLeafs.get(leafCt).getName().equals(source.getName())) {
+					if (sourceLeafs.size() < leafCt + 1
+							|| !sourceLeafs.get(leafCt).getName().equals(source.getName())) {
 						TreeLeaf leaf = new TreeLeaf(source);
 						sourceBranch.add(leafCt, leaf);
 						leaf.addClickListener(sourceListner);
@@ -752,7 +822,8 @@ public class Project {
 			leafCt = 0;
 
 			if (libFiles.size() > 0) {
-				if (projectNodes.size() < categoryIdx + 1 || !projectNodes.get(categoryIdx).getName().equals(COMPONENTS_PARENT)) {
+				if (projectNodes.size() < categoryIdx + 1
+						|| !projectNodes.get(categoryIdx).getName().equals(COMPONENTS_PARENT)) {
 					TreeNode compBranch = new TreeNode(COMPONENTS_PARENT);
 					compBranch.addClickListener(componentsListner);
 					project.add(categoryIdx, compBranch);
@@ -774,7 +845,8 @@ public class Project {
 			}
 
 			if (ipCores.size() > 0) {
-				if (projectNodes.size() < categoryIdx + 1 || !projectNodes.get(categoryIdx).getName().equals(CORES_PARENT)) {
+				if (projectNodes.size() < categoryIdx + 1
+						|| !projectNodes.get(categoryIdx).getName().equals(CORES_PARENT)) {
 					TreeNode coreBranch = new TreeNode(CORES_PARENT);
 					coreBranch.addClickListener(coresListner);
 					project.add(categoryIdx, coreBranch);
@@ -808,7 +880,8 @@ public class Project {
 						for (int i = 0; i < cfiles.size(); i++) {
 							File cfile = cfiles.get(i);
 							if (cfile.isFile()) {
-								if (coreParentLeafs.size() < i + 1 || !coreParentLeafs.get(i).getName().equals(cfile.getName())) {
+								if (coreParentLeafs.size() < i + 1
+										|| !coreParentLeafs.get(i).getName().equals(cfile.getName())) {
 									TreeLeaf leaf = new TreeLeaf(cfile);
 									coreParent.add(leafCt, leaf);
 									leaf.addClickListener(coresListner);
@@ -825,7 +898,8 @@ public class Project {
 					coreBranch.remove(coreLeafs.size() - 1);
 			}
 
-			if (projectNodes.size() < categoryIdx + 1 || !projectNodes.get(categoryIdx).getName().equals(CONSTRAINTS_PARENT)) {
+			if (projectNodes.size() < categoryIdx + 1
+					|| !projectNodes.get(categoryIdx).getName().equals(CONSTRAINTS_PARENT)) {
 				TreeNode constBranch = new TreeNode(CONSTRAINTS_PARENT);
 				constBranch.addClickListener(constraintsListner);
 				project.add(categoryIdx, constBranch);
@@ -934,7 +1008,8 @@ public class Project {
 					case Tags.constraint:
 						att = file.getAttribute(Tags.Attributes.library);
 						boolean isLib = Boolean.valueOf(att != null && att.getValue().equals("true"));
-						File cstFile = Util.assembleFile(isLib ? Locations.COMPONENTS : getConstraintFolder(), file.getText());
+						File cstFile = Util.assembleFile(isLib ? Locations.COMPONENTS : getConstraintFolder(),
+								file.getText());
 						constraintFiles.add(cstFile);
 						break;
 					case Tags.component:
@@ -976,7 +1051,8 @@ public class Project {
 		}
 
 		if (version != VERSION_ID) {
-			if (Util.askQuestion("This project is from a previous version of the IDE. Would you like to attempt to update it?")) {
+			if (Util.askQuestion(
+					"This project is from a previous version of the IDE. Would you like to attempt to update it?")) {
 				if (version == 0) {
 					File coresDir = new File(Util.assemblePath(getProjectFolder(), "coreGen"));
 					File newCoresDir = new File(Util.assemblePath(getProjectFolder(), CORES_FOLDER));
@@ -1141,7 +1217,8 @@ public class Project {
 		return converter.getInstModules(file, modules);
 	}
 
-	public List<InstModule> getModuleList(List<Module> modules, boolean mergeDupes, Module topModule) throws IOException {
+	public List<InstModule> getModuleList(List<Module> modules, boolean mergeDupes, Module topModule)
+			throws IOException {
 		Queue<InstModule> queue = new LinkedList<>();
 		List<InstModule> outList = new ArrayList<>();
 
@@ -1172,8 +1249,8 @@ public class Project {
 					boolean add = true;
 
 					// Skip IP core files
-					if (m.getType().getFile() == null
-							|| m.getType().getFile().getCanonicalPath().startsWith(Util.assembleFile(projectFolder, Project.CORES_FOLDER).getCanonicalPath()))
+					if (m.getType().getFile() == null || m.getType().getFile().getCanonicalPath()
+							.startsWith(Util.assembleFile(projectFolder, Project.CORES_FOLDER).getCanonicalPath()))
 						add = false;
 
 					if (add && mergeDupes)
@@ -1217,10 +1294,12 @@ public class Project {
 
 		String oldName = projectName;
 		projectName = name;
-		
-		// Need to update core file references before saving so they don't point to the old project
+
+		// Need to update core file references before saving so they don't point to the
+		// old project
 		for (IPCore core : ipCores) {
-			Path oldCorePath = Paths.get(new File(Util.assemblePath(oldFolder, CORES_FOLDER, core.getName())).getAbsolutePath());
+			Path oldCorePath = Paths
+					.get(new File(Util.assemblePath(oldFolder, CORES_FOLDER, core.getName())).getAbsolutePath());
 			ArrayList<File> updatedFiles = new ArrayList<>(core.getFiles().size());
 			for (File corefile : core.getFiles()) {
 				String p = oldCorePath.relativize(Paths.get(corefile.getAbsolutePath())).toString();
@@ -1276,7 +1355,8 @@ public class Project {
 
 		for (IPCore core : ipCores) {
 			Element coreElement = new Element(Tags.core).setAttribute(Tags.Attributes.name, core.getName());
-			Path corePath = Paths.get(new File(Util.assemblePath(projectFolder, CORES_FOLDER, core.getName())).getAbsolutePath());
+			Path corePath = Paths
+					.get(new File(Util.assemblePath(projectFolder, CORES_FOLDER, core.getName())).getAbsolutePath());
 			for (File corefile : core.getFiles()) {
 				String p = corePath.relativize(Paths.get(corefile.getAbsolutePath())).toString();
 				coreElement.addContent(new Element(Tags.source).setText(p));
@@ -1311,7 +1391,8 @@ public class Project {
 		debugInfo = dbi;
 
 		try {
-			ObjectOutputStream e = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(Util.assembleFile(projectFolder, "work", "debug", "debug.data"))));
+			ObjectOutputStream e = new ObjectOutputStream(new BufferedOutputStream(
+					new FileOutputStream(Util.assembleFile(projectFolder, "work", "debug", "debug.data"))));
 			e.writeObject(dbi);
 			e.close();
 		} catch (Exception o) {
@@ -1324,7 +1405,8 @@ public class Project {
 			File debugFile = Util.assembleFile(projectFolder, "work", "debug", "debug.data");
 			if (!debugFile.exists())
 				return false;
-			ObjectInputStream e = new ObjectInputStream(new BufferedInputStream(new FileInputStream(debugFile.getPath())));
+			ObjectInputStream e = new ObjectInputStream(
+					new BufferedInputStream(new FileInputStream(debugFile.getPath())));
 			DebugInfo dbi = (DebugInfo) e.readObject();
 			e.close();
 			debugInfo = dbi;
@@ -1454,13 +1536,15 @@ public class Project {
 				if (hasErrors)
 					addError(String.format("Errors in file %s:%s", file, System.lineSeparator()), SyntaxError.ERROR);
 				else if (hasWarnings)
-					addError(String.format("Warnings in file %s:%s", file, System.lineSeparator()), SyntaxError.WARNING);
+					addError(String.format("Warnings in file %s:%s", file, System.lineSeparator()),
+							SyntaxError.WARNING);
 				else
 					addError(String.format("Info in file %s:%s", file, System.lineSeparator()), SyntaxError.INFO);
 
 				for (SyntaxError se : errors) {
 					if (se.type != SyntaxError.DEBUG)
-						addError(String.format("    Line %d, Column %d : %s%s", se.line, se.column, se.message, System.lineSeparator()), se.type);
+						addError(String.format("    Line %d, Column %d : %s%s", se.line, se.column, se.message,
+								System.lineSeparator()), se.type);
 				}
 				try {
 					Thread.sleep(1000);

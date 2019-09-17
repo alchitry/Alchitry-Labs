@@ -136,6 +136,13 @@ public class MainMenu {
 				((StyledCodeEditor) (parent.tabFolder.getSelectedControl())).save();
 			}
 		});
+		
+		createItem(subMenu, "Print\tCtrl+P", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.printOpen();
+			}
+		});
 
 		createItem(subMenu, "Exit", new SelectionAdapter() {
 			@Override
@@ -341,7 +348,7 @@ public class MainMenu {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Settings.pref.putBoolean(Settings.USE_ICESTORM, false);
-				updateCuToolchainSelection();
+				updateCheckMenu(cuBuilder.getItems(), (MenuItem) e.widget);
 			}
 		});
 
@@ -349,7 +356,7 @@ public class MainMenu {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Settings.pref.putBoolean(Settings.USE_ICESTORM, true);
-				updateCuToolchainSelection();
+				updateCheckMenu(cuBuilder.getItems(), (MenuItem) e.widget);
 			}
 		});
 
@@ -362,6 +369,68 @@ public class MainMenu {
 				dialog.open();
 			}
 		});
+
+		Menu fontMenu = createSubMenu(subMenu, "Editor Font Size");
+
+		createCheckItem(fontMenu, "0.75x", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.setTabFonts(9);
+				updateCheckMenu(fontMenu.getItems(), (MenuItem) e.widget);
+			}
+		});
+
+		createCheckItem(fontMenu, "1x", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.setTabFonts(12);
+				updateCheckMenu(fontMenu.getItems(), (MenuItem) e.widget);
+			}
+		});
+
+		createCheckItem(fontMenu, "1.25x", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.setTabFonts(15);
+				updateCheckMenu(fontMenu.getItems(), (MenuItem) e.widget);
+			}
+		});
+
+		createCheckItem(fontMenu, "1.5x", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.setTabFonts(18);
+				updateCheckMenu(fontMenu.getItems(), (MenuItem) e.widget);
+			}
+		});
+
+		createCheckItem(fontMenu, "1.75x", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.setTabFonts(21);
+				updateCheckMenu(fontMenu.getItems(), (MenuItem) e.widget);
+			}
+		});
+
+		createCheckItem(fontMenu, "2x", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				parent.setTabFonts(24);
+				updateCheckMenu(fontMenu.getItems(), (MenuItem) e.widget);
+			}
+		});
+
+		double fontPercent = Settings.pref.getInt(Settings.EDITOR_FONT_SIZE, 12) / 12.0;
+
+		for (MenuItem mi : fontMenu.getItems()) {
+			double mip = Double.parseDouble(mi.getText().substring(0, mi.getText().length() - 1));
+			mi.setSelection(mip == fontPercent);
+		}
+	}
+
+	private void updateCheckMenu(MenuItem[] items, MenuItem selectedItem) {
+		for (MenuItem mi : items)
+			mi.setSelection(mi == selectedItem);
 	}
 
 	private void updateCuToolchainSelection() {
@@ -376,7 +445,8 @@ public class MainMenu {
 		createItem(subMenu, "Send Feedback", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FeedbackDialog feedbackDialog = new FeedbackDialog(parent.shlAlchitryLabs, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.CLOSE);
+				FeedbackDialog feedbackDialog = new FeedbackDialog(parent.shlAlchitryLabs,
+						SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.CLOSE);
 				EmailMessage message = feedbackDialog.open();
 				if (message != null) {
 					Reporter.sendFeedback(message);

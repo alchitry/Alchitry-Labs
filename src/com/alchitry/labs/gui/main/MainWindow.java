@@ -59,7 +59,7 @@ import com.alchitry.labs.widgets.CustomTree;
 import com.alchitry.labs.widgets.TabChild;
 
 public class MainWindow {
-	public static final String VERSION = "1.1.2";
+	public static final String VERSION = "1.1.4";
 	public static final String LIB_VERSION = "1.0.0";
 
 	protected final Display display = Display.getDefault();
@@ -83,6 +83,8 @@ public class MainWindow {
 	public static MainWindow mainWindow;
 	protected CoreGen coreGen;
 	protected VivadoIP vivadoIP;
+	
+	public StyledCodeEditor lastActiveEditor;
 
 	/**
 	 * Launch the application.
@@ -418,6 +420,16 @@ public class MainWindow {
 		int numEditors = tabs.size();
 		for (int i = 0; i < numEditors; i++) {
 			tabs.get(0).close();
+		}
+	}
+	
+	public void setTabFonts(int size) {
+		Settings.pref.putInt(Settings.EDITOR_FONT_SIZE, size);
+		int numEditors = tabs.size();
+		for (int i = 0; i < numEditors; i++) {
+			if (tabs.get(i) instanceof StyledCodeEditor) {
+				((StyledCodeEditor)tabs.get(i)).updateFont();
+			}
 		}
 	}
 
@@ -857,6 +869,13 @@ public class MainWindow {
 		tabFolder.opened = true;
 		return true;
 
+	}
+	
+	public void printOpen() {
+		if (lastActiveEditor != null)
+			lastActiveEditor.print();
+		else
+			Util.showInfo("No active text editors to print!");
 	}
 
 	public static HashMap<String, List<Constant>> getGlobalConstants() {
