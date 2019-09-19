@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import org.apache.commons.io.FileUtils;
+
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
@@ -186,7 +188,11 @@ public class VivadoIP {
 				"/");
 		String projectFile = Util.assembleLinuxPath(coresFolder, "managed_ip_project", "managed_ip_project.xpr");
 		String xciFile = Util.assembleLinuxPath(coresFolder, "mig_7series_0", "mig_7series_0.xci").replace(" ", "\\ ");
-		String migPrjFile = Util.assembleFile(project.getProjectFolder(),Project.CORES_FOLDER,"managed_ip_project").toPath().relativize(Util.assembleFile(Locations.COMPONENTS, "mig.prj").toPath()).toString().replace("\\", "/");
+		File migSrcPrjFile = Util.assembleFile(Locations.COMPONENTS, "mig.prj");
+		File migDstPrjFile = Util.assembleFile(project.getProjectFolder(),Project.CORES_FOLDER,"managed_ip_project","mig.prj");
+		FileUtils.copyFile(migSrcPrjFile, migDstPrjFile);
+		
+		String migPrjFile = "../managed_ip_project/mig.prj";
 		//String migPrjFile = Util.assembleLinuxPath(Locations.COMPONENTS, "mig.prj").replace("\\", "/");
 
 		final String nl = System.lineSeparator();
