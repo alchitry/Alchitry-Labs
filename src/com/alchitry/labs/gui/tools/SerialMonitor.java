@@ -101,6 +101,12 @@ public class SerialMonitor {
 			return;
 		}
 
+		if (MainWindow.getOpenProject() == null) {
+			Util.showError("Please open a project before opening the serial port monitor!");
+			shell.dispose();
+			return;
+		}
+
 		if (!MainWindow.getOpenProject().getBoard().isType(Board.MOJO)) {
 			int baud = 1000000;
 			int setBaud = -1;
@@ -120,7 +126,10 @@ public class SerialMonitor {
 				if (setBaud == baud) {
 					break;
 				} else {
-					if (Util.askQuestion("Baud Mismatch", "The requested baudrate could not be set. The actual baudrate is " + setBaud + ". Is this acceptable?", Util.getShell()))
+					if (Util.askQuestion("Baud Mismatch",
+							"The requested baudrate could not be set. The actual baudrate is " + setBaud
+									+ ". Is this acceptable?",
+							Util.getShell()))
 						break;
 				}
 			}

@@ -898,7 +898,7 @@ public class ConstExprParser extends LucidBaseListener {
 				else
 					values.put(ctx, new ConstValue(op1.getBigInt().multiply(op2.getBigInt()), Util.widthOfMult(op1.getWidth(), op2.getWidth())));
 			} else {
-				if (!op1.isNumber() || !op2.isNumber())
+				if (!op1.isNumber() || !op2.isNumber() || op2.getBigInt().equals(BigInteger.ZERO))
 					values.put(ctx, new ConstValue(BitValue.Bx, op1.getWidth()));
 				else
 					values.put(ctx, new ConstValue(op1.getBigInt().divide(op2.getBigInt()), op1.getWidth()));

@@ -872,7 +872,7 @@ public class MainWindow {
 	}
 	
 	public void printOpen() {
-		if (lastActiveEditor != null)
+		if (lastActiveEditor != null && !lastActiveEditor.isDisposed())
 			lastActiveEditor.print();
 		else
 			Util.showInfo("No active text editors to print!");

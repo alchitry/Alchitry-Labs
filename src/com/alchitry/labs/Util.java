@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
@@ -181,7 +180,7 @@ public class Util {
 	public static boolean askQuestion(String message) {
 		return askQuestion("Question?", message);
 	}
-	
+
 	public static boolean askQuestion(String title, String message) {
 		return askQuestion(title, message, shell);
 	}
@@ -369,7 +368,8 @@ public class Util {
 
 	public static int minWidthNum(BigInteger i) {
 		if (i.compareTo(BigInteger.ZERO) != 0)
-			return BigFunctions.ln(new BigDecimal(i), 10).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.FLOOR).intValue() + 1;
+			return BigFunctions.ln(new BigDecimal(i), 10).divide(BigFunctions.LOG2, RoundingMode.HALF_UP)
+					.setScale(0, RoundingMode.FLOOR).intValue() + 1;
 		else
 			return 1;
 	}
@@ -387,17 +387,13 @@ public class Util {
 	}
 
 	public static int widthOfMult(long w1, long w2) {
-		return (int) Math.floor((Math.log((Math.pow(2, w1) - 1) * (Math.pow(2, w2) - 1)) / Math.log(2))) + 1; // max value
+		return (int) Math.floor((Math.log((Math.pow(2, w1) - 1) * (Math.pow(2, w2) - 1)) / Math.log(2))) + 1; // max
+																												// value
 	}
 
 	public static String getWorkspace() {
-		String workspace = Settings.pref.get(Settings.WORKSPACE, null);
-		if (workspace == null) {
-			JFileChooser fr = new JFileChooser();
-			FileSystemView fw = fr.getFileSystemView();
-			workspace = fw.getDefaultDirectory().getAbsolutePath() + File.separatorChar + "alchitry";
-		}
-		return workspace;
+		return Settings.pref.get(Settings.WORKSPACE,
+				assemblePath(FileSystemView.getFileSystemView().getDefaultDirectory().getPath(), "alchitry"));
 	}
 
 	public static void setWorkspace(String workspace) {
@@ -681,7 +677,8 @@ public class Util {
 			process = pb.start();
 		} catch (Exception e) {
 			Util.log.severe("Couldn't start " + pb.command().get(0));
-			Util.showError("Could not start " + pb.command().get(0) + "! Please check the location for " + pb.command().get(0) + " is correctly set in the settings menu.");
+			Util.showError("Could not start " + pb.command().get(0) + "! Please check the location for "
+					+ pb.command().get(0) + " is correctly set in the settings menu.");
 			return null;
 		}
 

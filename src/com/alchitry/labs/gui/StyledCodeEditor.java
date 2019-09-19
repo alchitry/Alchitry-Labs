@@ -750,11 +750,26 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			return;
 
 		Printer printer = new Printer(data);
-		Util.syncExec(print(printer, printOptions));
+	
+		final Runnable printJob = print(printer, printOptions);
+		
 		skipEdit = true;
 		undoRedo.skipNext();
 		if (autoComplete != null)
 			autoComplete.skipNext();
-		notifyListeners(SWT.Modify, new Event()); // for some reason this is needed as color data is disposed after printing
+		// for some reason this is needed as color data is disposed after printing
+		notifyListeners(SWT.Modify, new Event()); 
+		
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Util.clearConsole();
+				Util.println("Printing " + fileName + "...");
+				printJob.run();
+				Util.println("Complete.", Theme.successTextColor);
+			}
+		});
+		thread.start();
+
 	}
 }
