@@ -84,6 +84,10 @@
     <module file="mig_wrapper.luc" name="MIG Wrapper">
       <description>This module wraps the DDR3 MIG IP from Xilinx into a more convenient interface.</description>
     </module>
+    <module file="lru_cache.luc" name="LRU Cache">
+      <description>This module is a cache the approximates a fully associative LRU (least recently used) cache. It can be used with the MIG Wrapper interface to the DDR3 memory on the Alchitry Au.</description>
+      <depends>MIG Wrapper</depends>
+    </module>
   </category>
   <category name="Math">
     <module file="pn_gen.luc" name="Pseudo-random Number Generator">

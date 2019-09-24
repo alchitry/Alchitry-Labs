@@ -1,5 +1,9 @@
 <projects>
   <project name="Base Project">Base Project</project>
+  <project name="LED to Button">LED to Button</project>
+  <project name="Blinker Demo">Blinker Demo</project>
+  <project name="Hello World!">Hello World</project>
+  <project name="Hello RAM!">Hello RAM</project>
   <project name="IO Element Base">IO Element Base</project>
   <project name="IO Element Demo">IO Element Demo</project>
 </projects>

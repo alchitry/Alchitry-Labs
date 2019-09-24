@@ -603,7 +603,7 @@ public class Project {
 
 				for (TabChild editor : MainWindow.mainWindow.getTabs()) {
 					if (editor instanceof StyledCodeEditor)
-						if (((StyledCodeEditor) editor).getFile().equals(file)) {
+						if (file.equals(((StyledCodeEditor) editor).getFile())) {
 							MainWindow.mainWindow.getTabFolder().close(editor); // close file if open
 							break;
 						}

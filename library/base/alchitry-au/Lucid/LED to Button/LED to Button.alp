@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="LED to Button" board="Alchitry Au" language="Lucid" version="2">
+  <files>
+    <src top="true">au_top.luc</src>
+    <component>reset_conditioner.luc</component>
+    <constraint lib="true">alchitry.acf</constraint>
+    <constraint lib="true">au.xdc</constraint>
+  </files>
+</project>

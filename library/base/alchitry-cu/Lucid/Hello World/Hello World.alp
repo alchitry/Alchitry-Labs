@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Hello World" board="Alchitry Cu" language="Lucid" version="2">
+  <files>
+    <src>greeter.luc</src>
+    <src>hello_world_rom.luc</src>
+    <src top="true">cu_top.luc</src>
+    <component>reset_conditioner.luc</component>
+    <component>uart_tx.luc</component>
+    <component>uart_rx.luc</component>
+    <constraint lib="true">alchitry.acf</constraint>
+  </files>
+</project>
