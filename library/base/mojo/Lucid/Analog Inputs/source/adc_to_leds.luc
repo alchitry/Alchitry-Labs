@@ -26,7 +26,8 @@ module adc_to_leds (
     pwm.value = 8x{{sample}};                         // all PWM values are from sample
     pwm.update = 8b0;                                 // default to not updating
     
-    if (new_sample) {                                 // when there is a new sample
+    // when there is a new sample for our given channel
+    if (new_sample && sample_channel == LED_TO_CHANNEL[ch.q]) {  
       pwm.update[CHANNEL_TO_LED[sample_channel]] = 1; // update the corresponding PWM channel
       ch.d = ch.q + 1;                                // increment the channel we are sampling
       if (ch.q == 7)                                  // there are only 8 channels (0 to 7)
