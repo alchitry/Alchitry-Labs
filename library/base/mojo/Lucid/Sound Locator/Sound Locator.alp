@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Sound Locator" board="Mojo" language="Lucid" version="2">
+<project name="Sound Locator" board="Mojo" language="Lucid" version="3">
   <files>
     <src>sound_locator.luc</src>
     <src top="true">mojo_top.luc</src>
@@ -13,7 +13,7 @@
     <component>cclk_detector.luc</component>
     <component>uart_rx.luc</component>
     <component>reg_interface.luc</component>
-    <component>spi_slave.luc</component>
+    <component>spi_peripheral.luc</component>
     <component>avr_interface.luc</component>
     <component>uart_tx.luc</component>
     <component>reset_conditioner.luc</component>

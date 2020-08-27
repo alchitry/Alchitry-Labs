@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Hello RAM" board="Mojo" language="Lucid" version="2">
+<project name="Hello RAM" board="Mojo" language="Lucid" version="3">
   <files>
     <src>greeter.luc</src>
     <src top="true">mojo_top.luc</src>
     <constraint lib="true">mojo.ucf</constraint>
-    <component>spi_slave.luc</component>
+    <component>spi_peripheral.luc</component>
     <component>uart_rx.luc</component>
     <component>simple_ram.v</component>
     <component>cclk_detector.luc</component>
