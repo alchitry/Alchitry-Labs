@@ -41,7 +41,8 @@
    To write, set write_en to 1, write_data to the value to write, and waddr to 
    the address you want to write.
    
-   You should avoid reading and writing to the same address simultaneously.
+   You should avoid reading and writing to the same address simultaneously. The 
+   value read in this case is undefined.
 */
 
 module simple_dual_ram #(

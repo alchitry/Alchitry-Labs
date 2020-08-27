@@ -136,7 +136,7 @@ public class MainMenu {
 				((StyledCodeEditor) (parent.tabFolder.getSelectedControl())).save();
 			}
 		});
-		
+
 		createItem(subMenu, "Print\tCtrl+P", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -426,6 +426,39 @@ public class MainMenu {
 			double mip = Double.parseDouble(mi.getText().substring(0, mi.getText().length() - 1));
 			mi.setSelection(mip == fontPercent);
 		}
+		
+		/*
+		
+		if (Board.isType(board, Board.MOJO)) {
+			MenuItem menuItem = new MenuItem(subMenu, SWT.CASCADE);
+			menuItem.setText("Serial Port");
+
+			Menu portMenu = new Menu(menuItem);
+			menuItem.setMenu(portMenu);
+			
+			SelectionAdapter portSelectedAdapter = new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					Settings.pref.put(Settings.SERIAL_PORT, ((MenuItem) e.widget).getText());
+				}
+			};
+
+			menuItem.addArmListener(new ArmListener() {
+
+				@Override
+				public void widgetArmed(ArmEvent e) {
+					for (MenuItem mi : portMenu.getItems()) 
+						mi.dispose();
+					for (SerialPort p : SerialPort.getCommPorts()) 
+						createCheckItem(portMenu, p.getDescriptivePortName(), portSelectedAdapter);
+					String currentPort = Settings.pref.get(Settings.SERIAL_PORT, null);
+					for (MenuItem mi : portMenu.getItems()) 
+						mi.setSelection(mi.getText().equals(currentPort));
+				}
+			});
+		}
+		
+		*/
 	}
 
 	private void updateCheckMenu(MenuItem[] items, MenuItem selectedItem) {
@@ -445,8 +478,7 @@ public class MainMenu {
 		createItem(subMenu, "Send Feedback", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FeedbackDialog feedbackDialog = new FeedbackDialog(parent.shlAlchitryLabs,
-						SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.CLOSE);
+				FeedbackDialog feedbackDialog = new FeedbackDialog(parent.shlAlchitryLabs, SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.CLOSE);
 				EmailMessage message = feedbackDialog.open();
 				if (message != null) {
 					Reporter.sendFeedback(message);

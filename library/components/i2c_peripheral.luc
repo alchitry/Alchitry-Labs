@@ -24,7 +24,7 @@
 
    *****************************************************************************/
 
-module i2c_slave #(
+module i2c_peripheral #(
     DEVICE_ID = 7h50 : DEVICE_ID.WIDTH == 7
   )(
     input clk,  // clock

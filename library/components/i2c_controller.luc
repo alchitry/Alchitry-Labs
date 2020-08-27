@@ -24,8 +24,8 @@
    
    *****************************************************************************
    
-   I2C Master: This is an I2C master interface. With this
-   you can communicate to multiple I2C slave devices.
+   I2C Controller: This is an I2C controller interface. With this
+   you can communicate to multiple I2C peripheral devices.
    
    Each I2C transaction begins with the start event. This
    is triggered by setting the start input high for one
@@ -51,10 +51,10 @@
    acknowledge or 0 to not.
    
    When performing a write, ack_write will tell if your
-   write was acknowledged by the slave device.
+   write was acknowledged by the peripheral device.
 */
 
-module i2c_master #(
+module i2c_controller #(
     CLK_DIV = 8 : CLK_DIV >= 3 // divide clock by 2^CLK_DIV, must be 3 or more
   )(
     input clk,          // clock

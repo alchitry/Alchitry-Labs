@@ -81,8 +81,12 @@ public class ProjectSignal implements Serializable {
 			return dff.getName() + ".q";
 		if (fsm != null)
 			return fsm.getName() + ".q";
-		if (sig != null)
-			return sig.getName();
+		if (sig != null) {
+			String prefix = "";
+			if (parent != null)
+				prefix = parent.getName() + ".";
+			return prefix + sig.getName();
+		}
 		return "";
 	}
 

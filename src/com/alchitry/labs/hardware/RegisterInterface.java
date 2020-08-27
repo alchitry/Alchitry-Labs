@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.usb4java.LibUsbException;
 
-import com.alchitry.labs.hardware.usb.UsbSerial;
+import com.alchitry.labs.hardware.usb.SerialDevice;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
 
 public class RegisterInterface {
-	private UsbSerial serialPort;
+	private SerialDevice serialPort;
 
 	public RegisterInterface() {
 
@@ -20,7 +20,7 @@ public class RegisterInterface {
 			return false;
 		return true;
 	}
-	
+
 	public boolean connect() {
 		return connect(UsbUtil.ALL_DEVICES);
 	}
@@ -37,7 +37,7 @@ public class RegisterInterface {
 	public boolean disconnect() {
 		if (serialPort == null)
 			return true;
-		return serialPort.usbClose();
+		return serialPort.close();
 	}
 
 	public boolean write(int address, int data) {
@@ -92,9 +92,10 @@ public class RegisterInterface {
 		buff[3] = (byte) ((address >> 16) & 0xff);
 		buff[4] = (byte) ((address >> 24) & 0xff);
 		if (serialPort.writeData(buff) != buff.length)
-			throw new LibUsbException("readReg " + " failed to write address", -1);
+			throw new RuntimeException("readReg " + " failed to write address");
 		buff = new byte[4];
-		serialPort.readDataWithTimeout(buff);
+		if (serialPort.readDataWithTimeout(buff) != buff.length)
+			throw new RuntimeException("Reading " + buff.length + " bytes took too long!");
 		return (buff[0] & 0xff) | (buff[1] & 0xff) << 8 | (buff[2] & 0xff) << 16 | (buff[3] & 0xff) << 24;
 	}
 
@@ -121,7 +122,8 @@ public class RegisterInterface {
 			throw new LibUsbException("readReg " + " failed to write address", -1);
 
 		buff = new byte[length * 4];
-		serialPort.readDataWithTimeout(buff);
+		if (serialPort.readDataWithTimeout(buff) != buff.length)
+			throw new LibUsbException("Reading " + buff.length + " bytes took too long!", -1);
 
 		for (int i = 0; i < buff.length; i += 4) {
 			data[i / 4 + start] = (buff[i] & 0xff) | (buff[i + 1] & 0xff) << 8 | (buff[i + 2] & 0xff) << 16 | (buff[i + 3] & 0xff) << 24;

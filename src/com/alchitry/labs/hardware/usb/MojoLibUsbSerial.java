@@ -8,7 +8,7 @@ import org.usb4java.LibUsbException;
 
 import com.alchitry.labs.hardware.usb.ftdi.enums.DetachMode;
 
-public class MojoSerial extends UsbSerial {
+public class MojoLibUsbSerial extends UsbDevice implements SerialDevice {
 
 	static final byte ACM_CTRL_DTR = 0x01;
 	static final byte ACM_CTRL_RTS = 0x02;
@@ -20,7 +20,7 @@ public class MojoSerial extends UsbSerial {
 	static final byte CDC_SET_CONTROL_LINE_STATE = 0x22;
 	static final byte CDC_SEND_BREAK = 0x23;
 
-	public MojoSerial() {
+	public MojoLibUsbSerial() {
 		super();
 	}
 
@@ -109,5 +109,10 @@ public class MojoSerial extends UsbSerial {
 		short value = (short) ((dtr ? ACM_CTRL_DTR : 0x00) | (rts ? ACM_CTRL_RTS : 0x00));
 
 		LibUsb.controlTransfer(device, DEVICE_OUT_REQUEST, CDC_SET_CONTROL_LINE_STATE, value, (short) 0, EMPTY_BUF, writeTimeout);
+	}
+
+	@Override
+	public boolean close() {
+		return usbClose();
 	}
 }

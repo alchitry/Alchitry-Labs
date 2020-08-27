@@ -7,15 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import org.usb4java.LibUsbException;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.hardware.usb.MojoSerial;
+import com.alchitry.labs.hardware.usb.SerialDevice;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 
 public class MojoLoader extends ProjectLoader {
-	private MojoSerial mojo;
+	private SerialDevice mojo;
 
 	public MojoLoader() {
 
@@ -38,14 +36,14 @@ public class MojoLoader extends ProjectLoader {
 
 		Util.println("Error: " + e, true);
 		if (mojo != null)
-			mojo.usbClose();
+			mojo.close();
 	}
 
 	private boolean connect() {
 		Util.println("Connecting...");
 		try {
 			mojo = UsbUtil.openMojoSerial();
-		} catch (LibUsbException e) {
+		} catch (Exception e) {
 			onError("Error while opening Mojo! " + e.getMessage());
 			return false;
 		}
@@ -64,7 +62,8 @@ public class MojoLoader extends ProjectLoader {
 
 	private byte readByte() {
 		byte[] bbuf = new byte[1];
-		mojo.readDataWithTimeout(bbuf);
+		if (mojo.readDataWithTimeout(bbuf) != bbuf.length)
+			throw new RuntimeException("Reading " + bbuf.length + " bytes took too long!");
 		return bbuf[0];
 	}
 
@@ -94,7 +93,7 @@ public class MojoLoader extends ProjectLoader {
 		} catch (Exception e) {
 			Util.logException(e);
 		} finally {
-			mojo.usbClose();
+			mojo.close();
 		}
 	}
 
@@ -111,6 +110,8 @@ public class MojoLoader extends ProjectLoader {
 			onError("The bin file could not be opened!");
 			return;
 		}
+
+		Util.println("Restarting Mojo...");
 
 		restartMojo();
 
@@ -251,12 +252,11 @@ public class MojoLoader extends ProjectLoader {
 			Util.logException(e);
 			return;
 		} finally {
-			mojo.usbClose();
+			mojo.close();
 		}
 
 		Util.println("Done.", Theme.successTextColor);
 
-		
 	}
 
 }

@@ -20,10 +20,7 @@ public abstract class Mpsse {
 
 	public void init() {
 		ftdi.usbReset();
-		ftdi.readDataSetChunkSize(16384);
-		ftdi.writeDataSetChunksize(16384);
-		ftdi.setErrorChar((byte) 0, false);
-		ftdi.setEventChar((byte) 0, false);
+		ftdi.setChars((byte) 0, false, (byte) 0, false);
 		ftdi.setLatencyTimer((byte) 16);
 		ftdi.setBitmode((byte) 0, BitMode.RESET);
 		ftdi.setBitmode((byte) 0, BitMode.MPSSE);
@@ -39,7 +36,7 @@ public abstract class Mpsse {
 	private boolean syncMpsse() {
 		ftdi.writeData(new byte[] { (byte) 0xAA });
 		try {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 		}
 		byte[] data = new byte[8];

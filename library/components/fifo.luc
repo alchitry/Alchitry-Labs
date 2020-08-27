@@ -53,6 +53,7 @@ module fifo #(
   // write clock domain
   .clk(clk), .rst(rst) {
     dff waddr[ADDR_SIZE];                      // write address
+    dff waddr_delay[ADDR_SIZE];                // write address delayed one cycle
     dff raddr[ADDR_SIZE];                      // read address
   }
   
@@ -70,12 +71,13 @@ module fifo #(
     ram.write_en = 0;                          // default to not writing
     
     next_write = waddr.q + 1;
+    waddr_delay.d = waddr.q;
     
     // if next write address isn't the read address we can write
     wrdy = next_write != raddr.q;
     
     // if the current read address isn't the write address we can read
-    rrdy = raddr.q != waddr.q;
+    rrdy = raddr.q != waddr_delay.q;
     
     // invert ready signals for full and empty
     full = !wrdy;

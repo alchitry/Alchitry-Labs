@@ -10,11 +10,11 @@ import com.alchitry.labs.hardware.usb.ftdi.enums.FlashCommand;
 import com.alchitry.labs.hardware.usb.ftdi.enums.MpsseCommand;
 
 public class LatticeSpi extends Mpsse {
-	//private static final byte DATA_TMS = (byte) 0x40; /* When set use TMS mode */
+	// private static final byte DATA_TMS = (byte) 0x40; /* When set use TMS mode */
 	private static final byte DATA_IN = (byte) 0x20; /* When set read data (Data IN) */
 	private static final byte DATA_OUT = (byte) 0x10; /* When set write data (Data OUT) */
-	//private static final byte DATA_LSB = (byte) 0x08; /* When set input/output data LSB first. */
-	//private static final byte DATA_ICN = (byte) 0x04; /* When set receive data on negative clock edge */
+	// private static final byte DATA_LSB = (byte) 0x08; /* When set input/output data LSB first. */
+	// private static final byte DATA_ICN = (byte) 0x04; /* When set receive data on negative clock edge */
 	private static final byte DATA_BITS = (byte) 0x02; /* When set count bits not bytes */
 	private static final byte DATA_OCN = (byte) 0x01; /* When set update data on negative clock edge */
 
@@ -44,7 +44,8 @@ public class LatticeSpi extends Mpsse {
 
 	private byte rxByte() {
 		byte[] buf = new byte[1];
-		ftdi.readDataWithTimeout(buf);
+		if (ftdi.readDataWithTimeout(buf) != buf.length)
+			throw new RuntimeException("Read of " + buf.length + " bytes timed out!");
 		return buf[0];
 	}
 
@@ -76,7 +77,8 @@ public class LatticeSpi extends Mpsse {
 		if (ftdi.writeData(data) != data.length)
 			throw new MpsseException("Failed to write full chunk!");
 
-		ftdi.readDataWithTimeout(data);
+		if (ftdi.readDataWithTimeout(data) != data.length)
+			throw new RuntimeException("Read of " + data.length + " bytes timed out!");
 	}
 
 	private byte xferSpiBits(byte data, int n) {

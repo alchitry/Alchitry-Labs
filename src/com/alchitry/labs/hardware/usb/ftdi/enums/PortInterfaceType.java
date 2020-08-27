@@ -23,6 +23,7 @@ package com.alchitry.labs.hardware.usb.ftdi.enums;
 public enum PortInterfaceType {
 
 	INTERFACE_ANY(0), INTERFACE_A(1), INTERFACE_B(2), INTERFACE_C(3), INTERFACE_D(4);
+
 	private final short index;
 
 	private PortInterfaceType(int index) {
@@ -31,6 +32,22 @@ public enum PortInterfaceType {
 
 	public short getIndex() {
 		return index;
+	}
+
+	public boolean letterMatches(char letter) {
+		switch (this) {
+		case INTERFACE_ANY:
+			return true;
+		case INTERFACE_A:
+			return letter == 'A';
+		case INTERFACE_B:
+			return letter == 'B';
+		case INTERFACE_C:
+			return letter == 'C';
+		case INTERFACE_D:
+			return letter == 'D';
+		}
+		return false;
 	}
 
 }

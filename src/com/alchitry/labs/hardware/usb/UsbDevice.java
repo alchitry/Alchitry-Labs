@@ -96,12 +96,12 @@ public class UsbDevice {
 		readTimeout = 5000;
 		writeTimeout = 5000;
 		readBuffer = null;
-		writeBufferChunksize = 4096;
+		writeBufferChunksize = 16384;
 		maxPacketSize = 0;
 		detachMode = DetachMode.AUTO_DETACH_REATACH_SIO_MODULE;
 
 		iface = 0;
-		readDataSetChunkSize(4096);
+		readDataSetChunkSize(16384);
 	}
 
 	public UsbDevice() {
@@ -215,7 +215,7 @@ public class UsbDevice {
 					device = new DeviceHandle();
 					int code = LibUsb.open(dev, device);
 					if (code < 0)
-						throw new LibUsbException("LibUsb.open() failed", code);
+						continue;
 
 					String sDesc = LibUsb.getStringDescriptor(device, desc.iProduct());
 					if (sDesc == null) {
@@ -612,7 +612,7 @@ public class UsbDevice {
 		return writeBufferChunksize;
 	}
 
-	public void readDataWithTimeout(byte[] data) {
+	public int readDataWithTimeout(byte[] data) {
 		byte[] buffer = new byte[data.length];
 		int reqBytes = data.length;
 		int offset = 0;
@@ -626,9 +626,11 @@ public class UsbDevice {
 				offset += ct;
 				reqBytes -= ct;
 			}
-			if (System.currentTimeMillis() - startTime > readTimeout)
-				throw new LibUsbException("Reading " + data.length + " bytes took longer than 2 seconds!", -1);
+			if (System.currentTimeMillis() - startTime > readTimeout) {
+				return data.length - reqBytes;
+			}
 		}
+		return data.length;
 	}
 
 	public int readData(byte[] buf) {

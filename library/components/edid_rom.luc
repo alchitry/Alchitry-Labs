@@ -33,7 +33,7 @@ module edid_rom (
   
   .clk(clk) {
     .rst(rst) {
-      i2c_slave i2c(.sda(sda), .scl(scl));
+      i2c_peripheral i2c(.sda(sda), .scl(scl));
       dff addr[8];
       dff tx_enable;
     }

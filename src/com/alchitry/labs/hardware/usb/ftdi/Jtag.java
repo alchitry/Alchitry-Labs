@@ -78,7 +78,8 @@ public class Jtag extends Mpsse {
 
 			if (read) {
 				byte[] inputBuffer = new byte[bitCount > 1 ? 2 : 1];
-				ftdi.readDataWithTimeout(inputBuffer);
+				if (ftdi.readDataWithTimeout(inputBuffer) != inputBuffer.length)
+					throw new RuntimeException("Read of "+inputBuffer.length + " bytes timed out!");
 				tdo[0] = (byte) (inputBuffer[inputBuffer.length - 1] >>> (8 - bitCount));
 				tdoBytes = 1;
 			}

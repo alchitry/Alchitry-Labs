@@ -4,7 +4,7 @@
       <description>Interface to the AVR (for the default firmware). This give you access to the USB port and analog pins on the Mojo.</description>
       <depends>UART TX</depends>
       <depends>UART RX</depends>
-      <depends>SPI Slave</depends>
+      <depends>SPI Peripheral</depends>
       <depends>CCLK Detector</depends>
     </module>
     <module file="reg_interface.luc" name="Register Interface">
@@ -18,17 +18,17 @@
     <module file="uart_rx.luc" name="UART RX">
       <description>UART (Serial) receiver with configurable baud rate.</description>
     </module>
-    <module file="spi_master.luc" name="SPI Master">
-      <description>SPI master. It has configurable CPOL and CPHA as well as a configurable clock divider.</description>
+    <module file="spi_controller.luc" name="SPI Controller">
+      <description>SPI controller. It has configurable CPOL and CPHA as well as a configurable clock divider.</description>
     </module>
-    <module file="spi_slave.luc" name="SPI Slave">
-      <description>SPI slave. It has configurable CPOL and CPHA. It's used to interface with the AVR on the Mojo.</description>
+    <module file="spi_peripheral.luc" name="SPI Peripheral">
+      <description>SPI peripheral. It has configurable CPOL and CPHA. It's used to interface with the AVR on the Mojo.</description>
     </module>
-    <module file="i2c_master.luc" name="I2C Master">
-      <description>I2C master that can be used to talk to I2C devices. It has a configurable clock divider.</description>
+    <module file="i2c_controller.luc" name="I2C Controller">
+      <description>I2C controller that can be used to talk to I2C devices. It has a configurable clock divider.</description>
     </module>
-    <module file="i2c_slave.luc" name="I2C Slave">
-      <description>I2C slave that can be used to interface with an I2C master. It has a configurable devices ID. After a byte is read, you need to tell the module if it should respond with a byte or wait for more bytes to be read. See the EDID ROM module in the Video category for an example use case.</description>
+    <module file="i2c_peripheral.luc" name="I2C Peripheral">
+      <description>I2C peripheral that can be used to interface with an I2C controller. It has a configurable devices ID. After a byte is read, you need to tell the module if it should respond with a byte or wait for more bytes to be read. See the EDID ROM module in the Video category for an example use case.</description>
     </module>
     <module file="sccb.luc" name="SCCB">
       <description>Serial Camera Control Bus. This module allows you to write to a camera's registers using the SCCB protocol. It currently only supports writes.</description>
@@ -145,7 +145,7 @@
     </module>
     <module file="edid_rom.luc" name="EDID ROM">
       <description>Example EDID ROM for use with HDMI Decoder. This ROM will tell a source that the Mojo is a 720p60 capable monitor.</description>
-      <depends>I2C Slave</depends>
+      <depends>I2C Peripheral</depends>
     </module>
     <module file="dvi_encoder.luc" name="DVI Encoder">
       <description>Encodes video data into a DVI stream. You most likely should be using the HDMI Encoder module instead of this directly.</description>
@@ -202,15 +202,23 @@
       <depends>Simple Dual-port RAM</depends>
     </module>
   </category>
+  <category name="Pulse Manipulation">
+    <module file="edge_detector.luc" name="Edge Detector">
+      <description>An edge detector that can be configured to detect rising, falling, or both types of edges.</description>
+    </module>
+    <module file="pulse_extender.luc" name="Pulse Extender">
+      <description>Extend single cycle pulses into a defined pulse width.</description>
+    </module>
+    <module file="pulse_delay_chain.luc" name="Pulse Delay Chain">
+      <description>Accepts single cycle pulses and feeds them into a delay chain with a configurable number of dynamic taps. It is useful for triggering multiple delayed events off a single input event.</description>
+    </module>
+  </category>
   <category name="Miscellaneous">
     <module file="counter.luc" name="Counter">
       <description>Configurable counter module. It can count up or down and has an adjustable size, max value, and clock divider.</description>
     </module>
     <module file="pipeline.luc" name="Pipeline">
       <description>Pipeline with configurable depth. It will delay a signal for a specified number of clock cycles. It's also useful to synchronizing external inputs.</description>
-    </module>
-    <module file="edge_detector.luc" name="Edge Detector">
-      <description>An edge detector that can be configured to detect rising, falling, or both types of edges.</description>
     </module>
     <module file="decoder.luc" name="Decoder">
       <description>Binary to 1-hot decoder with a configurable input width.</description>

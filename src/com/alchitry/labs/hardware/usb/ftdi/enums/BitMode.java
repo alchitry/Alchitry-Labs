@@ -17,6 +17,8 @@ package com.alchitry.labs.hardware.usb.ftdi.enums;
 
 import org.apache.batik.apps.svgbrowser.Application;
 
+import net.sf.yad2xx.FTDIBitMode;
+
 /**
  * Enumerated list of Multi-Protocol Synchronous Serial Engine (MPSSE) bitbang modes.
  * <p>
@@ -93,6 +95,21 @@ public enum BitMode {
 	
 	public byte getMask() {
 		return mask;
+	}
+	
+	public FTDIBitMode getFTDIMode() {
+		switch(this) {
+		case RESET: return FTDIBitMode.FT_BITMODE_RESET;
+		case BITBANG: return FTDIBitMode.FT_BITMODE_ASYNC_BITBANG;
+		case MPSSE: return FTDIBitMode.FT_BITMODE_MPSSE;
+		case SYNCBB: return FTDIBitMode.FT_BITMODE_SYNC_BITBANG;
+		case MCU: return FTDIBitMode.FT_BITMODE_MCU_HOST;
+		case OPTO: return FTDIBitMode.FT_BITMODE_FAST_SERIAL;
+		case CBUS: return FTDIBitMode.FT_BITMODE_CBUS_BITBANG;
+		case SYNCFF: return FTDIBitMode.FT_BITMODE_SYNC_FIFO;
+		case FT1284: throw new RuntimeException("FT1284 mode not available with the D2xx driver");
+		default: throw new RuntimeException("Unknown bitmode!");
+		}
 	}
 
 }

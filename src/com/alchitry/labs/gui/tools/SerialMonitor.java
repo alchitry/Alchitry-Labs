@@ -18,7 +18,7 @@ import com.alchitry.labs.gui.BaudDialog;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
-import com.alchitry.labs.hardware.usb.UsbSerial;
+import com.alchitry.labs.hardware.usb.SerialDevice;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 
 public class SerialMonitor {
@@ -29,7 +29,7 @@ public class SerialMonitor {
 	// protected CustomCombo combo;
 	private int cursorPos;
 
-	private UsbSerial port;
+	private SerialDevice port;
 	private boolean ignoreText;
 
 	/**
@@ -140,7 +140,7 @@ public class SerialMonitor {
 				byte buffer[] = new byte[1];
 				while (!shell.isDisposed()) {
 					try {
-						int len = port.readData(buffer);
+						int len = port.readDataWithTimeout(buffer);
 						if (len > 0) {
 							String rx = new String(Arrays.copyOfRange(buffer, 0, len));
 							shell.getDisplay().syncExec(new Runnable() {
@@ -179,7 +179,7 @@ public class SerialMonitor {
 
 	private void disconnect() {
 		if (port != null) {
-			port.usbClose();
+			port.close();
 		}
 		port = null;
 	}
