@@ -126,11 +126,11 @@ public class ConstExprParser extends LucidBaseListener {
 	}
 
 	private void debug(ParserRuleContext ctx) {
-		//listener.reportDebug(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
+		// listener.reportDebug(ctx, ctx.getText() + " = " + (values.get(ctx) == null ? "null" : values.get(ctx).toString()));
 	}
 
 	private void debugNullConstant(ParserRuleContext ctx) {
-		//listener.reportDebug(ctx, "This should have a known value!");
+		// listener.reportDebug(ctx, "This should have a known value!");
 	}
 
 	@Override
@@ -502,8 +502,19 @@ public class ConstExprParser extends LucidBaseListener {
 						break;
 					int[] dims = new int[args.length - 1];
 
-					for (int i = 1; i < args.length; i++)
+					for (int i = 1; i < args.length; i++) {
 						dims[dims.length - i] = args[i].getBigInt().intValue();
+						if (dims[dims.length - i] == 0) {
+							listener.reportError(ctx.expr(i), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(i).getText()));
+							error = true;
+						} else if (dims[dims.length - i] < 0) {
+							listener.reportError(ctx.expr(i), String.format(ErrorStrings.FUNCTION_ARG_NEG, ctx.expr(i).getText()));
+							error = true;
+						}
+					}
+					
+					if (error)
+						break;
 
 					long factor = 1;
 					for (int d : dims)

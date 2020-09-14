@@ -59,7 +59,7 @@ import com.alchitry.labs.widgets.CustomTree;
 import com.alchitry.labs.widgets.TabChild;
 
 public class MainWindow {
-	public static final String VERSION = "1.1.6";
+	public static final String VERSION = "1.2.1";
 	public static final String LIB_VERSION = "1.0.0";
 
 	protected final Display display = Display.getDefault();
@@ -150,6 +150,22 @@ public class MainWindow {
 
 		display.dispose();
 	}
+	
+	private static void runLoader() {
+		LoaderWindow loader;
+		Util.isGUI = true;
+		
+		try {
+			loader = new LoaderWindow();
+			Util.loader = loader;
+			loader.open();
+		} catch (Exception e) {
+			Util.log.log(Level.SEVERE, "", e);
+			if (Util.getEnvType() != Util.ECLIPSE)
+				Reporter.reportException(e);
+		}
+		System.exit(0);
+	}
 
 	private static void parseCommand(String[] args) {
 		if (args.length > 0) {
@@ -165,6 +181,12 @@ public class MainWindow {
 				break;
 			case "win64":
 				Util.setEnvType(Util.WIN64);
+				break;
+			case "mac32":
+				Util.setEnvType(Util.MAC32);
+				break;
+			case "mac64":
+				Util.setEnvType(Util.MAC64);
 				break;
 			case "eclipse":
 				Util.setEnvType(Util.ECLIPSE);
@@ -184,6 +206,8 @@ public class MainWindow {
 				System.err.println("Library value missing after -u!");
 				System.exit(2);
 			}
+		} else if (args.length > 1 && args[1].equals("--loader")) {
+			runLoader();
 		}
 	}
 

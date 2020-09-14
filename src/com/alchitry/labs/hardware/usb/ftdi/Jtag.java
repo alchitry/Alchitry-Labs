@@ -90,7 +90,7 @@ public class Jtag extends Mpsse {
 
 			byte[] writeBuffer = null;
 			while (remBytes > 0) {
-				int bct = remBytes > 65536 ? 65536 : remBytes;
+				int bct = remBytes > 4096 ? 4096 : remBytes;
 				if (writeBuffer == null || writeBuffer.length != bct + 3)
 					writeBuffer = new byte[bct + 3];
 				writeBuffer[0] = (byte) (read ? 0x39 : 0x19);

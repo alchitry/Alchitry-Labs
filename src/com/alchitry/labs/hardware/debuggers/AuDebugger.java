@@ -30,6 +30,7 @@ public class AuDebugger extends Debugger {
 		ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.AU_DEVICES);
 		if (ftdi == null)
 			throw new RuntimeException("Failed to connect to device!");
+		ftdi.setTimeouts(20000, 20000);
 		jtag = new Jtag(ftdi);
 		jtag.init();
 		jtag.setFreq(30000000);

@@ -21,9 +21,13 @@ public class AlchitryCu extends Board {
 			new IoRegion("Clock", 6, 0.583353846153846, 0.664444444444445, 0.0557076923076923, 0.115555555555556),
 			new IoRegion("USB", 7, 0.00189230769230769, 0.107711111111111, 0.137446153846154, 0.221177777777778),
 			new IoRegion("Flash", 8, 0.724230769230769, 0.575555555555555, 0.135384615384615, 0.111111111111111), };
+	
+	static {
+		ioRegions[0].signals = new String[] { "A2", "A3" };
+	}
 
 	public AlchitryCu() {
-		ioRegions[0].signals = new String[] { "A2", "A3" };
+		
 	}
 
 	@Override

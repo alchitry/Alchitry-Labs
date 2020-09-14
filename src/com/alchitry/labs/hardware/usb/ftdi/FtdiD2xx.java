@@ -1,12 +1,13 @@
 package com.alchitry.labs.hardware.usb.ftdi;
 
+import com.alchitry.labs.hardware.usb.SerialDevice;
 import com.alchitry.labs.hardware.usb.ftdi.enums.BitMode;
 
 import net.sf.yad2xx.Device;
 import net.sf.yad2xx.FTDIConstants;
 import net.sf.yad2xx.FTDIException;
 
-public class FtdiD2xx implements Ftdi {
+public class FtdiD2xx implements Ftdi, SerialDevice {
 	private Device device;
 	protected int readTimeout;
 	protected int writeTimeout;
@@ -110,6 +111,43 @@ public class FtdiD2xx implements Ftdi {
 	public void usbPurgeBuffers() {
 		try {
 			device.purge(FTDIConstants.FT_PURGE_RX | FTDIConstants.FT_PURGE_TX);
+		} catch (FTDIException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public boolean close() {
+		return usbClose();
+	}
+
+	@Override
+	public int setBaudrate(int baud) {
+		try {
+			device.setBaudRate(baud);
+		} catch (FTDIException e) {
+			throw new RuntimeException(e);
+		}
+		return baud;
+	}
+
+	@Override
+	public void setDtrRts(boolean dtr, boolean rts) {
+		try {
+			device.setDtr(dtr);
+			device.setRts(rts);
+		} catch (FTDIException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public void flushReadBuffer() {
+		try {
+			device.purge(FTDIConstants.FT_PURGE_RX);
+			while (device.getQueueStatus() > 0) {
+				device.read(new byte[device.getQueueStatus()]);
+			}
 		} catch (FTDIException e) {
 			throw new RuntimeException(e);
 		}

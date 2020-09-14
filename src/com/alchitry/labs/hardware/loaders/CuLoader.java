@@ -18,8 +18,10 @@ public class CuLoader extends ProjectLoader {
 		Ftdi ftdi = null;
 		try {
 			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DEVICES);
-			if (ftdi == null)
+			if (ftdi == null) {
+				Util.println("Could not detect a Cu!", true);
 				return;
+			}
 
 			LatticeSpi spi = new LatticeSpi(ftdi);
 			spi.eraseFlash();
@@ -43,8 +45,10 @@ public class CuLoader extends ProjectLoader {
 		Ftdi ftdi = null;
 		try {
 			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.CU_DEVICES);
-			if (ftdi == null)
+			if (ftdi == null) {
+				Util.println("Could not detect a Cu!", true);
 				return;
+			}
 
 			LatticeSpi spi = new LatticeSpi(ftdi);
 			try {

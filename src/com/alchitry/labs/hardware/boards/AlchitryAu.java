@@ -21,9 +21,7 @@ public class AlchitryAu extends Board {
 			new IoRegion("Flash", 8, 0.756538461538461, 0.566666666666667, 0.135384615384615, 0.111111111111111),
 			new IoRegion("RAM", 9, 0.769230769230769, 0.233333333333333, 0.123076923076923, 0.311111111111111), };
 	
-	
-
-	public AlchitryAu() {
+	static {
 		ioRegions[0].signals = new String[] { "A2", "A3", "A5", "A6", "A8", "A9", "A11", "A12", "A14", "A15", "A17", "A18", "A20", "A21", "A23", "A24", "A27", "A28", "A30",
 				"A31", "A33", "A34", "A36", "A37", "A39", "A40", "A42", "A43", "A45", "A46", "A48", "A49" };
 		ioRegions[1].signals = new String[] { "B2", "B3", "B5", "B6", "B8", "B9", "B11", "B12", "B14", "B15", "B17", "B18", "B20", "B21", "B23", "B24", "B27", "B28", "B30",
@@ -34,7 +32,12 @@ public class AlchitryAu extends Board {
 		ioRegions[4].signals = new String[] { "LED 0", "LED 1", "LED 2", "LED 3", "LED 4", "LED 5", "LED 6", "LED 7" };
 		ioRegions[5].signals = new String[] { "Reset" };
 		ioRegions[6].signals = new String[] { "100Mhz Clock" };
-		
+	}
+	
+	
+
+	public AlchitryAu() {
+
 	}
 
 	@Override

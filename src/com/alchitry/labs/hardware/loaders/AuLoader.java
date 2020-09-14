@@ -19,8 +19,10 @@ public class AuLoader extends ProjectLoader {
 		Ftdi ftdi = null;
 		try {
 			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.AU_DEVICES);
-			if (ftdi == null) 
+			if (ftdi == null) {
+				Util.println("Could not detect an Au!", true);
 				return;
+			}
 			
 			XilinxJtag xil = new XilinxJtag(ftdi);
 			xil.checkIDCODE();
@@ -48,8 +50,10 @@ public class AuLoader extends ProjectLoader {
 		Ftdi ftdi = null;
 		try {
 			ftdi = UsbUtil.openFtdiDevice(PortInterfaceType.INTERFACE_A, UsbUtil.AU_DEVICES);
-			if (ftdi == null) 
+			if (ftdi == null) {
+				Util.println("Could not detect an Au!", true);
 				return;
+			}
 			
 			XilinxJtag xil = new XilinxJtag(ftdi);
 			xil.checkIDCODE();

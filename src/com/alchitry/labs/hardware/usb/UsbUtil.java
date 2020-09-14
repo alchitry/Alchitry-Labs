@@ -88,20 +88,28 @@ public class UsbUtil {
 		return null;
 	}
 
+	private static net.sf.yad2xx.Device findD2xxDevice(PortInterfaceType iface, List<UsbDescriptor> board) throws FTDIException {
+		net.sf.yad2xx.Device[] devices = FTDIInterface.getDevices();
+		for (net.sf.yad2xx.Device d : devices) {
+			String desc = d.getDescription();
+			if (!desc.isEmpty() && iface.letterMatches(desc.charAt(desc.length() - 1))) {
+				String product = desc.substring(0, desc.length() - 2);
+				for (UsbDescriptor b : board)
+					if (product.equals(b.product)) {
+						return d;
+					}
+			}
+		}
+		return null;
+	}
+
 	public static Ftdi openFtdiDevice(PortInterfaceType iface, List<UsbDescriptor> board) {
 		if (Util.isWindows) {
 			try {
-				net.sf.yad2xx.Device[] devices = FTDIInterface.getDevices();
-				for (net.sf.yad2xx.Device d : devices) {
-					String desc = d.getDescription();
-					if (iface.letterMatches(desc.charAt(desc.length() - 1))) {
-						String product = desc.substring(0, desc.length() - 2);
-						for (UsbDescriptor b : board)
-							if (product.equals(b.product)) {
-								d.open();
-								return new FtdiD2xx(d);
-							}
-					}
+				net.sf.yad2xx.Device dev = findD2xxDevice(iface, board);
+				if (dev != null) {
+					dev.open();
+					return new FtdiD2xx(dev);
 				}
 			} catch (FTDIException e) {
 				Util.logException(e);
@@ -136,29 +144,42 @@ public class UsbUtil {
 		try {
 			DeviceEntry dev = getDevice(devices);
 			if (dev == null) {
-				boolean tryMojo = false;
-				for (UsbDescriptor d : devices)
-					if (d == MOJO_DESC) {
-						tryMojo = true;
-						break;
+				String portName = null;
+				if (Util.isWindows) {
+					try {
+						net.sf.yad2xx.Device d2xx = findD2xxDevice(PortInterfaceType.INTERFACE_B, devices);
+						if (d2xx != null) {
+							d2xx.open();
+							portName = "COM" + d2xx.getComPortNumber();
+							d2xx.close();
+							Util.println("Found board on " + portName);
+						}
+					} catch (FTDIException e) {
+						Util.logException(e);
 					}
-				if (tryMojo) {
-					String portName = null;
-					for (SerialPort sp : SerialPort.getCommPorts()) {
-						if (sp.getDescriptivePortName().contains("Mojo V")) {
-							portName = sp.getSystemPortName();
-							break;
+				}
+
+				if (portName == null)
+					for (UsbDescriptor d : devices) {
+						if (d == MOJO_DESC) {
+
+							for (SerialPort sp : SerialPort.getCommPorts()) {
+								if (sp.getDescriptivePortName().contains("Mojo V")) {
+									portName = sp.getSystemPortName();
+									break;
+								}
+							}
 						}
 					}
-					if (portName != null) {
-						SerialPort port = SerialPort.getCommPort(portName);
-						if (port != null) {
-							GenericSerial serial = new GenericSerial(port);
-							if (serial.open())
-								return serial;
-							else
-								Util.println("Failed to open serial port " + portName, true);
-						}
+
+				if (portName != null) {
+					SerialPort port = SerialPort.getCommPort(portName);
+					if (port != null) {
+						GenericSerial serial = new GenericSerial(port);
+						if (serial.open())
+							return serial;
+						else
+							Util.println("Failed to open serial port " + portName, true);
 					}
 				}
 				Util.println("No devices found...", true);
@@ -175,7 +196,9 @@ public class UsbUtil {
 			}
 			LibUsb.unrefDevice(dev.device);
 			return device;
-		} catch (LibUsbException e) {
+		} catch (
+
+		LibUsbException e) {
 			Util.logException(e);
 			return null;
 		}

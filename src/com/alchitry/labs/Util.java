@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.LoaderWindow;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.parsers.BigFunctions;
@@ -67,13 +68,16 @@ public class Util {
 	public static Logger log;
 	public static boolean isGUI;
 	public static final String logFile = "alchitry-labs.log";
+	public static LoaderWindow loader;
 
 	public static final int UNKNOWN = -1;
 	public static final int WIN32 = 0;
 	public static final int WIN64 = 1;
 	public static final int LIN32 = 2;
 	public static final int LIN64 = 3;
-	public static final int ECLIPSE = 4;
+	public static final int MAC32 = 4;
+	public static final int MAC64 = 5;
+	public static final int ECLIPSE = 6;
 	private static int envType = UNKNOWN;
 
 	public static final String[] sourceSuffixes = new String[] { ".v", ".luc" };
@@ -273,7 +277,7 @@ public class Util {
 	}
 
 	public static void clearConsole() {
-		if (isGUI)
+		if (isGUI && loader == null)
 			display.asyncExec(new Runnable() {
 				@Override
 				public void run() {
@@ -328,23 +332,27 @@ public class Util {
 			}
 		}
 		if (isGUI) {
-			display.asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					String message = text;
-					if (message == null)
-						message = "null";
-					if (color != null) {
-						int end = console.getCharCount() + message.length();
-						StyleRange styleRange = new StyleRange();
-						styleRange.start = end - message.length();
-						styleRange.length = message.length();
-						styleRange.foreground = color;
-						console.addStyle(styleRange);
+			if (loader != null) {
+				loader.setStatus(text);
+			} else {
+				display.asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						String message = text;
+						if (message == null)
+							message = "null";
+						if (color != null) {
+							int end = console.getCharCount() + message.length();
+							StyleRange styleRange = new StyleRange();
+							styleRange.start = end - message.length();
+							styleRange.length = message.length();
+							styleRange.foreground = color;
+							console.addStyle(styleRange);
+						}
+						console.append(message);
 					}
-					console.append(message);
-				}
-			});
+				});
+			}
 		} else {
 			System.out.print(text);
 		}
@@ -368,8 +376,7 @@ public class Util {
 
 	public static int minWidthNum(BigInteger i) {
 		if (i.compareTo(BigInteger.ZERO) != 0)
-			return BigFunctions.ln(new BigDecimal(i), 10).divide(BigFunctions.LOG2, RoundingMode.HALF_UP)
-					.setScale(0, RoundingMode.FLOOR).intValue() + 1;
+			return BigFunctions.ln(new BigDecimal(i), 10).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.FLOOR).intValue() + 1;
 		else
 			return 1;
 	}
@@ -392,8 +399,7 @@ public class Util {
 	}
 
 	public static String getWorkspace() {
-		return Settings.pref.get(Settings.WORKSPACE,
-				assemblePath(FileSystemView.getFileSystemView().getDefaultDirectory().getPath(), "alchitry"));
+		return Settings.pref.get(Settings.WORKSPACE, assemblePath(FileSystemView.getFileSystemView().getDefaultDirectory().getPath(), "alchitry"));
 	}
 
 	public static void setWorkspace(String workspace) {
@@ -677,8 +683,7 @@ public class Util {
 			process = pb.start();
 		} catch (Exception e) {
 			Util.log.severe("Couldn't start " + pb.command().get(0));
-			Util.showError("Could not start " + pb.command().get(0) + "! Please check the location for "
-					+ pb.command().get(0) + " is correctly set in the settings menu.");
+			Util.showError("Could not start " + pb.command().get(0) + "! Please check the location for " + pb.command().get(0) + " is correctly set in the settings menu.");
 			return null;
 		}
 

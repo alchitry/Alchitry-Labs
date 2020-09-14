@@ -214,8 +214,9 @@ public class UsbDevice {
 				if (vidPidMatch) {
 					device = new DeviceHandle();
 					int code = LibUsb.open(dev, device);
-					if (code < 0)
+					if (code < 0) {
 						continue;
+					}
 
 					String sDesc = LibUsb.getStringDescriptor(device, desc.iProduct());
 					if (sDesc == null) {
@@ -345,7 +346,6 @@ public class UsbDevice {
 				if ((errno = LibUsb.detachKernelDriver(device, iface)) != LibUsb.SUCCESS)
 					detachErrno = errno;
 		}
-
 
 		if (LibUsb.getConfiguration(device, cfgBuf) < 0)
 			throw new LibUsbException("LibUsb.getConfiguration() failed", -12);

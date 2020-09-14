@@ -222,6 +222,9 @@ public class SignalWidth implements Serializable {
 		for (int d : dimensions)
 			factor *= d;
 		int bits = widths.get(0);
+		
+		if (factor == 0)
+			return null;
 
 		if (bits % factor != 0)
 			return null;

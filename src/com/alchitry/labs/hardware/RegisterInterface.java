@@ -2,14 +2,20 @@ package com.alchitry.labs.hardware;
 
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.usb4java.LibUsbException;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.BaudDialog;
+import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.hardware.usb.SerialDevice;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
 
 public class RegisterInterface {
 	private SerialDevice serialPort;
+	private int baud = -1;
 
 	public RegisterInterface() {
 
@@ -21,15 +27,48 @@ public class RegisterInterface {
 		return true;
 	}
 
+	private void askBaud() {
+		if (MainWindow.getOpenProject() == null) {
+			Util.showError("Please open a project before opening the register interface!");
+			baud = -1;
+			return;
+		}
+		Util.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				baud = 1000000;
+				if (!MainWindow.getOpenProject().getBoard().isType(Board.MOJO)) {
+					BaudDialog bd = new BaudDialog(Util.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+					baud = bd.open(baud);
+				}
+			}
+		});
+	}
+
 	public boolean connect() {
-		return connect(UsbUtil.ALL_DEVICES);
+		askBaud();
+		if (baud < 0)
+			return false;
+		return connect(baud);
+	}
+
+	public boolean connect(int baud) {
+		return connect(UsbUtil.ALL_DEVICES, baud);
 	}
 
 	public boolean connect(List<UsbDescriptor> devices) {
+		askBaud();
+		if (baud < 0)
+			return false;
+
+		return connect(devices, baud);
+	}
+
+	public boolean connect(List<UsbDescriptor> devices, int baud) {
 		serialPort = UsbUtil.openSerial(devices);
 		if (serialPort == null)
 			return false;
-		serialPort.setBaudrate(1000000);
+		serialPort.setBaudrate(baud);
 		serialPort.setTimeouts(1000, 1000);
 		return true;
 	}

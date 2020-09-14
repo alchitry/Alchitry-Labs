@@ -49,7 +49,7 @@ public class MojoLoader extends ProjectLoader {
 		}
 
 		if (mojo == null) {
-			Util.showError("Could not detect a Mojo!");
+			Util.println("Could not detect a Mojo!", true);
 			return false;
 		}
 
@@ -93,7 +93,8 @@ public class MojoLoader extends ProjectLoader {
 		} catch (Exception e) {
 			Util.logException(e);
 		} finally {
-			mojo.close();
+			if (mojo != null)
+				mojo.close();
 		}
 	}
 
