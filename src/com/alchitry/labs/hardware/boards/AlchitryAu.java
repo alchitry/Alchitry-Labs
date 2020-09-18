@@ -43,6 +43,7 @@ public class AlchitryAu extends Board {
 	@Override
 	public String getFPGAName() {
 		return "xc7a35tftg256-1";
+		//return "xc7a100tftg256-1";
 	}
 
 	@Override

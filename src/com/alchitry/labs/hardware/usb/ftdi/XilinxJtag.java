@@ -46,7 +46,8 @@ public class XilinxJtag {
 	public void checkIDCODE() {
 		ftdi.usbPurgeBuffers();
 		setIR(Instruction.IDCODE);
-		jtag.shiftDRWithCheck(32, "00000000", "0362D093", "0FFFFFFF");
+		jtag.shiftDRWithCheck(32, "00000000", "0362D093", "0FFFFFFF"); // Au 35T IDCODE
+		//jtag.shiftDRWithCheck(32, "00000000", "13631093", "0FFFFFFF"); // Au+ 100T IDCODE
 	}
 
 	private byte reverse(byte b) {

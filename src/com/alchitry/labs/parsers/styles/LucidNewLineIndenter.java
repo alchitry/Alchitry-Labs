@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.swt.custom.ExtendedModifyEvent;
@@ -14,6 +15,7 @@ import org.eclipse.swt.custom.ExtendedModifyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
+import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.UndoRedo;
 import com.alchitry.labs.parsers.lucid.indent.LucidIndentBaseListener;
@@ -88,14 +90,21 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 
 	private void addIndents(List<ParseTree> children, int exclude) {
 		if (children != null && children.size() > 2 + exclude) {
-			int a = children.get(0).getSourceInterval().a;
-			int b = Math.max(children.get(children.size() - 1 - exclude).getSourceInterval().a, children.get(children.size() - 1 - exclude).getSourceInterval().b);
-			int c = Math.max(children.get(children.size() - 2 - exclude).getSourceInterval().a, children.get(children.size() - 2 - exclude).getSourceInterval().b);
-			int start = tokens.get(a).getLine()-1;
-			int end = tokens.get(b).getLine()-1;
+			Interval interval0 = children.get(0).getSourceInterval();
+			Interval interval1 = children.get(children.size() - 1 - exclude).getSourceInterval();
+			Interval interval2 = children.get(children.size() - 1 - exclude).getSourceInterval();
+			
+			if (interval0 == Interval.INVALID || interval1 == Interval.INVALID || interval2 == Interval.INVALID)
+				return;
+
+			int a = interval0.a;
+			int b = Math.max(interval1.a, interval1.b);
+			int c = Math.max(interval2.a, interval2.b);
+			int start = tokens.get(a).getLine() - 1;
+			int end = tokens.get(b).getLine() - 1;
 			int end2 = end;
 			if (c >= 0)
-				end2 = tokens.get(c).getLine()-1;
+				end2 = tokens.get(c).getLine() - 1;
 			if (end > end2)
 				addIndentsToLines(start, end - 1);
 			else
@@ -113,7 +122,7 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 			int b = children.get(children.size() - 1 - exclude).getSourceInterval().b;
 			Token start = tokens.get(a);
 			Token end = tokens.get(b);
-			addIndentsToLines(start.getLine()-1, end.getLine()-1);
+			addIndentsToLines(start.getLine() - 1, end.getLine() - 1);
 		}
 	}
 
@@ -125,7 +134,7 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 		int endIdx = end.getStopIndex() - 2; // skip * and /
 		while (Character.isWhitespace(text.charAt(endIdx--)))
 			;
-		addIndentsToLines(start.getLine()-1, getLineAtOffset(endIdx), 3);
+		addIndentsToLines(start.getLine() - 1, getLineAtOffset(endIdx), 3);
 	}
 
 	@Override
@@ -134,7 +143,7 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 		for (IndentContext ic : ctx.indent()) {
 			if (ic.getChild(0).getText().equals("{")) {
 				Token end = tokens.get(ic.getChild(0).getSourceInterval().b);
-				addIndentsToLines(start.getLine()-1, end.getLine()-1);
+				addIndentsToLines(start.getLine() - 1, end.getLine() - 1);
 				break;
 			}
 		}
@@ -200,18 +209,24 @@ public class LucidNewLineIndenter extends LucidIndentBaseListener implements Ver
 	@Override
 	public void verifyText(VerifyEvent e) {
 		if (e.text.equals("\n") || e.text.equals("\r\n")) {
-			resizeBuffers(editor.getLineCount() + 1);
-			StringBuilder sb = new StringBuilder(editor.getText());
-			sb.replace(e.start, e.end, e.text + "l;");
-			updateIndents(sb.toString());
+			try {
+				resizeBuffers(editor.getLineCount() + 1);
+				StringBuilder sb = new StringBuilder(editor.getText());
+				sb.replace(e.start, e.end, e.text + "l;");
+				updateIndents(sb.toString());
 
-			int indents = tabs[getLineAtOffset(e.end + 1)];
+				int indents = tabs[getLineAtOffset(e.end + 1)];
 
-			StringBuilder newText = new StringBuilder(e.text);
-			for (int i = 0; i < indents; i++) {
-				newText.append(' ');
+				StringBuilder newText = new StringBuilder(e.text);
+				for (int i = 0; i < indents; i++) {
+					newText.append(' ');
+				}
+				e.text = newText.toString();
+			} catch (Exception ex) {
+				Util.logException(ex, "Failed to add indents to new line!");
+				Util.println("Auto indending a new line failed! Check the logs for more details.", true);
+				System.err.println(ex.toString());
 			}
-			e.text = newText.toString();
 		}
 	}
 
