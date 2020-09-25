@@ -1,54 +1,52 @@
 package com.alchitry.labs.gui.util
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.util.*
 import java.util.regex.MatchResult
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import java.util.regex.PatternSyntaxException
+import kotlin.math.absoluteValue
 
-class Search(text: String, pattern: String, regex: Boolean, caseSensitive: Boolean) {
-    var pattern: Pattern? = null
-        private set
-    val matches = ArrayList<MatchResult>()
-    var error = false
-        private set
+class Search(text: String, expression: String, regex: Boolean, caseSensitive: Boolean) {
     var lastResult: MatchResult? = null
         private set
 
-    private fun first(): MatchResult? {
-        return if (matches.size > 0) matches[0] else null
+    val pattern: Pattern = if (regex)
+        Pattern.compile(expression)
+    else
+        Pattern.compile(Pattern.quote(expression), if (caseSensitive) 0 else Pattern.CASE_INSENSITIVE)
+
+    val deferredMatches = GlobalScope.async(Dispatchers.Default) {
+        val matchList = ArrayList<MatchResult>()
+        val matcher: Matcher = pattern.matcher(text)
+        while (matcher.find()) matchList.add(matcher.toMatchResult())
+        matchList
     }
 
-    private fun last(): MatchResult? {
-        return if (matches.size > 0) matches[matches.size - 1] else null
+    suspend fun next(start: Int): MatchResult? {
+        return find(start, true)
     }
 
-    fun next(start: Int): MatchResult? {
-        matches.forEach {
-            if (it.start() >= start) return it
+    suspend fun previous(start: Int): MatchResult? {
+        return find(start, false)
+    }
+
+    private suspend fun find(start: Int, forward: Boolean = true): MatchResult? {
+        val matches = if (forward) deferredMatches.await() else deferredMatches.await().asReversed()
+
+        val result = (matches.binarySearch {
+            if (forward) it.start() - start else start - it.end()
+        }.absoluteValue - 1).coerceAtLeast(0)
+
+        lastResult = when {
+            result < matches.size -> matches[result]
+            matches.size > 0 -> matches[0]
+            else -> null
         }
-        lastResult = first()
         return lastResult
     }
 
-    fun previous(start: Int): MatchResult? {
-        matches.asReversed().forEach {
-            if (it.end() <= start) return it
-        }
-        lastResult = last()
-        return lastResult
-    }
 
-    init {
-        try {
-            if (regex)
-                this.pattern = Pattern.compile(pattern)
-            else
-                this.pattern = Pattern.compile(Pattern.quote(pattern), if (caseSensitive) 0 else Pattern.CASE_INSENSITIVE)
-            val matcher: Matcher = this.pattern!!.matcher(text)
-            while (matcher.find()) matches.add(matcher.toMatchResult())
-        } catch (e: PatternSyntaxException) {
-            error = true
-        }
-    }
 }

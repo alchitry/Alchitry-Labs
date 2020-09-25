@@ -1,76 +1,63 @@
-package com.alchitry.labs.gui;
+package com.alchitry.labs.gui
 
-import com.alchitry.labs.gui.util.Search;
-import com.alchitry.labs.style.StyleUtil;
-import com.alchitry.labs.style.StyleUtil.StyleMerger;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Color;
+import com.alchitry.labs.gui.util.Search
+import com.alchitry.labs.style.StyleUtil
+import com.alchitry.labs.style.StyleUtil.StyleMerger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.swt.SWT
+import org.eclipse.swt.custom.StyleRange
+import org.eclipse.swt.custom.StyledText
+import org.eclipse.swt.events.ModifyEvent
+import org.eclipse.swt.events.ModifyListener
+import java.util.regex.MatchResult
 
-import java.util.List;
-import java.util.regex.MatchResult;
+class TextHighlighter(private val editor: StyledText) : CachedStyleListner(), ModifyListener {
+    private var matchList: List<MatchResult>? = null
 
-public class TextHighligher extends CachedStyleListner implements ModifyListener {
-	private StyledText editor;
-	private List<MatchResult> matchList;
+    fun setText(text: String) {
+        GlobalScope.launch(Dispatchers.Default) {
+            try {
+                val matches = Search(editor.text, text, regex = false, caseSensitive = false).deferredMatches.await()
+                launch(Dispatchers.SWT) {
+                    setMatches(matches)
+                }
+            } catch (e: Exception) {
 
-	public TextHighligher(StyledText e) {
-		super();
-		editor = e;
-	}
-	
-	public void setText(String text) {
-		setMatches(new Search(editor.getText(), text, false, false).getMatches());
-	}
+            }
+        }
+    }
 
-	public void setMatches(List<MatchResult> matches) {
-		matchList = matches;
-		update();
-		editor.redraw();
-	}
+    fun setMatches(matches: List<MatchResult>?) {
+        lock.acquireUninterruptibly()
+        matchList = matches
+        GlobalScope.launch(Dispatchers.Default) {
+            invalidateStyles()
+            styles.clear()
+            matchList?.let {
+                for (m in it) {
+                    val style = StyleRange()
+                    style.background = Theme.highlightedWordColor
+                    style.start = m.start()
+                    style.length = m.end() - m.start()
+                    styles.add(style)
+                }
+            }
+            lock.release()
+            launch(Dispatchers.SWT) { editor.redraw() }
+        }
+    }
 
-	protected void update() {
-		lock.acquireUninterruptibly();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				invalidateStyles();
-				styles.clear();
+    override fun getStyleMerger(): StyleMerger {
+        return StyleMerger { dest, src ->
+            val bg = dest.background
+            StyleUtil.copy(dest, src)
+            dest.background = bg
+        }
+    }
 
-				if (matchList == null) {
-					lock.release();
-					return;
-				}
-
-				for (MatchResult m : matchList) {
-					StyleRange style = new StyleRange();
-					style.background = Theme.highlightedWordColor;
-					style.start = m.start();
-					style.length = m.end() - m.start();
-					styles.add(style);
-				}
-
-				lock.release();
-			}
-		}).start();
-	}
-
-	@Override
-	protected StyleMerger getStyleMerger() {
-		return new StyleMerger() {
-			@Override
-			public void mergeStyles(StyleRange dest, StyleRange src) {
-				Color bg = dest.background;
-				StyleUtil.copy(dest, src);
-				dest.background = bg;
-			}
-		};
-	}
-	
-	@Override
-	public void modifyText(ModifyEvent e) {
-		update();
-	}
+    override fun modifyText(e: ModifyEvent) {
+        setMatches(matchList) // redraw
+    }
 }

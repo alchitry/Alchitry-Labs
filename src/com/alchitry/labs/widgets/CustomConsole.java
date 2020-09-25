@@ -1,40 +1,24 @@
 package com.alchitry.labs.widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.alchitry.labs.Settings;
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.DoubleClickHighlighter;
+import com.alchitry.labs.gui.TextHighlighter;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.style.StyleUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.*;
 
-import com.alchitry.labs.Settings;
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.DoubleClickHighlighter;
-import com.alchitry.labs.gui.TextHighligher;
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.style.StyleUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomConsole extends StyledText {
 	private DoubleClickHighlighter doubleClick;
@@ -43,7 +27,7 @@ public class CustomConsole extends StyledText {
 	private StyleRange[] cachedStyles;
 	private boolean newStyles = false;
 	private CustomSearch search;
-	private TextHighligher highlighter;
+	private TextHighlighter highlighter;
 	private boolean searchActive = false;
 
 	private MenuItem createItem(Menu m, int style, String text, SelectionAdapter selectedListener) {
@@ -124,7 +108,7 @@ public class CustomConsole extends StyledText {
 
 		lineStyleListeners = new ArrayList<>();
 
-		highlighter = new TextHighligher(this);
+		highlighter = new TextHighlighter(this);
 		lineStyleListeners.add(highlighter);
 		addModifyListener(highlighter);
 
