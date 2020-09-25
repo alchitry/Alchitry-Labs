@@ -1,11 +1,10 @@
 package com.alchitry.labs.gui;
 
+import com.alchitry.labs.Settings;
+import com.alchitry.labs.gui.main.MainWindow;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
-
-import com.alchitry.labs.Settings;
-import com.alchitry.labs.gui.main.MainWindow;
 
 public class Images {
 	public static Image loadIcon;
@@ -53,6 +52,14 @@ public class Images {
 	public static Image syncIconHover;
 	public static Image debugIcon;
 	public static Image debugIconHover;
+	public static Image replaceOneIcon;
+	public static Image replaceOneHover;
+	public static Image replaceAllIcon;
+	public static Image replaceAllHover;
+	public static Image regexIcon;
+	public static Image regexHover;
+	public static Image caseSensitiveIcon;
+	public static Image caseSensitiveHover;
 
 	private static Image getImage(Display display, String name) {
 		return new Image(display, MainWindow.class.getResourceAsStream("/images/" + name));
@@ -126,6 +133,18 @@ public class Images {
 			
 			debugIconHover = getImage(display, "debug.png");
 			debugIcon = colorIcon(debugIconHover, 0x000000);
+			
+			replaceOneHover = getImage(display, "replace-one.png");
+			replaceOneIcon = colorIcon(replaceOneHover, 0x000000);
+			
+			replaceAllHover = getImage(display, "replace-all.png");
+			replaceAllIcon = colorIcon(replaceOneHover, 0x000000);
+			
+			regexHover = getImage(display, "regex.png");
+			regexIcon = colorIcon(regexHover, 0x000000);
+			
+			caseSensitiveHover = getImage(display, "case-sensitive.png");
+			caseSensitiveIcon = colorIcon(caseSensitiveHover, 0x000000);
 		} else { // dark theme
 			loadIcon = getImage(display, "load.png");
 			loadTempIcon = getImage(display, "load-temp.png");
@@ -187,6 +206,18 @@ public class Images {
 			
 			debugIcon = getImage(display, "debug.png");
 			debugIconHover = debugIcon;
+			
+			replaceOneIcon = getImage(display, "replace-one.png");
+			replaceOneHover = replaceOneIcon;
+			
+			replaceAllIcon = getImage(display, "replace-all.png");
+			replaceAllHover = replaceAllIcon;
+			
+			regexIcon = getImage(display, "regex.png");
+			regexHover = regexIcon;
+			
+			caseSensitiveIcon = getImage(display, "case-sensitive.png");
+			caseSensitiveHover = caseSensitiveIcon;
 		}
 	}
 
@@ -244,5 +275,13 @@ public class Images {
 		syncIconHover.dispose();
 		debugIcon.dispose();
 		debugIconHover.dispose();
+		replaceOneIcon.dispose();
+		replaceOneHover.dispose();
+		replaceAllIcon.dispose();
+		replaceAllHover.dispose();
+		regexIcon.dispose();
+		regexHover.dispose();
+		caseSensitiveIcon.dispose();
+		caseSensitiveHover.dispose();
 	}
 }

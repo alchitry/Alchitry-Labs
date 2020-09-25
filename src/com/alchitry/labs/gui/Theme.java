@@ -1,11 +1,10 @@
 package com.alchitry.labs.gui;
 
+import com.alchitry.labs.Settings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
-
-import com.alchitry.labs.Settings;
 
 public class Theme {
 	public static boolean set;
@@ -148,10 +147,10 @@ public class Theme {
 			comboBackgroundColor = new Color(display, 50, 50, 45);
 			editorBackgroundColor = new Color(display, 40, 40, 35);
 			editorForegroundColor = new Color(display, 255, 255, 255);
-			editorTextSelectedColor = new Color(display, 100, 100, 90);
+			editorTextSelectedColor = new Color(display, 120, 120, 110);
 			bulletTextColor = new Color(display, 200, 200, 200);
 			highlightedLineColor = editorTextSelectedColor;
-			highlightedWordColor = new Color(display, 90, 90, 75);
+			highlightedWordColor = new Color(display, 80, 80, 70);
 			tabSelectedForegroundColor = bulletTextColor;
 			tabSelectedBackgroundColor = editorBackgroundColor;
 			windowBackgroundColor = new Color(display, 80, 80, 75);

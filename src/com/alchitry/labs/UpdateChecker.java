@@ -1,11 +1,12 @@
 package com.alchitry.labs;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.alchitry.labs.gui.FileDownloaderDialog;
+import com.alchitry.labs.gui.main.MainWindow;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.ReadableByteChannel;
@@ -15,13 +16,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.prefs.BackingStoreException;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
-import com.alchitry.labs.gui.FileDownloaderDialog;
-import com.alchitry.labs.gui.main.MainWindow;
 
 public class UpdateChecker {
 	private static final String BASE_URL = "https://cdn.alchitry.com/labs/";
@@ -33,7 +27,7 @@ public class UpdateChecker {
 	}
 
 	public static void checkForUpdates() {
-		if (Util.getEnvType() != Util.ECLIPSE)
+		if (Util.getEnvType() != Util.IDE)
 			new Thread(new Runnable() {
 
 				@Override

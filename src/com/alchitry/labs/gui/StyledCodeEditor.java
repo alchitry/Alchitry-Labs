@@ -1,77 +1,42 @@
 package com.alchitry.labs.gui;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
+import com.alchitry.labs.Settings;
+import com.alchitry.labs.Util;
+import com.alchitry.labs.dictionaries.AlchitryConstraintsDictionary;
+import com.alchitry.labs.dictionaries.LucidDictionary;
+import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.gui.util.Search;
+import com.alchitry.labs.parsers.errors.AlchitryConstraintsErrorProvider;
+import com.alchitry.labs.parsers.errors.ErrorProvider;
+import com.alchitry.labs.parsers.errors.LucidErrorProvider;
+import com.alchitry.labs.parsers.errors.VerilogErrorProvider;
+import com.alchitry.labs.parsers.styles.*;
+import com.alchitry.labs.project.Project;
+import com.alchitry.labs.style.*;
+import com.alchitry.labs.tools.ParserCache;
+import com.alchitry.labs.widgets.CustomSearchAndReplace;
+import com.alchitry.labs.widgets.CustomTabs;
+import com.alchitry.labs.widgets.TabChild;
+import com.alchitry.labs.widgets.TabHotKeys;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ExtendedModifyListener;
-import org.eclipse.swt.custom.LineStyleEvent;
-import org.eclipse.swt.custom.LineStyleListener;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.StyledTextPrintOptions;
-import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MenuAdapter;
-import org.eclipse.swt.events.MenuEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TraverseEvent;
-import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.printing.PrintDialog;
 import org.eclipse.swt.printing.Printer;
 import org.eclipse.swt.printing.PrinterData;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.*;
 
-import com.alchitry.labs.Settings;
-import com.alchitry.labs.Util;
-import com.alchitry.labs.dictionaries.AlchitryConstraintsDictionary;
-import com.alchitry.labs.dictionaries.LucidDictionary;
-import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.parsers.errors.AlchitryConstraintsErrorProvider;
-import com.alchitry.labs.parsers.errors.ErrorProvider;
-import com.alchitry.labs.parsers.errors.LucidErrorProvider;
-import com.alchitry.labs.parsers.errors.VerilogErrorProvider;
-import com.alchitry.labs.parsers.styles.AlchitryConstraintStyleProvider;
-import com.alchitry.labs.parsers.styles.LucidNewLineIndenter;
-import com.alchitry.labs.parsers.styles.LucidStyleProvider;
-import com.alchitry.labs.parsers.styles.VerilogIndentProvider;
-import com.alchitry.labs.parsers.styles.VerilogNewLineIndenter;
-import com.alchitry.labs.parsers.styles.VerilogStyleProvider;
-import com.alchitry.labs.project.Project;
-import com.alchitry.labs.style.AutoComplete;
-import com.alchitry.labs.style.AutoFormatter;
-import com.alchitry.labs.style.BracketUnderliner;
-import com.alchitry.labs.style.IndentProvider;
-import com.alchitry.labs.style.LineHighlighter;
-import com.alchitry.labs.style.LineStyler;
-import com.alchitry.labs.style.ToolTipListener;
-import com.alchitry.labs.tools.ParserCache;
-import com.alchitry.labs.widgets.CustomSearch;
-import com.alchitry.labs.widgets.CustomTabs;
-import com.alchitry.labs.widgets.TabChild;
-import com.alchitry.labs.widgets.TabHotKeys;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 
 public class StyledCodeEditor extends StyledText implements ModifyListener, TabChild {
 
@@ -85,7 +50,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	private String fileName;
 	private AutoComplete autoComplete;
 	private TextHighligher highlighter;
-	private CustomSearch search;
+	private CustomSearchAndReplace search;
 	private DoubleClickHighlighter doubleClick;
 	private List<LineStyleListener> lineStyleListeners;
 	private Listener projectSaveListener;
@@ -94,6 +59,7 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	private boolean hasErrors;
 
 	private boolean searchActive = false;
+	private Search searchResults = null;
 
 	private boolean isLucid = false;
 	private boolean isVerilog = false;
@@ -109,7 +75,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		this.write = write;
 		this.file = file;
 
-		search = new CustomSearch(parent, SWT.NONE);
+		// attach search to parent so that it doesn't scroll with the text
+		search = new CustomSearchAndReplace(getParent(), SWT.NONE);
 
 		if (Util.isLinux) // Windows has a bug where hidden scroll bars flash
 			setAlwaysShowScrollBars(false);
@@ -132,7 +99,6 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		hasErrors = false;
 
 		undoRedo = new UndoRedo(this);
-		addExtendedModifyListener(undoRedo);
 		addVerifyListener(undoRedo);
 
 		if (file == null) {
@@ -281,11 +247,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 
 		new BlockIndenter(this); // converts tabs into spaces and multiline tabs to indents
 
-		// attach search to parent so that it doesn't scroll with the text
-		search = new CustomSearch(getParent(), SWT.NONE);
 		search.addModifyListener(this);
 		search.addKeyListener(new KeyListener() {
-
 			@Override
 			public void keyReleased(KeyEvent e) {
 			}
@@ -295,23 +258,48 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 				if (e.keyCode == SWT.ESC)
 					setSearch(false);
 				else if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR)
-					findWord(search.getText(), true);
+					search(true);
 			}
 		});
 
 		search.addNextListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				findWord(search.getText(), true);
+				search(true);
 			}
 		});
 
 		search.addPrevListener(new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				findWord(search.getText(), false);
+				search(false);
 			}
 		});
+
+		search.addReplaceOnceListener(new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				replace(false);
+			}
+		});
+
+		search.addReplaceAllListener(new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				replace(true);
+			}
+		});
+
+		Listener invalidateSearchListener = new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				searchResults = null;
+				updateSearchResults();
+			}
+		};
+
+		search.addCaseSensitiveListener(invalidateSearchListener);
+		search.addRegexListener(invalidateSearchListener);
 
 		search.setVisible(false);
 
@@ -393,20 +381,21 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 		if (s == false) {
 			if (searchActive == false)
 				return;
-			highlighter.setText(null);
-			search.setText("");
+			highlighter.setMatches(null);
 		} else if (searchActive == false || doubleClick.getWord() != null) {
 			String selection = doubleClick.getWord();
-			highlighter.setText(selection);
-			search.setText(selection == null ? "" : selection);
-			if (selection != null && !selection.isEmpty())
+			if (selection != null && !selection.isEmpty()) {
+				search.setSearchText(selection);
 				doubleClick.clearWord();
+			}
 		}
 		searchActive = s;
 		if (searchActive) {
 			search.setVisible(true);
 			search.setFocus();
+			updateSearchResults();
 		} else {
+			searchResults = null;
 			search.setVisible(false);
 			setFocus();
 		}
@@ -415,8 +404,8 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 	private void placeSearch() {
 		Point p = getSize();
 		Point fs = search.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-		p.x -= fs.x + 20;
-		p.y = 0;
+		p.x = 0;
+		p.y -= fs.y;
 		p = getDisplay().map(this, getParent(), p);
 		search.setBounds(p.x, p.y, fs.x, fs.y);
 		search.moveAbove(this);
@@ -538,40 +527,81 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			}
 			edited = true;
 
+			searchResults = null;
+			updateSearchResults();
+
 			// work around for selectAll -> delete bug
 			if (getText().isEmpty())
 				redraw();
 		} else { // modify from search
-			String text = ((StyledText) e.widget).getText();
-			highlighter.setText(text);
+			searchResults = null;
+			updateSearchResults();
 		}
 	}
 
-	private void findWord(String word, boolean dir) {
-		if (word == null || word.isEmpty())
+	private void updateSearchResults() {
+		if (!searchActive)
+			return;
+		String pattern = search.getSearchText();
+		if (pattern == null || pattern.isEmpty())
 			return;
 
-		int start = getCaretOffset();
-		String text = getText();
-		int idx;
-		if (dir)
-			idx = StringUtils.indexOfIgnoreCase(text, word, start);
-		else {
-			idx = StringUtils
-					.lastIndexOfIgnoreCase(text.substring(0, start > text.length() ? text.length() - 1 : start), word);
+		if (searchResults == null) {
+			searchResults = new Search(getText(), search.getSearchText(), search.isRegex(), search.isCaseSensitive());
+			search.setSearchError(searchResults.getError());
+			highlighter.setMatches(searchResults.getMatches());
 		}
+	}
 
-		if (idx < 0) {
-			if (dir)
-				idx = StringUtils.indexOfIgnoreCase(text, word);
-			else {
-				idx = StringUtils.lastIndexOfIgnoreCase(text, word);
+	private void replace(boolean all) {
+		updateSearchResults();
+		if (searchResults == null)
+			return;
+
+		try {
+			String replacement = search.getReplaceText();
+			if (!all) {
+				MatchResult result = searchResults.getLastResult();
+				if (result == null)
+					result = searchResults.next(getCaretOffset());
+				if (result != null) {
+					Matcher m = searchResults.getPattern().matcher(getTextRange(result.start(), result.end() - result.start()));
+					if (m.find()) {
+						replacement = m.replaceFirst(replacement);
+						replaceTextRange(result.start(), result.end() - result.start(), replacement);
+					}
+				}
+			} else {
+				Matcher m = searchResults.getPattern().matcher(getText());
+				if (m.find()) {
+					String newText = m.replaceAll(replacement);
+					replaceTextRange(0, getCharCount(), newText);
+				}
 			}
+		} catch (Exception e) {
+			search.setReplaceError(true);
+			Util.println(e.getMessage(), true);
+			return;
 		}
+		search.setReplaceError(false);
+	}
 
-		if (idx >= 0) {
-			setCaretOffset(idx);
-			setSelection(idx, idx + word.length());
+	private void search(boolean forward) {
+		updateSearchResults();
+		if (searchResults == null)
+			return;
+
+		int startIdx = getCaretOffset();
+
+		MatchResult match = null;
+
+		if (forward)
+			match = searchResults.next(startIdx);
+		else
+			match = searchResults.previous(startIdx - 1);
+
+		if (match != null) {
+			setSelection(match.start(), match.end());
 			placeSearch();
 		}
 	}
@@ -750,16 +780,16 @@ public class StyledCodeEditor extends StyledText implements ModifyListener, TabC
 			return;
 
 		Printer printer = new Printer(data);
-	
+
 		final Runnable printJob = print(printer, printOptions);
-		
+
 		skipEdit = true;
 		undoRedo.skipNext();
 		if (autoComplete != null)
 			autoComplete.skipNext();
 		// for some reason this is needed as color data is disposed after printing
-		notifyListeners(SWT.Modify, new Event()); 
-		
+		notifyListeners(SWT.Modify, new Event());
+
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {

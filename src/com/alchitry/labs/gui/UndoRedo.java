@@ -1,46 +1,25 @@
 package com.alchitry.labs.gui;
 
-import java.util.Stack;
-
-import org.eclipse.swt.custom.ExtendedModifyEvent;
-import org.eclipse.swt.custom.ExtendedModifyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
-import com.alchitry.labs.Util;
+import java.util.Stack;
 
-public class UndoRedo implements ExtendedModifyListener, VerifyListener {
-
+public class UndoRedo implements VerifyListener {
 	private StyledCodeEditor editor;
 	private Stack<Edit> undoStack;
 	private Stack<Edit> redoStack;
 	private boolean editing;
 	private boolean skip;
-	private int lastHash;
+	private long lastEdit = 0;
 
 	private class Edit {
-		public int start;
-		public int length;
+		public int position;
 		public String text;
-		public int editorHash;
 
-		public Edit(int start, int length, String text, int editorHash) {
-			this.start = start;
-			this.length = length;
-			this.text = text;
-			this.editorHash = editorHash;
-		}
-
-		public Edit(ExtendedModifyEvent event) {
-			editorHash = editor.getText().hashCode();
-			start = event.start;
-			length = event.length;
-			text = event.replacedText;
-		}
-
-		@Override
-		public String toString() {
-			return "Start " + start + " Length " + length + " Text \"" + text + "\"";
+		public Edit() {
+			position = editor.getCaretOffset();
+			text = editor.getText();
 		}
 	}
 
@@ -50,8 +29,8 @@ public class UndoRedo implements ExtendedModifyListener, VerifyListener {
 
 	public UndoRedo(StyledCodeEditor editor) {
 		this.editor = editor;
-		undoStack = new Stack<Edit>();
-		redoStack = new Stack<Edit>();
+		undoStack = new Stack<>();
+		redoStack = new Stack<>();
 		editing = false;
 		skip = false;
 	}
@@ -59,57 +38,39 @@ public class UndoRedo implements ExtendedModifyListener, VerifyListener {
 	public void skipNext() {
 		skip = true;
 	}
-	
-	@Override
-	public void verifyText(VerifyEvent event) {
-		lastHash = editor.getText().hashCode();
-	}
 
 	@Override
-	public void modifyText(ExtendedModifyEvent event) {
+	public void verifyText(VerifyEvent e) {
 		if (!skip && !editing) {
-			Edit e = new Edit(event);
-			e.editorHash = lastHash;
-			undoStack.push(e);
-			redoStack.clear();
-		}
+			long now = System.currentTimeMillis();
+			if ((lastEdit + 1000) < now) {
+				lastEdit = now;
+				undoStack.push(new Edit());
+				redoStack.clear();
+			}
+		} 
 		editing = skip = false;
 	}
 
-	private void replace(Stack<Edit> popStack, Stack<Edit> pushStack, boolean undo) {
+	private void replace(Stack<Edit> popStack, Stack<Edit> pushStack) {
 		if (!editing && popStack.size() > 0) {
 			Edit edit = popStack.pop();
-			
-			String replacedText = "";
-			if (edit.length > 0)
-				replacedText = editor.getText(edit.start, edit.start + edit.length - 1);
-			
-			pushStack.push(new Edit(edit.start, edit.text.length(), replacedText, editor.getText().hashCode()));
-			
-			// System.out.println("Replacing from: " + edit.start+" for: "+edit.length+" with "+edit.text);
+
+			pushStack.push(new Edit());
+
 			editing = true;
-			if (editor.getCharCount() > 0)
-				editor.replaceTextRange(edit.start, edit.length, edit.text);
-			else
-				editor.insert(edit.text);
-			editor.setCaretOffset(edit.start + edit.text.length());
+			editor.replaceTextRange(0, editor.getCharCount(), edit.text);
+			editor.setCaretOffset(edit.position);
 			editor.update();
-			
-			if (editor.getText().hashCode() != edit.editorHash) {
-				Util.showError("Undo/Redo Error", "An error occured with the undo/redo stack. It is out of sync with the editor.");
-				return;
-			}
-			//while (Util.getDisplay().readAndDispatch());
-			
 		}
 	}
 
 	public void undo() {
-		replace(undoStack, redoStack, true);
+		replace(undoStack, redoStack);
 	}
 
 	public void redo() {
-		replace(redoStack, undoStack, false);
+		replace(redoStack, undoStack);
 	}
 
 	public boolean canUndo() {
@@ -119,6 +80,5 @@ public class UndoRedo implements ExtendedModifyListener, VerifyListener {
 	public boolean canRedo() {
 		return !redoStack.empty();
 	}
-
 
 }

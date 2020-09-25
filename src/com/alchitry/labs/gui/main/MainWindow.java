@@ -1,49 +1,10 @@
 package com.alchitry.labs.gui.main;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.prefs.BackingStoreException;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
-
 import com.alchitry.labs.Reporter;
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.UpdateChecker;
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.ComponentsDialog;
-import com.alchitry.labs.gui.ConstraintsEditor;
-import com.alchitry.labs.gui.Images;
-import com.alchitry.labs.gui.NewProjectDialog;
-import com.alchitry.labs.gui.NewSourceDialog;
-import com.alchitry.labs.gui.StyledCodeEditor;
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.gui.WaveForm;
-import com.alchitry.labs.gui.WelcomeDialog;
+import com.alchitry.labs.gui.*;
 import com.alchitry.labs.gui.tools.ImageCapture;
 import com.alchitry.labs.gui.tools.RegInterface;
 import com.alchitry.labs.gui.tools.SerialMonitor;
@@ -57,6 +18,27 @@ import com.alchitry.labs.widgets.CustomConsole;
 import com.alchitry.labs.widgets.CustomTabs;
 import com.alchitry.labs.widgets.CustomTree;
 import com.alchitry.labs.widgets.TabChild;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.wb.swt.SWTResourceManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.prefs.BackingStoreException;
 
 public class MainWindow {
 	public static final String VERSION = "1.2.1";
@@ -86,14 +68,6 @@ public class MainWindow {
 	
 	public StyledCodeEditor lastActiveEditor;
 
-	/**
-	 * Launch the application.
-	 * 
-	 * @param args
-	 * @throws UnsupportedEncodingException
-	 * @throws InterruptedException
-	 * @wbp.parser.entryPoint
-	 */
 	public static void main(String[] args) {
 		parseCommand(args);
 
@@ -103,14 +77,14 @@ public class MainWindow {
 			mainWindow.open();
 		} catch (Exception e) {
 			Util.log.log(Level.SEVERE, "", e);
-			if (Util.getEnvType() != Util.ECLIPSE)
+			if (Util.getEnvType() != Util.IDE)
 				Reporter.reportException(e);
 
 			if (mainWindow != null)
 				mainWindow.saveOnCrash();
 		}
 
-		return;
+		return; 
 	}
 
 	public MainWindow() {
@@ -161,7 +135,7 @@ public class MainWindow {
 			loader.open();
 		} catch (Exception e) {
 			Util.log.log(Level.SEVERE, "", e);
-			if (Util.getEnvType() != Util.ECLIPSE)
+			if (Util.getEnvType() != Util.IDE)
 				Reporter.reportException(e);
 		}
 		System.exit(0);
@@ -188,8 +162,8 @@ public class MainWindow {
 			case "mac64":
 				Util.setEnvType(Util.MAC64);
 				break;
-			case "eclipse":
-				Util.setEnvType(Util.ECLIPSE);
+			case "ide":
+				Util.setEnvType(Util.IDE);
 				break;
 			}
 		}

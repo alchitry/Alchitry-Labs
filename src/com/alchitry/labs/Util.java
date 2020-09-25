@@ -1,36 +1,11 @@
 package com.alchitry.labs;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
-import javax.swing.filechooser.FileSystemView;
-
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.main.LoaderWindow;
+import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.hardware.boards.Board;
+import com.alchitry.labs.parsers.BigFunctions;
+import com.alchitry.labs.widgets.CustomConsole;
 import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -50,12 +25,23 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.gui.main.LoaderWindow;
-import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.hardware.boards.Board;
-import com.alchitry.labs.parsers.BigFunctions;
-import com.alchitry.labs.widgets.CustomConsole;
+import javax.swing.filechooser.FileSystemView;
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Util {
 	private static Display display;
@@ -77,7 +63,7 @@ public class Util {
 	public static final int LIN64 = 3;
 	public static final int MAC32 = 4;
 	public static final int MAC64 = 5;
-	public static final int ECLIPSE = 6;
+	public static final int IDE = 6;
 	private static int envType = UNKNOWN;
 
 	public static final String[] sourceSuffixes = new String[] { ".v", ".luc" };
@@ -130,7 +116,7 @@ public class Util {
 			break;
 		case LIN32:
 		case LIN64:
-		case ECLIPSE:
+		case IDE:
 			osDir = "linux";
 			break;
 		}

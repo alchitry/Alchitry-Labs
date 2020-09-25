@@ -1,32 +1,37 @@
 package com.alchitry.labs.gui;
 
-import org.apache.commons.lang3.StringUtils;
+import com.alchitry.labs.gui.util.Search;
+import com.alchitry.labs.style.StyleUtil;
+import com.alchitry.labs.style.StyleUtil.StyleMerger;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 
-import com.alchitry.labs.style.StyleUtil;
-import com.alchitry.labs.style.StyleUtil.StyleMerger;
+import java.util.List;
+import java.util.regex.MatchResult;
 
 public class TextHighligher extends CachedStyleListner implements ModifyListener {
 	private StyledText editor;
-	private String highlightWord;
+	private List<MatchResult> matchList;
 
 	public TextHighligher(StyledText e) {
 		super();
 		editor = e;
 	}
-
+	
 	public void setText(String text) {
-		highlightWord = text;
+		setMatches(new Search(editor.getText(), text, false, false).getMatches());
+	}
+
+	public void setMatches(List<MatchResult> matches) {
+		matchList = matches;
 		update();
 		editor.redraw();
 	}
 
 	protected void update() {
-		final String text = editor.getText();
 		lock.acquireUninterruptibly();
 		new Thread(new Runnable() {
 			@Override
@@ -34,17 +39,16 @@ public class TextHighligher extends CachedStyleListner implements ModifyListener
 				invalidateStyles();
 				styles.clear();
 
-				if (highlightWord == null || highlightWord.isEmpty()) {
+				if (matchList == null) {
 					lock.release();
 					return;
 				}
 
-				int length = highlightWord.length();
-				for (int index = StringUtils.indexOfIgnoreCase(text, highlightWord); index >= 0; index = StringUtils.indexOfIgnoreCase(text, highlightWord, index + length)) {
+				for (MatchResult m : matchList) {
 					StyleRange style = new StyleRange();
 					style.background = Theme.highlightedWordColor;
-					style.start = index;
-					style.length = length;
+					style.start = m.start();
+					style.length = m.end() - m.start();
 					styles.add(style);
 				}
 
