@@ -1,12 +1,5 @@
 package com.alchitry.labs.dictionaries;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.StyledCodeEditor;
 import com.alchitry.labs.gui.main.MainWindow;
@@ -22,6 +15,8 @@ import com.alchitry.labs.parsers.types.Fsm;
 import com.alchitry.labs.parsers.types.Struct;
 import com.alchitry.labs.parsers.types.Struct.Member;
 
+import java.util.*;
+
 public class LucidDictionary extends Dictionary {
 	private static final String[] LUCID_KEYWORDS = { "module", "dff", "fsm", "input", "output", "inout", "signed", "for", "case", "if", "default", "const", "var", "sig",
 			"always", "else", "$clog2", "$pow", "$reverse", "$flatten", "$build", "$signed", "$unsigned", "$cdiv", "$resize"};
@@ -31,7 +26,7 @@ public class LucidDictionary extends Dictionary {
 	private List<Sig> inouts;
 	private List<InstModule> instModules;
 
-	private StyledCodeEditor editor;
+	private final StyledCodeEditor editor;
 	private LucidExtractor errorChecker;
 
 	private int position;
@@ -183,7 +178,7 @@ public class LucidDictionary extends Dictionary {
 								dict.add("read");
 								dict.add("write");
 							} else {
-								HashMap<String, List<Struct>> gS = MainWindow.getOpenProject().getGlobalStructs();
+								HashMap<String, List<Struct>> gS = MainWindow.INSTANCE.getProject().getGlobalStructs();
 								if (gS.get(name) != null) {
 									List<Constant> gC = MainWindow.getGlobalConstants().get(name);
 									List<Struct> st = gS.get(name);
@@ -206,10 +201,10 @@ public class LucidDictionary extends Dictionary {
 					String sig = words.get(1);
 					if (Util.containsName(dffs, name) || Util.containsName(fsms, name)) {
 						switch (sig) {
-						case "d":
-						case "q":
-							dict.add(Lucid.WIDTH_ATTR);
-							addWidth = addStructMembers(dict, width, addWidth);
+							case "d", "q" -> {
+								dict.add(Lucid.WIDTH_ATTR);
+								addWidth = addStructMembers(dict, width, addWidth);
+							}
 						}
 					} else {
 						InstModule im;
@@ -225,10 +220,7 @@ public class LucidDictionary extends Dictionary {
 								dict.add(Lucid.WIDTH_ATTR);
 							} else if (Util.containsName(inouts, name)) {
 								switch (sig) {
-								case "enable":
-								case "read":
-								case "write":
-									dict.add(Lucid.WIDTH_ATTR);
+									case "enable", "read", "write" -> dict.add(Lucid.WIDTH_ATTR);
 								}
 							} else {
 								addWidth = addStructMembers(dict, width, addWidth);
@@ -247,10 +239,7 @@ public class LucidDictionary extends Dictionary {
 
 						if (Util.containsName(m.getInouts(), sig)) {
 							switch (words.get(2)) {
-							case "enable":
-							case "read":
-							case "write":
-								dict.add(Lucid.WIDTH_ATTR);
+								case "enable", "read", "write" -> dict.add(Lucid.WIDTH_ATTR);
 							}
 						} else {
 							addWidth = addStructMembers(dict, width, addWidth);

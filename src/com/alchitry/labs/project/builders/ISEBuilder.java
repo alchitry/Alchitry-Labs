@@ -1,5 +1,12 @@
 package com.alchitry.labs.project.builders;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.project.Environment;
+import com.alchitry.labs.project.IPCore;
+import com.alchitry.labs.style.ParseException;
+import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,14 +15,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.logging.Level;
-
-import org.apache.commons.io.FileUtils;
-
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.project.Environment;
-import com.alchitry.labs.project.IPCore;
-import com.alchitry.labs.style.ParseException;
 
 public class ISEBuilder extends ProjectBuilder {
 	private static final String projectFile = "project.tcl";
@@ -42,14 +41,14 @@ public class ISEBuilder extends ProjectBuilder {
 				try {
 					out.close();
 				} catch (IOException e) {
-					Util.log.log(Level.SEVERE, "Failed to close stdout stream!", e);
+					Util.logger.log(Level.SEVERE, "Failed to close stdout stream!", e);
 				}
 		}
 
 		String xilinx = Util.getISELocation();
 
 		if (xilinx == null) {
-			Util.log.severe("Couldn't find ISE :(");
+			Util.logger.severe("Couldn't find ISE :(");
 			Util.showError("ISE's location must be set in the settings menu before you can build!");
 			return;
 		}

@@ -1,5 +1,7 @@
 package com.alchitry.labs.widgets;
 
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.gui.util.Images;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
@@ -11,9 +13,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Listener;
-
-import com.alchitry.labs.gui.Images;
-import com.alchitry.labs.gui.Theme;
 
 public class CustomSearch extends Composite {
 	private static final int HEIGHT = 35;

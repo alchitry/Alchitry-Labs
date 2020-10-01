@@ -5,7 +5,9 @@ import com.alchitry.labs.Util
 import com.alchitry.labs.dictionaries.AlchitryConstraintsDictionary
 import com.alchitry.labs.dictionaries.LucidDictionary
 import com.alchitry.labs.gui.main.MainWindow
+import com.alchitry.labs.gui.util.HotKeys
 import com.alchitry.labs.gui.util.Search
+import com.alchitry.labs.gui.util.UndoRedo
 import com.alchitry.labs.parsers.errors.AlchitryConstraintsErrorProvider
 import com.alchitry.labs.parsers.errors.ErrorProvider
 import com.alchitry.labs.parsers.errors.LucidErrorProvider
@@ -43,7 +45,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
     val isOpen: Boolean
     private var formatter: AutoFormatter? = null
     private val undoRedo = UndoRedo(this)
-    var fileName: String? = null
+    var fileName: String
     private var autoComplete: AutoComplete? = null
     private val highlighter = TextHighlighter(this)
     private val search: CustomSearchAndReplace = CustomSearchAndReplace(parent, SWT.NONE)
@@ -61,12 +63,14 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
 
     init {
         // attach search to parent so that it doesn't scroll with the text
-        if (Util.isLinux) // Windows has a bug where hidden scroll bars flash
+        if (!Util.isWindows) // Windows has a bug where hidden scroll bars flash
             alwaysShowScrollBars = false
         background = Theme.editorBackgroundColor
         foreground = Theme.editorForegroundColor
         selectionBackground = Theme.editorTextSelectedColor
         selectionForeground = null
+
+        bottomMargin = 5
 
         val lineHighlighter = LineHighlighter(this)
         addCaretListener(lineHighlighter)
@@ -118,11 +122,8 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
                     lineStyleListeners.add(asp)
                     addModifyListener(asp)
                     val dict = AlchitryConstraintsDictionary()
-                    val p = MainWindow.getOpenProject()
-                    if (p != null) {
-                        projectSaveListener = Listener { dict.updatePortNames() }
-                        p.addSaveListener(projectSaveListener)
-                    }
+                    val p = MainWindow.project
+                    p?.saveListeners?.add(Listener { dict.updatePortNames() }.also { listener -> projectSaveListener = listener })
                     autoComplete = AutoComplete(this, dict)
                     isConstraint = true
                 }
@@ -131,7 +132,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
                     // TODO : native constraint checking
                 }
                 else -> {
-                    Util.log.info("UNSUPPORTED FILE TYPE. $it")
+                    Util.logger.info("UNSUPPORTED FILE TYPE. $it")
                 }
             }
         }
@@ -168,7 +169,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         addFocusListener(object : FocusListener {
             override fun focusLost(arg0: FocusEvent) {}
             override fun focusGained(arg0: FocusEvent) {
-                MainWindow.mainWindow.lastActiveEditor = this@StyledCodeEditor
+                MainWindow.lastActiveEditor = this@StyledCodeEditor
             }
         })
         doubleClick = DoubleClickHighlighter(this, isLucid, isVerilog)
@@ -213,7 +214,14 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         setupMenu()
         if (!writable) {
             addVerifyListener { e ->
-                if (isConstraint) Util.showInfo("Library constraint files are read only!") else Util.showInfo("Components are read only!")
+                file?.let {
+                    if (Util.askQuestion("This file is read only! Would you like to make a local copy to edit?", "Create editable copy?"))
+                        if (MainWindow.project?.copyLibraryFile(it) == true) {
+                            GlobalScope.launch(Dispatchers.SWT) { tabFolder.close(this@StyledCodeEditor) }
+                        } else {
+                            Util.showError("Failed to copy file into project!")
+                        }
+                }
                 e.doit = false
             }
         }
@@ -222,7 +230,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
     }
 
     fun updateFont() {
-        val fontSize = Settings.pref.getInt(Settings.EDITOR_FONT_SIZE, 12)
+        val fontSize = Settings.EDITOR_FONT_SIZE.get()
         font = Font(display, "Ubuntu Mono", fontSize, SWT.NORMAL)
         autoComplete?.updateFont()
     }
@@ -263,10 +271,12 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         }
         searchActive = s
         if (searchActive) {
+            bottomMargin = CustomSearchAndReplace.HEIGHT + 5
             search.isVisible = true
             search.setFocus()
             updateSearchResults()
         } else {
+            bottomMargin = 5
             searchResults = null
             search.isVisible = false
             setFocus()
@@ -321,7 +331,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
             try {
                 Util.readFile(path)
             } catch (e1: IOException) {
-                Util.log.severe("Could not open file $path")
+                Util.logger.severe("Could not open file $path")
                 return false
             }
         } else {
@@ -358,10 +368,10 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
             }
         }
         if (edited) {
-            tabFolder.setText(this, tabFolder.getText(this).substring(1))
+            tabFolder.setText(this, tabFolder.getText(this)?.substring(1))
         }
         edited = false
-        MainWindow.mainWindow.updateErrors()
+        MainWindow.updateErrors()
         return true
     }
 
@@ -411,28 +421,34 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
 
     private fun replace(all: Boolean) {
         updateSearchResults()
+
         searchResults?.let {
+            val replaceText = search.getReplaceText()
+            val editorText = text
+            val caretOffset = caretOffset
             GlobalScope.launch(Dispatchers.Default) {
                 try {
-                    var replacement = search.getReplaceText()
+                    var replacement = replaceText
                     if (!all) {
                         val result = it.lastResult ?: it.next(caretOffset)
                         if (result != null) {
-                            val m = searchResults!!.pattern.matcher(getTextRange(result.start(), result.end() - result.start()))
-                            if (m.find()) {
-                                replacement = m.replaceFirst(replacement)
-                                launch(Dispatchers.SWT) {
+                            launch(Dispatchers.SWT) {
+                                val m = it.pattern.matcher(getTextRange(result.start(), result.end() - result.start()))
+                                if (m.find()) {
+                                    replacement = m.replaceFirst(replacement)
                                     search.setReplaceError(false)
+                                    autoComplete?.skipNext()
                                     replaceTextRange(result.start(), result.end() - result.start(), replacement)
                                 }
                             }
                         }
                     } else {
-                        val m = searchResults!!.pattern.matcher(text)
+                        val m = it.pattern.matcher(editorText)
                         if (m.find()) {
                             val newText = m.replaceAll(replacement)
                             launch(Dispatchers.SWT) {
                                 search.setReplaceError(false)
+                                autoComplete?.skipNext()
                                 replaceTextRange(0, charCount, newText)
                             }
                         }
@@ -465,19 +481,23 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
 
     override fun close() {
         tabFolder.close(this)
-        val p = MainWindow.getOpenProject()
-        if (p != null && projectSaveListener != null) p.removeSaveListener(projectSaveListener)
+        val p = MainWindow.project
+        if (p != null && projectSaveListener != null) p.saveListeners.remove(projectSaveListener)
     }
 
     fun updateTextColor() {
         hasErrors = false
-        if (errorChecker!!.hasErrors()) {
-            hasErrors = true
-            tabFolder.setTabTextColor(this, Theme.tabErrorTextColor)
-        } else if (errorChecker!!.hasWarnings()) {
-            tabFolder.setTabTextColor(this, Theme.tabWarningTextColor)
-        } else {
-            tabFolder.setTabTextColor(this, Theme.tabNormalTextColor)
+        when {
+            errorChecker?.hasErrors() == true -> {
+                hasErrors = true
+                tabFolder.setTabTextColor(this, Theme.tabErrorTextColor)
+            }
+            errorChecker?.hasWarnings() == true -> {
+                tabFolder.setTabTextColor(this, Theme.tabWarningTextColor)
+            }
+            else -> {
+                tabFolder.setTabTextColor(this, Theme.tabNormalTextColor)
+            }
         }
     }
 
@@ -490,7 +510,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
     }
 
     fun updateErrors() {
-errorChecker?.updateErrors()
+        errorChecker?.updateErrors()
     }
 
     fun getLineColor(line: Int): Color? {
@@ -499,7 +519,6 @@ errorChecker?.updateErrors()
 
     private fun setupMenu() {
         menu = rightClickMenu
-        var item: MenuItem
         val undo = MenuItem(rightClickMenu, SWT.NONE)
         undo.text = "&Undo\tCtrl+Z"
         undo.addSelectionListener(object : SelectionAdapter() {
@@ -515,7 +534,7 @@ errorChecker?.updateErrors()
             }
         })
         MenuItem(rightClickMenu, SWT.SEPARATOR)
-        item = MenuItem(rightClickMenu, SWT.NONE)
+        var item = MenuItem(rightClickMenu, SWT.NONE)
         item.text = "Cut\tCtrl+X"
         item.addSelectionListener(object : SelectionAdapter() {
             override fun widgetSelected(e: SelectionEvent) {

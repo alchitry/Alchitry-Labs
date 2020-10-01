@@ -1,283 +1,220 @@
-package com.alchitry.labs.widgets;
+package com.alchitry.labs.widgets
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSource;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DragSourceListener;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
+import com.alchitry.labs.gui.Theme
+import com.alchitry.labs.gui.main.MainWindow.getIndex
+import com.alchitry.labs.gui.util.Images
+import org.eclipse.swt.SWT
+import org.eclipse.swt.dnd.*
+import org.eclipse.swt.events.*
+import org.eclipse.swt.graphics.Color
+import org.eclipse.swt.graphics.GC
+import org.eclipse.swt.graphics.Image
+import org.eclipse.swt.graphics.Point
+import org.eclipse.swt.widgets.Canvas
+import org.eclipse.swt.widgets.Composite
+import org.eclipse.swt.widgets.Display
+import org.eclipse.swt.widgets.Event
 
-import com.alchitry.labs.gui.Images;
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.gui.main.MainWindow;
+class CustomTab(private val folder: CustomTabs, style: Int, private var index: Int) : Canvas(folder, style) {
+    private enum class MouseState {
+        NONE, HOVER_TAB, CLICK_TAB, HOVER_X, CLICK_X
+    }
 
-public class CustomTab extends Canvas {
-	private static final int NO_MOUSE = 0;
-	private static final int MOUSE_HOVER_TAB = 1;
-	private static final int MOUSE_CLICK_TAB = 2;
-	private static final int MOUSE_HOVER_X = 3;
-	private static final int MOUSE_CLICK_X = 4;
+    private var mouse = MouseState.NONE
+    private var hit = false
+    var text: String? = null
+    private var hoverColor: Color? = null
+    private var clickColor: Color? = null
 
-	private int mouse = NO_MOUSE;
-	private boolean hit = false;
-	private String text;
-	private Color hoverColor, clickColor;
-	private Integer index;
-	private CustomTabs folder;
+    init {
+        if (Theme.set) {
+            background = Theme.windowBackgroundColor
+            foreground = Theme.windowForegroundColor
+            hoverColor = Theme.mainAccentColor
+            clickColor = Theme.darkAccentColor
+        }
+        addPaintListener { e -> paintControl(e) }
+        addMouseMoveListener { e -> mouseMove(e) }
+        addMouseTrackListener(object : MouseTrackAdapter() {
+            override fun mouseEnter(e: MouseEvent) {
+                this@CustomTab.mouseEnter(e)
+            }
 
-	public CustomTab(CustomTabs parent, int style, int index) {
-		super(parent, style);
-		folder = parent;
+            override fun mouseExit(e: MouseEvent) {
+                this@CustomTab.mouseExit()
+            }
+        })
+        addMouseListener(object : MouseAdapter() {
+            override fun mouseDown(e: MouseEvent) {
+                this@CustomTab.mouseDown()
+            }
 
-		this.index = index;
+            override fun mouseUp(e: MouseEvent) {
+                this@CustomTab.mouseUp(e)
+            }
+        })
+        addKeyListener(object : KeyAdapter() {
+            override fun keyPressed(e: KeyEvent) {
+                this@CustomTab.keyPressed(e)
+            }
+        })
+        val dnd = DragSource(this, DND.DROP_MOVE or DND.DROP_COPY)
+        val types = arrayOf<Transfer>(TabTransfer.getInstance())
+        dnd.setTransfer(*types)
+        dnd.addDragListener(object : DragSourceListener {
+            var gc: GC? = null
+            var image: Image? = null
+            override fun dragStart(event: DragSourceEvent) {
+                // getting control widget - Composite in this case
+                val composite = (event.source as DragSource).control as Composite
+                // Getting dimensions of this widget
+                val compositeSize = composite.size
+                // creating new GC
+                gc = GC(composite)
+                // Creating new Image
+                image = Image(Display.getCurrent(), compositeSize.x, compositeSize.y)
+                // Rendering widget to image
+                gc!!.copyArea(image, 0, 0)
+                // Setting widget to DnD image
+                event.image = image
+            }
 
-		if (Theme.set) {
-			setBackground(Theme.windowBackgroundColor);
-			setForeground(Theme.windowForgroundColor);
-			hoverColor = Theme.mainAccentColor;
-			clickColor = Theme.darkAccentColor;
-		}
+            override fun dragSetData(event: DragSourceEvent) {
+                if (TabTransfer.getInstance().isSupportedType(event.dataType)) {
+                    event.data = getIndex(folder.getTabChild(index)!!)
+                }
+            }
 
-		this.addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				CustomTab.this.paintControl(e);
-			}
-		});
-		this.addMouseMoveListener(new MouseMoveListener() {
-			public void mouseMove(MouseEvent e) {
-				CustomTab.this.mouseMove(e);
-			}
-		});
-		this.addMouseTrackListener(new MouseTrackAdapter() {
-			public void mouseEnter(MouseEvent e) {
-				CustomTab.this.mouseEnter(e);
-			}
+            override fun dragFinished(event: DragSourceEvent) {
+                if (gc != null) {
+                    gc!!.dispose()
+                    gc = null
+                }
+                if (image != null) {
+                    image!!.dispose()
+                    image = null
+                }
+            }
+        })
+    }
 
-			public void mouseExit(MouseEvent e) {
-				CustomTab.this.mouseExit(e);
-			}
-		});
-		this.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				CustomTab.this.mouseDown(e);
-			}
+    fun setIndex(index: Int) {
+        this.index = index
+    }
 
-			public void mouseUp(MouseEvent e) {
-				CustomTab.this.mouseUp(e);
-			}
-		});
-		this.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				CustomTab.this.keyPressed(e);
-			}
-		});
+    private fun paintControl(e: PaintEvent) {
+        paint(e.gc)
+    }
 
-		DragSource dnd = new DragSource(this, DND.DROP_MOVE | DND.DROP_COPY);
-		Transfer[] types = new Transfer[] { TabTransfer.getInstance() };
-		dnd.setTransfer(types);
+    private fun paint(gc: GC) {
+        gc.font = Theme.defaultFont
+        val ts = gc.stringExtent(text)
+        val iconHeight = (size.y - 13) / 2
+        if (Theme.set) gc.foreground = Theme.tabNormalTextColor
+        when (mouse) {
+            MouseState.NONE -> {
+                gc.foreground = foreground
+                if (Theme.set) gc.background = background
+                gc.fillRectangle(clientArea)
+            }
+            MouseState.HOVER_TAB -> {
+                if (Theme.set) {
+                    gc.background = hoverColor
+                    gc.foreground = Theme.tabHoverTextColor
+                }
+                gc.fillRectangle(clientArea)
+                gc.drawImage(Images.xIcon, ts.x + 12, iconHeight)
+            }
+            MouseState.CLICK_TAB -> {
+                if (Theme.set) {
+                    gc.background = clickColor
+                    gc.foreground = Theme.tabHoverTextColor
+                }
+                gc.fillRectangle(clientArea)
+                gc.drawImage(Images.xIcon, ts.x + 12, iconHeight)
+            }
+            MouseState.HOVER_X -> {
+                if (Theme.set) {
+                    gc.background = hoverColor
+                    gc.foreground = Theme.tabHoverTextColor
+                }
+                gc.fillRectangle(clientArea)
+                gc.drawImage(Images.xGreyIcon, ts.x + 12, iconHeight)
+            }
+            MouseState.CLICK_X -> {
+                if (Theme.set) {
+                    gc.background = clickColor
+                    gc.foreground = Theme.tabHoverTextColor
+                }
+                gc.fillRectangle(clientArea)
+                gc.drawImage(Images.xRedIcon, ts.x + 12, iconHeight)
+            }
+        }
+        if (text != null) {
+            val textSize = gc.stringExtent(text)
+            gc.drawText(text, 6, (25 - textSize.y) / 2)
+        }
+    }
 
-		dnd.addDragListener(new DragSourceListener() {
-			GC gc;
-			Image image;
+    private fun mouseMove(e: MouseEvent) {
+        val bounds = bounds
+        mouse = if (e.x < 0 || e.y < 0 || e.x > bounds.width || e.y > bounds.height) {
+            MouseState.NONE
+        } else if (e.x < bounds.width - (9 + 13)) {
+            if (hit) MouseState.CLICK_TAB else MouseState.HOVER_TAB
+        } else {
+            if (hit) MouseState.CLICK_X else MouseState.HOVER_X
+        }
+        redraw()
+    }
 
-			@Override
-			public void dragStart(DragSourceEvent event) {
-				// getting control widget - Composite in this case
-				Composite composite = (Composite) ((DragSource) event.getSource()).getControl();
-				// Getting dimensions of this widget
-				Point compositeSize = composite.getSize();
-				// creating new GC
-				gc = new GC(composite);
-				// Creating new Image
-				image = new Image(Display.getCurrent(), compositeSize.x, compositeSize.y);
-				// Rendering widget to image
-				gc.copyArea(image, 0, 0);
-				// Setting widget to DnD image
-				event.image = image;
-			}
+    private fun mouseEnter(e: MouseEvent) {
+        val bounds = bounds
+        mouse = if (e.x < 0 || e.y < 0 || e.x > bounds.width || e.y > bounds.height) {
+            MouseState.NONE
+        } else if (e.x < bounds.width - (9 + 13)) {
+            MouseState.HOVER_TAB
+        } else {
+            MouseState.HOVER_X
+        }
+        redraw()
+    }
 
-			@Override
-			public void dragSetData(DragSourceEvent event) {
-				if (TabTransfer.getInstance().isSupportedType(event.dataType)) {
-					event.data = MainWindow.mainWindow.getIndex(folder.getTabChild(CustomTab.this.index));
-				}
-			}
+    private fun mouseExit() {
+        mouse = MouseState.NONE
+        redraw()
+    }
 
-			@Override
-			public void dragFinished(DragSourceEvent event) {
-				if (gc != null) {
-					gc.dispose();
-					gc = null;
-				}
+    private fun mouseDown() {
+        hit = true
+        if (mouse == MouseState.HOVER_TAB) mouse = MouseState.CLICK_TAB else if (mouse == MouseState.HOVER_X) mouse = MouseState.CLICK_X
+        redraw()
+    }
 
-				if (image != null) {
-					image.dispose();
-					image = null;
-				}
-			}
-		});
-	}
+    private fun mouseUp(e: MouseEvent) {
+        hit = false
+        if (e.x < 0 || e.y < 0 || e.x > bounds.width || e.y > bounds.height) {
+            mouse = MouseState.NONE
+        } else if (mouse == MouseState.CLICK_TAB) mouse = MouseState.HOVER_TAB else if (mouse == MouseState.CLICK_X) mouse = MouseState.HOVER_X
+        redraw()
+        if (mouse == MouseState.HOVER_TAB) notifyListeners(SWT.Selection, Event()) else if (mouse == MouseState.HOVER_X) notifyListeners(SWT.Close, Event())
+    }
 
-	public void setIndex(int index) {
-		this.index = index;
-	}
+    private fun keyPressed(e: KeyEvent) {
+        if (e.keyCode == '\r'.toInt() || e.character == ' ') {
+            val event = Event()
+            notifyListeners(SWT.Selection, event)
+        }
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	private void paintControl(PaintEvent e) {
-		paint(e.gc);
-	}
-
-	private void paint(GC gc) {
-		gc.setFont(Theme.defaultFont);
-		
-		Point ts = gc.stringExtent(text);
-		int iconHeight = (getSize().y - 13) / 2;
-
-		if (Theme.set)
-			gc.setForeground(Theme.tabNormalTextColor);
-
-		switch (mouse) {
-		case NO_MOUSE:
-			gc.setForeground(getForeground());
-			if (Theme.set)
-				gc.setBackground(getBackground());
-			gc.fillRectangle(getClientArea());
-			break;
-		case MOUSE_HOVER_TAB:
-			if (Theme.set) {
-				gc.setBackground(hoverColor);
-				gc.setForeground(Theme.tabHoverTextColor);
-			}
-			gc.fillRectangle(getClientArea());
-			gc.drawImage(Images.xIcon, ts.x + 12, iconHeight);
-			break;
-		case MOUSE_CLICK_TAB:
-			if (Theme.set) {
-				gc.setBackground(clickColor);
-				gc.setForeground(Theme.tabHoverTextColor);
-			}
-			gc.fillRectangle(getClientArea());
-			gc.drawImage(Images.xIcon, ts.x + 12, iconHeight);
-			break;
-		case MOUSE_HOVER_X:
-			if (Theme.set) {
-				gc.setBackground(hoverColor);
-				gc.setForeground(Theme.tabHoverTextColor);
-			}
-			gc.fillRectangle(getClientArea());
-			gc.drawImage(Images.xGreyIcon, ts.x + 12, iconHeight);
-			break;
-		case MOUSE_CLICK_X:
-			if (Theme.set) {
-				gc.setBackground(clickColor);
-				gc.setForeground(Theme.tabHoverTextColor);
-			}
-			gc.fillRectangle(getClientArea());
-			gc.drawImage(Images.xRedIcon, ts.x + 12, iconHeight);
-			break;
-		}
-
-		if (text != null) {
-			Point textSize = gc.stringExtent(text);
-			gc.drawText(text, 6, (25 - textSize.y)/2);
-		}
-	}
-
-	private void mouseMove(MouseEvent e) {
-		Rectangle bounds = getBounds();
-		if (e.x < 0 || e.y < 0 || e.x > bounds.width || e.y > bounds.height) {
-			mouse = NO_MOUSE;
-		} else if (e.x < bounds.width - (9 + 13)) {
-			mouse = hit ? MOUSE_CLICK_TAB : MOUSE_HOVER_TAB;
-		} else {
-			mouse = hit ? MOUSE_CLICK_X : MOUSE_HOVER_X;
-		}
-		redraw();
-	}
-
-	private void mouseEnter(MouseEvent e) {
-		Rectangle bounds = getBounds();
-		if (e.x < 0 || e.y < 0 || e.x > bounds.width || e.y > bounds.height) {
-			mouse = NO_MOUSE;
-		} else if (e.x < bounds.width - (9 + 13)) {
-			mouse = MOUSE_HOVER_TAB;
-		} else {
-			mouse = MOUSE_HOVER_X;
-		}
-		redraw();
-	}
-
-	private void mouseExit(MouseEvent e) {
-		mouse = NO_MOUSE;
-		redraw();
-	}
-
-	private void mouseDown(MouseEvent e) {
-		hit = true;
-		if (mouse == MOUSE_HOVER_TAB)
-			mouse = MOUSE_CLICK_TAB;
-		else if (mouse == MOUSE_HOVER_X)
-			mouse = MOUSE_CLICK_X;
-		redraw();
-	}
-
-	private void mouseUp(MouseEvent e) {
-		hit = false;
-
-		if (e.x < 0 || e.y < 0 || e.x > getBounds().width || e.y > getBounds().height) {
-			mouse = NO_MOUSE;
-		} else if (mouse == MOUSE_CLICK_TAB)
-			mouse = MOUSE_HOVER_TAB;
-		else if (mouse == MOUSE_CLICK_X)
-			mouse = MOUSE_HOVER_X;
-
-		redraw();
-		if (mouse == MOUSE_HOVER_TAB)
-			notifyListeners(SWT.Selection, new Event());
-		else if (mouse == MOUSE_HOVER_X)
-			notifyListeners(SWT.Close, new Event());
-	}
-
-	private void keyPressed(KeyEvent e) {
-		if (e.keyCode == '\r' || e.character == ' ') {
-			Event event = new Event();
-			notifyListeners(SWT.Selection, event);
-		}
-	}
-
-	@Override
-	public Point computeSize(int wHint, int hHint, boolean changed) {
-		if (text != null) {
-			GC gc = new GC(this);
-			gc.setFont(Theme.defaultFont);
-			Point textSize = gc.stringExtent(text);
-			gc.dispose();
-			return new Point(textSize.x + 18 + 13, 25);
-		}
-		return new Point(25, 25);
-	}
+    override fun computeSize(wHint: Int, hHint: Int, changed: Boolean): Point {
+        if (text != null) {
+            val gc = GC(this)
+            gc.font = Theme.defaultFont
+            val textSize = gc.stringExtent(text)
+            gc.dispose()
+            return Point(textSize.x + 18 + 13, 25)
+        }
+        return Point(25, 25)
+    }
 }

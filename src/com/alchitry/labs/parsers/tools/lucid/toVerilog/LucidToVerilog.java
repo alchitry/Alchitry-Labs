@@ -1,122 +1,28 @@
 package com.alchitry.labs.parsers.tools.lucid.toVerilog;
 
-import java.io.File;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Stack;
-
+import com.alchitry.labs.Util;
+import com.alchitry.labs.parsers.Module;
+import com.alchitry.labs.parsers.*;
+import com.alchitry.labs.parsers.lucid.AssignBlock;
+import com.alchitry.labs.parsers.lucid.Lucid;
+import com.alchitry.labs.parsers.lucid.SignalWidth;
+import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
+import com.alchitry.labs.parsers.tools.lucid.*;
+import com.alchitry.labs.parsers.tools.verilog.VerilogConstExprParser;
+import com.alchitry.labs.parsers.types.*;
+import com.alchitry.labs.project.Primitive;
+import com.alchitry.labs.project.Primitive.Parameter;
+import com.alchitry.labs.tools.ParserCache;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import com.alchitry.labs.Util;
-import com.alchitry.labs.parsers.ConstValue;
-import com.alchitry.labs.parsers.InstModule;
-import com.alchitry.labs.parsers.Module;
-import com.alchitry.labs.parsers.Param;
-import com.alchitry.labs.parsers.Sig;
-import com.alchitry.labs.parsers.lucid.AssignBlock;
-import com.alchitry.labs.parsers.lucid.Lucid;
-import com.alchitry.labs.parsers.lucid.SignalWidth;
-import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.AlwaysCaseContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.AlwaysForContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.AlwaysIfContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.AlwaysStatContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Always_blockContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Always_statContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_indexContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_sizeContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Assign_blockContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Assign_statContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.BitSelectorConstContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.BitSelectorFixWidthContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Bit_selectionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Bit_selectorContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.BlockContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Case_elemContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Case_statContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ConnectionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Const_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Dff_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Dff_singleContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Else_statContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprAddSubContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprAndOrContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprArrayContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprCompareContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprCompressContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprConcatContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprDupContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprFunctionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprGroupContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprInvertContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprLogicalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprMultDivContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNegateContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNumContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprShiftContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprSignalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprStructContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprTernaryContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.For_statContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Fsm_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.FunctionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.If_statContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Inout_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Input_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Inst_consContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ModuleContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Module_bodyContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Module_instContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.NameContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.NumberContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Output_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_conContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_listContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_nameContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Port_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Port_listContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Sig_conContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Sig_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.SignalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatAlwaysContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatAssignContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatConstContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatDFFContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatFSMContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatModuleInstContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatSigContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatStructContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.StatVarContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_constContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Type_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_assignContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_decContext;
-import com.alchitry.labs.parsers.tools.lucid.ArrayBounds;
-import com.alchitry.labs.parsers.tools.lucid.BitWidthChecker;
-import com.alchitry.labs.parsers.tools.lucid.ConstExprParser;
-import com.alchitry.labs.parsers.tools.lucid.ConstProvider;
-import com.alchitry.labs.parsers.tools.lucid.LucidExtractor;
-import com.alchitry.labs.parsers.tools.verilog.VerilogConstExprParser;
-import com.alchitry.labs.parsers.types.Connection;
-import com.alchitry.labs.parsers.types.Constant;
-import com.alchitry.labs.parsers.types.Dff;
-import com.alchitry.labs.parsers.types.Fsm;
-import com.alchitry.labs.parsers.types.SyncLogic;
-import com.alchitry.labs.parsers.types.Var;
-import com.alchitry.labs.project.Primitive;
-import com.alchitry.labs.project.Primitive.Parameter;
-import com.alchitry.labs.tools.ParserCache;
+import java.io.File;
+import java.math.BigInteger;
+import java.util.*;
 
 public class LucidToVerilog extends LucidBaseListener {
 	private Stack<AssignBlock> assignBlocks;
@@ -335,7 +241,7 @@ public class LucidToVerilog extends LucidBaseListener {
 
 	private int widthToInt(SignalWidth w) {
 		if (!w.isFixed()) {
-			Util.log.severe("The width " + w + " is not a fixed width!");
+			Util.logger.severe("The width " + w + " is not a fixed width!");
 			return 1;
 		}
 		return w.getTotalWidth();
@@ -536,7 +442,7 @@ public class LucidToVerilog extends LucidBaseListener {
 
 	private String ioDec(String type, boolean signed, SignalWidth sw, String name, boolean array) {
 		if (sw == null) {
-			Util.log.severe("Width of io was null! " + name);
+			Util.logger.severe("Width of io was null! " + name);
 			return "";
 		}
 
@@ -548,7 +454,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			sb.append("signed ");
 
 		if (!sw.isFixed()) {
-			Util.log.severe("Width of io isn't fixed! " + name);
+			Util.logger.severe("Width of io isn't fixed! " + name);
 			return "";
 		}
 
@@ -1027,7 +933,7 @@ public class LucidToVerilog extends LucidBaseListener {
 
 		Module module = Util.getByName(modules, ctx.name(0).getText());
 		if (module == null) {
-			Util.log.severe("Error: unknown module " + ctx.name(0).getText());
+			Util.logger.severe("Error: unknown module " + ctx.name(0).getText());
 			return;
 		}
 
@@ -1653,7 +1559,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			if (ptr.isText()) {
 				ConstValue cv = lucidExprParser(ptr.getText(), p);
 				if (cv == null)
-					Util.log.severe("Could not parse width " + ptr.getText());
+					Util.logger.severe("Could not parse width " + ptr.getText());
 				else
 					ptr.set(cv.getBigInt().intValue());
 			}
@@ -1787,7 +1693,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			} else if (pt instanceof TerminalNode) {
 				continue;
 			} else {
-				Util.log.severe("Uknown " + ctx.getText());
+				Util.logger.severe("Uknown " + ctx.getText());
 			}
 		}
 		if (bitOffset.length() > 0 || bitWidth != width.getTotalWidth()) {
@@ -1836,7 +1742,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		else if (ctx.parent instanceof Assign_statContext || ctx.parent instanceof Var_assignContext)
 			write = true;
 		else
-			Util.log.severe("Error unknown signal usage on line " + ctx.start.getLine() + ". Class: " + ctx.parent.getClass());
+			Util.logger.severe("Error unknown signal usage on line " + ctx.start.getLine() + ". Class: " + ctx.parent.getClass());
 
 		SignalWidth widths = getSigWidths(ctx);
 		int offset = 1;
@@ -1921,7 +1827,7 @@ public class LucidToVerilog extends LucidBaseListener {
 				return;
 			}
 
-			Util.log.severe("BUG: Couldn't get " + Lucid.WIDTH_ATTR + " of " + ctx.getText());
+			Util.logger.severe("BUG: Couldn't get " + Lucid.WIDTH_ATTR + " of " + ctx.getText());
 			return;
 			/*
 			 * SignalWidth w = getSigWidths(ctx); if (w == null || w.getDepth() == 0) { Util.log.severe("BUG: Couldn't get " + Lucid.WIDTH_ATTR + " of " + ctx.getText());

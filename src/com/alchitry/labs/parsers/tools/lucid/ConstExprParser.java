@@ -1,21 +1,5 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeProperty;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.apache.commons.text.StringEscapeUtils;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.parsers.BigFunctions;
@@ -28,37 +12,25 @@ import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_indexContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Bit_selectionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprAddSubContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprAndOrContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprArrayContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprCompareContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprCompressContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprConcatContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprDupContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprFunctionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprGroupContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprInvertContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprLogicalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprMultDivContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNegateContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNumContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprShiftContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprSignalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprStructContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprTernaryContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.FunctionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.NumberContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_constraintContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.SignalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_constContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_member_constContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
 import com.alchitry.labs.parsers.types.Constant;
 import com.alchitry.labs.parsers.types.Struct;
 import com.alchitry.labs.parsers.types.Struct.Member;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeProperty;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.apache.commons.text.StringEscapeUtils;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ConstExprParser extends LucidBaseListener {
 	private ErrorListener listener;
@@ -985,7 +957,7 @@ public class ConstExprParser extends LucidBaseListener {
 					v.shiftLeft(op2.getBigInt().intValue());
 					break;
 				default:
-					Util.log.severe("BUG: Unknown shift operator!");
+					Util.logger.severe("BUG: Unknown shift operator!");
 					break;
 				}
 				values.put(ctx, v);
@@ -1036,7 +1008,7 @@ public class ConstExprParser extends LucidBaseListener {
 					values.put(ctx, ConstValue.Xnor(op1, op2));
 					break;
 				default:
-					Util.log.severe("BUG: Unknown and/or/xor operator!");
+					Util.logger.severe("BUG: Unknown and/or/xor operator!");
 				}
 			} else {
 				switch (operand) {
@@ -1059,7 +1031,7 @@ public class ConstExprParser extends LucidBaseListener {
 					values.put(ctx, new ConstValue(BitValue.xnor(op1.getValue(), op2.getValue())));
 					break;
 				default:
-					Util.log.severe("BUG: Unknown and/or/xor operator!");
+					Util.logger.severe("BUG: Unknown and/or/xor operator!");
 				}
 			}
 		}
@@ -1101,7 +1073,7 @@ public class ConstExprParser extends LucidBaseListener {
 				values.put(ctx, new ConstValue(op.xnorReduce()));
 				break;
 			default:
-				Util.log.severe("BUG: Unknown reduction operator!");
+				Util.logger.severe("BUG: Unknown reduction operator!");
 			}
 		}
 

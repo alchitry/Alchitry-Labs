@@ -1,5 +1,10 @@
 package com.alchitry.labs.project;
 
+import com.alchitry.labs.Locations;
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
+import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,12 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
-
-import org.apache.commons.io.FileUtils;
-
-import com.alchitry.labs.Locations;
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.Theme;
 
 public class VivadoIP {
 	private static final String projectFile = "project.tcl";
@@ -61,7 +60,7 @@ public class VivadoIP {
 				try {
 					out.close();
 				} catch (IOException e) {
-					Util.log.log(Level.SEVERE, "Failed to close stdout stream!", e);
+					Util.logger.log(Level.SEVERE, "Failed to close stdout stream!", e);
 				}
 		}
 
@@ -88,7 +87,7 @@ public class VivadoIP {
 		String vivado = Util.getVivadoLocation();
 
 		if (vivado == null) {
-			Util.log.severe("Couldn't find Vivado :(");
+			Util.logger.severe("Couldn't find Vivado :(");
 			Util.showError("Vivado's location must be set in the settings menu before you can open an IP core!");
 			return;
 		}
@@ -108,7 +107,7 @@ public class VivadoIP {
 		String vivado = Util.getVivadoLocation();
 
 		if (vivado == null) {
-			Util.log.severe("Couldn't find Vivado :(");
+			Util.logger.severe("Couldn't find Vivado :(");
 			Util.showError("Vivado's location must be set in the settings menu before you can create IP cores!");
 			return;
 		}
@@ -164,7 +163,7 @@ public class VivadoIP {
 	}
 
 	private static ArrayList<String> blackList = new ArrayList<String>(
-			Arrays.asList(new String[] { "managed_ip_project", ".Xil", "ip_user_files", "project.tcl", "mig_ip.tcl" }));
+			Arrays.asList("managed_ip_project", ".Xil", "ip_user_files", "project.tcl", "mig_ip.tcl"));
 
 	private File findPattern(File dir, String regex, boolean isFile) {
 		for (File stub : dir.listFiles()) {
@@ -184,7 +183,7 @@ public class VivadoIP {
 	public void generateMigCore(final Project project) throws InterruptedException, IOException {
 		String tclScript = Util.assemblePath(project.getProjectFolder(), Project.CORES_FOLDER, migFile);
 
-		String coresFolder = Util.assembleLinuxPath(project.getProjectFolder(), Project.CORES_FOLDER).replace("\\",
+		String coresFolder = Util.assembleLinuxPath(project.getProjectFolder().getAbsolutePath(), Project.CORES_FOLDER).replace("\\",
 				"/");
 		String projectFile = Util.assembleLinuxPath(coresFolder, "managed_ip_project", "managed_ip_project.xpr");
 		String xciFile = Util.assembleLinuxPath(coresFolder, "mig_7series_0", "mig_7series_0.xci").replace(" ", "\\ ");

@@ -1,8 +1,8 @@
 package com.alchitry.labs.parsers;
 
-import java.util.ArrayList;
-
 import com.alchitry.labs.Util;
+
+import java.util.ArrayList;
 
 public enum BitValue {
 	B0, B1, Bx, Bz;
@@ -48,7 +48,7 @@ public enum BitValue {
 		case Bz:
 			return 'z';
 		default:
-			Util.log.severe("Unknown bit type " + this.toString());
+			Util.logger.severe("Unknown bit type " + this.toString());
 			return '?';
 		}
 	}

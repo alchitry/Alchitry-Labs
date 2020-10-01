@@ -1,7 +1,6 @@
 package com.alchitry.labs.gui;
 
-import java.util.List;
-
+import com.alchitry.labs.gui.main.MainWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -9,14 +8,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 
-import com.alchitry.labs.gui.main.MainWindow;
+import java.util.List;
 
 public class DeviceSelector extends Dialog {
 
@@ -30,7 +24,7 @@ public class DeviceSelector extends Dialog {
 
 		@Override
 		public void run() {
-			DeviceSelector selector = new DeviceSelector(MainWindow.mainWindow.getShell(), 0);
+			DeviceSelector selector = new DeviceSelector(MainWindow.INSTANCE.getShell(), 0);
 			result = selector.open(entries);
 		}
 

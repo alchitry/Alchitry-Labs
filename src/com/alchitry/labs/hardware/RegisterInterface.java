@@ -1,10 +1,5 @@
 package com.alchitry.labs.hardware;
 
-import java.util.List;
-
-import org.eclipse.swt.SWT;
-import org.usb4java.LibUsbException;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.BaudDialog;
 import com.alchitry.labs.gui.main.MainWindow;
@@ -12,6 +7,10 @@ import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.hardware.usb.SerialDevice;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
+import org.eclipse.swt.SWT;
+import org.usb4java.LibUsbException;
+
+import java.util.List;
 
 public class RegisterInterface {
 	private SerialDevice serialPort;
@@ -28,7 +27,7 @@ public class RegisterInterface {
 	}
 
 	private void askBaud() {
-		if (MainWindow.getOpenProject() == null) {
+		if (MainWindow.INSTANCE.getProject() == null) {
 			Util.showError("Please open a project before opening the register interface!");
 			baud = -1;
 			return;
@@ -37,8 +36,8 @@ public class RegisterInterface {
 			@Override
 			public void run() {
 				baud = 1000000;
-				if (!MainWindow.getOpenProject().getBoard().isType(Board.MOJO)) {
-					BaudDialog bd = new BaudDialog(Util.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				if (!MainWindow.INSTANCE.getProject() .getBoard().isType(Board.MOJO)) {
+					BaudDialog bd = new BaudDialog(MainWindow.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 					baud = bd.open(baud);
 				}
 			}

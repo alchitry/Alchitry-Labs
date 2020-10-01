@@ -1,7 +1,7 @@
 package com.alchitry.labs.widgets
 
-import com.alchitry.labs.gui.Images
 import com.alchitry.labs.gui.Theme
+import com.alchitry.labs.gui.util.Images
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.StyledText
 import org.eclipse.swt.events.KeyAdapter
@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Listener
 
 class CustomSearchAndReplace(parent: Composite, style: Int) : Composite(parent, style) {
     companion object {
-        private const val HEIGHT = 70
+        const val HEIGHT = 70
     }
     private var width = 300
     private val searchText = StyledText(this, SWT.SINGLE)

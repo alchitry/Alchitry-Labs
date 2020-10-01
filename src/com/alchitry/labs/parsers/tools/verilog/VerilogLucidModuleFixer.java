@@ -1,19 +1,5 @@
 package com.alchitry.labs.parsers.tools.verilog;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.TokenStreamRewriter;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.graphics.Color;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.parsers.ConstValue;
@@ -28,6 +14,15 @@ import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Named_parameter_assig
 import com.alchitry.labs.parsers.verilog.Verilog2001Parser.Ordered_parameter_assignmentContext;
 import com.alchitry.labs.style.SyntaxError;
 import com.alchitry.labs.tools.ParserCache;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.graphics.Color;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VerilogLucidModuleFixer {
 
@@ -157,7 +152,7 @@ public class VerilogLucidModuleFixer {
 				return;
 
 			if (start == -1 || stop == -1) {
-				Util.log.severe("ERROR: Token start or stop was -1");
+				Util.logger.severe("ERROR: Token start or stop was -1");
 				return;
 			}
 

@@ -1,4 +1,4 @@
-package com.alchitry.labs.gui;
+package com.alchitry.labs.gui.util;
 
 import com.alchitry.labs.Settings;
 import com.alchitry.labs.gui.main.MainWindow;
@@ -66,7 +66,7 @@ public class Images {
 	}
 
 	public static void loadImages(Display display) {
-		if (Settings.pref.getBoolean(Settings.THEME, false)) { // light theme
+		if (Settings.INSTANCE.getTHEME().get()) { // light theme
 			loadIconHover = getImage(display, "load.png");
 			loadIcon = colorIcon(loadIconHover, 0x000000);
 

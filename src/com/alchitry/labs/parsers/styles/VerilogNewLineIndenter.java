@@ -1,10 +1,9 @@
 package com.alchitry.labs.parsers.styles;
 
+import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.util.UndoRedo;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
-
-import com.alchitry.labs.gui.StyledCodeEditor;
-import com.alchitry.labs.gui.UndoRedo;
 
 public class VerilogNewLineIndenter implements VerifyListener {
 

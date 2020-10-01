@@ -1,22 +1,13 @@
 package com.alchitry.labs.gui;
 
-import java.util.prefs.BackingStoreException;
-
+import com.alchitry.labs.Settings;
+import com.alchitry.labs.Util;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-
-import com.alchitry.labs.Settings;
-import com.alchitry.labs.Util;
+import org.eclipse.swt.widgets.*;
 
 public class ThemeSelectorDialog extends Dialog {
 
@@ -26,20 +17,12 @@ public class ThemeSelectorDialog extends Dialog {
 	private Button btnDarkTheme;
 	private Button btnLightTheme;
 
-	/**
-	 * Create the dialog.
-	 * @param parent
-	 * @param style
-	 */
 	public ThemeSelectorDialog(Shell parent) {
 		super(parent);
 		setText("Theme Selector");
 	}
 
-	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
+
 	public Object open() {
 		createContents();
 		shell.open();
@@ -117,16 +100,12 @@ public class ThemeSelectorDialog extends Dialog {
 	}
 	
 	private void saveSelection() {
-		Settings.pref.putBoolean(Settings.THEME, btnLightTheme.getSelection());
-		try {
-			Settings.pref.flush();
-		} catch (BackingStoreException e) {
-			Util.showError("Failed to save your theme!");
-		}
+		Settings.INSTANCE.getTHEME().put(btnLightTheme.getSelection());
+		Settings.INSTANCE.commit();
 	}
 	
 	private void setDefault() {
-		if (Settings.pref.getBoolean(Settings.THEME, false)){
+		if (Settings.INSTANCE.getTHEME().get()){
 			btnLightTheme.setSelection(true);
 		} else {
 			btnDarkTheme.setSelection(true);

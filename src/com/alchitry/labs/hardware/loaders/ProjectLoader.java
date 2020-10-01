@@ -1,8 +1,7 @@
 package com.alchitry.labs.hardware.loaders;
 
-import org.eclipse.swt.custom.StyledText;
-
 import com.alchitry.labs.Util;
+import org.eclipse.swt.custom.StyledText;
 
 public abstract class ProjectLoader {
 	protected abstract void eraseFlash();
@@ -25,7 +24,7 @@ public abstract class ProjectLoader {
 			Util.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					StyledText console = Util.getConsole();
+					StyledText console = Util.console;
 					int lastLine = console.getLineCount() - 1;
 					int lineOffset = console.getOffsetAtLine(lastLine);
 					int lastOffset = console.getCharCount() - 1;
@@ -44,7 +43,7 @@ public abstract class ProjectLoader {
 						}
 					}
 
-					bar.append("]   " + percent + "%     ");
+					bar.append("]   ").append(percent).append("%     ");
 
 					console.replaceTextRange(lineOffset, lastOffset - lineOffset, bar.toString());
 				}

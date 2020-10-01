@@ -1,5 +1,6 @@
 package com.alchitry.labs.gui;
 
+import com.alchitry.labs.gui.main.MainKt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -7,14 +8,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
-import com.alchitry.labs.gui.main.MainWindow;
+import org.eclipse.swt.widgets.*;
 
 public class FeedbackDialog extends Dialog {
 
@@ -97,7 +91,7 @@ public class FeedbackDialog extends Dialog {
 				result.email = emailText.getText();
 				if (result.email.isEmpty())
 					result.email = "noreply@alchitry.com";
-				result.subject = "Feedback Report for " + MainWindow.VERSION + " from " + nameText.getText();
+				result.subject = "Feedback Report for " + MainKt.VERSION + " from " + nameText.getText();
 				result.body = commentsText.getText();
 				shell.dispose();
 			}

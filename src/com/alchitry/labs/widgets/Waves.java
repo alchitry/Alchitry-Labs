@@ -1,32 +1,9 @@
 package com.alchitry.labs.widgets;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackListener;
-import org.eclipse.swt.events.MouseWheelListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.graphics.Transform;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
-
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.Images;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.gui.util.Images;
 import com.alchitry.labs.hardware.boards.Board;
 import com.alchitry.labs.hardware.debuggers.AuDebugger;
 import com.alchitry.labs.hardware.debuggers.Debugger;
@@ -36,6 +13,16 @@ import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.ProjectSignal;
 import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.widgets.WaveSignal.TriggerType;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Waves extends Canvas {
 	private List<WaveSignal> signals;
@@ -312,7 +299,7 @@ public class Waves extends Canvas {
 						captureThread.wait();
 					}
 				} catch (InterruptedException e2) {
-					Util.log.warning("Capture thread was interrupted!");
+					Util.logger.warning("Capture thread was interrupted!");
 				}
 			captureThread = new Thread(new Runnable() {
 				@Override

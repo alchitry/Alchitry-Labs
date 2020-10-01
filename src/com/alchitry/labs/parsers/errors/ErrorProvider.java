@@ -1,10 +1,12 @@
 package com.alchitry.labs.parsers.errors;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.style.StyleUtil;
+import com.alchitry.labs.style.SyntaxError;
+import com.alchitry.labs.tools.ParserCache;
+import com.alchitry.labs.tools.ParserCache.ParseError;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -17,13 +19,10 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.StyledCodeEditor;
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.style.StyleUtil;
-import com.alchitry.labs.style.SyntaxError;
-import com.alchitry.labs.tools.ParserCache;
-import com.alchitry.labs.tools.ParserCache.ParseError;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class ErrorProvider implements ModifyListener, LineStyleListener, ErrorListener {
 	protected ArrayList<SyntaxError> errors;
@@ -190,7 +189,7 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 			return;
 
 		if (start == -1 || stop == -1) {
-			Util.log.severe("ERROR: Token start or stop was -1");
+			Util.logger.severe("ERROR: Token start or stop was -1");
 			return;
 		}
 

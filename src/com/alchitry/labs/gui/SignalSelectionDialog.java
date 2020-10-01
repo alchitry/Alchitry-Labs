@@ -1,9 +1,13 @@
 package com.alchitry.labs.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.parsers.InstModule;
+import com.alchitry.labs.parsers.ProjectSignal;
+import com.alchitry.labs.parsers.Sig;
+import com.alchitry.labs.parsers.types.Dff;
+import com.alchitry.labs.parsers.types.Fsm;
+import com.alchitry.labs.project.DebugInfo;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -13,27 +17,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.*;
 
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.parsers.InstModule;
-import com.alchitry.labs.parsers.ProjectSignal;
-import com.alchitry.labs.parsers.Sig;
-import com.alchitry.labs.parsers.types.Dff;
-import com.alchitry.labs.parsers.types.Fsm;
-import com.alchitry.labs.project.DebugInfo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class SignalSelectionDialog extends Dialog {
 	protected DebugInfo result;
@@ -44,22 +32,12 @@ public class SignalSelectionDialog extends Dialog {
 	private Combo comboClock;
 	private Text samplesText;
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
+
 	public SignalSelectionDialog(Shell parent) {
 		super(parent);
 		setText("Debug Signal Selector");
 	}
 
-	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
 	public DebugInfo open(InstModule topModule) {
 		top = topModule;
 		createContents();
@@ -74,9 +52,6 @@ public class SignalSelectionDialog extends Dialog {
 		return result;
 	}
 
-	/**
-	 * Create contents of the dialog.
-	 */
 	private void createContents() {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.RESIZE | SWT.PRIMARY_MODAL);
 		shell.setMinimumSize(new Point(600, 500));
@@ -337,7 +312,7 @@ public class SignalSelectionDialog extends Dialog {
 	}
 
 	private void preSelect(TreeItem root) {
-		DebugInfo di = MainWindow.getOpenProject().getDebugInfo();
+		DebugInfo di = MainWindow.INSTANCE.getProject().getDebugInfo();
 		if (di == null)
 			return;
 

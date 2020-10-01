@@ -1,12 +1,10 @@
 package com.alchitry.labs.gui;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
+import com.alchitry.labs.Locations;
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.main.MainWindow;
+import com.alchitry.labs.project.Project;
+import com.alchitry.labs.style.ParseException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,27 +12,18 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.*;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import com.alchitry.labs.Locations;
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.project.Project;
-import com.alchitry.labs.style.ParseException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class ComponentsDialog extends Dialog {
 	public static final String LIBRARY_XML = "lib.xml";
@@ -65,22 +54,11 @@ public class ComponentsDialog extends Dialog {
 		public ArrayList<String> dependencies = new ArrayList<>();
 	}
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
 	public ComponentsDialog(Shell parent) {
 		super(parent);
 		setText("Component Selector");
 	}
 
-	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
 	public void open() {
 		createContents();
 		shell.open();
@@ -93,9 +71,6 @@ public class ComponentsDialog extends Dialog {
 		}
 	}
 
-	/**
-	 * Create contents of the dialog.
-	 */
 	private void createContents() {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.RESIZE | SWT.PRIMARY_MODAL);
 		shell.setMinimumSize(new Point(600, 500));
@@ -186,7 +161,7 @@ public class ComponentsDialog extends Dialog {
 
 	private void addSelectedToProject() {
 		HashSet<String> files = new HashSet<>();
-		Project project = MainWindow.getOpenProject();
+		Project project = MainWindow.INSTANCE.getProject();
 
 		if (project == null) {
 			Util.showError("You need to open or create a project first!");
@@ -217,12 +192,12 @@ public class ComponentsDialog extends Dialog {
 		 * file + "!"); return; } }
 		 */
 		for (String file : files) {
-			File srcFile = Util.assembleFile(Locations.COMPONENTS, file);
+			File srcFile = Util.INSTANCE.assembleFile(Locations.COMPONENTS, file);
 			if (!srcFile.exists()) {
 				Util.showError("The component " + file + " could not be found!");
 				return;
 			}
-			if (Util.isConstraintFile(file))
+			if (Util.INSTANCE.isConstraintFile(file))
 				project.addExistingConstraintFile(srcFile);
 			else
 				project.addExistingSourceFile(srcFile);
@@ -234,7 +209,7 @@ public class ComponentsDialog extends Dialog {
 		} catch (IOException e) {
 			Util.showError("Could not save the project!");
 		}
-		MainWindow.mainWindow.updateErrors();
+		MainWindow.INSTANCE.updateErrors();
 		shell.close();
 	}
 
@@ -330,7 +305,7 @@ public class ComponentsDialog extends Dialog {
 				if (desc != null)
 					comp.description = desc.getTextNormalize();
 				else
-					Util.log.severe("No " + DESCRIP_TAG + " tag!");
+					Util.logger.severe("No " + DESCRIP_TAG + " tag!");
 
 				List<Element> deps = modNode.getChildren(DEPENDS_TAG);
 				for (Element depsNode : deps) {
@@ -339,7 +314,7 @@ public class ComponentsDialog extends Dialog {
 
 					TreeItem dep = new TreeItem(module, SWT.NONE);
 					dep.setText(name);
-					dep.setData(new Boolean(false));
+					dep.setData(Boolean.FALSE);
 
 				}
 			}

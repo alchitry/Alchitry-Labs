@@ -1,117 +1,68 @@
-package com.alchitry.labs.gui;
+package com.alchitry.labs.gui
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
+import com.alchitry.labs.gui.main.VERSION
+import org.eclipse.swt.SWT
+import org.eclipse.swt.events.SelectionAdapter
+import org.eclipse.swt.events.SelectionEvent
+import org.eclipse.swt.graphics.Point
+import org.eclipse.swt.layout.GridData
+import org.eclipse.swt.layout.GridLayout
+import org.eclipse.swt.widgets.Button
+import org.eclipse.swt.widgets.Dialog
+import org.eclipse.swt.widgets.Label
+import org.eclipse.swt.widgets.Shell
+import org.eclipse.wb.swt.SWTResourceManager
 
-import com.alchitry.labs.gui.main.MainWindow;
+class WelcomeDialog(parent: Shell) : Dialog(parent, SWT.DIALOG_TRIM or SWT.APPLICATION_MODAL) {
+    private val shell: Shell = Shell(parent, style)
+    fun open() {
+        shell.open()
+        shell.layout()
+        val display = parent.display
+        while (!shell.isDisposed) {
+            if (!display.readAndDispatch()) {
+                display.sleep()
+            }
+        }
+    }
 
-public class WelcomeDialog extends Dialog {
-
-	protected Object result;
-	protected Shell shell;
-
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
-	public WelcomeDialog(Shell parent, int style) {
-		super(parent, style | SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		setText("Welcome");
-	}
-
-	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Create contents of the dialog.
-	 */
-	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
-		shell.setMinimumSize(new Point(700, 450));
-		shell.setSize(700, 450);
-		shell.setText(getText());
-		shell.setLayout(new GridLayout(1, false));
-
-		Label lblTitle = new Label(shell, SWT.NONE);
-		lblTitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblTitle.setAlignment(SWT.CENTER);
-		lblTitle.setFont(SWTResourceManager.getFont("Ubuntu", 24, SWT.BOLD));
-		lblTitle.setText("Welcome to Alchtry Labs");
-
-		Label lblVersion_1 = new Label(shell, SWT.NONE);
-		lblVersion_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblVersion_1.setText("Version " + MainWindow.VERSION);
-
-		Label lblReleaseInfo = new Label(shell, SWT.WRAP);
-		lblReleaseInfo.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, true, 1, 1));
-		lblReleaseInfo.setText("Welcome to version " + MainWindow.VERSION + " of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback"
-				+ " at bugspray@alchitry.com\n\n"
-				+ "This version fixes a few bugs. Most notably the bug causing the IDE to crash when trying to open a serial port on Windows."
-				+ "\n\nAs always, we hope you enjoy this version!");
-
-		Button btnOk = new Button(shell, SWT.NONE);
-		btnOk.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				shell.close();
-			}
-		});
-		GridData gd_btnOk = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_btnOk.widthHint = 100;
-		btnOk.setLayoutData(gd_btnOk);
-		btnOk.setText("Ok");
-
-		Rectangle parentSize = getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		int locationX = (parentSize.width - shellSize.width) / 2 + parentSize.x;
-		int locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y;
-		shell.setLocation(new Point(locationX, locationY));
-
-		//@formatter:off
-		/*
-		if (Util.isWindows)
-			if (Util.askQuestion("Driver Update Required!",
-					"This version of Alchitry Labs now uses libUSB which requires the WinUSB driver to be installed for your boards.\n\n"
-							+ "Would you like to go to https://alchitry.com/pages/alchitry-labs for more information?")) {
-				Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-				if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-					try {
-						desktop.browse(new URI("https://alchitry.com/pages/alchitry-labs"));
-					} catch (Exception e) {
-						Util.logException(e);
-					}
-				}
-			}
-		*/
-		//@formatter:on
-	}
-
+    init {
+        text = "Welcome"
+        shell.minimumSize = Point(700, 450)
+        shell.setSize(700, 450)
+        shell.text = text
+        shell.layout = GridLayout(1, false)
+        val lblTitle = Label(shell, SWT.NONE)
+        lblTitle.layoutData = GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1)
+        lblTitle.alignment = SWT.CENTER
+        lblTitle.font = SWTResourceManager.getFont("Ubuntu", 24, SWT.BOLD)
+        lblTitle.text = "Welcome to Alchitry Labs"
+        val lblVersion = Label(shell, SWT.NONE)
+        lblVersion.layoutData = GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1)
+        lblVersion.text = "Version $VERSION"
+        val lblReleaseInfo = Label(shell, SWT.WRAP)
+        lblReleaseInfo.layoutData = GridData(SWT.HORIZONTAL, SWT.TOP, true, true, 1, 1)
+        lblReleaseInfo.text = """|Welcome to version $VERSION of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback at bugspray@alchitry.com
+                                 |
+                                 |This version is a massive overhaul from the previous version with tons of refactored code.
+                                 |
+                                 |The search function has been replaced with a search/replace bar and the undo/redo stack has been drastically improved.
+                                 |
+                                 |As always, we hope you enjoy this version!""".trimMargin()
+        val btnOk = Button(shell, SWT.NONE)
+        btnOk.addSelectionListener(object : SelectionAdapter() {
+            override fun widgetSelected(e: SelectionEvent) {
+                shell.close()
+            }
+        })
+        val bgBtnCk = GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1)
+        bgBtnCk.widthHint = 100
+        btnOk.layoutData = bgBtnCk
+        btnOk.text = "Ok"
+        val parentSize = parent.bounds
+        val shellSize = shell.bounds
+        val locationX = (parentSize.width - shellSize.width) / 2 + parentSize.x
+        val locationY = (parentSize.height - shellSize.height) / 2 + parentSize.y
+        shell.location = Point(locationX, locationY)
+    }
 }

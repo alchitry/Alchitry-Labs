@@ -1,5 +1,8 @@
 package com.alchitry.labs.gui;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.hardware.boards.Board;
+import com.alchitry.labs.project.SourceFile;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -7,17 +10,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-
-import com.alchitry.labs.Util;
-import com.alchitry.labs.hardware.boards.Board;
-import com.alchitry.labs.project.SourceFile;
+import org.eclipse.swt.widgets.*;
 
 public class NewSourceDialog extends Dialog {
 
@@ -26,23 +19,12 @@ public class NewSourceDialog extends Dialog {
 	private Text text;
 	private Board board;
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
 	public NewSourceDialog(Shell parent, Board board) {
 		super(parent);
 		setText("New File...");
 		this.board = board;
 	}
 
-	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
 	public SourceFile open() {
 		createContents();
 		shell.open();
@@ -56,9 +38,6 @@ public class NewSourceDialog extends Dialog {
 		return result;
 	}
 
-	/**
-	 * Create contents of the dialog.
-	 */
 	private void createContents() {
 		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.PRIMARY_MODAL);
 		shell.setSize(615, 472);
@@ -159,11 +138,10 @@ public class NewSourceDialog extends Dialog {
 		btnCreateFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				result = new SourceFile();
-				result.fileName = text.getText();
+				result = new SourceFile(text.getText(), 0);
 				if (btnLucidSourceFile.getSelection()) {
-					result.type = SourceFile.LUCID;
-					if (!result.fileName.endsWith(".luc")) {
+					result.setType(SourceFile.LUCID);
+					if (!result.getFileName().endsWith(".luc")) {
 						MessageBox box = new MessageBox(shell, SWT.OK);
 						box.setText("Invalid Options");
 						box.setMessage("Lucid file names must end with \".luc\".");
@@ -171,8 +149,8 @@ public class NewSourceDialog extends Dialog {
 						return;
 					}
 				} else if (btnVerilogSourceFile.getSelection()) {
-					result.type = SourceFile.VERILOG;
-					if (!result.fileName.endsWith(".v")) {
+					result.setType(SourceFile.VERILOG);
+					if (!result.getFileName().endsWith(".v")) {
 						MessageBox box = new MessageBox(shell, SWT.OK);
 						box.setText("Invalid Options");
 						box.setMessage("Verilog file names must end with \".v\".");
@@ -180,11 +158,11 @@ public class NewSourceDialog extends Dialog {
 						return;
 					}
 				} else if (btnConstraintsFile.getSelection()) {
-					result.type = SourceFile.CONSTRAINT;
+					result.setType(SourceFile.CONSTRAINT);
 					boolean acceptable = false;
 					String[] constraintTypes = board.getSupportedConstraintExtensions();
 					for (String c : constraintTypes)
-						if (result.fileName.endsWith(c)) {
+						if (result.getFileName().endsWith(c)) {
 							acceptable = true;
 							break;
 						}
@@ -203,7 +181,7 @@ public class NewSourceDialog extends Dialog {
 					box.open();
 					return;
 				}
-				String name = result.fileName.substring(0, result.fileName.lastIndexOf('.'));
+				String name = result.getFileName().substring(0, result.getFileName().lastIndexOf('.'));
 				if (name.isEmpty()) {
 					result = null;
 					MessageBox box = new MessageBox(shell, SWT.OK);

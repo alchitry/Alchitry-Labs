@@ -1,8 +1,13 @@
 package com.alchitry.labs.parsers.styles;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.gui.util.UndoRedo;
+import com.alchitry.labs.parsers.lucid.indent.LucidIndentBaseListener;
+import com.alchitry.labs.parsers.lucid.indent.LucidIndentLexer;
+import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser;
+import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.*;
+import com.alchitry.labs.style.IndentProvider;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -15,20 +20,8 @@ import org.eclipse.swt.custom.ExtendedModifyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.StyledCodeEditor;
-import com.alchitry.labs.gui.UndoRedo;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentBaseListener;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentLexer;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.AlwaysBlockContext;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.Always_lineContext;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.ElemContext;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.Else_blockContext;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.IndentContext;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.ModuleContext;
-import com.alchitry.labs.parsers.lucid.indent.LucidIndentParser.SingleBlockContext;
-import com.alchitry.labs.style.IndentProvider;
+import java.util.Arrays;
+import java.util.List;
 
 public class LucidNewLineIndenter extends LucidIndentBaseListener implements VerifyListener, ExtendedModifyListener, IndentProvider {
 

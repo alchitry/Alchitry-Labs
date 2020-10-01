@@ -47,6 +47,4 @@ class Search(text: String, expression: String, regex: Boolean, caseSensitive: Bo
         }
         return lastResult
     }
-
-
 }

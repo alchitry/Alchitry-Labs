@@ -85,11 +85,11 @@ public class CustomConsole extends StyledText {
 					setWordWrap(true);
 					((MenuItem) e.widget).setText("Disable word-wrap");
 				}
-				Settings.pref.putBoolean(Settings.WORD_WRAP, getWordWrap());
+				Settings.INSTANCE.getWORD_WRAP().put( getWordWrap());
 			}
 		});
 
-		if (Settings.pref.getBoolean(Settings.WORD_WRAP, false)) {
+		if (Settings.INSTANCE.getWORD_WRAP().get()) {
 			setWordWrap(true);
 			toggleWordwrap.setText("Disable word-wrap");
 		} else {

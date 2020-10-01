@@ -83,6 +83,7 @@ public class BlockIndenter {
 				int end = editor.getOffsetAtLine(lastLine) + editor.getLine(lastLine).length();
 				editor.replaceTextRange(start, end - start, sb.toString());
 				editor.setSelection(start, start + sb.length());
+
 			}
 		}
 	}

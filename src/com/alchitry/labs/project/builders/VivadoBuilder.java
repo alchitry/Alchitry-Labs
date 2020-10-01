@@ -1,5 +1,11 @@
 package com.alchitry.labs.project.builders;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.project.IPCore;
+import com.alchitry.labs.style.ParseException;
+import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -7,13 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
-
-import org.apache.commons.io.FileUtils;
-
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.project.IPCore;
-import com.alchitry.labs.style.ParseException;
 
 public class VivadoBuilder extends ProjectBuilder {
 	private static final String projectFile = "project.tcl";
@@ -40,14 +39,14 @@ public class VivadoBuilder extends ProjectBuilder {
 				try {
 					out.close();
 				} catch (IOException e) {
-					Util.log.log(Level.SEVERE, "Failed to close stdout stream!", e);
+					Util.logger.log(Level.SEVERE, "Failed to close stdout stream!", e);
 				}
 		}
 
 		String vivado = Util.getVivadoLocation();
 
 		if (vivado == null) {
-			Util.log.severe("Couldn't find Vivado :(");
+			Util.logger.severe("Couldn't find Vivado :(");
 			Util.showError("Vivado's location must be set in the settings menu before you can build!");
 			return;
 		}

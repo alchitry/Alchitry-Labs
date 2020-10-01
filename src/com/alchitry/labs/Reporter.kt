@@ -1,13 +1,13 @@
-package com.alchitry.labs;
+package com.alchitry.labs
 
-import com.alchitry.labs.gui.EmailMessage;
+import com.alchitry.labs.gui.EmailMessage
 
-public class Reporter {
-	public static void sendFeedback(EmailMessage message) {
-		// dummy call for public source
-	}
+object Reporter {
+    fun sendFeedback(message: EmailMessage) {
+        // Dummy call for public source
+    }
 
-	public static void reportException(Exception e) {
-		// dummy call for public source
-	}
+    fun reportException(e: Exception?) {
+        // Dummy call for public source
+    }
 }

@@ -1,5 +1,6 @@
-package com.alchitry.labs.gui;
+package com.alchitry.labs.gui.util;
 
+import com.alchitry.labs.gui.StyledCodeEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;

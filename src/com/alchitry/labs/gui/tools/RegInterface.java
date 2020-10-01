@@ -1,32 +1,24 @@
 package com.alchitry.labs.gui.tools;
 
-import java.math.BigInteger;
-
+import com.alchitry.labs.Util;
+import com.alchitry.labs.hardware.RegisterInterface;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.usb4java.LibUsbException;
 
-import com.alchitry.labs.Util;
-import com.alchitry.labs.hardware.RegisterInterface;
+import java.math.BigInteger;
 
 public class RegInterface {
 	protected Shell shell;
 	private Text address;
 	private Text value;
-	private Button decAddr, hexAddr;
-	private Button decVal, hexVal;
+	private Button decAddr;
+	private Button decVal;
 	RegisterInterface regInt;
 
 	public RegInterface(Display display) {
@@ -61,7 +53,7 @@ public class RegInterface {
 		decAddr.setText("Decimal");
 		decAddr.setSelection(true);
 
-		hexAddr = new Button(composite, SWT.RADIO);
+		Button hexAddr = new Button(composite, SWT.RADIO);
 		hexAddr.setText("Hex");
 
 		Label lblNewLabel_1 = new Label(shell, SWT.NONE);
@@ -82,7 +74,7 @@ public class RegInterface {
 		decVal.setText("Decimal");
 		decVal.setSelection(true);
 
-		hexVal = new Button(composite_1, SWT.RADIO);
+		Button hexVal = new Button(composite_1, SWT.RADIO);
 		hexVal.setText("Hex");
 		new Label(shell, SWT.NONE);
 
@@ -93,19 +85,19 @@ public class RegInterface {
 				long addr = getNumber(address.getText(), decAddr.getSelection());
 				long val = getNumber(value.getText(), decVal.getSelection());
 				if (addr == -1) {
-					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number", shell);
+					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number", "Error!", shell);
 					setFocus();
 					return;
 				}
 				if (val == -1) {
-					Util.showError("Value is not a valid " + (decVal.getSelection() ? "decimal" : "hex") + " number", shell);
+					Util.showError("Value is not a valid " + (decVal.getSelection() ? "decimal" : "hex") + " number", "Error!", shell);
 					setFocus();
 					return;
 				}
 				try {
 					regInt.write((int) addr, (int) val);
 				} catch (LibUsbException e1) {
-					Util.showError("Failed to write data!", shell);
+					Util.showError("Failed to write data!", "Error!", shell);
 				}
 			}
 		});
@@ -120,14 +112,14 @@ public class RegInterface {
 			public void widgetSelected(SelectionEvent e) {
 				long addr = getNumber(address.getText(), decAddr.getSelection());
 				if (addr == -1) {
-					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number", shell);
+					Util.showError("Address is not a valid " + (decAddr.getSelection() ? "decimal" : "hex") + " number", "Error!", shell);
 					return;
 				}
 				try {
 					int val = regInt.read((int) addr);
 					value.setText(Integer.toString(val, decVal.getSelection() ? 10 : 16));
 				} catch (LibUsbException e1) {
-					Util.showError("Failed to read data!", shell);
+					Util.showError("Failed to read data!","Error!", shell);
 				}
 
 			}
@@ -146,13 +138,10 @@ public class RegInterface {
 			return false;
 		}
 
-		shell.addDisposeListener(new DisposeListener() {
-			@Override
-			public void widgetDisposed(DisposeEvent arg0) {
-				if (regInt != null)
-					regInt.disconnect();
-				regInt = null;
-			}
+		shell.addDisposeListener(arg0 -> {
+			if (regInt != null)
+				regInt.disconnect();
+			regInt = null;
 		});
 
 		return true;

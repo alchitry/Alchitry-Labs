@@ -20,7 +20,7 @@ public class CustomToggle extends Canvas {
 
 		if (Theme.set) {
 			setBackground(Theme.windowBackgroundColor);
-			setForeground(Theme.windowForgroundColor);
+			setForeground(Theme.windowForegroundColor);
 		}
 
 		this.addPaintListener(new PaintListener() {

@@ -1,31 +1,26 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.graphics.Color;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.errors.ErrorStrings;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_sizeContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Const_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.GlobalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_memberContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
 import com.alchitry.labs.parsers.types.Constant;
 import com.alchitry.labs.parsers.types.Struct;
 import com.alchitry.labs.style.SyntaxError;
 import com.alchitry.labs.tools.ParserCache;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.graphics.Color;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class LucidGlobalExtractor extends LucidBaseListener {
 	private List<SyntaxError> errors;
@@ -144,7 +139,7 @@ public class LucidGlobalExtractor extends LucidBaseListener {
 						for (Array_sizeContext asc : smc.array_size()) {
 							ConstValue cv = ConstExprParser.parseExpr(asc.expr().getText(), constProvider, null, null);
 							if (cv == null) {
-								Util.log.severe("Failed to parse width " + asc.getText());
+								Util.logger.severe("Failed to parse width " + asc.getText());
 							} else {
 								if (!cv.isArray())
 									pwidth.getWidths().add(cv.getBigInt().intValue());
@@ -186,7 +181,7 @@ public class LucidGlobalExtractor extends LucidBaseListener {
 			return;
 
 		if (start == -1 || stop == -1) {
-			Util.log.severe("ERROR: Token start or stop was -1");
+			Util.logger.severe("ERROR: Token start or stop was -1");
 			return;
 		}
 

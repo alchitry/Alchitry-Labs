@@ -1,75 +1,26 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeProperty;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.main.MainWindow;
-import com.alchitry.labs.parsers.ConstValue;
-import com.alchitry.labs.parsers.InstModule;
 import com.alchitry.labs.parsers.Module;
-import com.alchitry.labs.parsers.Param;
-import com.alchitry.labs.parsers.Sig;
+import com.alchitry.labs.parsers.*;
 import com.alchitry.labs.parsers.errors.ErrorListener;
 import com.alchitry.labs.parsers.errors.ErrorStrings;
 import com.alchitry.labs.parsers.lucid.AssignBlock;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_indexContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_sizeContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Assign_statContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.BitSelectorConstContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.BitSelectorFixWidthContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Bit_selectionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Const_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Dff_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Dff_singleContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprAddSubContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprAndOrContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprArrayContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprCompareContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprCompressContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprConcatContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprDupContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprFunctionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprGroupContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprInvertContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprLogicalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprMultDivContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNegateContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprNumContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprShiftContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprSignalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprStructContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprTernaryContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Fsm_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.FunctionContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Inout_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Input_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.ModuleContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Module_instContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.NameContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.NumberContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Output_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Param_nameContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Sig_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.SignalContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_constContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_member_constContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Struct_typeContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Type_decContext;
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.Var_decContext;
+import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
 import com.alchitry.labs.parsers.types.Connection;
 import com.alchitry.labs.parsers.types.Struct;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeProperty;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class BitWidthChecker extends LucidBaseListener implements WidthProvider {
 	private ErrorListener errorChecker;
@@ -252,7 +203,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				widths.put(ctx, widths.get(ctx.expr(0)));
 			break;
 		default:
-			Util.log.severe("Unknown function " + sfid + " in BitWidthChecker.");
+			Util.logger.severe("Unknown function " + sfid + " in BitWidthChecker.");
 			break;
 		}
 
@@ -366,7 +317,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			if (ptr.isText()) {
 				ConstValue cv = ConstExprParser.parseExpr(ptr.getText(), paramsProvider, constParser, null);
 				if (cv == null)
-					Util.log.severe("Could not parse width " + ptr.getText());
+					Util.logger.severe("Could not parse width " + ptr.getText());
 				else
 					ptr.set(cv.getBigInt().intValue());
 			}
@@ -1283,7 +1234,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					widths.put(ctx, new SignalWidth(op1.getWidths().get(0) + op2.getBigInt().intValue()));
 					break;
 				default:
-					Util.log.severe("BUG: Unknown shift operator!");
+					Util.logger.severe("BUG: Unknown shift operator!");
 					break;
 				}
 			}

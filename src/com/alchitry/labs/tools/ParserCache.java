@@ -1,25 +1,5 @@
 package com.alchitry.labs.tools;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.List;
-
-import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.parsers.constraints.AlchitryConstraintsLexer;
 import com.alchitry.labs.parsers.constraints.AlchitryConstraintsParser;
@@ -27,6 +7,18 @@ import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser;
 import com.alchitry.labs.parsers.verilog.Verilog2001Lexer;
 import com.alchitry.labs.parsers.verilog.Verilog2001Parser;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.atn.ATNConfigSet;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
 
 public class ParserCache {
 	private static HashMap<File, CacheEntry> treeMap = new HashMap<>();
@@ -157,7 +149,7 @@ public class ParserCache {
 	static private ParseTree parseFile(final CacheEntry entry) throws IOException {
 		String[] parts = entry.file.getName().split("\\.");
 		if (parts.length != 2) {
-			Util.log.severe("File \"" + entry.file.getName() + "\" suffix could not be detected.");
+			Util.logger.severe("File \"" + entry.file.getName() + "\" suffix could not be detected.");
 			return null;
 		}
 

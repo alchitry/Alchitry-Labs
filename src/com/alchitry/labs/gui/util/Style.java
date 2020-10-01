@@ -1,4 +1,4 @@
-package com.alchitry.labs.gui;
+package com.alchitry.labs.gui.util;
 
 import org.eclipse.swt.graphics.Color;
 

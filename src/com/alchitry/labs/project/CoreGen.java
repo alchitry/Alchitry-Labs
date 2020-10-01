@@ -1,20 +1,13 @@
 package com.alchitry.labs.project;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.hardware.boards.Board;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import java.io.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CoreGen {
 	private static final String PROJECT_FILE = "coregen.cgc";
@@ -26,13 +19,12 @@ public class CoreGen {
 	}
 
 	public boolean projectExists(Project project) {
-		String projectPath = Util.assemblePath(project.getFolder(), Project.CORES_FOLDER, PROJECT_FILE);
+		String projectPath = Util.assemblePath(MainWindow.INSTANCE.getProject().getProjectFolder(), Project.CORES_FOLDER, PROJECT_FILE);
 		File projFile = new File(projectPath);
 		return projFile.exists();
 	}
 
 	private boolean createProject(final Project project) {
-
 		try {
 			Util.println("Creating new CoreGen project");
 			Util.println("");
@@ -50,7 +42,7 @@ public class CoreGen {
 			Board board = project.getBoard();
 			String projSettingsFile = Util.assemblePath(Locations.BASE, board.getExampleProjectDir(), "coregen_prop");
 
-			String coreGenDir = Util.assemblePath(project.getFolder(), Project.CORES_FOLDER);
+			String coreGenDir = Util.assemblePath(MainWindow.INSTANCE.getProject().getProjectFolder(), Project.CORES_FOLDER);
 			String coreGenProjFile = coreGenDir + File.separatorChar + PROJECT_FILE;
 			File coreGenFile = new File(coreGenDir);
 			if (!coreGenFile.exists())
@@ -83,7 +75,7 @@ public class CoreGen {
 				process = pb.start();
 			} catch (Exception e) {
 				Util.showError("Could not start CoreGenerator! Please check the location for ISE is correctly set in the settings menu. Tried " + coregen);
-				Util.log.severe(ExceptionUtils.getStackTrace(e));
+				Util.logger.severe(ExceptionUtils.getStackTrace(e));
 				return false;
 			}
 
@@ -120,13 +112,9 @@ public class CoreGen {
 			Util.println("");
 			Util.println("Finished creating CoreGen project");
 
-		} catch (InterruptedException e) {
+		} catch (InterruptedException | IOException e) {
 			e.printStackTrace();
 			Util.println(Util.exceptionToString(e), true);
-			return false;
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			Util.println(Util.exceptionToString(e1), true);
 			return false;
 		}
 		return true;
@@ -160,7 +148,7 @@ public class CoreGen {
 
 					String coregen = xilinx + Environment.COREGEN_PATH;
 
-					String projectFile = Util.assemblePath(project.getFolder(), Project.CORES_FOLDER, "coregen.cgc");
+					String projectFile = Util.assemblePath(MainWindow.INSTANCE.getProject().getProjectFolder(), Project.CORES_FOLDER, "coregen.cgc");
 
 					ProcessBuilder pb = new ProcessBuilder(coregen, "-q", Util.tmpDir.toString(), "-p", projectFile);
 					// ProcessBuilder pb = new

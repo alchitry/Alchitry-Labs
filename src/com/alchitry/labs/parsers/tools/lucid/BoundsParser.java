@@ -1,8 +1,5 @@
 package com.alchitry.labs.parsers.tools.lucid;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeProperty;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.parsers.BitValue;
 import com.alchitry.labs.parsers.ConstValue;
@@ -14,6 +11,8 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser.Array_indexContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.BitSelectorConstContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.BitSelectorFixWidthContext;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.SourceContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 	protected ParseTreeProperty<ArrayBounds> bounds;
@@ -109,7 +108,7 @@ public class BoundsParser extends LucidBaseListener implements BoundsProvider {
 		if (widthProvider != null) {
 			SignalWidth aw = widthProvider.getWidth(ctx.expr(0));
 			if (aw == null) {
-				Util.log.severe("Width of " + ctx.expr(0).getText() + " could not be determined!");
+				Util.logger.severe("Width of " + ctx.expr(0).getText() + " could not be determined!");
 			} else {
 				if (!aw.isSimpleArray()) {
 					errorChecker.reportError(ctx.expr(0), ErrorStrings.BIT_SELECTOR_STRUCT);

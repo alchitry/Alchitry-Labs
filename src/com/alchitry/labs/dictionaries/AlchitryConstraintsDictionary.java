@@ -1,7 +1,5 @@
 package com.alchitry.labs.dictionaries;
 
-import java.io.IOException;
-
 import com.alchitry.labs.gui.main.MainWindow;
 import com.alchitry.labs.parsers.Module;
 import com.alchitry.labs.parsers.Sig;
@@ -21,19 +19,17 @@ public class AlchitryConstraintsDictionary extends Dictionary {
 	}
 
 	public void updatePortNames() {
-		Project p = MainWindow.getOpenProject();
+		Project p = MainWindow.INSTANCE.getProject();
 		if (p != null) {
-			try {
-				Module top = p.getTopModule();
+			Module top = p.getTopModule();
+			if (top != null) {
 				clear();
-				for (Sig s : top.getInputs()) 
+				for (Sig s : top.getInputs())
 					dict.add(s.getName());
 				for (Sig s : top.getOutputs())
 					dict.add(s.getName());
 				for (Sig s : top.getInouts())
 					dict.add(s.getName());
-			} catch (IOException e) {
-				return;
 			}
 		}
 	}

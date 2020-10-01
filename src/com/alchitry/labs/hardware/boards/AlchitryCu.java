@@ -47,7 +47,7 @@ public class AlchitryCu extends Board {
 
 	@Override
 	public ProjectBuilder getBuilder() {
-		if (Settings.pref.getBoolean(Settings.USE_ICESTORM, false))
+		if (Settings.INSTANCE.getUSE_ICESTORM().get())
 			return new IceStormBuilder();
 		else
 			return new IceCubeBuilder();

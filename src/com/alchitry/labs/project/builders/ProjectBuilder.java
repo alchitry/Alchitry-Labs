@@ -1,21 +1,5 @@
 package com.alchitry.labs.project.builders;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.logging.Level;
-
-import org.apache.commons.io.FileUtils;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.SignalSelectionDialog;
 import com.alchitry.labs.gui.main.MainWindow;
@@ -32,6 +16,15 @@ import com.alchitry.labs.parsers.types.PinConstraint;
 import com.alchitry.labs.project.DebugInfo;
 import com.alchitry.labs.project.Project;
 import com.alchitry.labs.style.ParseException;
+import org.apache.commons.io.FileUtils;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.logging.Level;
 
 public abstract class ProjectBuilder {
 
@@ -69,9 +62,9 @@ public abstract class ProjectBuilder {
 	public void build(Project project, boolean debug) {
 		BufferedWriter logWriter = null;
 		try {
-			MainWindow.mainWindow.setBuilding(true);
+			MainWindow.INSTANCE.setBuilding(true);
 			this.project = project;
-			workFolder = Util.assembleFile(project.getFolder(), "work");
+			workFolder = Util.assembleFile(project.getProjectFolder(), "work");
 
 			Util.clearConsole();
 			InstModule top = null;
@@ -104,7 +97,7 @@ public abstract class ProjectBuilder {
 				Util.syncExec(new Runnable() {
 					@Override
 					public void run() {
-						SignalSelectionDialog dialog = new SignalSelectionDialog(MainWindow.mainWindow.getShell());
+						SignalSelectionDialog dialog = new SignalSelectionDialog(MainWindow.getShell());
 						debugInfo = dialog.open(ftop);
 					}
 				});
@@ -163,7 +156,7 @@ public abstract class ProjectBuilder {
 				} catch (IOException e) {
 					Util.println("Failed to close log file!", true);
 				}
-			MainWindow.mainWindow.setBuilding(false);
+			MainWindow.INSTANCE.setBuilding(false);
 		}
 	}
 
@@ -420,7 +413,7 @@ public abstract class ProjectBuilder {
 				FileUtils.write(destFile, modifiedFile);
 			} catch (IOException e) {
 				Util.showError("Failed to copy files for debugging!");
-				Util.log.log(Level.SEVERE, "Failed to copy files for debugging", e);
+				Util.logger.log(Level.SEVERE, "Failed to copy files for debugging", e);
 				return null;
 			}
 		}
