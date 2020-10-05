@@ -49,18 +49,25 @@ import kotlin.system.exitProcess
 
 object Util {
     var display: Display? = Display.getDefault()
+
     @JvmField
     var console: CustomConsole? = null
+
     @JvmField
     var tmpDir: Path? = null
+
     @JvmField
     val isWindows: Boolean
+
     @JvmField
     val isLinux: Boolean
+
     @JvmField
     var osDir: String? = null
+
     @JvmField
     val logger: Logger
+
     @JvmField
     var isGUI = false
     const val logFile = "alchitry-labs.log"
@@ -270,9 +277,9 @@ object Util {
 
     @JvmStatic
     var workspace: String
-        get() = Settings.WORKSPACE.get()
+        get() = Settings.WORKSPACE
         set(workspace) {
-            Settings.WORKSPACE.put(workspace)
+            Settings.WORKSPACE = workspace
         }
 
     @JvmStatic
@@ -297,12 +304,12 @@ object Util {
             return false
         }
     val isISESet: Boolean
-        get() = Settings.XILINX_LOC.get() != null
+        get() = Settings.XILINX_LOC != null
 
     @JvmStatic
     val iSELocation: String?
         get() {
-            val xilinx = Settings.XILINX_LOC.get()
+            val xilinx = Settings.XILINX_LOC
             if (xilinx != null) return xilinx
             var path = if (isWindows) File("C:\\Xilinx") else File("/opt/Xilinx")
             if (!path.isDirectory) return null
@@ -321,7 +328,7 @@ object Util {
     @JvmStatic
     val vivadoLocation: String?
         get() {
-            val vivado = Settings.VIVADO_LOC.get()
+            val vivado = Settings.VIVADO_LOC
             if (vivado != null) return vivado
             var path = if (isWindows) File("C:\\Xilinx\\Vivado") else File("/opt/Xilinx/Vivado")
             if (!path.isDirectory) return null
@@ -340,7 +347,7 @@ object Util {
     @JvmStatic
     val iceCubeFolder: String?
         get() {
-            val iceCube = Settings.ICECUBE_LOC.get()
+            val iceCube = Settings.ICECUBE_LOC
             if (iceCube != null) return iceCube
             val path = if (isWindows) File("C:\\lscc\\iCEcube2.2017.08") else File("~/lscc/iCEcube2")
             return if (!path.isDirectory) null else path.absolutePath
@@ -348,12 +355,12 @@ object Util {
 
     @JvmStatic
     val iceCubeLicenseFile: String?
-        get() = Settings.ICECUBE_LICENSE.get()
+        get() = Settings.ICECUBE_LICENSE
 
     @JvmStatic
     val yosysCommand: String?
         get() {
-            val yosys = Settings.YOSYS_LOC.get()
+            val yosys = Settings.YOSYS_LOC
             if (yosys != null) return yosys
             return if (isLinux) "yosys" else null
         }
@@ -361,7 +368,7 @@ object Util {
     @JvmStatic
     val arachneCommand: String?
         get() {
-            val arachne = Settings.ARACHNE_LOC.get()
+            val arachne = Settings.ARACHNE_LOC
             if (arachne != null) return arachne
             return if (isLinux) "arachne-pnr" else null
         }
@@ -369,7 +376,7 @@ object Util {
     @JvmStatic
     val icePackCommand: String?
         get() {
-            val icepack = Settings.ICEPACK_LOC.get()
+            val icepack = Settings.ICEPACK_LOC
             if (icepack != null) return icepack
             return if (isLinux) "icepack" else null
         }
@@ -612,6 +619,7 @@ object Util {
     }
 
     private val hexArray = "0123456789ABCDEF".toCharArray()
+
     @JvmStatic
     fun bytesToHex(bytes: ByteArray): String {
         val hexChars = CharArray(bytes.size * 2)

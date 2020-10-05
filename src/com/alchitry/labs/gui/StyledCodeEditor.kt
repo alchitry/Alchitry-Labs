@@ -230,7 +230,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
     }
 
     fun updateFont() {
-        val fontSize = Settings.EDITOR_FONT_SIZE.get()
+        val fontSize = Settings.EDITOR_FONT_SIZE
         font = Font(display, "Ubuntu Mono", fontSize, SWT.NORMAL)
         autoComplete?.updateFont()
     }

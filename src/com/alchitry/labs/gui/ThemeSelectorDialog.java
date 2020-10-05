@@ -100,12 +100,12 @@ public class ThemeSelectorDialog extends Dialog {
 	}
 	
 	private void saveSelection() {
-		Settings.INSTANCE.getTHEME().put(btnLightTheme.getSelection());
+		Settings.INSTANCE.setTHEME(btnLightTheme.getSelection());
 		Settings.INSTANCE.commit();
 	}
 	
 	private void setDefault() {
-		if (Settings.INSTANCE.getTHEME().get()){
+		if (Settings.INSTANCE.getTHEME()){
 			btnLightTheme.setSelection(true);
 		} else {
 			btnDarkTheme.setSelection(true);

@@ -223,11 +223,11 @@ class MainMenu {
         })
         val cuBuilder = createSubMenu(subMenu, "Cu Toolchain")
         iceCube = createCheckItem(cuBuilder, "iCEcube2", createSelectionAdapter {
-            Settings.USE_ICESTORM.put(false)
+            Settings.USE_ICESTORM = false
             updateCheckMenu(cuBuilder.items, it.widget as MenuItem)
         })
         iceStorm = createCheckItem(cuBuilder, "IceStorm", createSelectionAdapter {
-            Settings.USE_ICESTORM.put(true)
+            Settings.USE_ICESTORM = true
             updateCheckMenu(cuBuilder.items, it.widget as MenuItem)
         })
         updateCuToolchainSelection()
@@ -260,7 +260,7 @@ class MainMenu {
             MainWindow.setTabFonts(24)
             updateCheckMenu(fontMenu.items, it.widget as MenuItem)
         })
-        val fontPercent = Settings.EDITOR_FONT_SIZE.get() / 12.0
+        val fontPercent = Settings.EDITOR_FONT_SIZE / 12.0
         for (mi in fontMenu.items) {
             val mip = mi.text.substring(0, mi.text.length - 1).toDouble()
             mi.selection = mip == fontPercent
@@ -268,21 +268,21 @@ class MainMenu {
 
         val updateMenu = createSubMenu(subMenu, "Check for Updates")
         createCheckItem(updateMenu, "Never", createSelectionAdapter {
-            Settings.CHECK_FOR_UPDATES.put(false)
+            Settings.CHECK_FOR_UPDATES = false
             updateCheckMenu(updateMenu.items, it.widget as MenuItem)
-        }).also{it.selection = !Settings.CHECK_FOR_UPDATES.get()}
+        }).also { it.selection = !Settings.CHECK_FOR_UPDATES }
         createCheckItem(updateMenu, "Stable", createSelectionAdapter {
-            Settings.BETA_UPDATES.put(false)
-            Settings.CHECK_FOR_UPDATES.put(true)
+            Settings.BETA_UPDATES = false
+            Settings.CHECK_FOR_UPDATES = true
             updateCheckMenu(updateMenu.items, it.widget as MenuItem)
             UpdateChecker.checkForUpdates()
-        }).also{it.selection = Settings.CHECK_FOR_UPDATES.get() && !Settings.BETA_UPDATES.get()}
+        }).also { it.selection = Settings.CHECK_FOR_UPDATES && !Settings.BETA_UPDATES }
         createCheckItem(updateMenu, "Beta", createSelectionAdapter {
-            Settings.BETA_UPDATES.put(true)
-            Settings.CHECK_FOR_UPDATES.put(true)
+            Settings.BETA_UPDATES = true
+            Settings.CHECK_FOR_UPDATES = true
             updateCheckMenu(updateMenu.items, it.widget as MenuItem)
             UpdateChecker.checkForUpdates()
-        }).also{it.selection = Settings.CHECK_FOR_UPDATES.get() && Settings.BETA_UPDATES.get()}
+        }).also { it.selection = Settings.CHECK_FOR_UPDATES && Settings.BETA_UPDATES }
 
         /*
 		
@@ -323,7 +323,7 @@ class MainMenu {
     }
 
     private fun updateCuToolchainSelection() {
-        val useStorm = Settings.USE_ICESTORM.get()
+        val useStorm = Settings.USE_ICESTORM
         iceCube!!.selection = !useStorm
         iceStorm!!.selection = useStorm
     }

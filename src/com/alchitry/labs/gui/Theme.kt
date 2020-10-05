@@ -116,7 +116,7 @@ object Theme {
     }
 
     private fun initColors(display: Display) {
-        if (Settings.THEME.get()) {
+        if (Settings.THEME) {
             mainAccentColor = Color(display, 230, 184, 0)
             darkAccentColor = Color(display, 191, 152, 29)
             moduleColor = Color(display, 217, 165, 11)

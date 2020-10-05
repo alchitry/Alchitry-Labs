@@ -41,9 +41,11 @@ import kotlin.math.roundToInt
 
 object MainWindow {
     var project: Project? = null
+
     @JvmStatic
     val globalConstants: HashMap<String, List<Constant>>
         get() = project?.globalConstants ?: HashMap()
+
     @JvmStatic
     lateinit var shell: Shell
     lateinit var sideSashForm: SashForm
@@ -97,7 +99,7 @@ object MainWindow {
 
     private fun upgrade() {
         WelcomeDialog(shell).open()
-        Settings.VERSION.put(VERSION)
+        Settings.VERSION = VERSION
         try {
             Settings.commit()
         } catch (e: BackingStoreException) {
@@ -118,7 +120,7 @@ object MainWindow {
         shell.layout()
 
         // Settings.pref.put(Settings.LIB_VERSION, "1");
-        if (Settings.VERSION.get() != VERSION) {
+        if (Settings.VERSION != VERSION) {
             upgrade()
         }
         UpdateChecker.checkForUpdates()
@@ -193,64 +195,60 @@ object MainWindow {
         return false
     }
 
-    private fun updateDirectoryLocation(prompt: String?, startingDir: String?, setting: Settings.Setting<String?>?) {
+    private fun updateDirectoryLocation(prompt: String?, startingDir: String?): String? {
         if (prompt != null) Util.showInfo(prompt)
         val dialog = DirectoryDialog(this.shell, SWT.OPEN or SWT.APPLICATION_MODAL)
         if (startingDir != null) {
             val current = File(startingDir)
             if (current.parent != null) dialog.filterPath = current.parent
         }
-        var result = dialog.open()
-        if (result != null) {
-            if (!result.endsWith(File.separator)) result += File.separator
-            setting?.put(result)
-        }
+        var result: String? = dialog.open()
+
+        if (result?.endsWith(File.separator) == false) result += File.separator
+        return result
     }
 
-    private fun updateFileLocation(prompt: String?, startingDir: String?, setting: Settings.Setting<String?>?) {
+    private fun updateFileLocation(prompt: String?, startingDir: String?): String? {
         if (prompt != null) Util.showInfo(prompt)
         val dialog = FileDialog(this.shell, SWT.OPEN or SWT.APPLICATION_MODAL)
         if (startingDir != null) {
             val current = File(startingDir)
             if (current.parent != null) dialog.filterPath = current.parent
         }
-        val result = dialog.open()
-        if (result != null) {
-            setting?.put(result)
-        }
+        return dialog.open()
     }
 
     fun updateISELocation() {
         updateDirectoryLocation("The next dialog will ask you for the location of where you installed ISE. Please point it to the "
-                + "directory whose name is the version number of ISE. This is the Xilinx/14.7 folder in most cases.", Util.iSELocation, Settings.XILINX_LOC)
+                + "directory whose name is the version number of ISE. This is the Xilinx/14.7 folder in most cases.", Util.iSELocation)?.also { Settings.XILINX_LOC = it }
     }
 
     fun updateVivadoLocation() {
         updateDirectoryLocation("The next dialog will ask you for the location of where you installed Vivado. Please point it to the "
                 + "directory whose name is the version number of Vivado. This is the Xilinx/Vivado/YEAR.MONTH folder in most cases.",
-                Util.vivadoLocation, Settings.VIVADO_LOC)
+                Util.vivadoLocation)?.also { Settings.VIVADO_LOC = it }
     }
 
     fun updateIcecubeLocation() {
         updateDirectoryLocation("The next dialog will ask you for the location of where you installed iCEcube2. Please point it to the "
-                + "directory whose name is \"iCEcube2\". This is the lscc/iCEcube2 folder in most cases.", Util.iceCubeFolder, Settings.ICECUBE_LOC)
+                + "directory whose name is \"iCEcube2\". This is the lscc/iCEcube2 folder in most cases.", Util.iceCubeFolder)?.also { Settings.ICECUBE_LOC = it }
     }
 
     fun updateIcecubeLicenseLocation() {
         updateFileLocation("The next dialog will ask you for the location of iCEcube2's license file. You need to get your own file from Lattcie's website.",
-                Util.iceCubeLicenseFile, Settings.ICECUBE_LICENSE)
+                Util.iceCubeLicenseFile)?.also { Settings.ICECUBE_LICENSE = it }
     }
 
     fun updateYosysLocation() {
-        updateFileLocation("The next dialog will ask for the location of the Yosys executable.", Settings.YOSYS_LOC.get(), Settings.YOSYS_LOC)
+        updateFileLocation("The next dialog will ask for the location of the Yosys executable.", Settings.YOSYS_LOC)?.also { Settings.YOSYS_LOC = it }
     }
 
     fun updateArachneLocation() {
-        updateFileLocation("The next dialog will ask for the location of the Arachne PNR executable.", Settings.ARACHNE_LOC.get(), Settings.ARACHNE_LOC)
+        updateFileLocation("The next dialog will ask for the location of the Arachne PNR executable.", Settings.ARACHNE_LOC)?.also { Settings.ARACHNE_LOC = it }
     }
 
     fun updateIcepackLocation() {
-        updateFileLocation("The next dialog will ask for the location of the IcePack executable.", Settings.ICEPACK_LOC.get(), Settings.ICEPACK_LOC)
+        updateFileLocation("The next dialog will ask for the location of the IcePack executable.", Settings.ICEPACK_LOC)?.also { Settings.ICEPACK_LOC = it }
     }
 
     private fun loadFonts() {
@@ -269,24 +267,28 @@ object MainWindow {
     private fun saveSettings() {
         try {
             val max = shell.maximized
-            Settings.MAXIMIZED.put(max)
+            Settings.MAXIMIZED = max
             if (!max) {
                 val r = shell.bounds
-                Settings.WINDOW_HEIGHT.put( r.height)
-                Settings.WINDOW_WIDTH.put( r.width)
+                Settings.WINDOW_HEIGHT = r.height
+                Settings.WINDOW_WIDTH = r.width
             }
             var weights = sideSashForm.weights
-            Settings.FILE_LIST_WIDTH.put(
+            Settings.FILE_LIST_WIDTH =
                     (sideSashForm.clientArea.width.toDouble() * weights[0].toDouble() / (weights[0] + weights[1]).toDouble()).roundToInt().also {
                         leftWidth = it
-                    })
+                    }
             weights = bottomSashForm.weights
-            Settings.CONSOLE_HEIGHT.put(
+            Settings.CONSOLE_HEIGHT =
                     (bottomSashForm.clientArea.height.toDouble() * weights[1].toDouble() / (weights[0] + weights[1]).toDouble()).roundToInt().also {
                         bottomHeight = it
-                    })
-            project?.also { Settings.OPEN_PROJECT.put(it.projectFile.absolutePath) }
-                    ?: Settings.OPEN_PROJECT.put(null)
+                    }
+            project.let {
+                if (it != null)
+                    Settings.OPEN_PROJECT = it.projectFile.absolutePath
+                else
+                    Settings.OPEN_PROJECT = null
+            }
             Settings.commit()
         } catch (e1: BackingStoreException) {
             Util.logger.severe("Failed to save settings! " + e1.message)
@@ -301,7 +303,7 @@ object MainWindow {
     }
 
     fun setTabFonts(size: Int) {
-        Settings.EDITOR_FONT_SIZE.put( size)
+        Settings.EDITOR_FONT_SIZE = size
         val numEditors = tabs.size
         for (i in 0 until numEditors) {
             if (tabs[i] is StyledCodeEditor) {
@@ -361,10 +363,10 @@ object MainWindow {
         shell.setMinimumSize(550, 200)
         shell.text = "Alchitry Labs Version $VERSION"
         shell.layout = GridLayout(1, false)
-        val height = Settings.WINDOW_HEIGHT.get()
-        val width = Settings.WINDOW_WIDTH.get()
+        val height = Settings.WINDOW_HEIGHT
+        val width = Settings.WINDOW_WIDTH
         shell.setSize(width, height)
-        val max = Settings.MAXIMIZED.get()
+        val max = Settings.MAXIMIZED
         if (max) shell.maximized = true
         shell.background = Theme.windowBackgroundColor
         shell.foreground = Theme.windowForegroundColor
@@ -440,13 +442,13 @@ object MainWindow {
             }
         })
 
-        val oldProject = Settings.OPEN_PROJECT.get()
+        val oldProject = Settings.OPEN_PROJECT
         tabFolder = CustomTabs(sideSashForm, SWT.NONE)
         console = CustomConsole(bottomSashForm, SWT.READ_ONLY or SWT.H_SCROLL or SWT.V_SCROLL or SWT.CANCEL or SWT.MULTI)
         bottomSashForm.weights = intArrayOf(8, 2)
         Util.console = console
-        leftWidth = Settings.FILE_LIST_WIDTH.get()
-        bottomHeight = Settings.CONSOLE_HEIGHT.get()
+        leftWidth = Settings.FILE_LIST_WIDTH
+        bottomHeight = Settings.CONSOLE_HEIGHT
 
         if (oldProject != null) openProject(File(oldProject))
         openFile(null, true)
@@ -579,7 +581,7 @@ object MainWindow {
             project?.saveXML()
         } catch (e: IOException) {
             Util.logException(e)
-           return Util.askQuestion("Failed to save project! Continue opening new one?")
+            return Util.askQuestion("Failed to save project! Continue opening new one?")
         }
         return true
     }

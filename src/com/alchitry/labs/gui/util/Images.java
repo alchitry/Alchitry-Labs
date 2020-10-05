@@ -66,7 +66,7 @@ public class Images {
 	}
 
 	public static void loadImages(Display display) {
-		if (Settings.INSTANCE.getTHEME().get()) { // light theme
+		if (Settings.INSTANCE.getTHEME()) { // light theme
 			loadIconHover = getImage(display, "load.png");
 			loadIcon = colorIcon(loadIconHover, 0x000000);
 

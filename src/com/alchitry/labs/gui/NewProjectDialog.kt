@@ -103,8 +103,9 @@ class NewProjectDialog(parent: Shell, style: Int = SWT.DIALOG_TRIM, private val 
                 Util.showError(e.message!!)
                 return null
             }
+
             openProject(newProjFile)
-            Settings.WORKSPACE.put(workspace)
+            Settings.WORKSPACE = workspace
             return MainWindow.project
         }
 

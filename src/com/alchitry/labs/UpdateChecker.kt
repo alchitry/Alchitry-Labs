@@ -24,7 +24,7 @@ import java.nio.file.StandardCopyOption
 
 object UpdateChecker {
     private val BASE_URL
-        get() = if (Settings.BETA_UPDATES.get()) "https://cdn.alchitry.com/labs/beta/" else "https://cdn.alchitry.com/labs/"
+        get() = if (Settings.BETA_UPDATES) "https://cdn.alchitry.com/labs/beta/" else "https://cdn.alchitry.com/labs/"
     private val IDE_VERSION_URL
         get() = "${BASE_URL}ideVersion"
 
@@ -62,7 +62,7 @@ object UpdateChecker {
     }
 
     fun checkForUpdates() {
-        if (Util.envType != Util.IDE && Settings.CHECK_FOR_UPDATES.get()) GlobalScope.launch(Dispatchers.IO) {
+        if (Util.envType != Util.IDE && Settings.CHECK_FOR_UPDATES) GlobalScope.launch(Dispatchers.IO) {
             val inputStream: InputStream = try {
                 URL(IDE_VERSION_URL).openStream()
             } catch (e: IOException) {
@@ -77,7 +77,7 @@ object UpdateChecker {
                 IOUtils.closeQuietly(inputStream)
             }
             if (version == null) return@launch
-            val curVersion = Settings.VERSION.get()
+            val curVersion = Settings.VERSION
             if (version != curVersion) {
                 val result = Util.askQuestion("New Alchitry Labs Available", "Would you like to update the IDE to version $version now?")
                 if (result) {
