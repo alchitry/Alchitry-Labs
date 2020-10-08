@@ -3,6 +3,7 @@ package com.alchitry.labs.gui.main
 import com.alchitry.labs.Reporter
 import com.alchitry.labs.Settings
 import com.alchitry.labs.UpdateChecker
+import com.alchitry.labs.Util
 import com.alchitry.labs.Util.assembleFile
 import com.alchitry.labs.Util.logException
 import com.alchitry.labs.Util.showError
@@ -89,7 +90,7 @@ class MainMenu {
                 return@createSelectionAdapter
             }
             val dialog = FileDialog(MainWindow.shell, SWT.MULTI)
-            dialog.filterExtensions = arrayOf("*.luc;*.v;*.ucf", ".pcf", "*")
+            dialog.filterExtensions = arrayOf(Util.allFileSuffixes.joinToString(";") { "*$it" }, "*")
             val path = dialog.open()
             if (path != null) {
                 val files = dialog.fileNames
@@ -182,7 +183,7 @@ class MainMenu {
             MainWindow.regInterface.let { regInterface ->
                 if (MainWindow.display.isDisposed) return@createSelectionAdapter
                 if (regInterface?.isDisposed != false) {
-                    MainWindow.regInterface = RegInterface(MainWindow.display)
+                    MainWindow.regInterface = RegInterface(MainWindow.shell)
                 } else {
                     regInterface.setFocus()
                 }
@@ -284,6 +285,16 @@ class MainMenu {
             UpdateChecker.checkForUpdates()
         }).also { it.selection = Settings.CHECK_FOR_UPDATES && Settings.BETA_UPDATES }
 
+        val reportingMenu = createSubMenu(subMenu, "Anonymous Error Reporting")
+        createCheckItem(reportingMenu, "Enable", createSelectionAdapter {
+            Settings.ERROR_REPORTING = true
+            updateCheckMenu(reportingMenu.items, it.widget as MenuItem)
+        }).also { it.selection = Settings.ERROR_REPORTING }
+        createCheckItem(reportingMenu, "Disable", createSelectionAdapter {
+            Settings.ERROR_REPORTING = false
+            updateCheckMenu(reportingMenu.items, it.widget as MenuItem)
+        }).also { it.selection = !Settings.ERROR_REPORTING }
+
         /*
 		
 		if (Board.isType(board, Board.MOJO)) {
@@ -331,10 +342,10 @@ class MainMenu {
     private fun buildHelpMenu() {
         val subMenu = createSubMenu(menu, "Help")
         createItem(subMenu, "Send Feedback", createSelectionAdapter {
-            val feedbackDialog = FeedbackDialog(MainWindow.shell, SWT.APPLICATION_MODAL or SWT.DIALOG_TRIM or SWT.CLOSE)
+            val feedbackDialog = FeedbackDialog()
             val message = feedbackDialog.open()
             if (message != null) {
-                Reporter.sendFeedback(message)
+                Reporter.sendFeedback(message, true)
             }
         })
         createItem(subMenu, "About", createSelectionAdapter {

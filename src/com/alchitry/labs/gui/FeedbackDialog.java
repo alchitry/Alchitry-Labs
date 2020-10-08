@@ -1,70 +1,61 @@
 package com.alchitry.labs.gui;
 
-import com.alchitry.labs.gui.main.MainKt;
+import com.alchitry.labs.MainKt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-public class FeedbackDialog extends Dialog {
+public class FeedbackDialog {
 
-	protected EmailMessage result;
-	protected Shell shell;
-	private Text nameText;
-	private Text emailText;
-	private Text commentsText;
-	private Button submitButton;
+    protected EmailMessage result = null;
+    protected Shell shell;
+    private Text nameText;
+    private Text emailText;
+    private Text commentsText;
+    private Button submitButton;
 
-	/**
-	 * Create the dialog.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
-	public FeedbackDialog(Shell parent, int style) {
-		super(parent, style);
-		setText("Feedback Form");
-	}
 
-	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
-	public EmailMessage open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
+    public FeedbackDialog() {
+    }
+
+    /**
+     * Open the dialog.
+     *
+     * @return the result
+     */
+    public EmailMessage open() {
+        createContents();
+        shell.open();
+        shell.layout();
+        Display display = Display.getDefault();
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+        return result;
+    }
 
 	/**
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
-		shell.setSize(450, 300);
-		shell.setText(getText());
-		shell.setLayout(new GridLayout(2, false));
+        shell = new Shell(Display.getDefault(), SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM | SWT.CLOSE);
+        shell.setSize(450, 300);
+        shell.setText("FeedbackForm");
+        shell.setLayout(new GridLayout(2, false));
 
-		Label lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText("Name:");
+        Label lblNewLabel = new Label(shell, SWT.NONE);
+        lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+        lblNewLabel.setText("Name:");
 
-		nameText = new Text(shell, SWT.BORDER);
-		nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+        nameText = new Text(shell, SWT.BORDER);
+        nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label lblNewLabel_1 = new Label(shell, SWT.NONE);
+        Label lblNewLabel_1 = new Label(shell, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setText("Email:");
 
@@ -102,12 +93,6 @@ public class FeedbackDialog extends Dialog {
 
 			}
 		});
-		
-		Rectangle parentSize = getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		int locationX = (parentSize.width - shellSize.width)/2+parentSize.x;
-		int locationY = (parentSize.height - shellSize.height)/2+parentSize.y;
-		shell.setLocation(new Point(locationX, locationY));
 	}
 
 }

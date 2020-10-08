@@ -111,6 +111,10 @@ class NewProjectDialog(parent: Shell, style: Int = SWT.DIALOG_TRIM, private val 
 
         private fun getExampleProjects(boardType: String, language: String, names: MutableList<String>?): HashMap<String, String>? {
             val board = Board.getFromName(boardType)
+            if (board == null) {
+                Util.showError("Invalid board of type $boardType!")
+                return null
+            }
             val map = HashMap<String, String>()
             val builder = SAXBuilder()
             val xmlFile = File(Locations.BASE.toString() + File.separator + board.exampleProjectDir + File.separator + language + File.separator + PROJECT_XML)

@@ -105,17 +105,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="antlr-runtime-4.7.1.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/antlr-runtime-4.7.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="https://www.antlr.org/api/Java/" />
-        </JAVADOC>
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="commons-lang3-3.8.1.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/commons-lang3-3.8.1.jar!/" />
@@ -174,5 +163,6 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9" level="project" />
     <orderEntry type="library" name="de.brudaswen.kotlinx.coroutines:kotlinx-coroutines-swt:1.0.0" level="project" />
+    <orderEntry type="library" name="org.antlr:antlr4-runtime:4.8-1" level="project" />
   </component>
 </module>

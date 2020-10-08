@@ -19,9 +19,7 @@ import com.alchitry.labs.widgets.CustomSearchAndReplace
 import com.alchitry.labs.widgets.CustomTabs
 import com.alchitry.labs.widgets.TabChild
 import com.alchitry.labs.widgets.TabHotKeys
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.swt.SWT
 import org.eclipse.swt.SWT
 import org.eclipse.swt.custom.ExtendedModifyListener
@@ -45,7 +43,8 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
     val isOpen: Boolean
     private var formatter: AutoFormatter? = null
     private val undoRedo = UndoRedo(this)
-    var fileName: String
+    val fileName: String
+        get() = file?.name ?: "Untitled"
     private var autoComplete: AutoComplete? = null
     private val highlighter = TextHighlighter(this)
     private val search: CustomSearchAndReplace = CustomSearchAndReplace(parent, SWT.NONE)
@@ -60,6 +59,8 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
     var isVerilog = false
     private var isConstraint = false
     private val rightClickMenu = Menu(this)
+    private val monitorScope = CoroutineScope(Dispatchers.IO)
+    private var monitorJob: Job? = null
 
     init {
         // attach search to parent so that it doesn't scroll with the text
@@ -126,6 +127,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
                     p?.saveListeners?.add(Listener { dict.updatePortNames() }.also { listener -> projectSaveListener = listener })
                     autoComplete = AutoComplete(this, dict)
                     isConstraint = true
+                    throw NullPointerException()
                 }
                 Util.isConstraintFile(it.name) -> {
                     isConstraint = true
@@ -137,6 +139,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
             }
         }
 
+
         val tooltips = ToolTipListener(this, errorChecker)
         addMouseTrackListener(tooltips)
         addMouseMoveListener(tooltips)
@@ -147,7 +150,6 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
 
         tabs = 2
         updateFont()
-        fileName = if (file != null) file!!.name else "Untitled"
         tabFolder.addTab(fileName, this)
         if (indentProvider != null) formatter = AutoFormatter(this, indentProvider)
         newLineIndenter?.let { addVerifyListener(it) }
@@ -227,6 +229,38 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         }
         addTraverseListener { e -> e.doit = false }
         addModifyListener { ParserCache.invalidate(file) }
+
+        monitorScope.startFileMonitor()
+        addDisposeListener {
+            monitorScope.cancel()
+        }
+    }
+
+    fun CoroutineScope.startFileMonitor() {
+        file?.let {
+            monitorJob = launch {
+                var fileTimestamp = it.lastModified()
+                while (true) {
+                    if (fileTimestamp == 0L) {
+                        Util.showError("Failed to read file ${it.name}!")
+                        return@launch
+                    }
+                    delay(1000)
+                    val currentTime = it.lastModified()
+                    if (fileTimestamp != currentTime) {
+                        withContext(Dispatchers.SWT) {
+                            if (this@StyledCodeEditor.isFocusControl) {
+                                if (Util.askQuestion("${it.name} has changed on disk. Would you like to reload it?")) {
+                                    openFile(it)
+                                }
+                                fileTimestamp = currentTime
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     fun updateFont() {
@@ -338,9 +372,10 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
             ""
         }
         file = path
-        edited = false
         undoRedo.skipNext()
         text = fileContents
+        edited = false
+        tabFolder.setText(this, fileName)
         tabFolder.setSelection(this)
         return true
     }
@@ -359,16 +394,19 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
             edited = false
         }
         file?.let {
+            monitorJob?.cancel()
             try {
                 val out = PrintWriter(it)
                 out.print(text)
                 out.close()
             } catch (e1: FileNotFoundException) {
                 return false
+            } finally {
+                monitorScope.startFileMonitor()
             }
         }
         if (edited) {
-            tabFolder.setText(this, tabFolder.getText(this)?.substring(1))
+            tabFolder.setText(this, fileName)
         }
         edited = false
         MainWindow.updateErrors()

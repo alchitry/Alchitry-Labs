@@ -2,6 +2,7 @@ package com.alchitry.labs.gui.main
 
 import com.alchitry.labs.Util
 import com.alchitry.labs.Util.showError
+import com.alchitry.labs.VERSION
 import com.alchitry.labs.hardware.boards.AlchitryAu
 import com.alchitry.labs.hardware.boards.AlchitryCu
 import com.alchitry.labs.hardware.boards.Board
@@ -138,7 +139,7 @@ class LoaderWindow {
     }
 
     private val board: Board
-        get() = if (btnAuButton.selection) AlchitryAu() else if (btnCuButton.selection) AlchitryCu() else Mojo()
+        get() = if (btnAuButton.selection) AlchitryAu else if (btnCuButton.selection) AlchitryCu else Mojo
 
     private fun checkBinFileExists(): Boolean {
         val f = File(binText.text)

@@ -1,6 +1,6 @@
 package com.alchitry.labs.gui
 
-import com.alchitry.labs.gui.main.VERSION
+import com.alchitry.labs.VERSION
 import org.eclipse.swt.SWT
 import org.eclipse.swt.events.SelectionAdapter
 import org.eclipse.swt.events.SelectionEvent
@@ -46,7 +46,7 @@ class WelcomeDialog(parent: Shell) : Dialog(parent, SWT.DIALOG_TRIM or SWT.APPLI
                                  |
                                  |This version is a massive overhaul from the previous version with tons of refactored code.
                                  |
-                                 |The search function has been replaced with a search/replace bar and the undo/redo stack has been drastically improved.
+                                 |The search function has been replaced with a search/replace bar. The undo/redo stack has been drastically improved. Open files are now monitored for external changes. Error reporting has been updated. A beta update channel was added. Antlr was updated to 4.8.1.
                                  |
                                  |As always, we hope you enjoy this version!""".trimMargin()
         val btnOk = Button(shell, SWT.NONE)

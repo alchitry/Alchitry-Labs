@@ -1,5 +1,9 @@
 package com.alchitry.labs.gui;
 
+import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
+import com.alchitry.labs.parsers.verilog.Verilog2001Lexer;
+import com.alchitry.labs.style.StyleUtil;
+import com.alchitry.labs.style.StyleUtil.StyleMerger;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Lexer;
@@ -12,25 +16,21 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import com.alchitry.labs.parsers.lucid.parser.LucidLexer;
-import com.alchitry.labs.parsers.verilog.Verilog2001Lexer;
-import com.alchitry.labs.style.StyleUtil;
-import com.alchitry.labs.style.StyleUtil.StyleMerger;
+public class DoubleClickHighlighter extends CachedStyleListener implements Listener, LineStyleListener {
+    StyledText editor;
+    String highlightWord;
+    private final boolean isLucid;
+    private final boolean isVerilog;
 
-public class DoubleClickHighlighter extends CachedStyleListner implements Listener, LineStyleListener{
-	StyledText editor;
-	String highlightWord;
-	private boolean isLucid, isVerilog;
-	
-	public DoubleClickHighlighter(StyledText e, boolean lucid, boolean verilog) {
-		editor = e;
-		this.isLucid = lucid;
-		this.isVerilog = verilog;
-	}
-	
-	private void update(final String text) {
-		lock.acquireUninterruptibly();
-		new Thread(new Runnable() {
+    public DoubleClickHighlighter(StyledText e, boolean lucid, boolean verilog) {
+        editor = e;
+        this.isLucid = lucid;
+        this.isVerilog = verilog;
+    }
+
+    private void update(final String text) {
+        lock.acquireUninterruptibly();
+        new Thread(new Runnable() {
 			@Override
 			public void run() {
 				

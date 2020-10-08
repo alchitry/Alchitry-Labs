@@ -1,6 +1,6 @@
 <component name="libraryTable">
   <library name="de.brudaswen.kotlinx.coroutines:kotlinx-coroutines-swt:1.0.0" type="repository">
-    <properties maven-id="de.brudaswen.kotlinx.coroutines:kotlinx-coroutines-swt:1.0.0" />
+    <properties include-transitive-deps="false" maven-id="de.brudaswen.kotlinx.coroutines:kotlinx-coroutines-swt:1.0.0" />
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/kotlinx-coroutines-swt-1.0.0.jar!/" />
     </CLASSES>

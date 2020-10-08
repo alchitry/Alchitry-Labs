@@ -1,6 +1,6 @@
 package com.alchitry.labs.parsers.tools.lucid.toVerilog;
 
-import com.alchitry.labs.gui.main.MainKt;
+import com.alchitry.labs.MainKt;
 
 public class LucidConvertedHeader {
 	private LucidConvertedHeader(){}

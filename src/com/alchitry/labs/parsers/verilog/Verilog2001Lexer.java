@@ -1,12 +1,8 @@
-// Generated from Verilog2001.g4 by ANTLR 4.7.1
+// Generated from Verilog2001.g4 by ANTLR 4.8
 
 package com.alchitry.labs.parsers.verilog;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.atn.LexerATNSimulator;
@@ -15,17 +11,19 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Verilog2001Lexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static {
+		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+	}
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+			new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
+			T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
+			T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
+			T__17 = 18, T__18 = 19, T__19 = 20, T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24,
+			T__24 = 25, T__25 = 26, T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31,
+			T__31 = 32, T__32 = 33, T__33 = 34, T__34 = 35, T__35 = 36, T__36 = 37, T__37 = 38,
 		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
 		T__45=46, T__46=47, T__47=48, T__48=49, T__49=50, T__50=51, T__51=52, 
 		T__52=53, T__53=54, T__54=55, T__55=56, T__56=57, T__57=58, T__58=59, 
@@ -48,97 +46,111 @@ public class Verilog2001Lexer extends Lexer {
 		T__161=162, T__162=163, T__163=164, T__164=165, Real_number=166, Decimal_number=167, 
 		Binary_number=168, Octal_number=169, Hex_number=170, String=171, Ifdef_macro=172, 
 		Ifndef_macro=173, Define_macro=174, Endif_macro=175, Else_macro=176, Timescale_macro=177, 
-		Include_macro=178, Undefall_macro=179, Undef_macro=180, Line_macro=181, 
-		One_line_comment=182, Block_comment=183, Escaped_identifier=184, Simple_identifier=185, 
-		Dollar_Identifier=186, White_space=187;
+		Include_macro=178, Undefall_macro=179, Undef_macro=180, Line_macro=181,
+			One_line_comment = 182, Block_comment = 183, Escaped_identifier = 184, Simple_identifier = 185,
+			Dollar_Identifier = 186, White_space = 187;
 	public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+			"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
 
 	public static String[] modeNames = {
-		"DEFAULT_MODE"
+			"DEFAULT_MODE"
 	};
 
-	public static final String[] ruleNames = {
-		"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", 
-		"T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16", 
-		"T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24", 
-		"T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32", 
-		"T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40", 
-		"T__41", "T__42", "T__43", "T__44", "T__45", "T__46", "T__47", "T__48", 
-		"T__49", "T__50", "T__51", "T__52", "T__53", "T__54", "T__55", "T__56", 
-		"T__57", "T__58", "T__59", "T__60", "T__61", "T__62", "T__63", "T__64", 
-		"T__65", "T__66", "T__67", "T__68", "T__69", "T__70", "T__71", "T__72", 
-		"T__73", "T__74", "T__75", "T__76", "T__77", "T__78", "T__79", "T__80", 
-		"T__81", "T__82", "T__83", "T__84", "T__85", "T__86", "T__87", "T__88", 
-		"T__89", "T__90", "T__91", "T__92", "T__93", "T__94", "T__95", "T__96", 
-		"T__97", "T__98", "T__99", "T__100", "T__101", "T__102", "T__103", "T__104", 
-		"T__105", "T__106", "T__107", "T__108", "T__109", "T__110", "T__111", 
-		"T__112", "T__113", "T__114", "T__115", "T__116", "T__117", "T__118", 
-		"T__119", "T__120", "T__121", "T__122", "T__123", "T__124", "T__125", 
-		"T__126", "T__127", "T__128", "T__129", "T__130", "T__131", "T__132", 
-		"T__133", "T__134", "T__135", "T__136", "T__137", "T__138", "T__139", 
-		"T__140", "T__141", "T__142", "T__143", "T__144", "T__145", "T__146", 
-		"T__147", "T__148", "T__149", "T__150", "T__151", "T__152", "T__153", 
-		"T__154", "T__155", "T__156", "T__157", "T__158", "T__159", "T__160", 
-		"T__161", "T__162", "T__163", "T__164", "Real_number", "Decimal_number", 
-		"Binary_number", "Octal_number", "Hex_number", "Sign", "Size", "Non_zero_unsigned_number", 
-		"Unsigned_number", "Binary_value", "Octal_value", "Hex_value", "Decimal_base", 
-		"Binary_base", "Octal_base", "Hex_base", "Non_zero_decimal_digit", "Decimal_digit", 
-		"Binary_digit", "Octal_digit", "Hex_digit", "X_digit", "Z_digit", "String", 
-		"Ifdef_macro", "Ifndef_macro", "Define_macro", "Endif_macro", "Else_macro", 
-		"Timescale_macro", "Include_macro", "Undefall_macro", "Undef_macro", "Line_macro", 
-		"One_line_comment", "Block_comment", "Escaped_identifier", "Simple_identifier", 
-		"Dollar_Identifier", "White_space"
-	};
+	private static String[] makeRuleNames() {
+		return new String[]{
+				"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8",
+				"T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "T__16",
+				"T__17", "T__18", "T__19", "T__20", "T__21", "T__22", "T__23", "T__24",
+				"T__25", "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", "T__32",
+				"T__33", "T__34", "T__35", "T__36", "T__37", "T__38", "T__39", "T__40",
+				"T__41", "T__42", "T__43", "T__44", "T__45", "T__46", "T__47", "T__48",
+				"T__49", "T__50", "T__51", "T__52", "T__53", "T__54", "T__55", "T__56",
+				"T__57", "T__58", "T__59", "T__60", "T__61", "T__62", "T__63", "T__64",
+				"T__65", "T__66", "T__67", "T__68", "T__69", "T__70", "T__71", "T__72",
+				"T__73", "T__74", "T__75", "T__76", "T__77", "T__78", "T__79", "T__80",
+				"T__81", "T__82", "T__83", "T__84", "T__85", "T__86", "T__87", "T__88",
+				"T__89", "T__90", "T__91", "T__92", "T__93", "T__94", "T__95", "T__96",
+				"T__97", "T__98", "T__99", "T__100", "T__101", "T__102", "T__103", "T__104",
+				"T__105", "T__106", "T__107", "T__108", "T__109", "T__110", "T__111",
+				"T__112", "T__113", "T__114", "T__115", "T__116", "T__117", "T__118",
+				"T__119", "T__120", "T__121", "T__122", "T__123", "T__124", "T__125",
+				"T__126", "T__127", "T__128", "T__129", "T__130", "T__131", "T__132",
+				"T__133", "T__134", "T__135", "T__136", "T__137", "T__138", "T__139",
+				"T__140", "T__141", "T__142", "T__143", "T__144", "T__145", "T__146",
+				"T__147", "T__148", "T__149", "T__150", "T__151", "T__152", "T__153",
+				"T__154", "T__155", "T__156", "T__157", "T__158", "T__159", "T__160",
+				"T__161", "T__162", "T__163", "T__164", "Real_number", "Decimal_number",
+				"Binary_number", "Octal_number", "Hex_number", "Sign", "Size", "Non_zero_unsigned_number",
+				"Unsigned_number", "Binary_value", "Octal_value", "Hex_value", "Decimal_base",
+				"Binary_base", "Octal_base", "Hex_base", "Non_zero_decimal_digit", "Decimal_digit",
+				"Binary_digit", "Octal_digit", "Hex_digit", "X_digit", "Z_digit", "String",
+				"Ifdef_macro", "Ifndef_macro", "Define_macro", "Endif_macro", "Else_macro",
+				"Timescale_macro", "Include_macro", "Undefall_macro", "Undef_macro",
+				"Line_macro", "One_line_comment", "Block_comment", "Escaped_identifier",
+				"Simple_identifier", "Dollar_Identifier", "White_space"
+		};
+	}
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'config'", "';'", "'endconfig'", "'design'", "'.'", "'default'", 
-		"'instance'", "'liblist'", "'cell'", "'use'", "':config'", "'endmodule'", 
-		"'module'", "'macromodule'", "'#'", "'('", "','", "')'", "'{'", "'}'", 
-		"'['", "']'", "'defparam'", "'localparam'", "'signed'", "'integer'", "'real'", 
-		"'realtime'", "'time'", "'parameter'", "'specparam'", "'inout'", "'input'", 
-		"'output'", "'reg'", "'event'", "'genvar'", "'trireg'", "'vectored'", 
-		"'scalared'", "'supply0'", "'supply1'", "'tri'", "'triand'", "'trior'", 
-		"'tri0'", "'tri1'", "'wire'", "'wand'", "'wor'", "'='", "'highz1'", "'highz0'", 
-		"'strong0'", "'pull0'", "'weak0'", "'strong1'", "'pull1'", "'weak1'", 
-		"'small'", "'medium'", "'large'", "'PATHPULSE$'", "'$'", "':'", "'function'", 
-		"'automatic'", "'endfunction'", "'task'", "'endtask'", "'pulldown'", "'pullup'", 
-		"'cmos'", "'rcmos'", "'bufif0'", "'bufif1'", "'notif0'", "'notif1'", "'nmos'", 
-		"'pmos'", "'rnmos'", "'rpmos'", "'and'", "'nand'", "'or'", "'nor'", "'xor'", 
-		"'xnor'", "'buf'", "'not'", "'tranif0'", "'tranif1'", "'rtranif1'", "'rtranif0'", 
-		"'tran'", "'rtran'", "'generate'", "'endgenerate'", "'if'", "'else'", 
-		"'case'", "'endcase'", "'for'", "'begin'", "'end'", "'assign'", "'initial'", 
-		"'always'", "'<='", "'deassign'", "'force'", "'release'", "'fork'", "'join'", 
-		"'repeat'", "'disable'", "'@'", "'*'", "'->'", "'posedge'", "'negedge'", 
-		"'wait'", "'casez'", "'casex'", "'forever'", "'while'", "'specify'", "'endspecify'", 
-		"'pulsestyle_onevent'", "'pulsestyle_ondetect'", "'showcancelled'", "'noshowcancelled'", 
-		"'=>'", "'*>'", "'ifnone'", "'+'", "'-'", "'+:'", "'-:'", "'?'", "'!'", 
-		"'~'", "'&'", "'~&'", "'|'", "'~|'", "'^'", "'~^'", "'^~'", "'/'", "'%'", 
-		"'=='", "'!='", "'==='", "'!=='", "'&&'", "'||'", "'**'", "'<'", "'>'", 
-		"'>='", "'>>'", "'<<'", "'>>>'", "'<<<'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, "Real_number", 
-		"Decimal_number", "Binary_number", "Octal_number", "Hex_number", "String", 
-		"Ifdef_macro", "Ifndef_macro", "Define_macro", "Endif_macro", "Else_macro", 
-		"Timescale_macro", "Include_macro", "Undefall_macro", "Undef_macro", "Line_macro", 
-		"One_line_comment", "Block_comment", "Escaped_identifier", "Simple_identifier", 
-		"Dollar_Identifier", "White_space"
-	};
+	public static final String[] ruleNames = makeRuleNames();
+
+	private static String[] makeLiteralNames() {
+		return new String[]{
+				null, "'config'", "';'", "'endconfig'", "'design'", "'.'", "'default'",
+				"'instance'", "'liblist'", "'cell'", "'use'", "':config'", "'endmodule'",
+				"'module'", "'macromodule'", "'#'", "'('", "','", "')'", "'{'", "'}'",
+				"'['", "']'", "'defparam'", "'localparam'", "'signed'", "'integer'",
+				"'real'", "'realtime'", "'time'", "'parameter'", "'specparam'", "'inout'",
+				"'input'", "'output'", "'reg'", "'event'", "'genvar'", "'trireg'", "'vectored'",
+				"'scalared'", "'supply0'", "'supply1'", "'tri'", "'triand'", "'trior'",
+				"'tri0'", "'tri1'", "'wire'", "'wand'", "'wor'", "'='", "'highz1'", "'highz0'",
+				"'strong0'", "'pull0'", "'weak0'", "'strong1'", "'pull1'", "'weak1'",
+				"'small'", "'medium'", "'large'", "'PATHPULSE$'", "'$'", "':'", "'function'",
+				"'automatic'", "'endfunction'", "'task'", "'endtask'", "'pulldown'",
+				"'pullup'", "'cmos'", "'rcmos'", "'bufif0'", "'bufif1'", "'notif0'",
+				"'notif1'", "'nmos'", "'pmos'", "'rnmos'", "'rpmos'", "'and'", "'nand'",
+				"'or'", "'nor'", "'xor'", "'xnor'", "'buf'", "'not'", "'tranif0'", "'tranif1'",
+				"'rtranif1'", "'rtranif0'", "'tran'", "'rtran'", "'generate'", "'endgenerate'",
+				"'if'", "'else'", "'case'", "'endcase'", "'for'", "'begin'", "'end'",
+				"'assign'", "'initial'", "'always'", "'<='", "'deassign'", "'force'",
+				"'release'", "'fork'", "'join'", "'repeat'", "'disable'", "'@'", "'*'",
+				"'->'", "'posedge'", "'negedge'", "'wait'", "'casez'", "'casex'", "'forever'",
+				"'while'", "'specify'", "'endspecify'", "'pulsestyle_onevent'", "'pulsestyle_ondetect'",
+				"'showcancelled'", "'noshowcancelled'", "'=>'", "'*>'", "'ifnone'", "'+'",
+				"'-'", "'+:'", "'-:'", "'?'", "'!'", "'~'", "'&'", "'~&'", "'|'", "'~|'",
+				"'^'", "'~^'", "'^~'", "'/'", "'%'", "'=='", "'!='", "'==='", "'!=='",
+				"'&&'", "'||'", "'**'", "'<'", "'>'", "'>='", "'>>'", "'<<'", "'>>>'",
+				"'<<<'"
+		};
+	}
+
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+	private static String[] makeSymbolicNames() {
+		return new String[]{
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, "Real_number",
+				"Decimal_number", "Binary_number", "Octal_number", "Hex_number", "String",
+				"Ifdef_macro", "Ifndef_macro", "Define_macro", "Endif_macro", "Else_macro",
+				"Timescale_macro", "Include_macro", "Undefall_macro", "Undef_macro",
+				"Line_macro", "One_line_comment", "Block_comment", "Escaped_identifier",
+				"Simple_identifier", "Dollar_Identifier", "White_space"
+		};
+	}
+
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -146,6 +158,7 @@ public class Verilog2001Lexer extends Lexer {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
+
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {

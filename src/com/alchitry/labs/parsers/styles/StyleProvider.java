@@ -1,5 +1,8 @@
 package com.alchitry.labs.parsers.styles;
 
+import com.alchitry.labs.gui.CachedStyleListener;
+import com.alchitry.labs.gui.StyledCodeEditor;
+import com.alchitry.labs.style.StyleUtil.StyleMerger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -7,11 +10,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 
-import com.alchitry.labs.gui.CachedStyleListner;
-import com.alchitry.labs.gui.StyledCodeEditor;
-import com.alchitry.labs.style.StyleUtil.StyleMerger;
-
-public abstract class StyleProvider extends CachedStyleListner implements ModifyListener {
+public abstract class StyleProvider extends CachedStyleListener implements ModifyListener {
 	protected StyledText editor;
 
 	public StyleProvider(StyledCodeEditor editor) {

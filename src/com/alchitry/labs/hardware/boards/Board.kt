@@ -1,93 +1,70 @@
-package com.alchitry.labs.hardware.boards;
+package com.alchitry.labs.hardware.boards
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import com.alchitry.labs.hardware.loaders.ProjectLoader
+import com.alchitry.labs.hardware.pinout.PinConverter
+import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor
+import com.alchitry.labs.project.builders.ProjectBuilder
+import com.alchitry.labs.widgets.IoRegion
+import java.util.*
 
-import com.alchitry.labs.hardware.loaders.ProjectLoader;
-import com.alchitry.labs.hardware.pinout.PinConverter;
-import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor;
-import com.alchitry.labs.project.builders.ProjectBuilder;
-import com.alchitry.labs.widgets.IoRegion;
+abstract class Board {
+    companion object {
+        const val ANY = -0x1
+        const val AU = 1 shl 0
+        const val CU = 1 shl 1
+        const val MOJO = 1 shl 2
+        val constraintExtensions: MutableSet<String> = HashSet()
 
-public abstract class Board {
-	public static final int ANY = 0xFFFFFFFF;
-	public static final int AU = 1 << 0;
-	public static final int CU = 1 << 1;
-	public static final int MOJO = 1 << 2;
+        @JvmField
+        val boards = listOf(AlchitryAu, AlchitryCu, Mojo)
 
-	public static final Set<String> constraintExtensions;
+        @JvmStatic
+        fun getFromName(board: String): Board? {
+            for (b in boards) {
+                if (b.name == board) return b
+            }
+            return null
+        }
 
-	public final static ArrayList<Board> boards = new ArrayList<>();
+        fun getFromProjectName(board: String): Board? {
+            for (b in boards) {
+                if (b.exampleProjectDir == board) return b
+            }
+            return null
+        }
 
-	static {
-		boards.add(new AlchitryAu());
-		boards.add(new AlchitryCu());
-		boards.add(new Mojo());
-		constraintExtensions = new HashSet<>();
-		for (Board b : boards)
-			for (String ext : b.getSupportedConstraintExtensions())
-				constraintExtensions.add(ext);
-	}
-	
-	
-	public abstract UsbDescriptor getUsbDesciptor();
+        fun getType(board: Board?): Int {
+            return when (board) {
+                is AlchitryAu -> AU
+                is AlchitryCu -> CU
+                is Mojo -> MOJO
+                else -> 0
+            }
+        }
 
-	public abstract String getFPGAName();
+        fun isType(board: Board?, type: Int): Boolean {
+            return type and getType(board) != 0
+        }
 
-	public abstract String getName();
+        init {
+            boards.forEach { board -> board.supportedConstraintExtensions.forEach { constraintExtensions.add(it) } }
+        }
+    }
 
-	public abstract String getExampleProjectDir();
+    abstract val usbDescriptor: UsbDescriptor
+    abstract val fPGAName: String
+    abstract val name: String
+    abstract val exampleProjectDir: String
+    abstract val builder: ProjectBuilder
+    abstract val loader: ProjectLoader
+    abstract val ioRegions: Array<IoRegion>
+    abstract val sVGPath: String
+    abstract val supportedConstraintExtensions: Array<String>
+    abstract val pinConverter: PinConverter
+    val type: Int
+        get() = getType(this)
 
-	public abstract ProjectBuilder getBuilder();
-
-	public abstract ProjectLoader getLoader();
-
-	public abstract IoRegion[] getIoRegions();
-
-	public abstract String getSVGPath();
-
-	public abstract String[] getSupportedConstraintExtensions();
-
-	public abstract PinConverter getPinConverter();
-
-	public static Board getFromName(String board) {
-		for (Board b : boards) {
-			if (b.getName().equals(board))
-				return b;
-		}
-		return null;
-	}
-
-	public static Board getFromProjectName(String board) {
-		for (Board b : boards) {
-			if (b.getExampleProjectDir().equals(board))
-				return b;
-		}
-		return null;
-	}
-
-	public int getType() {
-		return getType(this);
-	}
-
-	public boolean isType(int type) {
-		return isType(this, type);
-	}
-
-	public static int getType(Board board) {
-		if (AlchitryAu.class.isInstance(board))
-			return AU;
-		if (AlchitryCu.class.isInstance(board))
-			return CU;
-		if (Mojo.class.isInstance(board))
-			return MOJO;
-		return 0;
-	}
-
-	public static boolean isType(Board board, int type) {
-		if ((type & getType(board)) != 0)
-			return true;
-		return false;
-	}
+    fun isType(type: Int): Boolean {
+        return isType(this, type)
+    }
 }

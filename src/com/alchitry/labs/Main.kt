@@ -1,24 +1,26 @@
-package com.alchitry.labs.gui.main
+package com.alchitry.labs
 
-import com.alchitry.labs.Reporter
-import com.alchitry.labs.UpdateChecker
-import com.alchitry.labs.Util
+import com.alchitry.labs.gui.main.LoaderWindow
+import com.alchitry.labs.gui.main.MainWindow
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.util.logging.Level
 import kotlin.system.exitProcess
 
-const val VERSION = "B1.2.2"
+const val VERSION = "1.2.2"
 
 fun main(args: Array<String>) {
     parseCommand(args)
     Util.isGUI = true
     try {
         MainWindow.open()
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
         Util.logger.log(Level.SEVERE, "", e)
-        if (Util.envType != Util.IDE) Reporter.reportException(e)
+        if (Util.envType != Util.IDE) Reporter.reportException(e, true)
         MainWindow.saveOnCrash()
+        Settings.commit()
     }
+    runBlocking { Reporter.waitForAll() }
     return
 }
 
@@ -58,9 +60,10 @@ private fun runLoader() {
         loader = LoaderWindow()
         Util.loader = loader
         loader.open()
-    } catch (e: Exception) {
+    } catch (e: Throwable) {
         Util.logger.log(Level.SEVERE, "", e)
-        if (Util.envType != Util.IDE) Reporter.reportException(e)
+        if (Util.envType != Util.IDE) Reporter.reportException(e, true)
     }
-    System.exit(0)
+    runBlocking { Reporter.waitForAll() }
+    exitProcess(0)
 }

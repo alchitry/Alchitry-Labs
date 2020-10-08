@@ -1,18 +1,8 @@
-// Generated from LucidIndent.g4 by ANTLR 4.7.1
+// Generated from LucidIndent.g4 by ANTLR 4.8
 
 package com.alchitry.labs.parsers.lucid.indent;
 
-import java.util.List;
-
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.atn.ParserATNSimulator;
@@ -21,33 +11,51 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.List;
+
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class LucidIndentParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static {
+		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+	}
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+			new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, BLOCK_COMMENT=17, 
-		COMMENT=18, WS=19, STUFF=20;
+			T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
+			T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, BLOCK_COMMENT = 17,
+			COMMENT = 18, WS = 19, STUFF = 20;
 	public static final int
-		RULE_lucid = 0, RULE_module = 1, RULE_global = 2, RULE_elem = 3, RULE_indent = 4, 
-		RULE_always_line = 5, RULE_else_block = 6, RULE_block = 7, RULE_fluff = 8;
-	public static final String[] ruleNames = {
-		"lucid", "module", "global", "elem", "indent", "always_line", "else_block", 
-		"block", "fluff"
-	};
+			RULE_lucid = 0, RULE_module = 1, RULE_global = 2, RULE_elem = 3, RULE_indent = 4,
+			RULE_always_line = 5, RULE_else_block = 6, RULE_block = 7, RULE_fluff = 8;
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'module'", "'global'", "':'", "'always'", "'{'", "'}'", "'('", 
-		"')'", "'['", "']'", "'if'", "'for'", "'case'", "'else'", "';'", "'\\'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, "BLOCK_COMMENT", "COMMENT", "WS", "STUFF"
-	};
+	private static String[] makeRuleNames() {
+		return new String[]{
+				"lucid", "module", "global", "elem", "indent", "always_line", "else_block",
+				"block", "fluff"
+		};
+	}
+
+	public static final String[] ruleNames = makeRuleNames();
+
+	private static String[] makeLiteralNames() {
+		return new String[]{
+				null, "'module'", "'global'", "':'", "'always'", "'{'", "'}'", "'('",
+				"')'", "'['", "']'", "'if'", "'for'", "'case'", "'else'", "';'", "'\\'"
+		};
+	}
+
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+	private static String[] makeSymbolicNames() {
+		return new String[]{
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, "BLOCK_COMMENT", "COMMENT", "WS", "STUFF"
+		};
+	}
+
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -55,6 +63,7 @@ public class LucidIndentParser extends Parser {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
+
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -97,6 +106,7 @@ public class LucidIndentParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class LucidContext extends ParserRuleContext {
 		public TerminalNode EOF() { return getToken(LucidIndentParser.EOF, 0); }
 		public List<IndentContext> indent() {

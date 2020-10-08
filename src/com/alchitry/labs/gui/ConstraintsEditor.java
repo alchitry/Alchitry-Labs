@@ -1,5 +1,9 @@
 package com.alchitry.labs.gui;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.hardware.boards.AlchitryAu;
+import com.alchitry.labs.hardware.boards.Board;
+import com.alchitry.labs.widgets.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ControlAdapter;
@@ -11,21 +15,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-import com.alchitry.labs.Util;
-import com.alchitry.labs.hardware.boards.AlchitryAu;
-import com.alchitry.labs.hardware.boards.Board;
-import com.alchitry.labs.widgets.CustomTabs;
-import com.alchitry.labs.widgets.IoRegion;
-import com.alchitry.labs.widgets.SelectableSVG;
-import com.alchitry.labs.widgets.SignalSelector;
-import com.alchitry.labs.widgets.TabChild;
-
 public class ConstraintsEditor extends Composite implements TabChild {
 	private CustomTabs tabFolder;
-	private SelectableSVG svg;
-	private SignalSelector selector;
-	private ScrolledComposite selectorSC;
-	private Board board;
+	private final SelectableSVG svg;
+	private final SignalSelector selector;
+	private final ScrolledComposite selectorSC;
+	private final Board board;
 
 	public ConstraintsEditor(CustomTabs parent) {
 		super(parent, SWT.NONE);
@@ -40,7 +35,7 @@ public class ConstraintsEditor extends Composite implements TabChild {
 			}
 		});
 
-		board = new AlchitryAu();
+		board = AlchitryAu.INSTANCE;
 
 		svg = new SelectableSVG(this, board.getSVGPath(), board.getIoRegions());
 

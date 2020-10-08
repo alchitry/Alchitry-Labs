@@ -1,28 +1,23 @@
 package com.alchitry.labs.style;
 
-import org.eclipse.swt.custom.CaretEvent;
-import org.eclipse.swt.custom.CaretListener;
-import org.eclipse.swt.custom.LineStyleEvent;
-import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.graphics.Color;
-
 import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.CachedStyleListner;
+import com.alchitry.labs.gui.CachedStyleListener;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.StyleUtil.StyleMerger;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.graphics.Color;
 
-public class BracketUnderliner extends CachedStyleListner implements CaretListener {
-	private StyledText editor;
-	private static final String BRACKETS = "{}()[]";
-	private int caretPosition = -1;
-	private int oldStart, oldStop;
+public class BracketUnderliner extends CachedStyleListener implements CaretListener {
+    private final StyledText editor;
+    private static final String BRACKETS = "{}()[]";
+    private int caretPosition = -1;
+    private int oldStart, oldStop;
 
-	public BracketUnderliner(StyledText e) {
-		super();
-		editor = e;
-		oldStart = oldStop = -1;
-	}
+    public BracketUnderliner(StyledText e) {
+        super();
+        editor = e;
+        oldStart = oldStop = -1;
+    }
 
 	@Override
 	public void lineGetStyle(LineStyleEvent event) {
@@ -78,17 +73,17 @@ public class BracketUnderliner extends CachedStyleListner implements CaretListen
 				}
 
 				if (oldStart != offidx || oldStop != end) {
-					final int a[] = new int[4];
-					a[0] = oldStart;
-					a[1] = oldStop;
-					a[2] = offidx;
-					a[3] = end;
-					Util.asyncExec(new Runnable() {
+                    final int[] a = new int[4];
+                    a[0] = oldStart;
+                    a[1] = oldStop;
+                    a[2] = offidx;
+                    a[3] = end;
+                    Util.asyncExec(new Runnable() {
 
-						@Override
-						public void run() {
-							if (editor.isDisposed())
-								return;
+                        @Override
+                        public void run() {
+                            if (editor.isDisposed())
+                                return;
 							for (int i = 0; i < a.length; i++) {
 								if (a[i] >= 0 && a[i] < editor.getCharCount())
 									editor.redrawRange(a[i], 1, true);

@@ -1,12 +1,8 @@
-// Generated from LucidIndent.g4 by ANTLR 4.7.1
+// Generated from LucidIndent.g4 by ANTLR 4.8
 
 package com.alchitry.labs.parsers.lucid.indent;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.atn.LexerATNSimulator;
@@ -15,37 +11,52 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class LucidIndentLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static {
+		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+	}
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+			new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, BLOCK_COMMENT=17, 
-		COMMENT=18, WS=19, STUFF=20;
+			T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
+			T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, BLOCK_COMMENT = 17,
+			COMMENT = 18, WS = 19, STUFF = 20;
 	public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+			"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
 
 	public static String[] modeNames = {
-		"DEFAULT_MODE"
+			"DEFAULT_MODE"
 	};
 
-	public static final String[] ruleNames = {
-		"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", 
-		"T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "BLOCK_COMMENT", 
-		"COMMENT", "WS", "STUFF"
-	};
+	private static String[] makeRuleNames() {
+		return new String[]{
+				"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8",
+				"T__9", "T__10", "T__11", "T__12", "T__13", "T__14", "T__15", "BLOCK_COMMENT",
+				"COMMENT", "WS", "STUFF"
+		};
+	}
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'module'", "'global'", "':'", "'always'", "'{'", "'}'", "'('", 
-		"')'", "'['", "']'", "'if'", "'for'", "'case'", "'else'", "';'", "'\\'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, "BLOCK_COMMENT", "COMMENT", "WS", "STUFF"
-	};
+	public static final String[] ruleNames = makeRuleNames();
+
+	private static String[] makeLiteralNames() {
+		return new String[]{
+				null, "'module'", "'global'", "':'", "'always'", "'{'", "'}'", "'('",
+				"')'", "'['", "']'", "'if'", "'for'", "'case'", "'else'", "';'", "'\\'"
+		};
+	}
+
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+	private static String[] makeSymbolicNames() {
+		return new String[]{
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, "BLOCK_COMMENT", "COMMENT", "WS", "STUFF"
+		};
+	}
+
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -53,6 +64,7 @@ public class LucidIndentLexer extends Lexer {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
+
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {

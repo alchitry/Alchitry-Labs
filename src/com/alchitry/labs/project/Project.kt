@@ -201,6 +201,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
                 }
             }
             project.readDebugInfo()
+            project.checkProjectFiles()
             return project
         }
 
@@ -356,8 +357,8 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
                 br = BufferedReader(FileReader(template))
                 bw = BufferedWriter(FileWriter(path))
                 val name = fileName.split("\\.".toRegex()).toTypedArray()
-                var line: String
-                while (br.readLine().also { line = it } != null) {
+                var line = ""
+                while (br.readLine()?.also { line = it } != null) {
                     bw.write(line.replace("%NAME%", name[0]))
                     bw.write("\n")
                 }
@@ -973,6 +974,19 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
             }
         }
         return outList
+    }
+
+    fun checkProjectFiles() {
+        sourceFiles.forEach {
+            if (!it.exists()) {
+                Util.showError("File ${it.name} is missing!")
+            }
+        }
+        constraintFiles.forEach {
+            if (!it.exists()) {
+                Util.showError("File ${it.name} is missing!")
+            }
+        }
     }
 
     @Throws(IOException::class)

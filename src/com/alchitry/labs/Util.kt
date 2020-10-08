@@ -42,6 +42,7 @@ import java.util.logging.FileHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
+import javax.swing.filechooser.FileSystemView
 import kotlin.math.floor
 import kotlin.math.ln
 import kotlin.math.pow
@@ -118,6 +119,7 @@ object Util {
 
     val sourceSuffixes = arrayOf(".v", ".luc")
     val errorProviderSuffixes = arrayOf(".v", ".luc", ".acf")
+    val allFileSuffixes = arrayOf(".v", ".luc", ".acf", ".xdc", ".ucf", ".pcf", ".sdc")
 
     private var consoleLogger: BufferedWriter? = null
 
@@ -198,9 +200,12 @@ object Util {
 
     @JvmOverloads
     @JvmStatic
-    fun logException(e: Throwable?, message: String? = "An exception occurred:") {
+    fun logException(e: Throwable, message: String? = "An exception occurred:") {
         logger.log(Level.SEVERE, message, e)
         println(ExceptionUtils.getStackTrace(e), true)
+        if (Settings.ERROR_REPORTING) {
+            Reporter.reportException(e)
+        }
     }
 
     @JvmOverloads
@@ -277,7 +282,7 @@ object Util {
 
     @JvmStatic
     var workspace: String
-        get() = Settings.WORKSPACE
+        get() = Settings.WORKSPACE ?: assemblePath(FileSystemView.getFileSystemView().defaultDirectory.path, "alchitry")
         set(workspace) {
             Settings.WORKSPACE = workspace
         }

@@ -65,12 +65,12 @@ public class LucidDictionary extends Dictionary {
 		while (start > 0 && (Character.isLetterOrDigit(text.charAt(start)) || text.charAt(start) == '_'))
 			start--;
 
-		if (text.charAt(start) == '.') {
+		if (text.charAt(start) == '.' && start > 0) {
 			start--;
 			if (text.charAt(start) == ']') { // Skip bit indexes like [6] or [4:0]
 				while (start > 0 && (text.charAt(start) != '['))
 					start--;
-				start--;
+				if (start > 0) start--;
 			}
 
 			while (start >= 0 && Character.isWhitespace(text.charAt(start)))

@@ -23,10 +23,9 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 object UpdateChecker {
-    private val BASE_URL
-        get() = if (Settings.BETA_UPDATES) "https://cdn.alchitry.com/labs/beta/" else "https://cdn.alchitry.com/labs/"
+    private const val BASE_URL = "https://cdn.alchitry.com/labs/"
     private val IDE_VERSION_URL
-        get() = "${BASE_URL}ideVersion"
+        get() = if (Settings.BETA_UPDATES) "${BASE_URL}ideBetaVersion" else "${BASE_URL}ideVersion"
 
     @Throws(IOException::class)
     fun copyLibrary(from: String): Boolean {

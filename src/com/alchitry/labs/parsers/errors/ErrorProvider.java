@@ -55,7 +55,7 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 		lineErrors.clear();
 		for (SyntaxError e : errors) {
 			SyntaxError o = lineErrors.get(e.line);
-			if (o == null || (o != null && o.type > e.type)) {
+			if (o == null || o.type > e.type) {
 				lineErrors.put(e.line, e);
 			}
 		}
@@ -103,20 +103,20 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 			return lineErrors.get(line).style.underlineColor;
 		return null;
 	}
-	
+
 	@Override
 	public void modifyText(ModifyEvent e) {
 		display.timerExec(-1, updateTask);
 		display.timerExec(500, updateTask);
 	}
-	
-	private Runnable updateTask = new Runnable() {
+
+	private final Runnable updateTask = new Runnable() {
 		@Override
 		public void run() {
 			updateErrors();
 		}
 	};
-	
+
 	@Override
 	public void lineGetStyle(LineStyleEvent event) {
 		List<SyntaxError> errors = this.errors;

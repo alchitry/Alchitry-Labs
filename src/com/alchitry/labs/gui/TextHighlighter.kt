@@ -13,7 +13,7 @@ import org.eclipse.swt.events.ModifyEvent
 import org.eclipse.swt.events.ModifyListener
 import java.util.regex.MatchResult
 
-class TextHighlighter(private val editor: StyledText) : CachedStyleListner(), ModifyListener {
+class TextHighlighter(private val editor: StyledText) : CachedStyleListener(), ModifyListener {
     private var matchList: List<MatchResult>? = null
 
     fun setText(text: String) {

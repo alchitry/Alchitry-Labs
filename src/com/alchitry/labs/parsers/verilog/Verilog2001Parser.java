@@ -1,18 +1,8 @@
-// Generated from Verilog2001.g4 by ANTLR 4.7.1
+// Generated from Verilog2001.g4 by ANTLR 4.8
 
 package com.alchitry.labs.parsers.verilog;
 
-import java.util.List;
-
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.atn.ParserATNSimulator;
@@ -22,19 +12,23 @@ import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.List;
+
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Verilog2001Parser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static {
+		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+	}
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+			new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
-		T__31=32, T__32=33, T__33=34, T__34=35, T__35=36, T__36=37, T__37=38, 
+			T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, T__7 = 8, T__8 = 9,
+			T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17,
+			T__17 = 18, T__18 = 19, T__19 = 20, T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24,
+			T__24 = 25, T__25 = 26, T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31,
+			T__31 = 32, T__32 = 33, T__33 = 34, T__34 = 35, T__35 = 36, T__36 = 37, T__37 = 38,
 		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
 		T__45=46, T__46=47, T__47=48, T__48=49, T__49=50, T__50=51, T__51=52, 
 		T__52=53, T__53=54, T__54=55, T__55=56, T__56=57, T__57=58, T__58=59, 
@@ -165,155 +159,171 @@ public class Verilog2001Parser extends Parser {
 		RULE_genvar_function_identifier = 272, RULE_genvar_identifier = 273, RULE_hierarchical_block_identifier = 274, 
 		RULE_hierarchical_event_identifier = 275, RULE_hierarchical_function_identifier = 276, 
 		RULE_hierarchical_identifier = 277, RULE_hierarchical_net_identifier = 278, 
-		RULE_hierarchical_variable_identifier = 279, RULE_hierarchical_task_identifier = 280, 
-		RULE_identifier = 281, RULE_inout_port_identifier = 282, RULE_input_port_identifier = 283, 
-		RULE_instance_identifier = 284, RULE_library_identifier = 285, RULE_memory_identifier = 286, 
-		RULE_module_identifier = 287, RULE_module_instance_identifier = 288, RULE_net_identifier = 289, 
-		RULE_output_port_identifier = 290, RULE_parameter_identifier = 291, RULE_port_identifier = 292, 
-		RULE_real_identifier = 293, RULE_simple_arrayed_identifier = 294, RULE_simple_hierarchical_identifier = 295, 
-		RULE_specparam_identifier = 296, RULE_system_function_identifier = 297, 
-		RULE_system_task_identifier = 298, RULE_task_identifier = 299, RULE_terminal_identifier = 300, 
-		RULE_text_macro_identifier = 301, RULE_topmodule_identifier = 302, RULE_udp_identifier = 303, 
-		RULE_udp_instance_identifier = 304, RULE_variable_identifier = 305, RULE_simple_hierarchical_branch = 306, 
-		RULE_escaped_hierarchical_branch = 307;
-	public static final String[] ruleNames = {
-		"config_declaration", "design_statement", "config_rule_statement", "default_clause", 
-		"inst_clause", "inst_name", "liblist_clause", "cell_clause", "use_clause", 
-		"source_text", "description", "module_declaration", "module_keyword", 
-		"module_parameter_port_list", "list_of_ports", "list_of_port_declarations", 
-		"port", "port_expression", "port_reference", "port_declaration", "module_item", 
-		"module_or_generate_item", "non_port_module_item", "module_or_generate_item_declaration", 
-		"parameter_override", "local_parameter_declaration", "parameter_declaration", 
-		"parameter_declaration_", "specparam_declaration", "inout_declaration", 
-		"input_declaration", "output_declaration", "event_declaration", "genvar_declaration", 
-		"integer_declaration", "time_declaration", "real_declaration", "realtime_declaration", 
-		"reg_declaration", "net_declaration", "net_type", "output_variable_type", 
-		"real_type", "variable_type", "drive_strength", "strength0", "strength1", 
-		"charge_strength", "delay3", "delay2", "delay_value", "list_of_event_identifiers", 
-		"list_of_net_identifiers", "list_of_genvar_identifiers", "list_of_port_identifiers", 
-		"list_of_net_decl_assignments", "list_of_param_assignments", "list_of_specparam_assignments", 
-		"list_of_real_identifiers", "list_of_variable_identifiers", "list_of_variable_port_identifiers", 
-		"net_decl_assignment", "param_assignment", "specparam_assignment", "pulse_control_specparam", 
-		"error_limit_value", "reject_limit_value", "limit_value", "dimension", 
-		"range", "function_declaration", "function_item_declaration", "function_port_list", 
-		"function_port", "range_or_type", "task_declaration", "task_item_declaration", 
-		"task_port_list", "task_port_item", "tf_decl_header", "tf_declaration", 
-		"task_port_type", "block_item_declaration", "block_reg_declaration", "list_of_block_variable_identifiers", 
-		"block_variable_type", "gate_instantiation", "cmos_switch_instance", "enable_gate_instance", 
-		"mos_switch_instance", "n_input_gate_instance", "n_output_gate_instance", 
-		"pass_switch_instance", "pass_enable_switch_instance", "pull_gate_instance", 
-		"name_of_gate_instance", "pulldown_strength", "pullup_strength", "enable_terminal", 
-		"ncontrol_terminal", "pcontrol_terminal", "input_terminal", "inout_terminal", 
-		"output_terminal", "cmos_switchtype", "enable_gatetype", "mos_switchtype", 
-		"n_input_gatetype", "n_output_gatetype", "pass_en_switchtype", "pass_switchtype", 
-		"module_instantiation", "parameter_value_assignment", "list_of_parameter_assignments", 
-		"ordered_parameter_assignment", "named_parameter_assignment", "module_instance", 
-		"name_of_instance", "list_of_port_connections", "ordered_port_connection", 
-		"named_port_connection", "generated_instantiation", "generate_item_or_null", 
-		"generate_item", "generate_conditional_statement", "generate_case_statement", 
-		"genvar_case_item", "generate_loop_statement", "genvar_assignment", "generate_block", 
-		"continuous_assign", "list_of_net_assignments", "net_assignment", "initial_construct", 
-		"always_construct", "blocking_assignment", "nonblocking_assignment", "procedural_continuous_assignments", 
-		"function_blocking_assignment", "function_statement_or_null", "function_seq_block", 
-		"variable_assignment", "par_block", "seq_block", "statement", "statement_or_null", 
-		"function_statement", "delay_or_event_control", "delay_control", "disable_statement", 
-		"event_control", "event_trigger", "event_expression", "event_primary", 
-		"procedural_timing_control_statement", "wait_statement", "conditional_statement", 
-		"if_else_if_statement", "function_conditional_statement", "function_if_else_if_statement", 
-		"case_statement", "case_item", "function_case_statement", "function_case_item", 
-		"function_loop_statement", "loop_statement", "system_task_enable", "task_enable", 
-		"specify_block", "specify_item", "pulsestyle_declaration", "showcancelled_declaration", 
-		"path_declaration", "simple_path_declaration", "parallel_path_description", 
-		"full_path_description", "list_of_path_inputs", "list_of_path_outputs", 
-		"specify_input_terminal_descriptor", "specify_output_terminal_descriptor", 
-		"input_identifier", "output_identifier", "path_delay_value", "list_of_path_delay_expressions", 
-		"t_path_delay_expression", "trise_path_delay_expression", "tfall_path_delay_expression", 
-		"tz_path_delay_expression", "t01_path_delay_expression", "t10_path_delay_expression", 
-		"t0z_path_delay_expression", "tz1_path_delay_expression", "t1z_path_delay_expression", 
-		"tz0_path_delay_expression", "t0x_path_delay_expression", "tx1_path_delay_expression", 
-		"t1x_path_delay_expression", "tx0_path_delay_expression", "txz_path_delay_expression", 
-		"tzx_path_delay_expression", "path_delay_expression", "edge_sensitive_path_declaration", 
-		"parallel_edge_sensitive_path_description", "full_edge_sensitive_path_description", 
-		"data_source_expression", "edge_identifier", "state_dependent_path_declaration", 
-		"polarity_operator", "checktime_condition", "delayed_data", "delayed_reference", 
-		"end_edge_offset", "event_based_flag", "notify_reg", "remain_active_flag", 
-		"stamptime_condition", "start_edge_offset", "threshold", "timing_check_limit", 
-		"concatenation", "constant_concatenation", "constant_multiple_concatenation", 
-		"module_path_concatenation", "module_path_multiple_concatenation", "multiple_concatenation", 
-		"net_concatenation", "net_concatenation_value", "variable_concatenation", 
-		"variable_concatenation_value", "constant_function_call", "function_call", 
-		"system_function_call", "genvar_function_call", "base_expression", "constant_base_expression", 
-		"constant_expression", "constant_mintypmax_expression", "constant_range_expression", 
-		"dimension_constant_expression", "expression", "term", "lsb_constant_expression", 
-		"mintypmax_expression", "module_path_conditional_expression", "module_path_expression", 
-		"module_path_mintypmax_expression", "msb_constant_expression", "range_expression", 
-		"width_constant_expression", "constant_primary", "module_path_primary", 
-		"primary", "net_lvalue", "variable_lvalue", "unary_operator", "binary_operator", 
-		"unary_module_path_operator", "binary_module_path_operator", "number", 
-		"attribute_instance", "attr_spec", "attr_name", "arrayed_identifier", 
-		"block_identifier", "cell_identifier", "config_identifier", "escaped_arrayed_identifier", 
-		"escaped_hierarchical_identifier", "event_identifier", "function_identifier", 
-		"gate_instance_identifier", "generate_block_identifier", "genvar_function_identifier", 
-		"genvar_identifier", "hierarchical_block_identifier", "hierarchical_event_identifier", 
-		"hierarchical_function_identifier", "hierarchical_identifier", "hierarchical_net_identifier", 
-		"hierarchical_variable_identifier", "hierarchical_task_identifier", "identifier", 
-		"inout_port_identifier", "input_port_identifier", "instance_identifier", 
-		"library_identifier", "memory_identifier", "module_identifier", "module_instance_identifier", 
-		"net_identifier", "output_port_identifier", "parameter_identifier", "port_identifier", 
-		"real_identifier", "simple_arrayed_identifier", "simple_hierarchical_identifier", 
-		"specparam_identifier", "system_function_identifier", "system_task_identifier", 
-		"task_identifier", "terminal_identifier", "text_macro_identifier", "topmodule_identifier", 
-		"udp_identifier", "udp_instance_identifier", "variable_identifier", "simple_hierarchical_branch", 
-		"escaped_hierarchical_branch"
-	};
+		RULE_hierarchical_variable_identifier = 279, RULE_hierarchical_task_identifier = 280,
+			RULE_identifier = 281, RULE_inout_port_identifier = 282, RULE_input_port_identifier = 283,
+			RULE_instance_identifier = 284, RULE_library_identifier = 285, RULE_memory_identifier = 286,
+			RULE_module_identifier = 287, RULE_module_instance_identifier = 288, RULE_net_identifier = 289,
+			RULE_output_port_identifier = 290, RULE_parameter_identifier = 291, RULE_port_identifier = 292,
+			RULE_real_identifier = 293, RULE_simple_arrayed_identifier = 294, RULE_simple_hierarchical_identifier = 295,
+			RULE_specparam_identifier = 296, RULE_system_function_identifier = 297,
+			RULE_system_task_identifier = 298, RULE_task_identifier = 299, RULE_terminal_identifier = 300,
+			RULE_text_macro_identifier = 301, RULE_topmodule_identifier = 302, RULE_udp_identifier = 303,
+			RULE_udp_instance_identifier = 304, RULE_variable_identifier = 305, RULE_simple_hierarchical_branch = 306,
+			RULE_escaped_hierarchical_branch = 307;
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'config'", "';'", "'endconfig'", "'design'", "'.'", "'default'", 
-		"'instance'", "'liblist'", "'cell'", "'use'", "':config'", "'endmodule'", 
-		"'module'", "'macromodule'", "'#'", "'('", "','", "')'", "'{'", "'}'", 
-		"'['", "']'", "'defparam'", "'localparam'", "'signed'", "'integer'", "'real'", 
-		"'realtime'", "'time'", "'parameter'", "'specparam'", "'inout'", "'input'", 
-		"'output'", "'reg'", "'event'", "'genvar'", "'trireg'", "'vectored'", 
-		"'scalared'", "'supply0'", "'supply1'", "'tri'", "'triand'", "'trior'", 
-		"'tri0'", "'tri1'", "'wire'", "'wand'", "'wor'", "'='", "'highz1'", "'highz0'", 
-		"'strong0'", "'pull0'", "'weak0'", "'strong1'", "'pull1'", "'weak1'", 
-		"'small'", "'medium'", "'large'", "'PATHPULSE$'", "'$'", "':'", "'function'", 
-		"'automatic'", "'endfunction'", "'task'", "'endtask'", "'pulldown'", "'pullup'", 
-		"'cmos'", "'rcmos'", "'bufif0'", "'bufif1'", "'notif0'", "'notif1'", "'nmos'", 
-		"'pmos'", "'rnmos'", "'rpmos'", "'and'", "'nand'", "'or'", "'nor'", "'xor'", 
-		"'xnor'", "'buf'", "'not'", "'tranif0'", "'tranif1'", "'rtranif1'", "'rtranif0'", 
-		"'tran'", "'rtran'", "'generate'", "'endgenerate'", "'if'", "'else'", 
-		"'case'", "'endcase'", "'for'", "'begin'", "'end'", "'assign'", "'initial'", 
-		"'always'", "'<='", "'deassign'", "'force'", "'release'", "'fork'", "'join'", 
-		"'repeat'", "'disable'", "'@'", "'*'", "'->'", "'posedge'", "'negedge'", 
-		"'wait'", "'casez'", "'casex'", "'forever'", "'while'", "'specify'", "'endspecify'", 
-		"'pulsestyle_onevent'", "'pulsestyle_ondetect'", "'showcancelled'", "'noshowcancelled'", 
-		"'=>'", "'*>'", "'ifnone'", "'+'", "'-'", "'+:'", "'-:'", "'?'", "'!'", 
-		"'~'", "'&'", "'~&'", "'|'", "'~|'", "'^'", "'~^'", "'^~'", "'/'", "'%'", 
-		"'=='", "'!='", "'==='", "'!=='", "'&&'", "'||'", "'**'", "'<'", "'>'", 
-		"'>='", "'>>'", "'<<'", "'>>>'", "'<<<'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, null, null, "Real_number", 
-		"Decimal_number", "Binary_number", "Octal_number", "Hex_number", "String", 
-		"Ifdef_macro", "Ifndef_macro", "Define_macro", "Endif_macro", "Else_macro", 
-		"Timescale_macro", "Include_macro", "Undefall_macro", "Undef_macro", "Line_macro", 
-		"One_line_comment", "Block_comment", "Escaped_identifier", "Simple_identifier", 
-		"Dollar_Identifier", "White_space"
-	};
+	private static String[] makeRuleNames() {
+		return new String[]{
+				"config_declaration", "design_statement", "config_rule_statement", "default_clause",
+				"inst_clause", "inst_name", "liblist_clause", "cell_clause", "use_clause",
+				"source_text", "description", "module_declaration", "module_keyword",
+				"module_parameter_port_list", "list_of_ports", "list_of_port_declarations",
+				"port", "port_expression", "port_reference", "port_declaration", "module_item",
+				"module_or_generate_item", "non_port_module_item", "module_or_generate_item_declaration",
+				"parameter_override", "local_parameter_declaration", "parameter_declaration",
+				"parameter_declaration_", "specparam_declaration", "inout_declaration",
+				"input_declaration", "output_declaration", "event_declaration", "genvar_declaration",
+				"integer_declaration", "time_declaration", "real_declaration", "realtime_declaration",
+				"reg_declaration", "net_declaration", "net_type", "output_variable_type",
+				"real_type", "variable_type", "drive_strength", "strength0", "strength1",
+				"charge_strength", "delay3", "delay2", "delay_value", "list_of_event_identifiers",
+				"list_of_net_identifiers", "list_of_genvar_identifiers", "list_of_port_identifiers",
+				"list_of_net_decl_assignments", "list_of_param_assignments", "list_of_specparam_assignments",
+				"list_of_real_identifiers", "list_of_variable_identifiers", "list_of_variable_port_identifiers",
+				"net_decl_assignment", "param_assignment", "specparam_assignment", "pulse_control_specparam",
+				"error_limit_value", "reject_limit_value", "limit_value", "dimension",
+				"range", "function_declaration", "function_item_declaration", "function_port_list",
+				"function_port", "range_or_type", "task_declaration", "task_item_declaration",
+				"task_port_list", "task_port_item", "tf_decl_header", "tf_declaration",
+				"task_port_type", "block_item_declaration", "block_reg_declaration",
+				"list_of_block_variable_identifiers", "block_variable_type", "gate_instantiation",
+				"cmos_switch_instance", "enable_gate_instance", "mos_switch_instance",
+				"n_input_gate_instance", "n_output_gate_instance", "pass_switch_instance",
+				"pass_enable_switch_instance", "pull_gate_instance", "name_of_gate_instance",
+				"pulldown_strength", "pullup_strength", "enable_terminal", "ncontrol_terminal",
+				"pcontrol_terminal", "input_terminal", "inout_terminal", "output_terminal",
+				"cmos_switchtype", "enable_gatetype", "mos_switchtype", "n_input_gatetype",
+				"n_output_gatetype", "pass_en_switchtype", "pass_switchtype", "module_instantiation",
+				"parameter_value_assignment", "list_of_parameter_assignments", "ordered_parameter_assignment",
+				"named_parameter_assignment", "module_instance", "name_of_instance",
+				"list_of_port_connections", "ordered_port_connection", "named_port_connection",
+				"generated_instantiation", "generate_item_or_null", "generate_item",
+				"generate_conditional_statement", "generate_case_statement", "genvar_case_item",
+				"generate_loop_statement", "genvar_assignment", "generate_block", "continuous_assign",
+				"list_of_net_assignments", "net_assignment", "initial_construct", "always_construct",
+				"blocking_assignment", "nonblocking_assignment", "procedural_continuous_assignments",
+				"function_blocking_assignment", "function_statement_or_null", "function_seq_block",
+				"variable_assignment", "par_block", "seq_block", "statement", "statement_or_null",
+				"function_statement", "delay_or_event_control", "delay_control", "disable_statement",
+				"event_control", "event_trigger", "event_expression", "event_primary",
+				"procedural_timing_control_statement", "wait_statement", "conditional_statement",
+				"if_else_if_statement", "function_conditional_statement", "function_if_else_if_statement",
+				"case_statement", "case_item", "function_case_statement", "function_case_item",
+				"function_loop_statement", "loop_statement", "system_task_enable", "task_enable",
+				"specify_block", "specify_item", "pulsestyle_declaration", "showcancelled_declaration",
+				"path_declaration", "simple_path_declaration", "parallel_path_description",
+				"full_path_description", "list_of_path_inputs", "list_of_path_outputs",
+				"specify_input_terminal_descriptor", "specify_output_terminal_descriptor",
+				"input_identifier", "output_identifier", "path_delay_value", "list_of_path_delay_expressions",
+				"t_path_delay_expression", "trise_path_delay_expression", "tfall_path_delay_expression",
+				"tz_path_delay_expression", "t01_path_delay_expression", "t10_path_delay_expression",
+				"t0z_path_delay_expression", "tz1_path_delay_expression", "t1z_path_delay_expression",
+				"tz0_path_delay_expression", "t0x_path_delay_expression", "tx1_path_delay_expression",
+				"t1x_path_delay_expression", "tx0_path_delay_expression", "txz_path_delay_expression",
+				"tzx_path_delay_expression", "path_delay_expression", "edge_sensitive_path_declaration",
+				"parallel_edge_sensitive_path_description", "full_edge_sensitive_path_description",
+				"data_source_expression", "edge_identifier", "state_dependent_path_declaration",
+				"polarity_operator", "checktime_condition", "delayed_data", "delayed_reference",
+				"end_edge_offset", "event_based_flag", "notify_reg", "remain_active_flag",
+				"stamptime_condition", "start_edge_offset", "threshold", "timing_check_limit",
+				"concatenation", "constant_concatenation", "constant_multiple_concatenation",
+				"module_path_concatenation", "module_path_multiple_concatenation", "multiple_concatenation",
+				"net_concatenation", "net_concatenation_value", "variable_concatenation",
+				"variable_concatenation_value", "constant_function_call", "function_call",
+				"system_function_call", "genvar_function_call", "base_expression", "constant_base_expression",
+				"constant_expression", "constant_mintypmax_expression", "constant_range_expression",
+				"dimension_constant_expression", "expression", "term", "lsb_constant_expression",
+				"mintypmax_expression", "module_path_conditional_expression", "module_path_expression",
+				"module_path_mintypmax_expression", "msb_constant_expression", "range_expression",
+				"width_constant_expression", "constant_primary", "module_path_primary",
+				"primary", "net_lvalue", "variable_lvalue", "unary_operator", "binary_operator",
+				"unary_module_path_operator", "binary_module_path_operator", "number",
+				"attribute_instance", "attr_spec", "attr_name", "arrayed_identifier",
+				"block_identifier", "cell_identifier", "config_identifier", "escaped_arrayed_identifier",
+				"escaped_hierarchical_identifier", "event_identifier", "function_identifier",
+				"gate_instance_identifier", "generate_block_identifier", "genvar_function_identifier",
+				"genvar_identifier", "hierarchical_block_identifier", "hierarchical_event_identifier",
+				"hierarchical_function_identifier", "hierarchical_identifier", "hierarchical_net_identifier",
+				"hierarchical_variable_identifier", "hierarchical_task_identifier", "identifier",
+				"inout_port_identifier", "input_port_identifier", "instance_identifier",
+				"library_identifier", "memory_identifier", "module_identifier", "module_instance_identifier",
+				"net_identifier", "output_port_identifier", "parameter_identifier", "port_identifier",
+				"real_identifier", "simple_arrayed_identifier", "simple_hierarchical_identifier",
+				"specparam_identifier", "system_function_identifier", "system_task_identifier",
+				"task_identifier", "terminal_identifier", "text_macro_identifier", "topmodule_identifier",
+				"udp_identifier", "udp_instance_identifier", "variable_identifier", "simple_hierarchical_branch",
+				"escaped_hierarchical_branch"
+		};
+	}
+
+	public static final String[] ruleNames = makeRuleNames();
+
+	private static String[] makeLiteralNames() {
+		return new String[]{
+				null, "'config'", "';'", "'endconfig'", "'design'", "'.'", "'default'",
+				"'instance'", "'liblist'", "'cell'", "'use'", "':config'", "'endmodule'",
+				"'module'", "'macromodule'", "'#'", "'('", "','", "')'", "'{'", "'}'",
+				"'['", "']'", "'defparam'", "'localparam'", "'signed'", "'integer'",
+				"'real'", "'realtime'", "'time'", "'parameter'", "'specparam'", "'inout'",
+				"'input'", "'output'", "'reg'", "'event'", "'genvar'", "'trireg'", "'vectored'",
+				"'scalared'", "'supply0'", "'supply1'", "'tri'", "'triand'", "'trior'",
+				"'tri0'", "'tri1'", "'wire'", "'wand'", "'wor'", "'='", "'highz1'", "'highz0'",
+				"'strong0'", "'pull0'", "'weak0'", "'strong1'", "'pull1'", "'weak1'",
+				"'small'", "'medium'", "'large'", "'PATHPULSE$'", "'$'", "':'", "'function'",
+				"'automatic'", "'endfunction'", "'task'", "'endtask'", "'pulldown'",
+				"'pullup'", "'cmos'", "'rcmos'", "'bufif0'", "'bufif1'", "'notif0'",
+				"'notif1'", "'nmos'", "'pmos'", "'rnmos'", "'rpmos'", "'and'", "'nand'",
+				"'or'", "'nor'", "'xor'", "'xnor'", "'buf'", "'not'", "'tranif0'", "'tranif1'",
+				"'rtranif1'", "'rtranif0'", "'tran'", "'rtran'", "'generate'", "'endgenerate'",
+				"'if'", "'else'", "'case'", "'endcase'", "'for'", "'begin'", "'end'",
+				"'assign'", "'initial'", "'always'", "'<='", "'deassign'", "'force'",
+				"'release'", "'fork'", "'join'", "'repeat'", "'disable'", "'@'", "'*'",
+				"'->'", "'posedge'", "'negedge'", "'wait'", "'casez'", "'casex'", "'forever'",
+				"'while'", "'specify'", "'endspecify'", "'pulsestyle_onevent'", "'pulsestyle_ondetect'",
+				"'showcancelled'", "'noshowcancelled'", "'=>'", "'*>'", "'ifnone'", "'+'",
+				"'-'", "'+:'", "'-:'", "'?'", "'!'", "'~'", "'&'", "'~&'", "'|'", "'~|'",
+				"'^'", "'~^'", "'^~'", "'/'", "'%'", "'=='", "'!='", "'==='", "'!=='",
+				"'&&'", "'||'", "'**'", "'<'", "'>'", "'>='", "'>>'", "'<<'", "'>>>'",
+				"'<<<'"
+		};
+	}
+
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+	private static String[] makeSymbolicNames() {
+		return new String[]{
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null, null, null, "Real_number",
+				"Decimal_number", "Binary_number", "Octal_number", "Hex_number", "String",
+				"Ifdef_macro", "Ifndef_macro", "Define_macro", "Endif_macro", "Else_macro",
+				"Timescale_macro", "Include_macro", "Undefall_macro", "Undef_macro",
+				"Line_macro", "One_line_comment", "Block_comment", "Escaped_identifier",
+				"Simple_identifier", "Dollar_Identifier", "White_space"
+		};
+	}
+
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -321,6 +331,7 @@ public class Verilog2001Parser extends Parser {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
+
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -363,6 +374,7 @@ public class Verilog2001Parser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class Config_declarationContext extends ParserRuleContext {
 		public Config_identifierContext config_identifier() {
 			return getRuleContext(Config_identifierContext.class,0);

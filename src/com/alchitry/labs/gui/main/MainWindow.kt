@@ -3,6 +3,7 @@ package com.alchitry.labs.gui.main
 import com.alchitry.labs.Settings
 import com.alchitry.labs.UpdateChecker
 import com.alchitry.labs.Util
+import com.alchitry.labs.VERSION
 import com.alchitry.labs.gui.*
 import com.alchitry.labs.gui.tools.ImageCapture
 import com.alchitry.labs.gui.tools.RegInterface
@@ -110,6 +111,24 @@ object MainWindow {
         }
     }
 
+    private fun promptSettings() {
+        var prompted = false
+
+        if (!Settings.ERROR_REPORTING_PROMPTED) {
+            Settings.ERROR_REPORTING_PROMPTED = true
+            Settings.ERROR_REPORTING = Util.askQuestion("Help us improve the IDE by enabling anonymous error reporting?", "Anonymous Reporting")
+            prompted = true
+        }
+
+        if (!Settings.BETA_UPDATES_PROMPTED) {
+            Settings.BETA_UPDATES_PROMPTED = true
+            Settings.BETA_UPDATES = Util.askQuestion("Help us improve the IDE by getting beta updates?", "Beta Updates").also { if (it) Settings.CHECK_FOR_UPDATES = true }
+            prompted = true
+        }
+
+        if (prompted) mainMenu.build()
+    }
+
     /**
      * Open the window.
      */
@@ -124,6 +143,9 @@ object MainWindow {
             upgrade()
         }
         UpdateChecker.checkForUpdates()
+
+        promptSettings()
+
         while (!shell.isDisposed) {
             if (!display.readAndDispatch()) {
                 display.sleep()
@@ -574,6 +596,7 @@ object MainWindow {
         project?.openTree()
         mainMenu.build()
         mainToolbar.build()
+        shell.redraw()
     }
 
     private fun saveProject(): Boolean {

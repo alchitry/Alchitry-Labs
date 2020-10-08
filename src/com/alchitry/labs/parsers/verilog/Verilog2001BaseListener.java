@@ -1,4 +1,4 @@
-// Generated from Verilog2001.g4 by ANTLR 4.7.1
+// Generated from Verilog2001.g4 by ANTLR 4.8
 
 package com.alchitry.labs.parsers.verilog;
 
