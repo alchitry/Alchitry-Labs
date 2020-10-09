@@ -5,7 +5,7 @@ import com.alchitry.labs.Settings
 import com.alchitry.labs.UpdateChecker
 import com.alchitry.labs.Util
 import com.alchitry.labs.Util.assembleFile
-import com.alchitry.labs.Util.logException
+import com.alchitry.labs.Util.reportException
 import com.alchitry.labs.Util.showError
 import com.alchitry.labs.gui.*
 import com.alchitry.labs.gui.tools.ImageCapture
@@ -155,10 +155,10 @@ class MainMenu {
             try {
                 MainWindow.vivadoIP.generateMigCore(MainWindow.project)
             } catch (e1: InterruptedException) {
-                logException(e1, "Failed to generate MIG core!")
+                reportException(e1, "Failed to generate MIG core!")
                 showError("Failed to generate MIG core!")
             } catch (e1: IOException) {
-                logException(e1, "Failed to generate MIG core!")
+                reportException(e1, "Failed to generate MIG core!")
                 showError("Failed to generate MIG core!")
             }
         })

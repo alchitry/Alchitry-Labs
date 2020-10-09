@@ -127,7 +127,6 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
                     p?.saveListeners?.add(Listener { dict.updatePortNames() }.also { listener -> projectSaveListener = listener })
                     autoComplete = AutoComplete(this, dict)
                     isConstraint = true
-                    throw NullPointerException()
                 }
                 Util.isConstraintFile(it.name) -> {
                     isConstraint = true
@@ -243,6 +242,9 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
                 while (true) {
                     if (fileTimestamp == 0L) {
                         Util.showError("Failed to read file ${it.name}!")
+                        launch(Dispatchers.SWT) {
+                            tabFolder.close(this@StyledCodeEditor)
+                        }
                         return@launch
                     }
                     delay(1000)
@@ -366,6 +368,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
                 Util.readFile(path)
             } catch (e1: IOException) {
                 Util.logger.severe("Could not open file $path")
+                tabFolder.close(this)
                 return false
             }
         } else {

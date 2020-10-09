@@ -28,7 +28,7 @@ public class LucidToVerilog extends LucidBaseListener {
 	private Stack<AssignBlock> assignBlocks;
 	private HashSet<Dff> alwaysDffs;
 	private HashSet<Fsm> alwaysFsms;
-	private List<Module> modules;
+	private final List<Module> modules;
 	private List<Param> params;
 	private List<InstModule> instModules;
 	private ConstExprParser exprParser;
@@ -1693,10 +1693,10 @@ public class LucidToVerilog extends LucidBaseListener {
 			} else if (pt instanceof TerminalNode) {
 				continue;
 			} else {
-				Util.logger.severe("Uknown " + ctx.getText());
+				Util.logger.severe("Unknown " + ctx.getText());
 			}
 		}
-		if (bitOffset.length() > 0 || bitWidth != width.getTotalWidth()) {
+		if (bitOffset.length() > 0 && bitWidth != width.getTotalWidth()) {
 			sb.append("[").append(bitOffset.toString()).append("+").append(bitWidth - 1).append("-:").append(bitWidth).append("]");
 		}
 		return signed;

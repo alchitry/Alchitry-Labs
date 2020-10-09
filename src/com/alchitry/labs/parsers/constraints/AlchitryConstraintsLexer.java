@@ -1,12 +1,8 @@
-// Generated from AlchitryConstraints.g4 by ANTLR 4.7.1
+// Generated from AlchitryConstraints.g4 by ANTLR 4.8
 
 package com.alchitry.labs.parsers.constraints;
 
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.atn.LexerATNSimulator;
@@ -15,37 +11,52 @@ import org.antlr.v4.runtime.dfa.DFA;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AlchitryConstraintsLexer extends Lexer {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static {
+		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+	}
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+			new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, PULLUP=7, PULLDOWN=8, 
-		FREQ_UNIT=9, BASIC_NAME=10, REAL=11, INT=12, BLOCK_COMMENT=13, COMMENT=14, 
-		WS=15;
+			T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, PULLUP = 7, PULLDOWN = 8,
+			FREQ_UNIT = 9, BASIC_NAME = 10, REAL = 11, INT = 12, BLOCK_COMMENT = 13, COMMENT = 14,
+			WS = 15;
 	public static String[] channelNames = {
-		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
+			"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
 
 	public static String[] modeNames = {
-		"DEFAULT_MODE"
+			"DEFAULT_MODE"
 	};
 
-	public static final String[] ruleNames = {
-		"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "PULLUP", "PULLDOWN", 
-		"FREQ_UNIT", "BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT", 
-		"WS", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
-		"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-	};
+	private static String[] makeRuleNames() {
+		return new String[]{
+				"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "PULLUP", "PULLDOWN",
+				"FREQ_UNIT", "BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT",
+				"WS", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+				"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+		};
+	}
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'pin'", "';'", "'clock'", "'.'", "'['", "']'", "'pullup'", "'pulldown'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, "PULLUP", "PULLDOWN", "FREQ_UNIT", 
-		"BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT", "WS"
-	};
+	public static final String[] ruleNames = makeRuleNames();
+
+	private static String[] makeLiteralNames() {
+		return new String[]{
+				null, "'pin'", "';'", "'clock'", "'.'", "'['", "']'", "'pullup'", "'pulldown'"
+		};
+	}
+
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+	private static String[] makeSymbolicNames() {
+		return new String[]{
+				null, null, null, null, null, null, null, "PULLUP", "PULLDOWN", "FREQ_UNIT",
+				"BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT", "WS"
+		};
+	}
+
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -53,6 +64,7 @@ public class AlchitryConstraintsLexer extends Lexer {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
+
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {

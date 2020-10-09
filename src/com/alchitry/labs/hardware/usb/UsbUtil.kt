@@ -1,8 +1,8 @@
 package com.alchitry.labs.hardware.usb
 
 import com.alchitry.labs.Util
-import com.alchitry.labs.Util.logException
 import com.alchitry.labs.Util.println
+import com.alchitry.labs.Util.reportException
 import com.alchitry.labs.gui.DeviceSelector.DeviceSelectorRunnable
 import com.alchitry.labs.hardware.boards.AlchitryAu
 import com.alchitry.labs.hardware.boards.AlchitryCu
@@ -87,7 +87,7 @@ object UsbUtil {
                     return FtdiD2xx(dev)
                 }
             } catch (e: FTDIException) {
-                logException(e)
+                reportException(e)
             }
         }
         try {
@@ -98,7 +98,7 @@ object UsbUtil {
             LibUsb.unrefDevice(dev.device)
             return ftdi
         } catch (e: LibUsbException) {
-            logException(e)
+            reportException(e)
         }
         return null
     }
@@ -125,7 +125,7 @@ object UsbUtil {
                             println("Found board on $portName")
                         }
                     } catch (e: FTDIException) {
-                        logException(e)
+                        reportException(e)
                     }
                 }
                 if (portName == null) for (d in devices) {
@@ -160,7 +160,7 @@ object UsbUtil {
             LibUsb.unrefDevice(dev.device)
             device
         } catch (e: LibUsbException) {
-            logException(e)
+            reportException(e)
             null
         }
     }

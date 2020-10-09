@@ -1,5 +1,7 @@
 package com.alchitry.labs.gui.tools;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.hardware.RegisterInterface;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.PaintEvent;
@@ -12,18 +14,8 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.usb4java.LibUsbException;
-
-import com.alchitry.labs.Util;
-import com.alchitry.labs.hardware.RegisterInterface;
 
 public class ImageCapture {
 	private final int WIDTH = 1600;
@@ -182,7 +174,7 @@ public class ImageCapture {
 								}
 
 							} catch (LibUsbException e) {
-								Util.logException(e);
+								Util.reportException(e);
 							} finally {
 								reg.disconnect();
 

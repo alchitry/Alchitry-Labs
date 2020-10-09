@@ -148,7 +148,7 @@ public class VivadoIP {
 					Util.println("Looking for new cores...");
 					checkForNewCores(project);
 				} catch (Exception e) {
-					Util.logException(e);
+					Util.reportException(e);
 				}
 			}
 		};
@@ -162,7 +162,7 @@ public class VivadoIP {
 		}
 	}
 
-	private static ArrayList<String> blackList = new ArrayList<String>(
+	private static final ArrayList<String> blackList = new ArrayList<String>(
 			Arrays.asList("managed_ip_project", ".Xil", "ip_user_files", "project.tcl", "mig_ip.tcl"));
 
 	private File findPattern(File dir, String regex, boolean isFile) {
@@ -258,7 +258,7 @@ public class VivadoIP {
 					Util.println("Looking for new cores...", Theme.infoTextColor);
 					checkForNewCores(project);
 				} catch (Exception e) {
-					Util.logException(e);
+					Util.reportException(e);
 				}
 				try {
 					Thread.sleep(150);

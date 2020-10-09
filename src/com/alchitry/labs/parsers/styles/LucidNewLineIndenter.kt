@@ -1,7 +1,7 @@
 package com.alchitry.labs.parsers.styles
 
-import com.alchitry.labs.Util.logException
 import com.alchitry.labs.Util.println
+import com.alchitry.labs.Util.reportException
 import com.alchitry.labs.gui.StyledCodeEditor
 import com.alchitry.labs.gui.util.UndoRedo
 import com.alchitry.labs.parsers.lucid.indent.LucidIndentBaseListener
@@ -71,6 +71,7 @@ class LucidNewLineIndenter(private val editor: StyledCodeEditor, private val und
             val a = interval0.a
             val b = interval1.a.coerceAtLeast(interval1.b)
             val c = interval2.a.coerceAtLeast(interval2.b)
+            if (a < 0 || b < 0 || c < 0) return
             val start = tokens!![a].line - 1
             val end = tokens!![b].line - 1
             var end2 = end
@@ -153,7 +154,7 @@ class LucidNewLineIndenter(private val editor: StyledCodeEditor, private val und
                 }
                 e.text = newText.toString()
             } catch (ex: Exception) {
-                logException(ex, "Failed to add indents to new line!")
+                reportException(ex, "Failed to add indents to new line!")
                 println("Auto indending a new line failed! Check the logs for more details.", true)
                 System.err.println(ex.toString())
             }

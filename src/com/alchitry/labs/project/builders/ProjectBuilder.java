@@ -147,7 +147,7 @@ public abstract class ProjectBuilder {
 			projectBuilder();
 
 		} catch (Exception e) {
-			Util.logException(e, "Exception with project builder!");
+			Util.reportException(e, "Exception with project builder!");
 		} finally {
 			Util.setConsoleLogger(null);
 			if (logWriter != null)
@@ -252,7 +252,7 @@ public abstract class ProjectBuilder {
 	private ArrayList<File> mergeConstraintFiles(List<File> files) throws IOException {
 		HashMap<String, File> mergedFiles = new HashMap<>();
 		for (File cFile : files) {
-			String ext = cFile.getName().substring(cFile.getName().lastIndexOf('.'), cFile.getName().length());
+			String ext = cFile.getName().substring(cFile.getName().lastIndexOf('.'));
 			if (!mergedFiles.containsKey(ext)) {
 				File f = new File(Util.assemblePath(workFolder, "constraint", "merged_constraint" + ext));
 				mergedFiles.put(ext, f);
@@ -265,7 +265,7 @@ public abstract class ProjectBuilder {
 
 		Iterator<Entry<String, File>> it = mergedFiles.entrySet().iterator();
 		while (it.hasNext()) {
-			Entry<String, File> pair = (Map.Entry<String, File>) it.next();
+			Entry<String, File> pair = it.next();
 			mFiles.add(pair.getValue());
 		}
 

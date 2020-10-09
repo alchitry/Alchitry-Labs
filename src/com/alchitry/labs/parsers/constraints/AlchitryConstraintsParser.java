@@ -1,18 +1,8 @@
-// Generated from AlchitryConstraints.g4 by ANTLR 4.7.1
+// Generated from AlchitryConstraints.g4 by ANTLR 4.8
 
 package com.alchitry.labs.parsers.constraints;
 
-import java.util.List;
-
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.RuntimeMetaData;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.Vocabulary;
-import org.antlr.v4.runtime.VocabularyImpl;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;
 import org.antlr.v4.runtime.atn.ATNDeserializer;
 import org.antlr.v4.runtime.atn.ParserATNSimulator;
@@ -21,33 +11,51 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.List;
+
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AlchitryConstraintsParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.7.1", RuntimeMetaData.VERSION); }
+	static {
+		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+	}
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
-		new PredictionContextCache();
+			new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, PULLUP=7, PULLDOWN=8, 
-		FREQ_UNIT=9, BASIC_NAME=10, REAL=11, INT=12, BLOCK_COMMENT=13, COMMENT=14, 
-		WS=15;
+			T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, PULLUP = 7, PULLDOWN = 8,
+			FREQ_UNIT = 9, BASIC_NAME = 10, REAL = 11, INT = 12, BLOCK_COMMENT = 13, COMMENT = 14,
+			WS = 15;
 	public static final int
-		RULE_alchitry_constraints = 0, RULE_pin = 1, RULE_clock = 2, RULE_name = 3, 
-		RULE_port_name = 4, RULE_pin_name = 5, RULE_frequency = 6, RULE_array_index = 7, 
-		RULE_number = 8;
-	public static final String[] ruleNames = {
-		"alchitry_constraints", "pin", "clock", "name", "port_name", "pin_name", 
-		"frequency", "array_index", "number"
-	};
+			RULE_alchitry_constraints = 0, RULE_pin = 1, RULE_clock = 2, RULE_name = 3,
+			RULE_port_name = 4, RULE_pin_name = 5, RULE_frequency = 6, RULE_array_index = 7,
+			RULE_number = 8;
 
-	private static final String[] _LITERAL_NAMES = {
-		null, "'pin'", "';'", "'clock'", "'.'", "'['", "']'", "'pullup'", "'pulldown'"
-	};
-	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, null, "PULLUP", "PULLDOWN", "FREQ_UNIT", 
-		"BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT", "WS"
-	};
+	private static String[] makeRuleNames() {
+		return new String[]{
+				"alchitry_constraints", "pin", "clock", "name", "port_name", "pin_name",
+				"frequency", "array_index", "number"
+		};
+	}
+
+	public static final String[] ruleNames = makeRuleNames();
+
+	private static String[] makeLiteralNames() {
+		return new String[]{
+				null, "'pin'", "';'", "'clock'", "'.'", "'['", "']'", "'pullup'", "'pulldown'"
+		};
+	}
+
+	private static final String[] _LITERAL_NAMES = makeLiteralNames();
+
+	private static String[] makeSymbolicNames() {
+		return new String[]{
+				null, null, null, null, null, null, null, "PULLUP", "PULLDOWN", "FREQ_UNIT",
+				"BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT", "WS"
+		};
+	}
+
+	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
 	/**
@@ -55,6 +63,7 @@ public class AlchitryConstraintsParser extends Parser {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
+
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -97,6 +106,7 @@ public class AlchitryConstraintsParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
+
 	public static class Alchitry_constraintsContext extends ParserRuleContext {
 		public TerminalNode EOF() { return getToken(AlchitryConstraintsParser.EOF, 0); }
 		public List<PinContext> pin() {

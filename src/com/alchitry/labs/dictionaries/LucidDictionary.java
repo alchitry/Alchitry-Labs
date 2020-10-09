@@ -201,11 +201,11 @@ public class LucidDictionary extends Dictionary {
 					String sig = words.get(1);
 					if (Util.containsName(dffs, name) || Util.containsName(fsms, name)) {
 						switch (sig) {
-							case "d", "q" -> {
-								dict.add(Lucid.WIDTH_ATTR);
-								addWidth = addStructMembers(dict, width, addWidth);
-							}
-						}
+                            case "d":
+                            case "q":
+                                dict.add(Lucid.WIDTH_ATTR);
+                                addWidth = addStructMembers(dict, width, addWidth);
+                        }
 					} else {
 						InstModule im;
 						if ((im = Util.getByName(instModules, name)) != null) {
@@ -220,8 +220,11 @@ public class LucidDictionary extends Dictionary {
 								dict.add(Lucid.WIDTH_ATTR);
 							} else if (Util.containsName(inouts, name)) {
 								switch (sig) {
-									case "enable", "read", "write" -> dict.add(Lucid.WIDTH_ATTR);
-								}
+                                    case "enable":
+                                    case "read":
+                                    case "write":
+                                        dict.add(Lucid.WIDTH_ATTR);
+                                }
 							} else {
 								addWidth = addStructMembers(dict, width, addWidth);
 							}
@@ -239,8 +242,11 @@ public class LucidDictionary extends Dictionary {
 
 						if (Util.containsName(m.getInouts(), sig)) {
 							switch (words.get(2)) {
-								case "enable", "read", "write" -> dict.add(Lucid.WIDTH_ATTR);
-							}
+                                case "enable":
+                                case "read":
+                                case "write":
+                                    dict.add(Lucid.WIDTH_ATTR);
+                            }
 						} else {
 							addWidth = addStructMembers(dict, width, addWidth);
 						}

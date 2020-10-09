@@ -1,9 +1,5 @@
 package com.alchitry.labs.hardware.loaders;
 
-import java.io.IOException;
-
-import org.usb4java.LibUsbException;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.hardware.usb.UsbUtil;
@@ -11,6 +7,9 @@ import com.alchitry.labs.hardware.usb.ftdi.Ftdi;
 import com.alchitry.labs.hardware.usb.ftdi.LatticeSpi;
 import com.alchitry.labs.hardware.usb.ftdi.Mpsse.MpsseException;
 import com.alchitry.labs.hardware.usb.ftdi.enums.PortInterfaceType;
+import org.usb4java.LibUsbException;
+
+import java.io.IOException;
 
 public class CuLoader extends ProjectLoader {
 	@Override
@@ -26,7 +25,7 @@ public class CuLoader extends ProjectLoader {
 			LatticeSpi spi = new LatticeSpi(ftdi);
 			spi.eraseFlash();
 		} catch (LibUsbException | MpsseException e) {
-			Util.logException(e);
+			Util.reportException(e);
 		} finally {
 			if (ftdi != null) {
 				ftdi.usbClose();
@@ -54,11 +53,11 @@ public class CuLoader extends ProjectLoader {
 			try {
 				spi.writeBin(binFile);
 			} catch (IOException e) {
-				Util.logException(e);
+				Util.reportException(e);
 				Util.println("Failed to write bin file!", true);
 			}
 		} catch (LibUsbException | MpsseException e) {
-			Util.logException(e);
+			Util.reportException(e);
 		} finally {
 			if (ftdi != null) {
 				ftdi.usbClose();

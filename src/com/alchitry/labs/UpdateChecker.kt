@@ -61,7 +61,7 @@ object UpdateChecker {
     }
 
     fun checkForUpdates() {
-        if (Util.envType != Util.IDE && Settings.CHECK_FOR_UPDATES) GlobalScope.launch(Dispatchers.IO) {
+        if (Util.envType != Util.OS.IDE && Settings.CHECK_FOR_UPDATES) GlobalScope.launch(Dispatchers.IO) {
             val inputStream: InputStream = try {
                 URL(IDE_VERSION_URL).openStream()
             } catch (e: IOException) {
@@ -78,12 +78,12 @@ object UpdateChecker {
             if (version == null) return@launch
             val curVersion = Settings.VERSION
             if (version != curVersion) {
-                val result = Util.askQuestion("New Alchitry Labs Available", "Would you like to update the IDE to version $version now?")
+                val result = Util.askQuestion("Would you like to update the IDE to version $version now?", "New Alchitry Labs Available")
                 if (result) {
                     val website: URL = try {
                         when (Util.envType) {
-                            Util.LIN64 -> URL(BASE_URL + "alchitry-labs-" + version + "-linux.tgz")
-                            Util.WIN64 -> URL(BASE_URL + "alchitry-labs-" + version + "-windows.msi")
+                            Util.OS.LIN64 -> URL(BASE_URL + "alchitry-labs-" + version + "-linux.tgz")
+                            Util.OS.WIN64 -> URL(BASE_URL + "alchitry-labs-" + version + "-windows.msi")
                             else -> {
                                 Util.showError("Unknown IDE Type")
                                 return@launch
@@ -97,7 +97,7 @@ object UpdateChecker {
                     val fos: FileOutputStream? = null
                     val tempDir: Path
                     try {
-                        if (Util.envType == Util.LIN32 || Util.envType == Util.LIN64) {
+                        if (Util.envType == Util.OS.LIN32 || Util.envType == Util.OS.LIN64) {
                             tempDir = Files.createTempDirectory("alchitry_labs_")
                         } else {
                             tempDir = Paths.get(Util.workspace)
@@ -115,8 +115,8 @@ object UpdateChecker {
                         if (!stringPath.endsWith(File.separator)) stringPath += File.separator
                         var arcName: String? = null
                         when (Util.envType) {
-                            Util.LIN32, Util.LIN64 -> arcName = "alchitry-labs.tgz"
-                            Util.WIN32, Util.WIN64 -> arcName = "alchitry-labs.msi"
+                            Util.OS.LIN32, Util.OS.LIN64 -> arcName = "alchitry-labs.tgz"
+                            Util.OS.WIN32, Util.OS.WIN64 -> arcName = "alchitry-labs.msi"
                         }
                         val libZip = File(stringPath + arcName)
                         if (libZip.exists()) libZip.delete()
@@ -128,7 +128,7 @@ object UpdateChecker {
                         }
                         if (!dlRes.status) throw IOException()
                         val cmd: Array<String?>
-                        if (Util.envType == Util.LIN32 || Util.envType == Util.LIN64) {
+                        if (Util.envType == Util.OS.LIN32 || Util.envType == Util.OS.LIN64) {
                             ExtractUtility.untargz(libZip.path, stringPath)
                             var ideFolder: String? = null
                             val dstDir = Locations.progDir ?: throw IOException("Couldn't find project directory!")
@@ -183,7 +183,7 @@ object UpdateChecker {
                     } finally {
                         IOUtils.closeQuietly(rbc)
                         IOUtils.closeQuietly(fos)
-                        if (Util.envType == Util.LIN32 || Util.envType == Util.LIN64) {
+                        if (Util.envType == Util.OS.LIN32 || Util.envType == Util.OS.LIN64) {
                             try {
                                 FileUtils.deleteDirectory(tempDir.toFile())
                             } catch (e: IOException) {

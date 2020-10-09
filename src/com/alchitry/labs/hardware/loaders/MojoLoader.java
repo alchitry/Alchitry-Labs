@@ -1,16 +1,12 @@
 package com.alchitry.labs.hardware.loaders;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.Arrays;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.hardware.usb.SerialDevice;
 import com.alchitry.labs.hardware.usb.UsbUtil;
+
+import java.io.*;
+import java.util.Arrays;
 
 public class MojoLoader extends ProjectLoader {
 	private SerialDevice mojo;
@@ -91,7 +87,7 @@ public class MojoLoader extends ProjectLoader {
 			Util.println("Done.", Theme.successTextColor);
 
 		} catch (Exception e) {
-			Util.logException(e);
+			Util.reportException(e);
 		} finally {
 			if (mojo != null)
 				mojo.close();
@@ -250,7 +246,7 @@ public class MojoLoader extends ProjectLoader {
 
 			bin.close();
 		} catch (Exception e) {
-			Util.logException(e);
+			Util.reportException(e);
 			return;
 		} finally {
 			mojo.close();

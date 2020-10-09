@@ -124,7 +124,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
                                 }
                                 Tags.constraint -> {
                                     val att = file.getAttribute(Tags.Attributes.library)
-                                    val isLib = java.lang.Boolean.valueOf(att != null && att.value == "true")
+                                    val isLib = att?.value == "true"
                                     val cstFile = Util.assembleFile(if (isLib) Locations.COMPONENTS else project.constraintFolder, file.text)
                                     project.constraintFiles.add(cstFile)
                                 }
@@ -399,7 +399,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
             try {
                 FileUtils.copyFile(src, dest)
             } catch (e: IOException) {
-                Util.logException(e, "Failed to copy file!")
+                Util.reportException(e, "Failed to copy file!")
                 return false
             }
         }
@@ -526,7 +526,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
                 val ogName = ogFileName.substring(0, ogFileName.lastIndexOf('.'))
                 val ogExt = ogFileName.substring(ogFileName.lastIndexOf('.'))
                 val renameDialog = RenameDialog(treeMenu!!.shell, SWT.DIALOG_TRIM)
-                val newName = renameDialog.open(ogName)
+                val newName = renameDialog.open(ogName) ?: return
                 for (editor in MainWindow.tabs) {
                     if (editor is StyledCodeEditor) if (file == editor.file) {
                         MainWindow.tabFolder.close(editor) // close file if open
@@ -620,7 +620,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         if (event.button == 1 && !item.isNode) {
             val compFile = Util.assembleFile(Locations.COMPONENTS, item.name)
             val constFile = Util.assembleFile(constraintFolder, item.name)
-            if (isLibFile(constFile)) MainWindow.openFile(compFile, false) else MainWindow.openFile(Util.assembleFile(constraintFolder, item.name), true)
+            if (constraintFiles.contains(constFile)) MainWindow.openFile(constFile, true) else MainWindow.openFile(compFile, false)
         } else if (event.button == 3) {
             for (i in treeMenu!!.items) i.dispose()
             val mi = MenuItem(treeMenu, SWT.NONE)
@@ -1221,7 +1221,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
                 try {
                     builder?.build(this@Project, debug)
                 } catch (e: Exception) {
-                    Util.logException(e, "Exception with project builder!")
+                    Util.reportException(e, "Exception with project builder!")
                 }
             }
         } else {

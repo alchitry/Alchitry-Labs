@@ -1,15 +1,14 @@
 package com.alchitry.labs.hardware.debuggers;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.usb4java.LibUsbException;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.hardware.RegisterInterface;
 import com.alchitry.labs.hardware.usb.UsbUtil;
 import com.alchitry.labs.widgets.WaveSignal;
 import com.alchitry.labs.widgets.WaveSignal.TriggerType;
+import org.usb4java.LibUsbException;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MojoDebugger extends Debugger {
 	private static final int BASE_ADDR = 0xfffffff0;
@@ -35,7 +34,7 @@ public class MojoDebugger extends Debugger {
 			if (version == 2)
 				nonce = (long) regInt.read(NONCE_ADDR) & 0xffffffffL;
 		} catch (LibUsbException e) {
-			Util.logException(e, "Failed to connect");
+			Util.reportException(e, "Failed to connect");
 		}
 	}
 

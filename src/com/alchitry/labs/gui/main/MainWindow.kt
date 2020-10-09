@@ -597,13 +597,16 @@ object MainWindow {
         mainMenu.build()
         mainToolbar.build()
         shell.redraw()
+        GlobalScope.launch(Dispatchers.SWT) {
+            shell.layout()
+        }
     }
 
     private fun saveProject(): Boolean {
         try {
             project?.saveXML()
         } catch (e: IOException) {
-            Util.logException(e)
+            Util.reportException(e)
             return Util.askQuestion("Failed to save project! Continue opening new one?")
         }
         return true

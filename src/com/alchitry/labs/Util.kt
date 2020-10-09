@@ -73,14 +73,7 @@ object Util {
     var isGUI = false
     const val logFile = "alchitry-labs.log"
     var loader: LoaderWindow? = null
-    const val UNKNOWN = -1
-    const val WIN32 = 0
-    const val WIN64 = 1
-    const val LIN32 = 2
-    const val LIN64 = 3
-    const val MAC32 = 4
-    const val MAC64 = 5
-    const val IDE = 6
+    enum class OS { UNKNOWN, WIN32, WIN64, LIN32, LIN64, MAC32, MAC64, IDE }
 
     init {
         val os = System.getProperty("os.name")
@@ -107,13 +100,13 @@ object Util {
     }
 
     @JvmStatic
-    var envType = UNKNOWN
+    var envType = OS.UNKNOWN
         set(env) {
             field = env
             when (field) {
-                UNKNOWN -> osDir = null
-                WIN32, WIN64 -> osDir = "windows"
-                LIN32, LIN64, IDE -> osDir = "linux"
+                OS.UNKNOWN -> osDir = null
+                OS.WIN32, OS.WIN64 -> osDir = "windows"
+                OS.LIN32, OS.LIN64, OS.IDE -> osDir = "linux"
             }
         }
 
@@ -200,12 +193,16 @@ object Util {
 
     @JvmOverloads
     @JvmStatic
-    fun logException(e: Throwable, message: String? = "An exception occurred:") {
+    fun reportException(e: Throwable, message: String? = "An exception occurred:") {
+        printException(e, message)
+        Reporter.reportException(e)
+    }
+
+    @JvmOverloads
+    @JvmStatic
+    fun printException(e: Throwable, message: String? = "An exception occurred:") {
         logger.log(Level.SEVERE, message, e)
         println(ExceptionUtils.getStackTrace(e), true)
-        if (Settings.ERROR_REPORTING) {
-            Reporter.reportException(e)
-        }
     }
 
     @JvmOverloads
@@ -482,9 +479,9 @@ object Util {
                             val newText = buffer.toString()
                             stringBuffer.append(newText)
                             if (newText.contains("\n")) {
-                                val lines = stringBuffer.toString().split("\\r?\\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                                for (i in 0 until lines.size - 1) println(lines[i], red)
-                                stringBuffer.delete(0, stringBuffer.length - lines[lines.size - 1].length)
+                                val lines = stringBuffer.toString().split("\\r?\\n".toRegex())
+                                lines.forEachIndexed { i, it -> if (i != lines.size - 1) println(it, red) }
+                                stringBuffer.delete(0, stringBuffer.length - lines.last().length)
                             }
                         }
                         try {
@@ -654,7 +651,7 @@ object Util {
         try {
             Thread.sleep(millis)
         } catch (e: InterruptedException) {
-            logException(e, "Sleep interrupted but not important!")
+            reportException(e, "Sleep interrupted but not important!")
         }
     }
 

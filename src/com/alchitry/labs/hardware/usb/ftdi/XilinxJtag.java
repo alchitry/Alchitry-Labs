@@ -1,13 +1,13 @@
 package com.alchitry.labs.hardware.usb.ftdi;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.Theme;
 
 public class XilinxJtag {
 	private static final String LOADER_FILE = "/fpga/au_loader.bin";
@@ -15,22 +15,22 @@ public class XilinxJtag {
 	public enum Instruction {
 		EXTEST((byte) 0x26), EXTEST_PULSE((byte) 0x3C), EXTEST_TRAIN((byte) 0x3D), SAMPLE((byte) 0x01), USER1((byte) 0x02), USER2((byte) 0x03), USER3((byte) 0x22), USER4(
 				(byte) 0x23), CFG_OUT((byte) 0x04), CFG_IN((byte) 0x05), USERCODE((byte) 0x08), IDCODE((byte) 0x09), HIGHZ_IO((byte) 0x0A), JPROGRAM((byte) 0x0B), JSTART(
-						(byte) 0x0C), JSHUTDOWN((byte) 0x0D), XADC_DRP((byte) 0x37), ISC_ENABLE((byte) 0x10), ISC_PROGRAM((byte) 0x11), XSC_PROGRAM_KEY(
-								(byte) 0x12), XSC_DNA((byte) 0x17), FUSE_DNA((byte) 0x32), ISC_NOOP((byte) 0x14), ISC_DISABLE((byte) 0x16), BYPASS((byte) 0x2F);
+				(byte) 0x0C), JSHUTDOWN((byte) 0x0D), XADC_DRP((byte) 0x37), ISC_ENABLE((byte) 0x10), ISC_PROGRAM((byte) 0x11), XSC_PROGRAM_KEY(
+				(byte) 0x12), XSC_DNA((byte) 0x17), FUSE_DNA((byte) 0x32), ISC_NOOP((byte) 0x14), ISC_DISABLE((byte) 0x16), BYPASS((byte) 0x2F);
 
-		private byte code;
+		private final byte code;
 
 		public byte getCode() {
 			return code;
 		}
 
-		private Instruction(byte code) {
+		Instruction(byte code) {
 			this.code = code;
 		}
 	}
 
-	private Jtag jtag;
-	private Ftdi ftdi;
+	private final Jtag jtag;
+	private final Ftdi ftdi;
 
 	public XilinxJtag(Ftdi ftdi) {
 		this.ftdi = ftdi;
@@ -40,7 +40,7 @@ public class XilinxJtag {
 	}
 
 	public void setIR(Instruction inst) {
-		jtag.shiftIR(6, new byte[] { inst.getCode() });
+		jtag.shiftIR(6, new byte[]{inst.getCode()});
 	}
 
 	public void checkIDCODE() {
@@ -120,7 +120,7 @@ public class XilinxJtag {
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
-			Util.logException(e, "Sleep interrupted, don't really care.");
+			Util.reportException(e, "Sleep interrupted, don't really care.");
 		}
 	}
 
@@ -143,7 +143,7 @@ public class XilinxJtag {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				Util.logException(e, "Sleep interrupted, don't really care.");
+				Util.reportException(e, "Sleep interrupted, don't really care.");
 			}
 			setIR(Instruction.JPROGRAM);
 		} else {

@@ -44,9 +44,7 @@ class WelcomeDialog(parent: Shell) : Dialog(parent, SWT.DIALOG_TRIM or SWT.APPLI
         lblReleaseInfo.layoutData = GridData(SWT.HORIZONTAL, SWT.TOP, true, true, 1, 1)
         lblReleaseInfo.text = """|Welcome to version $VERSION of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback at bugspray@alchitry.com
                                  |
-                                 |This version is a massive overhaul from the previous version with tons of refactored code.
-                                 |
-                                 |The search function has been replaced with a search/replace bar. The undo/redo stack has been drastically improved. Open files are now monitored for external changes. Error reporting has been updated. A beta update channel was added. Antlr was updated to 4.8.1.
+                                 |This version reverts the JVM requirement back to Java 8. Some bugs were fixed including the one crashing .acf files. Error reporting was drastically improved (backend).
                                  |
                                  |As always, we hope you enjoy this version!""".trimMargin()
         val btnOk = Button(shell, SWT.NONE)
