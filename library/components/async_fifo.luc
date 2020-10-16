@@ -56,13 +56,15 @@ module async_fifo #(
   // write clock domain
   .clk(wclk), .rst(wrst) {
     dff waddr[ADDR_SIZE];                      // write address
-    dff wsync[2][ADDR_SIZE];                   // write sync dffs
+    dff wsync[3][ADDR_SIZE];                   // write sync dffs
+    dff gwsync[ADDR_SIZE];
   }
   
   // read clock domain
   .clk(rclk), .rst(rrst) {
     dff raddr[ADDR_SIZE];                      // read address
-    dff rsync[2][ADDR_SIZE];                   // read sync dffs
+    dff rsync[3][ADDR_SIZE];                   // read sync dffs
+    dff grsync[ADDR_SIZE];
   }
   
   // dual port RAM
@@ -73,6 +75,10 @@ module async_fifo #(
   sig raddr_gray[ADDR_SIZE];                   // gray-encoded version of raddr
   sig wrdy, rrdy;                              // write and read ready flags
   
+  sig wnext[ADDR_SIZE];
+  
+  sig read_sync[ADDR_SIZE];
+  
   always {
     // connect the clocks
     ram.wclk = wclk;
@@ -81,19 +87,24 @@ module async_fifo #(
     ram.write_en = 0;                          // default to not writing
     
     // convert the various values to their gray-encoded versions
-    waddr_gray = (waddr.q >> 1) ^ waddr.q;
-    wnext_gray = ((waddr.q+1) >> 1) ^ (waddr.q+1);
-    raddr_gray = (raddr.q >> 1) ^ raddr.q;
+    wnext = waddr.q + 1;
+    waddr_gray = waddr.q[ADDR_SIZE-1:1] ^ waddr.q;
+    wnext_gray = wnext[ADDR_SIZE-1:1] ^ wnext;
+    raddr_gray = raddr.q[ADDR_SIZE-1:1] ^ raddr.q;
+    
+    gwsync.d = waddr_gray;
+    grsync.d = raddr_gray;
     
     // cross clock domains with synchronizers
-    rsync.d = {rsync.q[0], waddr_gray};
-    wsync.d = {wsync.q[0], raddr_gray};
+    rsync.d = {rsync.q[1], rsync.q[0], gwsync.q};
+    wsync.d = {wsync.q[1], wsync.q[0], grsync.q};
     
     // if next write address isn't the read address we can write
-    wrdy = wnext_gray != wsync.q[1];
+    wrdy = wnext_gray != wsync.q[2];
+    read_sync = wsync.q[2];
     
     // if the current read address isn't the write address we can read
-    rrdy = raddr_gray != rsync.q[1];
+    rrdy = raddr_gray != rsync.q[2];
     
     // invert ready signals for full and empty
     full = !wrdy;

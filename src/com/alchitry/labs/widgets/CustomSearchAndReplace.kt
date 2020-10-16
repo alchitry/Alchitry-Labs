@@ -1,5 +1,6 @@
 package com.alchitry.labs.widgets
 
+import com.alchitry.labs.Settings
 import com.alchitry.labs.gui.Theme
 import com.alchitry.labs.gui.util.Images
 import org.eclipse.swt.SWT
@@ -8,15 +9,15 @@ import org.eclipse.swt.events.KeyAdapter
 import org.eclipse.swt.events.KeyEvent
 import org.eclipse.swt.events.KeyListener
 import org.eclipse.swt.events.ModifyListener
-import org.eclipse.swt.graphics.Font
 import org.eclipse.swt.graphics.Point
 import org.eclipse.swt.widgets.Composite
 import org.eclipse.swt.widgets.Label
 import org.eclipse.swt.widgets.Listener
+import kotlin.math.roundToInt
 
 class CustomSearchAndReplace(parent: Composite, style: Int) : Composite(parent, style) {
     companion object {
-        const val HEIGHT = 70
+        val HEIGHT = (70 * Settings.FONT_SCALE).roundToInt().coerceAtLeast(70)
     }
     private var width = 300
     private val searchText = StyledText(this, SWT.SINGLE)
@@ -59,14 +60,14 @@ class CustomSearchAndReplace(parent: Composite, style: Int) : Composite(parent, 
         caseSensitiveToggle.toolTipText = "Case sensitive"
 
         regexToggle.addListener(SWT.Selection) {
-            if (regexToggle.isChecked) caseSensitiveToggle.isChecked = true
+            if (regexToggle.checked) caseSensitiveToggle.checked = true
         }
 
         caseSensitiveToggle.addListener(SWT.Selection) {
-            if (!caseSensitiveToggle.isChecked) regexToggle.isChecked = false
+            if (!caseSensitiveToggle.checked) regexToggle.checked = false
         }
 
-        font = Font(display, "Ubuntu", 12, SWT.NORMAL)
+        font = Theme.defaultFont
 
         listOf(searchText, replaceText).forEach {
             it.background = Theme.searchBackgroundColor
@@ -87,8 +88,12 @@ class CustomSearchAndReplace(parent: Composite, style: Int) : Composite(parent, 
 
         searchLabel.font = font
         searchLabel.text = "Search:"
+        searchLabel.background = background
+        searchLabel.foreground = foreground
         replaceLabel.font = font
         replaceLabel.text = "Replace:"
+        replaceLabel.background = background
+        replaceLabel.foreground = foreground
 
         addDisposeListener {
             searchText.dispose()
@@ -109,38 +114,39 @@ class CustomSearchAndReplace(parent: Composite, style: Int) : Composite(parent, 
         setSize(width, HEIGHT)
 
         val p = nextBtn.computeSize(SWT.DEFAULT, SWT.DEFAULT)
-        val padding = (HEIGHT - p.y * 2) / 3
+        val rowHeight = (HEIGHT / 2 - 10).coerceAtLeast(p.y)
+        val padding = (HEIGHT - rowHeight * 2) / 3
+        val buttonWidth = rowHeight.coerceAtLeast(p.x)
 
-        nextBtn.setBounds(width - p.x - padding, padding, p.x, p.y)
-        prevBtn.setBounds(width - (padding * 2) - (p.x * 2), padding, p.x, p.y)
-        replaceOneBtn.setBounds(width - (padding * 2) - (p.x * 2), padding * 2 + p.y, p.x, p.y)
-        replaceAllBtn.setBounds(width - p.x - padding, padding * 2 + p.y, p.x, p.y)
+        nextBtn.setBounds(width - buttonWidth - padding, padding, buttonWidth, rowHeight)
+        prevBtn.setBounds(width - (padding * 2) - (buttonWidth * 2), padding, buttonWidth, rowHeight)
+        replaceOneBtn.setBounds(width - (padding * 2) - (buttonWidth * 2), padding * 2 + rowHeight, buttonWidth, rowHeight)
+        replaceAllBtn.setBounds(width - buttonWidth - padding, padding * 2 + rowHeight, buttonWidth, rowHeight)
 
-        caseSensitiveToggle.setBounds(padding, padding, p.x, p.y)
-        regexToggle.setBounds(padding, padding * 2 + p.y, p.x, p.y)
+        caseSensitiveToggle.setBounds(padding, padding, buttonWidth, rowHeight)
+        regexToggle.setBounds(padding, padding * 2 + rowHeight, buttonWidth, rowHeight)
 
         val replaceSize = replaceLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT)
         val searchSize = searchLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT)
-        val leftMargin = Math.max(replaceSize.x, searchSize.x) + (3 * padding) + p.x
-        val textHeight = p.y
-        val margin = (textHeight - replaceSize.y) / 2
+        val leftMargin = replaceSize.x.coerceAtLeast(searchSize.x) + (3 * padding) + buttonWidth
+        val margin = (rowHeight - replaceSize.y) / 2
 
-        searchLabel.setBounds(leftMargin - padding - searchSize.x, padding + margin, searchSize.x, p.y)
-        replaceLabel.setBounds(leftMargin - padding - replaceSize.x, (padding * 2) + p.y + margin, replaceSize.x, p.y)
+        searchLabel.setBounds(leftMargin - padding - searchSize.x, padding + margin, searchSize.x, rowHeight)
+        replaceLabel.setBounds(leftMargin - padding - replaceSize.x, (padding * 2) + rowHeight + margin, replaceSize.x, rowHeight)
 
-        val buttonMargin = padding * 3 + p.x * 2
+        val buttonMargin = padding * 3 + buttonWidth * 2
         val textBoxWidth = width - buttonMargin - leftMargin
 
         searchText.topMargin = margin
         searchText.bottomMargin = margin
         searchText.leftMargin = margin
         searchText.rightMargin = margin
-        searchText.setBounds(leftMargin, padding, textBoxWidth, textHeight)
+        searchText.setBounds(leftMargin, padding, textBoxWidth, rowHeight)
         replaceText.topMargin = margin
         replaceText.bottomMargin = margin
         replaceText.leftMargin = margin
         replaceText.rightMargin = margin
-        replaceText.setBounds(leftMargin, padding * 2 + textHeight, textBoxWidth, textHeight)
+        replaceText.setBounds(leftMargin, padding * 2 + rowHeight, textBoxWidth, rowHeight)
     }
 
     override fun computeSize(wHint: Int, hHint: Int): Point {
@@ -165,9 +171,9 @@ class CustomSearchAndReplace(parent: Composite, style: Int) : Composite(parent, 
     }
 
     val isRegex: Boolean
-        get() = regexToggle.isChecked
+        get() = regexToggle.checked
     val isCaseSensitive: Boolean
-        get() = caseSensitiveToggle.isChecked
+        get() = caseSensitiveToggle.checked
 
     override fun addKeyListener(listener: KeyListener) {
         super.addKeyListener(listener)

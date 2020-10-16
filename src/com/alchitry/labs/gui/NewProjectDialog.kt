@@ -42,7 +42,7 @@ class NewProjectDialog(parent: Shell, style: Int = SWT.DIALOG_TRIM, private val 
                 return null
             }
             val nameToFile = getExampleProjects(boardType, language, null)
-            val srcDir = File(Locations.BASE.toString() + File.separator + board.exampleProjectDir + File.separator + language + File.separator + nameToFile!![example])
+            val srcDir = Util.assembleFile(Locations.BASE.toString(), board.exampleProjectDir, language, nameToFile!![example]!!)
             if (!srcDir.exists()) {
                 Util.showError("Could not find starter code!")
                 return null
@@ -117,15 +117,18 @@ class NewProjectDialog(parent: Shell, style: Int = SWT.DIALOG_TRIM, private val 
             }
             val map = HashMap<String, String>()
             val builder = SAXBuilder()
-            val xmlFile = File(Locations.BASE.toString() + File.separator + board.exampleProjectDir + File.separator + language + File.separator + PROJECT_XML)
+            val xmlFile = Util.assembleFile(Locations.BASE.path, board.exampleProjectDir, language, PROJECT_XML)
+            Util.logger.info("xml ${xmlFile.absolutePath}")
+            Util.logger.info("Board ${board.exampleProjectDir}")
+            Util.logger.info("Base ${Locations.BASE.absolutePath}")
             val document: Document
             document = try {
                 builder.build(xmlFile) as Document
             } catch (e: JDOMException) {
-                Util.showError("Could not parse projects XML file!")
+                Util.showError("Could not parse projects XML file! ${xmlFile.absolutePath}")
                 return null
             } catch (e: IOException) {
-                Util.showError("Could not parse projects XML file!")
+                Util.showError("Could not parse projects XML file! ${xmlFile.absolutePath}")
                 return null
             }
             val library = document.rootElement

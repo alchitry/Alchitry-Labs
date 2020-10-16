@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Canvas
 import org.eclipse.swt.widgets.Composite
 import org.eclipse.swt.widgets.Display
 import org.eclipse.swt.widgets.Event
+import kotlin.math.roundToInt
 
 class CustomTab(private val folder: CustomTabs, style: Int, private var index: Int) : Canvas(folder, style) {
     private enum class MouseState {
@@ -152,7 +153,7 @@ class CustomTab(private val folder: CustomTabs, style: Int, private var index: I
         }
         if (text != null) {
             val textSize = gc.stringExtent(text)
-            gc.drawText(text, 6, (25 - textSize.y) / 2)
+            gc.drawText(text, 6, (size.y - textSize.y) / 2)
         }
     }
 
@@ -213,7 +214,7 @@ class CustomTab(private val folder: CustomTabs, style: Int, private var index: I
             gc.font = Theme.defaultFont
             val textSize = gc.stringExtent(text)
             gc.dispose()
-            return Point(textSize.x + 18 + 13, 25)
+            return Point(textSize.x + 18 + 13, (textSize.y * 1.2f).roundToInt().coerceAtLeast(25))
         }
         return Point(25, 25)
     }

@@ -63,7 +63,7 @@ public class VivadoBuilder extends ProjectBuilder {
 		Util.println("Starting Vivado...", Theme.infoTextColor);
 
 		builder = Util.runCommand(cmd);
-
+		if (builder == null) return;
 		builder.waitFor();
 
 		Thread.sleep(150);

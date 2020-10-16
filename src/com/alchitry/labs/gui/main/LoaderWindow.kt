@@ -1,7 +1,6 @@
 package com.alchitry.labs.gui.main
 
 import com.alchitry.labs.Util
-import com.alchitry.labs.Util.showError
 import com.alchitry.labs.VERSION
 import com.alchitry.labs.hardware.boards.AlchitryAu
 import com.alchitry.labs.hardware.boards.AlchitryCu
@@ -144,7 +143,7 @@ class LoaderWindow {
     private fun checkBinFileExists(): Boolean {
         val f = File(binText.text)
         if (!f.exists()) {
-            showError("Bin file could not be opened!")
+            Util.showError("Bin file could not be opened!", shell = shell)
             return false
         }
         return true

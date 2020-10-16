@@ -99,7 +99,9 @@ object MainWindow {
     }
 
     private fun upgrade() {
-        WelcomeDialog(shell).open()
+        GlobalScope.launch(Dispatchers.SWT) {
+            WelcomeDialog(shell).open()
+        }
         Settings.VERSION = VERSION
         try {
             Settings.commit()
@@ -145,6 +147,19 @@ object MainWindow {
         UpdateChecker.checkForUpdates()
 
         promptSettings()
+
+        Settings.OPEN_PROJECT?.let { openProject(File(it)) }
+        openFile(null, true)
+
+        if (project == null)
+            GlobalScope.launch(Dispatchers.SWT) {
+                if (Util.askQuestion("Open existing project (yes) or create a new project (no)?"))
+                    openProjectDialog()
+                else
+                    createNewProject()
+                if (project == null)
+                    close()
+            }
 
         while (!shell.isDisposed) {
             if (!display.readAndDispatch()) {
@@ -324,16 +339,6 @@ object MainWindow {
         }
     }
 
-    fun setTabFonts(size: Int) {
-        Settings.EDITOR_FONT_SIZE = size
-        val numEditors = tabs.size
-        for (i in 0 until numEditors) {
-            if (tabs[i] is StyledCodeEditor) {
-                (tabs[i] as StyledCodeEditor).updateFont()
-            }
-        }
-    }
-
     fun setDefaultFolder() {
         val children = sideSashForm.children
         var sash: Control? = null
@@ -464,21 +469,12 @@ object MainWindow {
             }
         })
 
-        val oldProject = Settings.OPEN_PROJECT
         tabFolder = CustomTabs(sideSashForm, SWT.NONE)
         console = CustomConsole(bottomSashForm, SWT.READ_ONLY or SWT.H_SCROLL or SWT.V_SCROLL or SWT.CANCEL or SWT.MULTI)
         bottomSashForm.weights = intArrayOf(8, 2)
         Util.console = console
         leftWidth = Settings.FILE_LIST_WIDTH
         bottomHeight = Settings.CONSOLE_HEIGHT
-
-        if (oldProject != null) openProject(File(oldProject))
-        openFile(null, true)
-
-        if (project == null)
-            GlobalScope.launch(Dispatchers.SWT) { createNewProject() }
-
-        // openSVG();
     }
 
     fun programProject(flash: Boolean, verify: Boolean) {
@@ -618,8 +614,6 @@ object MainWindow {
         val p = dialog.open()
         if (p != null) openProject(p)
         shell.isEnabled = true
-        if (project == null)
-            close()
     }
 
     fun openProject(project: Project) {
@@ -637,6 +631,7 @@ object MainWindow {
             project = Project.openXML(path, shell, tree)
             tabFolder.opened = false
         } catch (e: Exception) {
+            Util.printException(e)
             Util.showError("Encountered an error while parsing $path the error was: ${e.message}", "Error opening file!")
         }
         projectChanged()
@@ -658,6 +653,10 @@ object MainWindow {
                     return true
                 }
             }
+        }
+        if (file != null && !file.exists()) {
+            Util.showError("This file doesn't exist!")
+            return false
         }
         val codeEditor = StyledCodeEditor(tabFolder, SWT.V_SCROLL or SWT.MULTI or SWT.H_SCROLL, file, write)
         if (codeEditor.isOpen) {
@@ -705,13 +704,11 @@ object MainWindow {
         for (e in tabs) if (e is StyledCodeEditor) e.updateErrors()
     }
 
-    fun getEditorText(file: File): String? {
+    fun getEditor(file: File): StyledCodeEditor? {
         if (Util.isGUI) for (tc in tabs) {
             if (tc is StyledCodeEditor) {
                 if (file == tc.file) {
-                    val sb = StringBuilder()
-                    runBlocking(Dispatchers.SWT.immediate) { sb.append(tc.text) }
-                    return sb.toString()
+                    return tc
                 }
             }
         }

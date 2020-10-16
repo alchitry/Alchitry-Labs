@@ -7,7 +7,7 @@ import java.io.IOException
 import java.util.logging.Level
 import kotlin.system.exitProcess
 
-const val VERSION = "1.2.3"
+const val VERSION = "1.2.4"
 
 fun main(args: Array<String>) {
     parseCommand(args)
@@ -18,6 +18,7 @@ fun main(args: Array<String>) {
         Util.logger.log(Level.SEVERE, "", e)
         if (Util.envType != Util.OS.IDE) Reporter.reportException(e, true)
         MainWindow.saveOnCrash()
+    } finally {
         Settings.commit()
     }
     runBlocking { Reporter.waitForAll() }

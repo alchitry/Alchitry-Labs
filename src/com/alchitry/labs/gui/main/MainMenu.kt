@@ -96,7 +96,7 @@ class MainMenu {
                 val files = dialog.fileNames
                 val dir = dialog.filterPath
                 for (f in files) {
-                    if (MainWindow.project?.importFile(assembleFile(dir, f)) != true) showError("Failed to import \"$f\"")
+                    if (MainWindow.project?.importFile(assembleFile(dir, f)) == null) showError("Failed to import \"$f\"")
                 }
                 MainWindow.project?.updateTree()
             }
@@ -237,33 +237,16 @@ class MainMenu {
             dialog.open()
         })
         val fontMenu = createSubMenu(subMenu, "Editor Font Size")
-        createCheckItem(fontMenu, "0.75x", createSelectionAdapter {
-            MainWindow.setTabFonts(9)
-            updateCheckMenu(fontMenu.items, it.widget as MenuItem)
-        })
-        createCheckItem(fontMenu, "1x", createSelectionAdapter {
-            MainWindow.setTabFonts(12)
-            updateCheckMenu(fontMenu.items, it.widget as MenuItem)
-        })
-        createCheckItem(fontMenu, "1.25x", createSelectionAdapter {
-            MainWindow.setTabFonts(15)
-            updateCheckMenu(fontMenu.items, it.widget as MenuItem)
-        })
-        createCheckItem(fontMenu, "1.5x", createSelectionAdapter {
-            MainWindow.setTabFonts(18)
-            updateCheckMenu(fontMenu.items, it.widget as MenuItem)
-        })
-        createCheckItem(fontMenu, "1.75x", createSelectionAdapter {
-            MainWindow.setTabFonts(21)
-            updateCheckMenu(fontMenu.items, it.widget as MenuItem)
-        })
-        createCheckItem(fontMenu, "2x", createSelectionAdapter {
-            MainWindow.setTabFonts(24)
-            updateCheckMenu(fontMenu.items, it.widget as MenuItem)
-        })
-        val fontPercent = Settings.EDITOR_FONT_SIZE / 12.0
+        listOf(0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f).forEach { scale ->
+            createCheckItem(fontMenu, "${scale}x", createSelectionAdapter {
+                Settings.FONT_SCALE = scale
+                Util.showInfo("Restart the IDE to update the font size.")
+                updateCheckMenu(fontMenu.items, it.widget as MenuItem)
+            })
+        }
+        val fontPercent = Settings.FONT_SCALE
         for (mi in fontMenu.items) {
-            val mip = mi.text.substring(0, mi.text.length - 1).toDouble()
+            val mip = mi.text.substring(0, mi.text.length - 1).toFloat()
             mi.selection = mip == fontPercent
         }
 

@@ -1,13 +1,13 @@
 package com.alchitry.labs.project.builders;
 
+import com.alchitry.labs.Util;
+import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.style.ParseException;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.Theme;
-import com.alchitry.labs.style.ParseException;
 
 public class IceStormBuilder extends ProjectBuilder {
 
@@ -43,6 +43,7 @@ public class IceStormBuilder extends ProjectBuilder {
 		Util.println(yosysCommand.toString());
 
 		builder = Util.runCommand(yosysCommand);
+		if (builder == null) return;
 		builder.waitFor();
 
 		Util.println("");
@@ -67,6 +68,7 @@ public class IceStormBuilder extends ProjectBuilder {
 		arachneCommand.add(workFolder + File.separator + "alchitry.blif");
 
 		builder = Util.runCommand(arachneCommand, false);
+		if (builder == null) return;
 		builder.waitFor();
 
 		Util.println("");
@@ -79,6 +81,7 @@ public class IceStormBuilder extends ProjectBuilder {
 		icepacCommand.add(workFolder + File.separator + "alchitry.bin");
 
 		builder = Util.runCommand(icepacCommand);
+		if (builder == null) return;
 		builder.waitFor();
 
 		File binFile = new File(workFolder + File.separator + "alchitry.bin");

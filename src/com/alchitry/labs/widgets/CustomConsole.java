@@ -13,7 +13,6 @@ import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
 
@@ -64,7 +63,7 @@ public class CustomConsole extends StyledText {
             }
         });
 
-        setFont(new Font(parent.getDisplay(), "Ubuntu Mono", 12, SWT.NORMAL));
+        setFont(Theme.monoFont);
 
         final Menu consoleMenu = new Menu(this);
 
@@ -220,15 +219,17 @@ public class CustomConsole extends StyledText {
     }
 
     public void setSearch(boolean s) {
-        if (s == false) {
-            highlighter.setText(null);
+        if (!s) {
+            highlighter.setMatches(null);
             search.setText("");
-        } else if (searchActive == false || doubleClick.getWord() != null) {
+        } else if (!searchActive || doubleClick.getWord() != null) {
             String selection = doubleClick.getWord();
-            highlighter.setText(selection);
+
             search.setText(selection == null ? "" : selection);
-            if (selection != null && !selection.isEmpty())
+            if (selection != null && !selection.isEmpty()) {
+                highlighter.setText(selection);
                 doubleClick.clearWord();
+            }
         }
         searchActive = s;
 

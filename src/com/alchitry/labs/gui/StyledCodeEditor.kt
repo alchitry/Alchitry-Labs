@@ -1,6 +1,5 @@
 package com.alchitry.labs.gui
 
-import com.alchitry.labs.Settings
 import com.alchitry.labs.Util
 import com.alchitry.labs.dictionaries.AlchitryConstraintsDictionary
 import com.alchitry.labs.dictionaries.LucidDictionary
@@ -27,7 +26,6 @@ import org.eclipse.swt.custom.LineStyleListener
 import org.eclipse.swt.custom.StyledText
 import org.eclipse.swt.events.*
 import org.eclipse.swt.graphics.Color
-import org.eclipse.swt.graphics.Font
 import org.eclipse.swt.printing.PrintDialog
 import org.eclipse.swt.printing.Printer
 import org.eclipse.swt.widgets.*
@@ -37,7 +35,7 @@ import java.io.IOException
 import java.io.PrintWriter
 import java.util.*
 
-class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: File?, private val writable: Boolean) : StyledText(tabFolder, style), ModifyListener, TabChild {
+class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: File?, private var writable: Boolean) : StyledText(tabFolder, style), ModifyListener, TabChild {
     private var edited = false
     private var skipEdit = false
     val isOpen: Boolean
@@ -61,6 +59,18 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
     private val rightClickMenu = Menu(this)
     private val monitorScope = CoroutineScope(Dispatchers.IO)
     private var monitorJob: Job? = null
+
+    private val noWriteListener = VerifyListener { e ->
+        file?.let {
+            if (Util.askQuestion("This file is read only! Would you like to make a local copy to edit?", "Create editable copy?"))
+                if (MainWindow.project?.copyLibraryFile(it)?.also {
+                            GlobalScope.launch(Dispatchers.SWT) { openFile(it) }
+                        } == null) {
+                    Util.showError("Failed to copy file into project!")
+                }
+        }
+        e.doit = false
+    }
 
     init {
         // attach search to parent so that it doesn't scroll with the text
@@ -138,7 +148,6 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
             }
         }
 
-
         val tooltips = ToolTipListener(this, errorChecker)
         addMouseTrackListener(tooltips)
         addMouseMoveListener(tooltips)
@@ -148,7 +157,8 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         addModifyListener(styler)
 
         tabs = 2
-        updateFont()
+        font = Theme.monoFont
+        autoComplete?.updateFont()
         tabFolder.addTab(fileName, this)
         if (indentProvider != null) formatter = AutoFormatter(this, indentProvider)
         newLineIndenter?.let { addVerifyListener(it) }
@@ -213,19 +223,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         addDisposeListener { search.dispose() }
 
         setupMenu()
-        if (!writable) {
-            addVerifyListener { e ->
-                file?.let {
-                    if (Util.askQuestion("This file is read only! Would you like to make a local copy to edit?", "Create editable copy?"))
-                        if (MainWindow.project?.copyLibraryFile(it) == true) {
-                            GlobalScope.launch(Dispatchers.SWT) { tabFolder.close(this@StyledCodeEditor) }
-                        } else {
-                            Util.showError("Failed to copy file into project!")
-                        }
-                }
-                e.doit = false
-            }
-        }
+
         addTraverseListener { e -> e.doit = false }
         addModifyListener { ParserCache.invalidate(file) }
 
@@ -265,16 +263,11 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         }
     }
 
-    fun updateFont() {
-        val fontSize = Settings.EDITOR_FONT_SIZE
-        font = Font(display, "Ubuntu Mono", fontSize, SWT.NORMAL)
-        autoComplete?.updateFont()
-    }
+
 
     override fun dispose() {
         autoComplete?.dispose()
         search.dispose()
-        font.dispose()
         super.dispose()
     }
 
@@ -362,7 +355,9 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         setFocus()
     }
 
-    private fun openFile(path: File?): Boolean {
+    fun openFile(path: File?, writable: Boolean = this.writable): Boolean {
+        this.writable = writable
+        removeVerifyListener(noWriteListener)
         val fileContents: String = if (path != null) {
             try {
                 Util.readFile(path)
@@ -380,6 +375,8 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         edited = false
         tabFolder.setText(this, fileName)
         tabFolder.setSelection(this)
+        if (!writable)
+            addVerifyListener(noWriteListener)
         return true
     }
 
@@ -480,6 +477,8 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
                                     search.setReplaceError(false)
                                     autoComplete?.skipNext()
                                     replaceTextRange(result.start(), result.end() - result.start(), replacement)
+                                    setCaretOffset(result.end())
+                                    search(true)
                                 }
                             }
                         }

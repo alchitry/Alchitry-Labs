@@ -1,8 +1,6 @@
 package com.alchitry.labs.hardware.usb
 
 import com.alchitry.labs.Util
-import com.alchitry.labs.Util.println
-import com.alchitry.labs.Util.reportException
 import com.alchitry.labs.gui.DeviceSelector.DeviceSelectorRunnable
 import com.alchitry.labs.hardware.boards.AlchitryAu
 import com.alchitry.labs.hardware.boards.AlchitryCu
@@ -52,7 +50,7 @@ object UsbUtil {
             runBlocking(Dispatchers.SWT) { dsr.run() }
             if (dsr.result != null) {
                 dev = devs[devList.indexOf(dsr.result)]
-                println("Selected ${dsr.result}")
+                Util.println("Selected ${dsr.result}")
             }
         }
         if (dev != null) {
@@ -87,7 +85,7 @@ object UsbUtil {
                     return FtdiD2xx(dev)
                 }
             } catch (e: FTDIException) {
-                reportException(e)
+                Util.reportException(e)
             }
         }
         try {
@@ -98,7 +96,7 @@ object UsbUtil {
             LibUsb.unrefDevice(dev.device)
             return ftdi
         } catch (e: LibUsbException) {
-            reportException(e)
+            Util.reportException(e)
         }
         return null
     }
@@ -122,10 +120,10 @@ object UsbUtil {
                             d2xx.open()
                             portName = "COM" + d2xx.comPortNumber
                             d2xx.close()
-                            println("Found board on $portName")
+                            Util.println("Found board on $portName")
                         }
                     } catch (e: FTDIException) {
-                        reportException(e)
+                        Util.printException(e)
                     }
                 }
                 if (portName == null) for (d in devices) {
@@ -142,10 +140,10 @@ object UsbUtil {
                     val port = SerialPort.getCommPort(portName)
                     if (port != null) {
                         val serial = GenericSerial(port)
-                        if (serial.open()) return serial else println("Failed to open serial port $portName", true)
+                        if (serial.open()) return serial else Util.println("Failed to open serial port $portName", true)
                     }
                 }
-                println("No devices found...", true)
+                Util.println("No devices found...", true)
                 return null
             }
             val device: SerialDevice
@@ -160,7 +158,7 @@ object UsbUtil {
             LibUsb.unrefDevice(dev.device)
             device
         } catch (e: LibUsbException) {
-            reportException(e)
+            Util.printException(e)
             null
         }
     }

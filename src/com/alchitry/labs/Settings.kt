@@ -22,6 +22,11 @@ object Settings {
         operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) = pref.putInt(key, value)
     }
 
+    class FloatSetting(private val key: String, private val default: Float) {
+        operator fun getValue(thisRef: Any?, property: KProperty<*>): Float = pref.getFloat(key, default)
+        operator fun setValue(thisRef: Any?, property: KProperty<*>, value: Float) = pref.putFloat(key, value)
+    }
+
 
     fun commit() {
         try {
@@ -49,7 +54,7 @@ object Settings {
     var ICEPACK_LOC by StringSetting("ICEPACK_LOC", null)
     var YOSYS_LOC by StringSetting("YOSYS_LOC", null)
     var ARACHNE_LOC by StringSetting("ARACHNE_LOC", null)
-    var EDITOR_FONT_SIZE by IntSetting("EDITOR_FONT_SIZE", 12)
+    var FONT_SCALE by FloatSetting("FONT_SCALE", 1.0f)
     var CHECK_FOR_UPDATES by BooleanSetting("CHECK_FOR_UPDATES", true)
     var BETA_UPDATES by BooleanSetting("BETA_UPDATES", false)
     var BETA_UPDATES_PROMPTED by BooleanSetting("BETA_UPDATES_PROMPTED", false)
