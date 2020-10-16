@@ -112,6 +112,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 		cmd.add(bashScript);
 
 		builder = Util.runCommand(cmd);
+		if (builder == null) return;
 		builder.waitFor();
 		Util.sleep(100);
 

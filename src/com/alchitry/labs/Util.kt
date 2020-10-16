@@ -73,6 +73,7 @@ object Util {
     var isGUI = false
     const val logFile = "alchitry-labs.log"
     var loader: LoaderWindow? = null
+
     enum class OS { UNKNOWN, WIN32, WIN64, LIN32, LIN64, MAC32, MAC64, IDE }
 
     init {
@@ -104,9 +105,9 @@ object Util {
         set(env) {
             field = env
             when (field) {
-                OS.UNKNOWN -> osDir = null
                 OS.WIN32, OS.WIN64 -> osDir = "windows"
                 OS.LIN32, OS.LIN64, OS.IDE -> osDir = "linux"
+                else -> osDir = null
             }
         }
 
@@ -439,7 +440,8 @@ object Util {
 
     @JvmStatic
     fun getFileText(file: File): String? {
-        var t = MainWindow.getEditorText(file)
+        var t = MainWindow.getEditor(file)?.let { runBlocking(Dispatchers.SWT.immediate) { it.text } }
+
         if (t == null) try {
             t = readFile(file)
         } catch (e: IOException) {
@@ -587,30 +589,28 @@ object Util {
     }
 
     @JvmStatic
-    fun assembleLinuxPath(vararg pieces: String?): String {
-        val out = java.lang.String.join("/", *pieces)
-        return out.replace("//", "/") // remove any duplicate separators
+    fun assembleLinuxPath(vararg pieces: String): String {
+        return pieces.filter { it.isNotBlank() }.joinToString("/")
     }
 
     @JvmStatic
-    fun assemblePath(parent: File, vararg pieces: String?): String {
-        val out = parent.absolutePath + File.separator + java.lang.String.join(File.separator, *pieces)
-        return out.replace(File.separator + File.separator, File.separator) // remove any duplicate separators
+    fun assemblePath(parent: File, vararg pieces: String): String {
+        return parent.absolutePath + File.separator + pieces.filter { it.isNotBlank() }.joinToString(File.separator)
     }
 
     @JvmStatic
-    fun assemblePath(vararg pieces: String?): String {
-        val out = java.lang.String.join(File.separator, *pieces)
-        return out.replace(File.separator + File.separator, File.separator) // remove any duplicate separators
+    fun assemblePath(vararg pieces: String): String {
+        return pieces.filter { it.isNotBlank() }.joinToString(File.separator)
     }
 
+
     @JvmStatic
-    fun assembleFile(parent: File, vararg pieces: String?): File {
+    fun assembleFile(parent: File, vararg pieces: String): File {
         return File(assemblePath(parent, *pieces))
     }
 
     @JvmStatic
-    fun assembleFile(vararg pieces: String?): File {
+    fun assembleFile(vararg pieces: String): File {
         return File(assemblePath(*pieces))
     }
 

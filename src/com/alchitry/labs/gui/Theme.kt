@@ -5,110 +5,68 @@ import org.eclipse.swt.SWT
 import org.eclipse.swt.graphics.Color
 import org.eclipse.swt.graphics.Font
 import org.eclipse.swt.widgets.Display
+import kotlin.math.roundToInt
 
 object Theme {
-    @JvmField
-	var set = false
-    @JvmField
-	var mainAccentColor: Color? = null
-    var darkAccentColor: Color? = null
-    @JvmField
-	var moduleColor: Color? = null
-    @JvmField
-	var keyWordColor: Color? = null
-    @JvmField
-	var valueColor: Color? = null
-    @JvmField
-	var varTypeColor: Color? = null
-    @JvmField
-	var operatorColor: Color? = null
-    @JvmField
-	var commentColor: Color? = null
-    @JvmField
-	var stringColor: Color? = null
-    @JvmField
-	var constColor: Color? = null
-    @JvmField
-	var nameSpaceColor: Color? = null
-    @JvmField
-	var functionColor: Color? = null
-    var instantiationColor: Color? = null
-    @JvmField
-	var editorBackgroundColor: Color? = null
-    @JvmField
-	var editorForegroundColor: Color? = null
-    @JvmField
-	var comboBackgroundColor: Color? = null
-    @JvmField
-	var editorTextSelectedColor: Color? = null
-    @JvmField
-	var bulletTextColor: Color? = null
-    @JvmField
-	var highlightedLineColor: Color? = null
-    @JvmField
-	var highlightedWordColor: Color? = null
-    var tabBackgroundColor: Color? = null
-    var tabForegroundColor: Color? = null
-    var tabSelectedForegroundColor: Color? = null
-    var tabSelectedBackgroundColor: Color? = null
-    @JvmField
-	var windowBackgroundColor: Color? = null
-    @JvmField
-	var windowForegroundColor: Color? = null
-    @JvmField
-	var treeSelectedFocusedColor: Color? = null
-    @JvmField
-	var treeSelectedColor: Color? = null
-    @JvmField
-	var treeSelectedForegroundColor: Color? = null
-    @JvmField
-	var treeHoverColor: Color? = null
-    @JvmField
-	var toolBarHoverColor: Color? = null
-    @JvmField
-	var toolBarClickColor: Color? = null
-    @JvmField
-	var consoleBackgroundColor: Color? = null
-    @JvmField
-	var consoleForegoundColor: Color? = null
-    @JvmField
-	var successTextColor: Color? = null
-    @JvmField
-	var errorTextColor: Color? = null
-    @JvmField
-	var warningTextColor: Color? = null
-    @JvmField
-	var infoTextColor: Color? = null
-    @JvmField
-	var debugTextColor: Color? = null
-    @JvmField
-	var autocompleteBackgroundColor: Color? = null
-    @JvmField
-	var autocompleteForegroundColor: Color? = null
-    @JvmField
-	var autocompleteHighlightColor: Color? = null
-    @JvmField
-	var searchBackgroundColor: Color? = null
-    @JvmField
-	var searchForegroundColor: Color? = null
-    var bracketUnderlineColor: Color? = null
-    var clockMarkerColor: Color? = null
-    var tabErrorTextColor: Color? = null
-    var tabWarningTextColor: Color? = null
-    var tabNormalTextColor: Color? = null
-    var tabHoverTextColor: Color? = null
-    @JvmField
-	var waveButtonHoverColor: Color? = null
-    @JvmField
-	var waveButtonActiveColor: Color? = null
-    @JvmField
-	var waveGridColor: Color? = null
-    @JvmField
-	var waveCursorColor: Color? = null
-    @JvmField
-	var defaultFont: Font? = null
-    @JvmField
-	var boldFont: Font? = null
+    var set = false
+    lateinit var mainAccentColor: Color
+    lateinit var darkAccentColor: Color
+    lateinit var moduleColor: Color
+    lateinit var keyWordColor: Color
+    lateinit var valueColor: Color
+    lateinit var varTypeColor: Color
+    lateinit var operatorColor: Color
+    lateinit var commentColor: Color
+    lateinit var stringColor: Color
+    lateinit var constColor: Color
+    lateinit var nameSpaceColor: Color
+    lateinit var functionColor: Color
+    lateinit var instantiationColor: Color
+    lateinit var editorBackgroundColor: Color
+    lateinit var editorForegroundColor: Color
+    lateinit var comboBackgroundColor: Color
+    lateinit var editorTextSelectedColor: Color
+    lateinit var bulletTextColor: Color
+    lateinit var highlightedLineColor: Color
+    lateinit var highlightedWordColor: Color
+    lateinit var tabBackgroundColor: Color
+    lateinit var tabForegroundColor: Color
+    lateinit var tabSelectedForegroundColor: Color
+    lateinit var tabSelectedBackgroundColor: Color
+    lateinit var windowBackgroundColor: Color
+    lateinit var windowForegroundColor: Color
+    lateinit var treeSelectedFocusedColor: Color
+    lateinit var treeSelectedColor: Color
+    lateinit var treeSelectedForegroundColor: Color
+    lateinit var treeHoverColor: Color
+    lateinit var toolBarHoverColor: Color
+    lateinit var toolBarClickColor: Color
+    lateinit var consoleBackgroundColor: Color
+    lateinit var consoleForegoundColor: Color
+    lateinit var successTextColor: Color
+    lateinit var errorTextColor: Color
+    lateinit var warningTextColor: Color
+    lateinit var infoTextColor: Color
+    lateinit var debugTextColor: Color
+    lateinit var autocompleteBackgroundColor: Color
+    lateinit var autocompleteForegroundColor: Color
+    lateinit var autocompleteHighlightColor: Color
+    lateinit var searchBackgroundColor: Color
+    lateinit var searchForegroundColor: Color
+    lateinit var bracketUnderlineColor: Color
+    lateinit var clockMarkerColor: Color
+    lateinit var tabErrorTextColor: Color
+    lateinit var tabWarningTextColor: Color
+    lateinit var tabNormalTextColor: Color
+    lateinit var tabHoverTextColor: Color
+    lateinit var waveButtonHoverColor: Color
+    lateinit var waveButtonActiveColor: Color
+    lateinit var waveGridColor: Color
+    lateinit var waveCursorColor: Color
+    lateinit var defaultFont: Font
+    lateinit var boldFont: Font
+    lateinit var monoFont: Font
+
     fun init(display: Display) {
         initColors(display)
         initFonts(display)
@@ -230,67 +188,70 @@ object Theme {
     }
 
     private fun initFonts(display: Display) {
-        defaultFont = Font(display, "Ubuntu", 12, SWT.NORMAL)
-        boldFont = Font(display, "Ubuntu", 12, SWT.BOLD)
+        val fontSize = (12 * Settings.FONT_SCALE).roundToInt()
+        defaultFont = Font(display, "Ubuntu", fontSize, SWT.NORMAL)
+        boldFont = Font(display, "Ubuntu", fontSize, SWT.BOLD)
+        monoFont = Font(display, "Ubuntu Mono", fontSize, SWT.NORMAL)
     }
 
     fun dispose() {
-        mainAccentColor!!.dispose()
-        darkAccentColor!!.dispose()
-        moduleColor!!.dispose()
-        keyWordColor!!.dispose()
-        valueColor!!.dispose()
-        varTypeColor!!.dispose()
-        operatorColor!!.dispose()
-        commentColor!!.dispose()
-        stringColor!!.dispose()
-        constColor!!.dispose()
-        nameSpaceColor!!.dispose()
-        functionColor!!.dispose()
-        instantiationColor!!.dispose()
-        comboBackgroundColor!!.dispose()
-        editorBackgroundColor!!.dispose()
-        editorForegroundColor!!.dispose()
-        editorTextSelectedColor!!.dispose()
-        bulletTextColor!!.dispose()
-        highlightedLineColor!!.dispose()
-        highlightedWordColor!!.dispose()
-        tabSelectedBackgroundColor!!.dispose()
-        tabSelectedForegroundColor!!.dispose()
-        windowBackgroundColor!!.dispose()
-        windowForegroundColor!!.dispose()
-        tabBackgroundColor!!.dispose()
-        tabForegroundColor!!.dispose()
-        treeSelectedFocusedColor!!.dispose()
-        treeSelectedColor!!.dispose()
-        treeSelectedForegroundColor!!.dispose()
-        treeHoverColor!!.dispose()
-        toolBarHoverColor!!.dispose()
-        toolBarClickColor!!.dispose()
-        consoleBackgroundColor!!.dispose()
-        consoleForegoundColor!!.dispose()
-        successTextColor!!.dispose()
-        errorTextColor!!.dispose()
-        warningTextColor!!.dispose()
-        infoTextColor!!.dispose()
-        debugTextColor!!.dispose()
-        tabErrorTextColor!!.dispose()
-        tabWarningTextColor!!.dispose()
-        tabNormalTextColor!!.dispose()
-        tabHoverTextColor!!.dispose()
-        autocompleteBackgroundColor!!.dispose()
-        autocompleteForegroundColor!!.dispose()
-        autocompleteHighlightColor!!.dispose()
-        searchBackgroundColor!!.dispose()
-        searchForegroundColor!!.dispose()
-        bracketUnderlineColor!!.dispose()
-        clockMarkerColor!!.dispose()
-        waveButtonHoverColor!!.dispose()
-        waveButtonActiveColor!!.dispose()
-        waveGridColor!!.dispose()
-        waveCursorColor!!.dispose()
-        defaultFont!!.dispose()
-        boldFont!!.dispose()
+        mainAccentColor.dispose()
+        darkAccentColor.dispose()
+        moduleColor.dispose()
+        keyWordColor.dispose()
+        valueColor.dispose()
+        varTypeColor.dispose()
+        operatorColor.dispose()
+        commentColor.dispose()
+        stringColor.dispose()
+        constColor.dispose()
+        nameSpaceColor.dispose()
+        functionColor.dispose()
+        instantiationColor.dispose()
+        comboBackgroundColor.dispose()
+        editorBackgroundColor.dispose()
+        editorForegroundColor.dispose()
+        editorTextSelectedColor.dispose()
+        bulletTextColor.dispose()
+        highlightedLineColor.dispose()
+        highlightedWordColor.dispose()
+        tabSelectedBackgroundColor.dispose()
+        tabSelectedForegroundColor.dispose()
+        windowBackgroundColor.dispose()
+        windowForegroundColor.dispose()
+        tabBackgroundColor.dispose()
+        tabForegroundColor.dispose()
+        treeSelectedFocusedColor.dispose()
+        treeSelectedColor.dispose()
+        treeSelectedForegroundColor.dispose()
+        treeHoverColor.dispose()
+        toolBarHoverColor.dispose()
+        toolBarClickColor.dispose()
+        consoleBackgroundColor.dispose()
+        consoleForegoundColor.dispose()
+        successTextColor.dispose()
+        errorTextColor.dispose()
+        warningTextColor.dispose()
+        infoTextColor.dispose()
+        debugTextColor.dispose()
+        tabErrorTextColor.dispose()
+        tabWarningTextColor.dispose()
+        tabNormalTextColor.dispose()
+        tabHoverTextColor.dispose()
+        autocompleteBackgroundColor.dispose()
+        autocompleteForegroundColor.dispose()
+        autocompleteHighlightColor.dispose()
+        searchBackgroundColor.dispose()
+        searchForegroundColor.dispose()
+        bracketUnderlineColor.dispose()
+        clockMarkerColor.dispose()
+        waveButtonHoverColor.dispose()
+        waveButtonActiveColor.dispose()
+        waveGridColor.dispose()
+        waveCursorColor.dispose()
+        defaultFont.dispose()
+        boldFont.dispose()
+        monoFont.dispose()
         set = false
     }
 }

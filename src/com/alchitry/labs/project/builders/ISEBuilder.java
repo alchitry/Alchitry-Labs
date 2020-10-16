@@ -63,27 +63,27 @@ public class ISEBuilder extends ProjectBuilder {
 			if (!Util.askQuestion("ISE is Out of Date", "Only version 14.7 of ISE is supported. Continue anyway?"))
 				return;
 
-		ArrayList<String> cmd = new ArrayList<>();
-		cmd.add(planAhead);
-		cmd.add("-nojournal");
-		cmd.add("-nolog");
-		cmd.add("-mode");
-		cmd.add("batch");
-		cmd.add("-source");
-		cmd.add(tclScript.getAbsolutePath());
+        ArrayList<String> cmd = new ArrayList<>();
+        cmd.add(planAhead);
+        cmd.add("-nojournal");
+        cmd.add("-nolog");
+        cmd.add("-mode");
+        cmd.add("batch");
+        cmd.add("-source");
+        cmd.add(tclScript.getAbsolutePath());
 
-		builder = Util.runCommand(cmd);
+        builder = Util.runCommand(cmd);
+        if (builder == null) return;
+        builder.waitFor();
 
-		builder.waitFor();
-
-		File binFile = Util.assembleFile(workFolder, projectDir, project.getProjectName(), project.getProjectName() + ".runs", "impl_1",
-				project.getTopModule().getName().split("\\.")[0] + "_0.bin");
-		if (binFile.exists()) {
-			FileUtils.copyFile(binFile, Util.assembleFile(workFolder, "alchitry.bin"));
-			Util.println("");
-			Util.println("Finished building project.", Theme.successTextColor);
-		} else {
-			Util.println("");
+        File binFile = Util.assembleFile(workFolder, projectDir, project.getProjectName(), project.getProjectName() + ".runs", "impl_1",
+                project.getTopModule().getName().split("\\.")[0] + "_0.bin");
+        if (binFile.exists()) {
+            FileUtils.copyFile(binFile, Util.assembleFile(workFolder, "alchitry.bin"));
+            Util.println("");
+            Util.println("Finished building project.", Theme.successTextColor);
+        } else {
+            Util.println("");
 			Util.println("Bin file (" + binFile.getAbsolutePath() + ") could not be found! The build probably failed.", true);
 		}
 	}

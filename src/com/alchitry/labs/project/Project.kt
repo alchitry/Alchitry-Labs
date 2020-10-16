@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.swt.SWT
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.eclipse.swt.SWT
@@ -241,13 +242,14 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
     }
 
     init {
-        if (shell != null)
-            if (tree != null) {
+        if (shell != null && tree != null) {
+            GlobalScope.launch(Dispatchers.SWT) {
                 treeMenu = Menu(shell, SWT.POP_UP)
                 tree.menu = treeMenu
                 updateTree()
                 openTree()
             }
+        }
     }
 
     fun addControlListener(listener: ControlListener?) {
@@ -374,33 +376,34 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         return false
     }
 
-    fun copyLibraryFile(src: File): Boolean {
+    fun copyLibraryFile(src: File): File? {
         val isSrc = sourceFiles.remove(src)
         if (!isSrc) constraintFiles.remove(src)
-        if (!importFile(src)) {
+        var newFile: File? = null
+        if (importFile(src)?.also { newFile = it } == null) {
             println("Import returned false!")
             if (isSrc) sourceFiles.add(src) else constraintFiles.add(src)
-            return false
+            return null
         }
         updateTree()
-        return true
+        return newFile
     }
 
-    fun importFile(src: File): Boolean {
+    fun importFile(src: File): File? {
         val fileName = src.name
         val dest = when {
             Util.isConstraintFile(fileName) -> Util.assembleFile(constraintFolder.toString(), fileName)
             Util.isSourceFile(fileName) -> Util.assembleFile(sourceFolder.toString(), fileName)
-            else -> return false
+            else -> return null
         }
         val exists = dest.exists()
         if (dest != src) {
-            if (exists && !Util.askQuestion("A file with the same name as \"$fileName\" exists in the project. Overwrite this file?", "File Exists")) return false
+            if (exists && !Util.askQuestion("A file with the same name as \"$fileName\" exists in the project. Overwrite this file?", "File Exists")) return null
             try {
                 FileUtils.copyFile(src, dest)
             } catch (e: IOException) {
                 Util.reportException(e, "Failed to copy file!")
-                return false
+                return null
             }
         }
         if (Util.isConstraintFile(fileName) && !constraintFiles.contains(dest)) {
@@ -413,7 +416,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         } catch (e1: IOException) {
             Util.showError("Failed to save project file!")
         }
-        return true
+        return dest
     }
 
     fun addNewSourceFile(fileName: String): File? {
@@ -423,7 +426,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         return path
     }
 
-    fun addNewConstraintFile(fileName: String?): File? {
+    fun addNewConstraintFile(fileName: String): File? {
         val cFile = File(Util.assemblePath(projectFolder, CONSTRAINTS_FOLDER, fileName))
         return createFile(cFile, constraintFiles)
     }
@@ -558,40 +561,56 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         })
     }
 
-    private fun addRemoveFile(item: TreeLeaf, type: FileType) {
-        val mi = MenuItem(treeMenu, SWT.NONE)
-        mi.text = "Remove " + item.name
-        mi.addSelectionListener(object : SelectionListener {
-            override fun widgetSelected(e: SelectionEvent) {
-                val file = item.file
-                val result = if (isLibFile(file))
-                    Util.askQuestion("Are you sure you want to remove the component ${file.name}?", "Confirm Removal")
-                else
-                    Util.askQuestion("Are you sure you want to delete $file?${System.lineSeparator()}${System.lineSeparator()}This cannot be undone.", "Confirm Delete")
+    private fun Menu.addRemoveFile(item: TreeLeaf, type: FileType) {
+        MenuItem(this, SWT.NONE).run {
+            text = "Remove " + item.name
+            addSelectionListener(object : SelectionListener {
+                override fun widgetSelected(e: SelectionEvent) {
+                    val file = item.file
+                    val result = if (isLibFile(file))
+                        Util.askQuestion("Are you sure you want to remove the component ${file.name}?", "Confirm Removal")
+                    else
+                        Util.askQuestion("Are you sure you want to delete $file?${System.lineSeparator()}${System.lineSeparator()}This cannot be undone.", "Confirm Delete")
 
-                if (result) {
-                    for (editor in MainWindow.tabs) {
-                        if (editor is StyledCodeEditor) if (file == editor.file) {
-                            MainWindow.tabFolder.close(editor) // close file if open
-                            break
+                    if (result) {
+                        for (editor in MainWindow.tabs) {
+                            if (editor is StyledCodeEditor) if (file == editor.file) {
+                                MainWindow.tabFolder.close(editor) // close file if open
+                                break
+                            }
                         }
+                        when (type) {
+                            FileType.SOURCE, FileType.COMPONENT -> if (!removeFile(file, sourceFiles)) Util.showError("Could not remove file!")
+                            FileType.CONSTRAINT -> if (!removeFile(file, constraintFiles)) Util.showError("Could not remove file!")
+                            FileType.CORE -> if (!removeIPCore(item.name)) Util.showError("Could not remove IP Core!")
+                        }
+                        try {
+                            saveXML()
+                        } catch (e1: IOException) {
+                            Util.showError("Failed to save project file!")
+                        }
+                        MainWindow.updateErrors()
                     }
-                    when (type) {
-                        FileType.SOURCE, FileType.COMPONENT -> if (!removeFile(file, sourceFiles)) Util.showError("Could not remove file!")
-                        FileType.CONSTRAINT -> if (!removeFile(file, constraintFiles)) Util.showError("Could not remove file!")
-                        FileType.CORE -> if (!removeIPCore(item.name)) Util.showError("Could not remove IP Core!")
-                    }
-                    try {
-                        saveXML()
-                    } catch (e1: IOException) {
-                        Util.showError("Failed to save project file!")
-                    }
-                    MainWindow.updateErrors()
                 }
-            }
 
-            override fun widgetDefaultSelected(e: SelectionEvent) {}
-        })
+                override fun widgetDefaultSelected(e: SelectionEvent) {}
+            })
+        }
+    }
+
+    private fun Menu.addCopyComponent(compFile: File) {
+        MenuItem(this, SWT.NONE).run {
+            text = "Create editable copy"
+            addSelectionListener(object : SelectionListener {
+                override fun widgetSelected(e: SelectionEvent) {
+                    if (copyLibraryFile(compFile)?.also { newFile -> MainWindow.getEditor(compFile)?.openFile(newFile, true) } == null) {
+                        Util.showError("Failed to copy file into project!")
+                    }
+                }
+
+                override fun widgetDefaultSelected(e: SelectionEvent) {}
+            })
+        }
     }
 
     private val sourceListener = Listener { event ->
@@ -599,42 +618,51 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         if (event.button == 1 && !item.isNode) {
             MainWindow.openFile(Util.assembleFile(sourceFolder, item.name), true)
         } else if (event.button == 3) {
-            for (i in treeMenu!!.items) i.dispose()
-            val mi = MenuItem(treeMenu, SWT.NONE)
-            mi.text = "New source..."
-            mi.addSelectionListener(object : SelectionListener {
-                override fun widgetSelected(e: SelectionEvent) {
-                    MainWindow.addNewFile()
-                }
+            treeMenu?.let {
+                for (i in it.items) i.dispose()
+                MenuItem(it, SWT.NONE).run {
+                    text = "New source..."
+                    addSelectionListener(object : SelectionListener {
+                        override fun widgetSelected(e: SelectionEvent) {
+                            MainWindow.addNewFile()
+                        }
 
-                override fun widgetDefaultSelected(e: SelectionEvent) {}
-            })
-            if (!item.isNode) {
-                addRemoveFile(item as TreeLeaf, FileType.SOURCE)
-                addRenameFile(item)
+                        override fun widgetDefaultSelected(e: SelectionEvent) {}
+                    })
+                }
+                if (!item.isNode) {
+                    it.addRemoveFile(item as TreeLeaf, FileType.SOURCE)
+                    addRenameFile(item)
+                }
             }
         }
     }
     private val constraintsListener = Listener { event ->
         val item = event.data as TreeElement
+        val compFile = Util.assembleFile(Locations.COMPONENTS, item.name)
+        val constFile = Util.assembleFile(constraintFolder, item.name)
+        val isComponent = !constraintFiles.contains(constFile)
         if (event.button == 1 && !item.isNode) {
-            val compFile = Util.assembleFile(Locations.COMPONENTS, item.name)
-            val constFile = Util.assembleFile(constraintFolder, item.name)
-            if (constraintFiles.contains(constFile)) MainWindow.openFile(constFile, true) else MainWindow.openFile(compFile, false)
+            if (isComponent) MainWindow.openFile(compFile, false) else MainWindow.openFile(constFile, true)
         } else if (event.button == 3) {
-            for (i in treeMenu!!.items) i.dispose()
-            val mi = MenuItem(treeMenu, SWT.NONE)
-            mi.text = "New constraint..."
-            mi.addSelectionListener(object : SelectionListener {
-                override fun widgetSelected(e: SelectionEvent) {
-                    MainWindow.addNewFile()
-                }
+            treeMenu?.let {
+                for (i in it.items) i.dispose()
+                MenuItem(it, SWT.NONE).run {
+                    text = "New constraint..."
+                    addSelectionListener(object : SelectionListener {
+                        override fun widgetSelected(e: SelectionEvent) {
+                            MainWindow.addNewFile()
+                        }
 
-                override fun widgetDefaultSelected(e: SelectionEvent) {}
-            })
-            if (!item.isNode) {
-                addRemoveFile(item as TreeLeaf, FileType.CONSTRAINT)
-                addRenameFile(item)
+                        override fun widgetDefaultSelected(e: SelectionEvent) {}
+                    })
+                }
+                if (isComponent)
+                    it.addCopyComponent(compFile)
+                if (!item.isNode) {
+                    it.addRemoveFile(item as TreeLeaf, FileType.CONSTRAINT)
+                    addRenameFile(item)
+                }
             }
         }
     }
@@ -643,17 +671,22 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         if (event.button == 1 && !item.isNode) {
             MainWindow.openFile(Util.assembleFile(Locations.COMPONENTS, item.name), false)
         } else if (event.button == 3) {
-            for (i in treeMenu!!.items) i.dispose()
-            val mi = MenuItem(treeMenu, SWT.NONE)
-            mi.text = "Add component..."
-            mi.addSelectionListener(object : SelectionListener {
-                override fun widgetSelected(e: SelectionEvent) {
-                    MainWindow.addComponents()
-                }
+            treeMenu?.let {
+                for (i in it.items) i.dispose()
+                MenuItem(it, SWT.NONE).run {
+                    text = "Add component..."
+                    addSelectionListener(object : SelectionListener {
+                        override fun widgetSelected(e: SelectionEvent) {
+                            MainWindow.addComponents()
+                        }
 
-                override fun widgetDefaultSelected(e: SelectionEvent) {}
-            })
-            if (!item.isNode) addRemoveFile(item as TreeLeaf, FileType.COMPONENT)
+                        override fun widgetDefaultSelected(e: SelectionEvent) {}
+                    })
+                }
+                it.addCopyComponent(Util.assembleFile(Locations.COMPONENTS, item.name))
+
+                if (!item.isNode) it.addRemoveFile(item as TreeLeaf, FileType.COMPONENT)
+            }
         }
     }
     private val coresListener = Listener { event ->
@@ -662,7 +695,9 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
             if (board.isType(Board.MOJO)) {
                 MainWindow.openFile(Util.assembleFile(projectFolder, CORES_FOLDER, item.name), true)
             } else {
-                MainWindow.openFile(Util.assembleFile(projectFolder, CORES_FOLDER, item.parent.name, item.name), true)
+                item.parent?.let { parent ->
+                    MainWindow.openFile(Util.assembleFile(projectFolder, CORES_FOLDER, parent.name, item.name), true)
+                }
             }
         } else if (event.button == 3) {
             for (i in treeMenu!!.items) i.dispose()
@@ -979,12 +1014,12 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
     fun checkProjectFiles() {
         sourceFiles.forEach {
             if (!it.exists()) {
-                Util.showError("File ${it.name} is missing!")
+                Util.showError("File ${it.absolutePath} is missing!")
             }
         }
         constraintFiles.forEach {
             if (!it.exists()) {
-                Util.showError("File ${it.name} is missing!")
+                Util.showError("File ${it.absolutePath} is missing!")
             }
         }
     }

@@ -13,7 +13,11 @@ abstract class Board {
         const val AU = 1 shl 0
         const val CU = 1 shl 1
         const val MOJO = 1 shl 2
-        val constraintExtensions: MutableSet<String> = HashSet()
+        val constraintExtensions: Set<String> by lazy {
+            HashSet<String>().also { list ->
+                boards.forEach { board -> board.supportedConstraintExtensions.forEach { list.add(it) } }
+            }
+        }
 
         @JvmField
         val boards = listOf(AlchitryAu, AlchitryCu, Mojo)
@@ -44,10 +48,6 @@ abstract class Board {
 
         fun isType(board: Board?, type: Int): Boolean {
             return type and getType(board) != 0
-        }
-
-        init {
-            boards.forEach { board -> board.supportedConstraintExtensions.forEach { constraintExtensions.add(it) } }
         }
     }
 
