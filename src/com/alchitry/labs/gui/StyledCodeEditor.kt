@@ -64,7 +64,7 @@ class StyledCodeEditor(private var tabFolder: CustomTabs, style: Int, var file: 
         file?.let {
             if (Util.askQuestion("This file is read only! Would you like to make a local copy to edit?", "Create editable copy?"))
                 if (MainWindow.project?.copyLibraryFile(it)?.also {
-                            GlobalScope.launch(Dispatchers.SWT) { openFile(it) }
+                            GlobalScope.launch(Dispatchers.SWT) { openFile(it, true) }
                         } == null) {
                     Util.showError("Failed to copy file into project!")
                 }

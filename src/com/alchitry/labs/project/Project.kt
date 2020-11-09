@@ -484,7 +484,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         }
     }
 
-    val debugFiles: HashSet<File>
+    val debugHelperFiles: Set<File>
         get() {
             val debugList = HashSet<File>()
             if (board.isType(Board.MOJO)) {
@@ -930,7 +930,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         addModules(modules, sourceFiles)
         if (debugFiles != null) {
             addModules(modules, debugFiles)
-            addModules(modules, debugFiles)
+            addModules(modules, debugHelperFiles)
         }
         for (ipcore in iPCores) {
             if (ipcore.stub != null) addModule(modules, ipcore.stub) else addModules(modules, ipcore.files)
@@ -1034,7 +1034,6 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         newProject.iPCores.addAll(iPCores)
         newProject.sourceFiles.addAll(sourceFiles)
         newProject.constraintFiles.addAll(constraintFiles)
-        newProject.debugFiles.addAll(debugFiles)
         newProject.primitives.addAll(primitives)
         newProject.top = top
         newProject.debugInfo = debugInfo
