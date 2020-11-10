@@ -12,6 +12,7 @@ import com.alchitry.labs.parsers.lucid.AssignBlock;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
+import com.alchitry.labs.parsers.lucidv2.ExprParser;
 import com.alchitry.labs.parsers.types.*;
 import com.alchitry.labs.project.Primitive;
 import com.alchitry.labs.project.Primitive.Parameter;
@@ -25,41 +26,41 @@ import java.io.File;
 import java.util.*;
 
 public class LucidExtractor extends LucidBaseListener {
-	private ArrayList<Dff> dffs;
-	private ArrayList<Fsm> fsms;
-	private List<Constant> constants;
-	private ArrayList<Sig> sigs;
-	private List<Sig> inputs;
-	private List<Sig> outputs;
-	private List<Sig> inouts;
-	private List<Sig> connectedInouts;
-	private List<Var> vars;
-	private List<Struct> structs;
-	private List<InstModule> instModules;
-	private List<Param> params;
+	private final ArrayList<Dff> dffs;
+	private final ArrayList<Fsm> fsms;
+	private final List<Constant> constants;
+	private final ArrayList<Sig> sigs;
+	private final List<Sig> inputs;
+	private final List<Sig> outputs;
+	private final List<Sig> inouts;
+	private final List<Sig> connectedInouts;
+	private final List<Var> vars;
+	private final List<Struct> structs;
+	private final List<InstModule> instModules;
+	private final List<Param> params;
 
 	private List<Module> modules = new ArrayList<Module>();
 
-	private Stack<AssignBlock> assignBlocks;
+	private final Stack<AssignBlock> assignBlocks;
 
-	private Stack<ArrayList<HashSet<Sig>>> assignedSigs;
-	private Stack<Boolean> hasDefaultCase;
+	private final Stack<ArrayList<HashSet<Sig>>> assignedSigs;
+	private final Stack<Boolean> hasDefaultCase;
 
-	private HashSet<Sig> drivenSigs;
+	private final HashSet<Sig> drivenSigs;
 	private HashSet<Sig> writtenSigs;
-	private HashSet<Sig> reqSigs;
+	private final HashSet<Sig> reqSigs;
 
-	private HashSet<Sig> unusedSigs;
+	private final HashSet<Sig> unusedSigs;
 
-	private BitWidthChecker bitWidthChecker;
-	private ParamsParser paramsParser;
-	private ConstParser constParser;
-	private ConstExprParser constExprParser;
-	private BoundsParser boundsParser;
+	private final BitWidthChecker bitWidthChecker;
+	private final ParamsParser paramsParser;
+	private final ConstParser constParser;
+	private final ConstExprParser constExprParser;
+	private final BoundsParser boundsParser;
 
 	private LucidDictionary dictionary;
 
-	private InstModule thisModule;
+	private final InstModule thisModule;
 
 	private ErrorListener errorListener;
 
@@ -211,6 +212,7 @@ public class LucidExtractor extends LucidBaseListener {
 		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		addToParser(listeners);
+		listeners.add(new ExprParser(errorListener));
 		ParserCache.walk(file, listeners);
 	}
 
@@ -392,12 +394,9 @@ public class LucidExtractor extends LucidBaseListener {
 	}
 
 	public boolean nameUsed(String name) {
-		if (Util.containsName(inputs, name) || Util.containsName(outputs, name) || Util.containsName(inouts, name) || Util.containsName(sigs, name)
+		return Util.containsName(inputs, name) || Util.containsName(outputs, name) || Util.containsName(inouts, name) || Util.containsName(sigs, name)
 				|| Util.containsName(vars, name) || Util.containsName(instModules, name) || Util.containsName(dffs, name) || Util.containsName(fsms, name)
-				|| Util.containsName(constants, name) || Util.containsName(structs, name) || MainWindow.getGlobalConstants().get(name) != null)
-			return true;
-
-		return false;
+				|| Util.containsName(constants, name) || Util.containsName(structs, name) || MainWindow.getGlobalConstants().get(name) != null;
 	}
 
 	private void nameUsedError(ParserRuleContext ctx) {
@@ -424,7 +423,7 @@ public class LucidExtractor extends LucidBaseListener {
 					dictionary.add(s.getName());
 			}
 		}
-	};
+	}
 
 	@Override
 	public void exitOutput_dec(Output_decContext ctx) {
@@ -501,7 +500,7 @@ public class LucidExtractor extends LucidBaseListener {
 					dictionary.add(name);
 			}
 		}
-	};
+	}
 
 	@Override
 	public void exitParam_dec(Param_decContext ctx) {
@@ -515,12 +514,12 @@ public class LucidExtractor extends LucidBaseListener {
 					if (constraint.isZero()) {
 						ConstValue cv = constExprParser.getValue(ctx.param_name().expr());
 						errorListener.reportError(ctx.param_constraint(),
-								String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, ctx.param_constraint().getText(), p.getName(), String.valueOf(cv)));
+								String.format(ErrorStrings.PARAMETER_CONSTRAINT_FAILED, ctx.param_constraint().getText(), p.getName(), cv));
 					}
 				}
 			}
 		}
-	};
+	}
 
 	@Override
 	public void exitConst_dec(Const_decContext ctx) {

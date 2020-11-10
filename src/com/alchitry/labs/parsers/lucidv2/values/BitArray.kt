@@ -6,7 +6,7 @@ import kotlin.experimental.and
 import kotlin.experimental.or
 import kotlin.math.ceil
 
-class BitArray(var signed: Boolean = false, size: Int = 0) : ArrayList<BitValue>(size) {
+class BitArray(var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue>(width) {
     constructor(signed: Boolean, size: Int, init: (Int) -> BitValue) : this(signed, size) {
         for (i in 0 until size) add(init(i))
     }
@@ -29,6 +29,18 @@ class BitArray(var signed: Boolean = false, size: Int = 0) : ArrayList<BitValue>
         repeat(width) {
             add(if ((value and (1 shr it).toLong()) != 0.toLong()) BitValue.B1 else BitValue.B0)
         }
+    }
+
+    constructor(value: BitValue, width: Int = 1, signed: Boolean = false) : this(signed, width) {
+        repeat(width) { add(value) }
+    }
+
+    constructor(value: BigInteger) : this() {
+        fromBigInt(value)
+    }
+
+    constructor(value: BigInteger, width: Int) : this(width = width) {
+        fromBigInt(value, width)
     }
 
     private fun fromBigInt(bigInt: BigInteger) {
@@ -63,7 +75,7 @@ class BitArray(var signed: Boolean = false, size: Int = 0) : ArrayList<BitValue>
 
     fun toBigInt(): BigInteger {
         check(isNumber()) { "The value is not a number (it contains x and z values)" }
-        val bytes = ByteArray(ceil((size + if (signed) 0 else 1) as Double / 8.0).toInt()) // if not signed need extra 0 sign bit
+        val bytes = ByteArray(ceil((size + if (signed) 0 else 1).toDouble() / 8.0).toInt()) // if not signed need extra 0 sign bit
         if (signed && this[size - 1] == BitValue.B1) // sign extension
             Arrays.fill(bytes, 255.toByte()) else Arrays.fill(bytes, 0.toByte())
         repeat(size) { i ->
@@ -206,12 +218,14 @@ class BitArray(var signed: Boolean = false, size: Int = 0) : ArrayList<BitValue>
     }
 
     fun isNumber(): Boolean {
-        this.forEach { if (it != BitValue.B0 || it != BitValue.B1) return false }
+        this.forEach { if (it != BitValue.B0 && it != BitValue.B1) return false }
         return true
     }
 
     override fun toString(): String {
         val sb = StringBuilder()
+        if (signed)
+            sb.append("signed ")
         sb.append('{')
         for (i in this.indices.reversed()) {
             val bv = this[i]

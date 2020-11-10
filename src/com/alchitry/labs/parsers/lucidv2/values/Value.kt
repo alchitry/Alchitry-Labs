@@ -19,6 +19,16 @@ sealed class Value {
             }
         }
     }
+
+    val signalWidth: SignalWidth
+        get() {
+            return when (this) {
+                is SimpleValue -> ArrayWidth(bits.size)
+                is ArrayValue -> ArrayWidth(elements.size, elements[0].signalWidth)
+                is StructValue -> StructWidth(type)
+                is UndefinedValue -> UndefinedSimpleArray()
+            }
+        }
 }
 
 data class ArrayValue(
@@ -35,6 +45,5 @@ data class StructValue(
 ) : Value()
 
 data class UndefinedValue(
-        val expression: String,
-        val width: SignalWidth
+        val expression: String
 ) : Value()

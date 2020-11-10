@@ -12,7 +12,7 @@ interface ErrorListener {
     fun reportDebug(ctx: ParserRuleContext, message: String)
 }
 
-object DummyErrorListener : ErrorListener {
+val dummyErrorListener = object : ErrorListener {
     override fun reportError(node: TerminalNode, message: String) {
     }
 
