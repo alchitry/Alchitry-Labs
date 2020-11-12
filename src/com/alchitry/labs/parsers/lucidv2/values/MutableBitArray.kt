@@ -6,7 +6,99 @@ import kotlin.experimental.and
 import kotlin.experimental.or
 import kotlin.math.ceil
 
-class BitArray(var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue>(width) {
+interface BitArray : List<BitValue> {
+    val signed: Boolean
+
+    fun toBigInt(): BigInteger {
+        check(isNumber()) { "The value is not a number (it contains x and z values)" }
+        val bytes = ByteArray(ceil((size + if (signed) 0 else 1).toDouble() / 8.0).toInt()) // if not signed need extra 0 sign bit
+        if (signed && this[size - 1] == BitValue.B1) // sign extension
+            Arrays.fill(bytes, 255.toByte()) else Arrays.fill(bytes, 0.toByte())
+        repeat(size) { i ->
+            val idx: Int = i / 8
+            bytes[bytes.size - 1 - idx] = if (this[i] == BitValue.B1)
+                bytes[bytes.size - 1 - idx] or (1 shl i % 8).toByte()
+            else
+                bytes[bytes.size - 1 - idx] and (1 shl i % 8).inv().toByte()
+        }
+        return BigInteger(bytes)
+    }
+
+    operator fun not(): BitValue {
+        var hasX = false
+        this.forEach {
+            if (it == BitValue.B1) return BitValue.B0 else if (it == BitValue.Bx || it == BitValue.Bz) hasX = true
+        }
+        return if (hasX) BitValue.Bx else BitValue.B1
+    }
+
+    fun invert(): BitArray {
+        return MutableBitArray(this.signed, this.size) { !this[it] }
+    }
+
+    private inline fun doOp(b: BitArray, crossinline op: (BitValue, BitValue) -> BitValue): BitArray {
+        val size = this.size.coerceAtLeast(b.size)
+        return MutableBitArray(this.signed || b.signed, size) { i ->
+            val op1 = if (i < this.size) this[i] else BitValue.B0
+            val op2 = if (i < b.size) b[i] else BitValue.B0
+            op(op1, op2)
+        }
+    }
+
+    infix fun or(b: BitArray): BitArray {
+        return doOp(b) { b1, b2 -> b1 or b2 }
+    }
+
+    infix fun and(b: BitArray): BitArray {
+        return doOp(b) { b1, b2 -> b1 and b2 }
+    }
+
+    infix fun xor(b: BitArray): BitArray {
+        return doOp(b) { b1, b2 -> b1 xor b2 }
+    }
+
+    infix fun nor(b: BitArray): BitArray {
+        return doOp(b) { b1, b2 -> b1 nor b2 }
+    }
+
+    infix fun nand(b: BitArray): BitArray {
+        return doOp(b) { b1, b2 -> b1 nand b2 }
+    }
+
+    infix fun xnor(b: BitArray): BitArray {
+        return doOp(b) { b1, b2 -> b1 xnor b2 }
+    }
+
+    fun equal(b: BitArray): BitValue {
+        val size = this.size.coerceAtLeast(b.size)
+        val se1 = if (this.signed) this[this.size - 1] else BitValue.B0
+        val se2 = if (b.signed) b[b.size - 1] else BitValue.B0
+        for (i in 0 until size) {
+            if (i < this.size) {
+                if (i < b.size) {
+                    if (this[i] != b[i]) return BitValue.B0
+                } else {
+                    if (this[i] != se2) return BitValue.B0
+                }
+            } else {
+                if (b[i] != se1) return BitValue.B0
+            }
+        }
+        return BitValue.B1
+    }
+
+    fun isZero(): Boolean {
+        this.forEach { if (it != BitValue.B0) return false }
+        return true
+    }
+
+    fun isNumber(): Boolean {
+        this.forEach { if (it != BitValue.B0 && it != BitValue.B1) return false }
+        return true
+    }
+}
+
+class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue>(width), BitArray {
     constructor(signed: Boolean, size: Int, init: (Int) -> BitValue) : this(signed, size) {
         for (i in 0 until size) add(init(i))
     }
@@ -73,21 +165,6 @@ class BitArray(var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue
         }
     }
 
-    fun toBigInt(): BigInteger {
-        check(isNumber()) { "The value is not a number (it contains x and z values)" }
-        val bytes = ByteArray(ceil((size + if (signed) 0 else 1).toDouble() / 8.0).toInt()) // if not signed need extra 0 sign bit
-        if (signed && this[size - 1] == BitValue.B1) // sign extension
-            Arrays.fill(bytes, 255.toByte()) else Arrays.fill(bytes, 0.toByte())
-        repeat(size) { i ->
-            val idx: Int = i / 8
-            bytes[bytes.size - 1 - idx] = if (this[i] == BitValue.B1)
-                bytes[bytes.size - 1 - idx] or (1 shl i % 8).toByte()
-            else
-                bytes[bytes.size - 1 - idx] and (1 shl i % 8).inv().toByte()
-        }
-        return BigInteger(bytes)
-    }
-
     private fun set(str: String, radix: Int, width: Int, signed: Boolean) {
         this.signed = signed
         val strl = str.toLowerCase()
@@ -147,79 +224,6 @@ class BitArray(var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue
             }
             else -> throw IllegalArgumentException("Radix must be 16, 10, or 2")
         }
-    }
-
-    operator fun not(): BitValue {
-        var hasX = false
-        this.forEach {
-            if (it == BitValue.B1) return BitValue.B0 else if (it == BitValue.Bx || it == BitValue.Bz) hasX = true
-        }
-        return if (hasX) BitValue.Bx else BitValue.B1
-    }
-
-    fun invert(): BitArray {
-        return BitArray(this.signed, this.size) { !this[it] }
-    }
-
-    private inline fun doOp(b: BitArray, crossinline op: (BitValue, BitValue) -> BitValue): BitArray {
-        val size = this.size.coerceAtLeast(b.size)
-        return BitArray(this.signed || b.signed, size) { i ->
-            val op1 = if (i < this.size) this[i] else BitValue.B0
-            val op2 = if (i < b.size) b[i] else BitValue.B0
-            op(op1, op2)
-        }
-    }
-
-    infix fun or(b: BitArray): BitArray {
-        return doOp(b) { b1, b2 -> b1 or b2 }
-    }
-
-    infix fun and(b: BitArray): BitArray {
-        return doOp(b) { b1, b2 -> b1 and b2 }
-    }
-
-    infix fun xor(b: BitArray): BitArray {
-        return doOp(b) { b1, b2 -> b1 xor b2 }
-    }
-
-    infix fun nor(b: BitArray): BitArray {
-        return doOp(b) { b1, b2 -> b1 nor b2 }
-    }
-
-    infix fun nand(b: BitArray): BitArray {
-        return doOp(b) { b1, b2 -> b1 nand b2 }
-    }
-
-    infix fun xnor(b: BitArray): BitArray {
-        return doOp(b) { b1, b2 -> b1 xnor b2 }
-    }
-
-    fun equal(b: BitArray): BitValue {
-        val size = this.size.coerceAtLeast(b.size)
-        val se1 = if (this.signed) this[this.size - 1] else BitValue.B0
-        val se2 = if (b.signed) b[b.size - 1] else BitValue.B0
-        for (i in 0 until size) {
-            if (i < this.size) {
-                if (i < b.size) {
-                    if (this[i] != b[i]) return BitValue.B0
-                } else {
-                    if (this[i] != se2) return BitValue.B0
-                }
-            } else {
-                if (b[i] != se1) return BitValue.B0
-            }
-        }
-        return BitValue.B1
-    }
-
-    fun isZero(): Boolean {
-        this.forEach { if (it != BitValue.B0) return false }
-        return true
-    }
-
-    fun isNumber(): Boolean {
-        this.forEach { if (it != BitValue.B0 && it != BitValue.B1) return false }
-        return true
     }
 
     override fun toString(): String {

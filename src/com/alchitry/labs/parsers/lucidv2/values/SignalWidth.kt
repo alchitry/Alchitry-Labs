@@ -1,16 +1,20 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
 sealed class SignalWidth {
+    fun isFlatArray(): Boolean {
+        return (this is ArrayWidth && next == null) || this is UndefinedSimpleWidth
+    }
+
     fun isSimpleArray(): Boolean {
-        return (this is ArrayWidth && next == null) || this is UndefinedSimpleArray
+        return (this is ArrayWidth && (next == null || next.isSimpleArray())) || this is UndefinedSimpleWidth
     }
 
     fun isArray(): Boolean {
-        return this is ArrayWidth && (next == null || next.isArray())
+        return this is ArrayWidth || this is UndefinedSimpleWidth
     }
 
     fun getDimensions(): List<Int> {
-        require(isArray()) { "getDimensions can only be called on arrays" }
+        require(isSimpleArray()) { "getDimensions can only be called on arrays" }
         val dims = mutableListOf<Int>()
         var array: ArrayWidth? = this as ArrayWidth
         while (array != null) {
@@ -24,13 +28,19 @@ sealed class SignalWidth {
         if (other !is SignalWidth)
             return false
 
-        if (other is ArrayWidth && this is ArrayWidth) {
-            return other.size == this.size && other.next == this.next
-        } else if (other is StructWidth && this is StructWidth) {
-            return other.struct == this.struct
+        return when {
+            other is ArrayWidth && this is ArrayWidth -> other.size == this.size && other.next == this.next
+            other is StructWidth && this is StructWidth -> other.struct == this.struct
+            else -> false
         }
+    }
 
-        return false
+    fun shallowEquals(other: SignalWidth): Boolean {
+        return when {
+            other is ArrayWidth && this is ArrayWidth -> other.size == this.size
+            other is StructWidth && this is StructWidth -> other.struct == this.struct
+            else -> false
+        }
     }
 }
 
@@ -43,4 +53,4 @@ data class StructWidth(
         val struct: StructType
 ) : SignalWidth()
 
-class UndefinedSimpleArray : SignalWidth()
+class UndefinedSimpleWidth : SignalWidth()

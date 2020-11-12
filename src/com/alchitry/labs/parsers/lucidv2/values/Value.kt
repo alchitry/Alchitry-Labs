@@ -26,13 +26,13 @@ sealed class Value {
                 is SimpleValue -> ArrayWidth(bits.size)
                 is ArrayValue -> ArrayWidth(elements.size, elements[0].signalWidth)
                 is StructValue -> StructWidth(type)
-                is UndefinedValue -> UndefinedSimpleArray()
+                is UndefinedValue -> width
             }
         }
 }
 
 data class ArrayValue(
-        val elements: MutableList<Value> = mutableListOf()
+        val elements: List<Value>
 ) : Value()
 
 data class SimpleValue(
@@ -41,9 +41,10 @@ data class SimpleValue(
 
 data class StructValue(
         val type: StructType,
-        val elements: MutableMap<String, Value> = mutableMapOf()
+        val elements: Map<String, Value>
 ) : Value()
 
 data class UndefinedValue(
-        val expression: String
+        val expression: String,
+        val width: SignalWidth = UndefinedSimpleWidth()
 ) : Value()

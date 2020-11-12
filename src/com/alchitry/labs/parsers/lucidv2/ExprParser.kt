@@ -46,12 +46,12 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         }
 
         val valueString: String
-        var width: BitArray? = null
+        var width: MutableBitArray? = null
 
         if (split != null) {
             valueString = split[1]
             if (split[0].isNotBlank()) {
-                width = BitArray(split[0])
+                width = MutableBitArray(split[0])
                 if (!width.isNumber()) {
                     errorListener.reportError(ctx, ErrorStrings.NUM_WIDTH_NAN)
                     return
@@ -68,14 +68,15 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                 val value: Value
                 when {
                     valueString.length > 1 -> {
-                        value = ArrayValue()
-                        repeat(valueString.length) { value.elements.add(SimpleValue(BitArray(valueString[it].toLong(), 8))) }
+                        val elements = mutableListOf<Value>()
+                        repeat(valueString.length) { elements.add(SimpleValue(MutableBitArray(valueString[it].toLong(), 8))) }
+                        value = ArrayValue(elements)
                     }
                     valueString.length == 1 -> {
-                        value = SimpleValue(BitArray(valueString[0].toLong(), 8))
+                        value = SimpleValue(MutableBitArray(valueString[0].toLong(), 8))
                     }
                     else -> {
-                        value = SimpleValue(BitArray())
+                        value = SimpleValue(MutableBitArray())
                         errorListener.reportError(ctx, ErrorStrings.STRING_CANNOT_BE_EMPTY)
                     }
                 }
@@ -84,9 +85,9 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             }
         }
 
-        val unbound = BitArray(valueString, radix)
+        val unbound = MutableBitArray(valueString, radix)
         val value = if (width != null) {
-            SimpleValue(BitArray(valueString, radix, width.toBigInt().intValueExact()))
+            SimpleValue(MutableBitArray(valueString, radix, width.toBigInt().intValueExact()))
         } else {
             SimpleValue(unbound)
         }
@@ -94,8 +95,6 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             errorListener.reportWarning(ctx, String.format(ErrorStrings.VALUE_TOO_BIG, ctx.text, value.bits.size))
         }
         values[ctx] = value
-
-        debug(ctx)
     }
 
     override fun exitParam_constraint(ctx: Param_constraintContext) {
@@ -150,12 +149,12 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
         var error = false
 
-        if (!op1.signalWidth.isSimpleArray()) {
+        if (!op1.signalWidth.isFlatArray()) {
             errorListener.reportError(ctx.expr(0), if (operand == "+") ErrorStrings.ADD_MULTI_DIM else ErrorStrings.SUB_MULTI_DIM)
             error = true
         }
 
-        if (!op2.signalWidth.isSimpleArray()) {
+        if (!op2.signalWidth.isFlatArray()) {
             errorListener.reportError(ctx.expr(1), if (operand == "+") ErrorStrings.ADD_MULTI_DIM else ErrorStrings.SUB_MULTI_DIM)
             error = true
         }
@@ -163,19 +162,24 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         if (error) return
 
         if (op1 is UndefinedValue || op2 is UndefinedValue) {
-            values[ctx] = UndefinedValue(ctx.text)
+            val op1Width = op1.signalWidth
+            val op2Width = op2.signalWidth
+            if (op1Width is ArrayWidth && op2Width is ArrayWidth)
+                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size) + 1))
+            else
+                values[ctx] = UndefinedValue(ctx.text)
         } else {
             if (op1 !is SimpleValue || op2 !is SimpleValue)
                 error("One (or both) of the operands isn't a simple array. This shouldn't be possible.")
 
+            val width = op1.bits.size.coerceAtLeast(op2.bits.size) + 1
+
             values[ctx] = when {
-                !op1.isNumber() || !op2.isNumber() -> SimpleValue(BitArray(BitValue.Bx, op1.bits.size))
-                operand == "+" -> SimpleValue(BitArray(op1.bits.toBigInt().add(op2.bits.toBigInt()), op1.bits.size.coerceAtLeast(op2.bits.size) + 1))
-                else -> SimpleValue(BitArray(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), op1.bits.size.coerceAtLeast(op2.bits.size) + 1))
+                !op1.isNumber() || !op2.isNumber() -> SimpleValue(MutableBitArray(BitValue.Bx, width))
+                operand == "+" -> SimpleValue(MutableBitArray(op1.bits.toBigInt().add(op2.bits.toBigInt()), width))
+                else -> SimpleValue(MutableBitArray(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), width))
             }
         }
-
-        debug(ctx)
     }
 
     override fun exitExprConcat(ctx: ExprConcatContext) {
@@ -199,68 +203,167 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         var error = false
 
         if (baseSigWidth is StructWidth) {
-            operands.forEach {
-                if (it.first.signalWidth != baseSigWidth) {
-                    errorListener.reportError(it.second, ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH)
-                    error = true
-                }
-            }
-            if (error) return
-
-            val value = ArrayValue()
-            operands.asReversed().forEach { value.elements.add(it.first) }
-            values[ctx] = value
-        } else if (baseSigWidth is ArrayWidth || baseSigWidth is UndefinedSimpleArray) { // if width is array, value is array or simple
-            when (base) {
-                is ArrayValue -> {
-                    assert(baseSigWidth is ArrayWidth) { "The ArrayValue has a width that isn't an ArrayWidth" }
-                    operands.forEach {
-                        val sigWidth = it.first.signalWidth
-                        if (sigWidth !is ArrayWidth || sigWidth.next != (baseSigWidth as ArrayWidth).next) {
-                            errorListener.reportError(it.second, ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH)
-                            error = true
-                        }
-                    }
-                    if (error) return
-
-                    val value = ArrayValue()
-                    operands.asReversed().forEach { value.elements.addAll((it.first as ArrayValue).elements) }
-                    values[ctx] = value
-                }
-                is SimpleValue -> {
-                    operands.forEach {
-                        val sigWidth = it.first.signalWidth
-                        if (!sigWidth.isSimpleArray()) {
-                            errorListener.reportError(it.second, ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH)
-                            error = true
-                        }
-                    }
-                    if (error) return
-
-                    if (operands.any { it.first is UndefinedValue }) {
-                        values[ctx] = UndefinedValue(ctx.text)
-                        return
-                    }
-
-                    val bits = BitArray()
-                    operands.asReversed().forEach { bits.addAll((it.first as SimpleValue).bits) }
-                    values[ctx] = SimpleValue(bits)
-                }
-                else -> {
-                    error("Value with array width isn't an array or simple value")
-                }
-            }
+            errorListener.reportError(operands[0].second, ErrorStrings.ARRAY_CONCAT_STRUCT)
+            return
         }
 
-        debug(ctx)
+        // if width is array, value is array or simple
+        assert(baseSigWidth is ArrayWidth || baseSigWidth is UndefinedSimpleWidth)
+        when (base) {
+            is ArrayValue -> {
+                assert(baseSigWidth is ArrayWidth) { "The ArrayValue has a width that isn't an ArrayWidth" }
+                operands.forEach {
+                    val sigWidth = it.first.signalWidth
+                    if (sigWidth !is ArrayWidth || sigWidth.next != (baseSigWidth as ArrayWidth).next) {
+                        errorListener.reportError(it.second, ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH)
+                        error = true
+                    }
+                }
+                if (error) return
+
+                val value = mutableListOf<Value>()
+                operands.asReversed().forEach { value.addAll((it.first as ArrayValue).elements) }
+                values[ctx] = ArrayValue(value)
+            }
+            is SimpleValue, is UndefinedValue -> {
+                var bitCount = 0
+                var definedWidth = true
+
+                operands.forEach {
+                    val sigWidth = it.first.signalWidth
+                    if (!sigWidth.isFlatArray()) {
+                        errorListener.reportError(it.second, ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH)
+                        error = true
+                    }
+                    if (sigWidth is ArrayWidth)
+                        bitCount += sigWidth.size
+                    else // UndefinedWidth
+                        definedWidth = false
+                }
+
+                if (error) return
+
+                if (operands.any { it.first is UndefinedValue }) {
+                    values[ctx] = if (definedWidth)
+                        UndefinedValue(ctx.text, ArrayWidth(bitCount))
+                    else
+                        UndefinedValue(ctx.text)
+
+                    return
+                }
+
+                val bits = MutableBitArray()
+                operands.asReversed().forEach { bits.addAll((it.first as SimpleValue).bits) }
+                values[ctx] = SimpleValue(bits)
+            }
+            else -> {
+                error("Value with array width isn't an array or simple value")
+            }
+        }
     }
 
     override fun exitExprDup(ctx: ExprDupContext) {
+        if (ctx.expr().size != 2)
+            return
 
+        constant[ctx] = constant[ctx.expr(1)] == true
+
+        val dupCount = values[ctx.expr(0)] ?: return
+        val dupValue = values[ctx.expr(1)] ?: return
+
+        if (constant[ctx.expr(0)] != true) {
+            errorListener.reportError(ctx.expr(0), ErrorStrings.EXPR_NOT_CONSTANT.format(ctx.expr(0).text))
+            return
+        }
+
+        val valWidth = dupValue.signalWidth
+
+        if (!valWidth.isArray()) {
+            errorListener.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_STRUCT)
+            return
+        }
+
+        val dupWidth = dupCount.signalWidth
+
+        if (!dupWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_MULTI_DIM)
+            return
+        }
+
+        // if the duplication value is undefined we have no idea what the width will be
+        if (dupCount is UndefinedValue) {
+            values[ctx] = UndefinedValue(ctx.text)
+            return
+        }
+
+        assert(dupCount is SimpleValue) { "Duplication count is flat array but not a SimpleValue!" }
+        dupCount as SimpleValue
+
+        if (!dupCount.bits.isNumber()) {
+            errorListener.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_NAN)
+            return
+        }
+
+        val dupTimes = dupCount.bits.toBigInt().toInt()
+
+        if (dupValue is UndefinedValue) {
+            values[ctx] = UndefinedValue(ctx.text,
+                    width = if (valWidth is ArrayWidth) {
+                        ArrayWidth(valWidth.size * dupTimes, valWidth.next)
+                    } else {
+                        UndefinedSimpleWidth()
+                    }
+            )
+            return
+        }
+
+        if (dupValue is ArrayValue) {
+            val elements = mutableListOf<Value>()
+            repeat(dupTimes) {
+                elements.addAll(dupValue.elements)
+            }
+            values[ctx] = ArrayValue(elements)
+        } else if (dupValue is SimpleValue) {
+            val bits = MutableBitArray()
+            repeat(dupTimes) {
+                bits.addAll(dupValue.bits)
+            }
+            values[ctx] = SimpleValue(bits)
+        }
+        debug(ctx)
     }
 
     override fun exitExprArray(ctx: ExprArrayContext) {
+        if (ctx.expr().isEmpty())
+            return
 
+        // is constant if all operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
+
+        val operands = mutableListOf<Pair<Value, ParserRuleContext>>()
+        ctx.expr().forEach {
+            val v = values[it] ?: return
+            operands.add(Pair(v, it))
+        }
+
+        if (operands.isEmpty())
+            return
+
+        val firstDim = operands[0].first.signalWidth
+
+        var error = false
+        operands.forEach {
+            if (it.first.signalWidth != firstDim) {
+                error = true
+                errorListener.reportError(it.second, ErrorStrings.ARRAY_BUILDING_DIM_MISMATCH)
+            }
+        }
+        if (error) return
+
+        val elements = mutableListOf<Value>()
+        operands.forEach { elements.add(it.first) }
+        values[ctx] = ArrayValue(elements)
+        debug(ctx)
     }
 
     override fun exitExprNegate(ctx: ExprNegateContext) {
