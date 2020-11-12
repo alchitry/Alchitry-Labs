@@ -25,11 +25,18 @@ interface BitArray : List<BitValue> {
     }
 
     operator fun not(): BitValue {
+        return isTrue().not()
+    }
+
+    fun isTrue(): BitValue {
         var hasX = false
         this.forEach {
-            if (it == BitValue.B1) return BitValue.B0 else if (it == BitValue.Bx || it == BitValue.Bz) hasX = true
+            if (it == BitValue.B1)
+                return BitValue.B1
+            else if (it == BitValue.Bx || it == BitValue.Bz)
+                hasX = true
         }
-        return if (hasX) BitValue.Bx else BitValue.B1
+        return if (hasX) BitValue.Bx else BitValue.B0
     }
 
     fun invert(): BitArray {
@@ -87,11 +94,6 @@ interface BitArray : List<BitValue> {
         return BitValue.B1
     }
 
-    fun isZero(): Boolean {
-        this.forEach { if (it != BitValue.B0) return false }
-        return true
-    }
-
     fun isNumber(): Boolean {
         this.forEach { if (it != BitValue.B0 && it != BitValue.B1) return false }
         return true
@@ -131,8 +133,8 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
         fromBigInt(value)
     }
 
-    constructor(value: BigInteger, width: Int) : this(width = width) {
-        fromBigInt(value, width)
+    constructor(value: BigInteger, width: Int, signed: Boolean = value.signum() == -1) : this(width = width) {
+        fromBigInt(value, width, signed)
     }
 
     private fun fromBigInt(bigInt: BigInteger) {
@@ -143,10 +145,8 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
         fromBigInt(bigInt, w)
     }
 
-    private fun fromBigInt(bigInt: BigInteger, width: Int) {
+    private fun fromBigInt(bigInt: BigInteger, width: Int, signed: Boolean = bigInt.signum() == -1) {
         val bList = bigInt.toByteArray()
-
-        signed = bigInt.signum() == -1
 
         for (i in 0 until width) {
             val idx = i / 8

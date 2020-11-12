@@ -1,20 +1,14 @@
 package com.alchitry.labs.parsers;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alchitry.labs.Util;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.types.Struct;
 import com.alchitry.labs.parsers.types.Struct.Member;
+
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.InvalidParameterException;
+import java.util.*;
 
 public class ConstValue implements Serializable {
 	/**
@@ -68,12 +62,8 @@ public class ConstValue implements Serializable {
 				return false;
 			}
 			if (cv.structValues != null) {
-				if (!cv.structValues.equals(structValues))
-					return false;
-			} else if (structValues != null) {
-				return false;
-			}
-			return true;
+				return cv.structValues.equals(structValues);
+			} else return structValues == null;
 		}
 		return false;
 	}
@@ -187,10 +177,7 @@ public class ConstValue implements Serializable {
 		value = new ArrayList<>();
 		isArray = false;
 
-		if (bigInt.signum() == -1)
-			signed = true;
-		else
-			signed = false;
+		signed = bigInt.signum() == -1;
 
 		for (int i = 0; i < width; i++) {
 			int idx = i / 8;
@@ -609,17 +596,17 @@ public class ConstValue implements Serializable {
 	public static ConstValue Invert(ConstValue v) {
 		if (v.isStruct())
 			throw new IllegalArgumentException("Argument can't be a struct");
+		ConstValue cv;
 		if (v.isArray()) {
-			ConstValue cv = new ConstValue(true);
+			cv = new ConstValue(true);
 			for (int i = 0; i < v.getValues().size(); i++) {
 				cv.add(Invert(v.get(i)));
 			}
-			return cv;
 		} else {
-			ConstValue cv = new ConstValue(false);
+			cv = new ConstValue(false);
 			cv.setValue(BitValue.invert(v.getValue()));
-			return cv;
 		}
+		return cv;
 	}
 
 	private static BitValue NotRecursive(ConstValue v) {
@@ -628,7 +615,7 @@ public class ConstValue implements Serializable {
 		if (v.isArray()) {
 			boolean hasX = false;
 			for (int i = 0; i < v.getValues().size(); i++) {
-				BitValue bv = NotRecursive(v);
+				BitValue bv = NotRecursive(v.get(i));
 				if (bv == BitValue.B0)
 					return BitValue.B0;
 				else if (bv == BitValue.Bx || bv == BitValue.Bz)
@@ -839,9 +826,7 @@ public class ConstValue implements Serializable {
 			throw new IllegalStateException("The function isNegative() can't be used on structs");
 		if (isArray)
 			throw new IllegalStateException("The function isNegative() can't be used on arrays");
-		if (signed && value.get(value.size() - 1) == BitValue.B1)
-			return true;
-		return false;
+		return signed && value.get(value.size() - 1) == BitValue.B1;
 	}
 
 	public BitValue lessThan(ConstValue cv) {

@@ -50,7 +50,7 @@ enum class BitValue {
             B0 -> B1
             B1 -> B0
             Bx -> Bx
-            Bz -> Bz
+            Bz -> Bx
         }
     }
 }

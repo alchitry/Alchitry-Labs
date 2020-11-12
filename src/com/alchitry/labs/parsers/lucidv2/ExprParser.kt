@@ -164,24 +164,27 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         if (op1 is UndefinedValue || op2 is UndefinedValue) {
             val op1Width = op1.signalWidth
             val op2Width = op2.signalWidth
+            val signed = op1.signed && op1.signed
             if (op1Width is ArrayWidth && op2Width is ArrayWidth)
-                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size) + 1))
+                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size) + 1), signed)
             else
-                values[ctx] = UndefinedValue(ctx.text)
+                values[ctx] = UndefinedValue(ctx.text, signed = signed)
         } else {
             if (op1 !is SimpleValue || op2 !is SimpleValue)
                 error("One (or both) of the operands isn't a simple array. This shouldn't be possible.")
 
             val width = op1.bits.size.coerceAtLeast(op2.bits.size) + 1
+            val signed = op1.signed && op1.signed
 
             values[ctx] = when {
-                !op1.isNumber() || !op2.isNumber() -> SimpleValue(MutableBitArray(BitValue.Bx, width))
-                operand == "+" -> SimpleValue(MutableBitArray(op1.bits.toBigInt().add(op2.bits.toBigInt()), width))
-                else -> SimpleValue(MutableBitArray(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), width))
+                !op1.isNumber() || !op2.isNumber() -> SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
+                operand == "+" -> SimpleValue(MutableBitArray(op1.bits.toBigInt().add(op2.bits.toBigInt()), width, signed))
+                else -> SimpleValue(MutableBitArray(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), width, signed))
             }
         }
     }
 
+    // always returns an unsigned value
     override fun exitExprConcat(ctx: ExprConcatContext) {
         if (ctx.expr().isEmpty())
             return
@@ -262,6 +265,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         }
     }
 
+    // always returns an unsigned value
     override fun exitExprDup(ctx: ExprDupContext) {
         if (ctx.expr().size != 2)
             return
@@ -324,7 +328,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             }
             values[ctx] = ArrayValue(elements)
         } else if (dupValue is SimpleValue) {
-            val bits = MutableBitArray()
+            val bits = MutableBitArray(dupValue.signed)
             repeat(dupTimes) {
                 bits.addAll(dupValue.bits)
             }
@@ -367,11 +371,41 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
     }
 
     override fun exitExprNegate(ctx: ExprNegateContext) {
+        constant[ctx] = constant[ctx.expr()] == true
+        val expr = values[ctx.expr()] ?: return
 
+        if (!expr.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx, ErrorStrings.NEG_MULTI_DIM)
+            return
+        }
+
+        if (expr is UndefinedValue) {
+            values[ctx] = UndefinedValue(ctx.text, expr.width, expr.signed)
+            return
+        }
+
+        assert(expr is SimpleValue) { "Expression assumed to be SimpleValue" }
+        expr as SimpleValue
+
+        if (!expr.bits.isNumber()) {
+            values[ctx] = SimpleValue(MutableBitArray(expr.signed, expr.size) { BitValue.Bx })
+            return
+        }
+
+        values[ctx] = SimpleValue(MutableBitArray(expr.bits.toBigInt().negate(), expr.size, expr.signed))
+        debug(ctx)
     }
 
     override fun exitExprInvert(ctx: ExprInvertContext) {
+        constant[ctx] = constant[ctx.expr()] == true
+        val expr = values[ctx.expr()] ?: return
 
+        values[ctx] = if (ctx.getChild(0).text == "!") {
+            expr.not()
+        } else { // ~ operator
+            expr.invert()
+        }
+        debug(ctx)
     }
 
     override fun exitExprMultDiv(ctx: ExprMultDivContext) {
