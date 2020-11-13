@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.lucidv2
 
+import com.alchitry.labs.Util.widthOfMult
 import com.alchitry.labs.parsers.errors.ErrorListener
 import com.alchitry.labs.parsers.errors.ErrorStrings
 import com.alchitry.labs.parsers.errors.dummyErrorListener
@@ -9,6 +10,7 @@ import com.alchitry.labs.parsers.lucidv2.values.*
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 import org.apache.commons.text.StringEscapeUtils
+import java.math.BigInteger
 
 class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidBaseListener() {
     val values = mutableMapOf<ParseTree, Value>()
@@ -130,58 +132,6 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             return
         values[ctx.expr()]?.let { values[ctx] = it }
         constant[ctx.expr()]?.let { constant[ctx] = it }
-    }
-
-    override fun exitExprAddSub(ctx: ExprAddSubContext) {
-        if (ctx.childCount != 3 || ctx.expr().size != 2)
-            return
-
-        val op1 = values[ctx.expr(0)]
-        val op2 = values[ctx.expr(1)]
-
-        // is constant if both operands are constant
-        constant[ctx] = !ctx.expr().any { constant[it] != true }
-
-        if (op1 == null || op2 == null)
-            return
-
-        val operand = ctx.getChild(1).text
-
-        var error = false
-
-        if (!op1.signalWidth.isFlatArray()) {
-            errorListener.reportError(ctx.expr(0), if (operand == "+") ErrorStrings.ADD_MULTI_DIM else ErrorStrings.SUB_MULTI_DIM)
-            error = true
-        }
-
-        if (!op2.signalWidth.isFlatArray()) {
-            errorListener.reportError(ctx.expr(1), if (operand == "+") ErrorStrings.ADD_MULTI_DIM else ErrorStrings.SUB_MULTI_DIM)
-            error = true
-        }
-
-        if (error) return
-
-        if (op1 is UndefinedValue || op2 is UndefinedValue) {
-            val op1Width = op1.signalWidth
-            val op2Width = op2.signalWidth
-            val signed = op1.signed && op1.signed
-            if (op1Width is ArrayWidth && op2Width is ArrayWidth)
-                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size) + 1), signed)
-            else
-                values[ctx] = UndefinedValue(ctx.text, signed = signed)
-        } else {
-            if (op1 !is SimpleValue || op2 !is SimpleValue)
-                error("One (or both) of the operands isn't a simple array. This shouldn't be possible.")
-
-            val width = op1.bits.size.coerceAtLeast(op2.bits.size) + 1
-            val signed = op1.signed && op1.signed
-
-            values[ctx] = when {
-                !op1.isNumber() || !op2.isNumber() -> SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
-                operand == "+" -> SimpleValue(MutableBitArray(op1.bits.toBigInt().add(op2.bits.toBigInt()), width, signed))
-                else -> SimpleValue(MutableBitArray(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), width, signed))
-            }
-        }
     }
 
     // always returns an unsigned value
@@ -408,19 +358,266 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         debug(ctx)
     }
 
-    override fun exitExprMultDiv(ctx: ExprMultDivContext) {
+    override fun exitExprAddSub(ctx: ExprAddSubContext) {
+        if (ctx.childCount != 3 || ctx.expr().size != 2)
+            return
 
+        // is constant if both operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
+
+
+        val op1 = values[ctx.expr(0)] ?: return
+        val op2 = values[ctx.expr(1)] ?: return
+
+        val operand = ctx.getChild(1).text
+
+        var error = false
+
+        if (!op1.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(0), if (operand == "+") ErrorStrings.ADD_MULTI_DIM else ErrorStrings.SUB_MULTI_DIM)
+            error = true
+        }
+
+        if (!op2.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(1), if (operand == "+") ErrorStrings.ADD_MULTI_DIM else ErrorStrings.SUB_MULTI_DIM)
+            error = true
+        }
+
+        if (error) return
+
+        val op1Width = op1.signalWidth
+        val op2Width = op2.signalWidth
+        val signed = op1.signed && op2.signed
+
+        if (op1 is UndefinedValue || op2 is UndefinedValue) {
+            if (op1Width is ArrayWidth && op2Width is ArrayWidth)
+                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size) + 1), signed)
+            else
+                values[ctx] = UndefinedValue(ctx.text, signed = signed)
+            return
+        }
+
+        if (op1 !is SimpleValue || op2 !is SimpleValue)
+            error("One (or both) of the operands isn't a simple array. This shouldn't be possible.")
+
+        val width = op1.bits.size.coerceAtLeast(op2.bits.size) + 1
+
+        values[ctx] = when {
+            !op1.isNumber() || !op2.isNumber() -> SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
+            operand == "+" -> SimpleValue(MutableBitArray(op1.bits.toBigInt().add(op2.bits.toBigInt()), width, signed))
+            else -> SimpleValue(MutableBitArray(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), width, signed))
+        }
+    }
+
+    override fun exitExprMultDiv(ctx: ExprMultDivContext) {
+        if (ctx.childCount != 3 || ctx.expr().size != 2) return
+
+        // is constant if both operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
+
+        val op1 = values[ctx.expr(0)] ?: return
+        val op2 = values[ctx.expr(1)] ?: return
+
+        val multOp = ctx.getChild(1).text == "*"
+
+        var error = false
+
+        if (!op1.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(0), if (multOp) ErrorStrings.MUL_MULTI_DIM else ErrorStrings.DIV_MULTI_DIM)
+            error = true
+        }
+
+        if (!op2.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(1), if (multOp) ErrorStrings.MUL_MULTI_DIM else ErrorStrings.DIV_MULTI_DIM)
+            error = true
+        }
+
+        if (error) return
+
+        val op1Width = op1.signalWidth
+        val op2Width = op2.signalWidth
+        val signed = op1.signed && op2.signed
+
+        if (op1 is UndefinedValue || op2 is UndefinedValue) {
+            if (op1Width is ArrayWidth && op2Width is ArrayWidth)
+                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(widthOfMult(op1Width.size, op2Width.size)), signed)
+            else
+                values[ctx] = UndefinedValue(ctx.text, signed = signed)
+            return
+        }
+
+        if (op1 !is SimpleValue || op2 !is SimpleValue)
+            error("One (or both) of the operands isn't a simple array. This shouldn't be possible.")
+
+        val width = widthOfMult(op1.bits.size, op2.bits.size)
+        values[ctx] = if (multOp) {
+            if (!op1.isNumber() || !op2.isNumber())
+                SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
+            else
+                SimpleValue(MutableBitArray(op1.bits.toBigInt().multiply(op2.bits.toBigInt()), width, signed))
+        } else {
+            if (!op1.isNumber() || !op2.isNumber() || op2.bits.toBigInt() == BigInteger.ZERO)
+                SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
+            else
+                SimpleValue(MutableBitArray(op1.bits.toBigInt().divide(op2.bits.toBigInt()), width, signed))
+        }
     }
 
     override fun exitExprShift(ctx: ExprShiftContext) {
+        if (ctx.childCount != 3 || ctx.expr().size != 2) return
 
+        // is constant if both operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
+
+        val value = values[ctx.expr(0)] ?: return
+        val shift = values[ctx.expr(1)] ?: return
+
+        val operand = ctx.getChild(1).text
+
+        var error = false
+
+        if (!value.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(0), ErrorStrings.SHIFT_MULTI_DIM)
+            error = true
+        }
+
+        if (!shift.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(1), ErrorStrings.SHIFT_MULTI_DIM)
+            error = true
+        }
+
+        if (error) return
+
+        val isSigned = value.signed && (operand == ">>>" || operand == "<<<")
+
+        if (shift is UndefinedValue) {
+            values[ctx] = UndefinedValue(ctx.text, signed = isSigned)
+            return
+        }
+
+        assert(shift is SimpleValue) { "Shift value is flat array but not SimpleValue or UndefinedValue" }
+        shift as SimpleValue
+
+        if (value is UndefinedValue) {
+            val vWidth = value.signalWidth
+            if (vWidth is ArrayWidth) {
+                val w = if (operand == "<<" || operand == "<<<") vWidth.size + shift.bits.toBigInt().toInt() else vWidth.size
+                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(w), signed = isSigned)
+            } else
+                values[ctx] = UndefinedValue(ctx.text, signed = isSigned)
+        }
+
+        assert(value is SimpleValue) { "Value is flat array but not SimpleValue or UndefinedValue" }
+        value as SimpleValue
+
+        if (!shift.bits.isNumber()) {
+            values[ctx] = SimpleValue(MutableBitArray(isSigned, value.size) { BitValue.Bx })
+            return
+        }
+
+        val shiftAmount = shift.bits.toBigInt().toInt()
+
+        values[ctx] = when (operand) {
+            ">>" -> SimpleValue(value.bits ushr shiftAmount)
+            ">>>" -> SimpleValue(value.bits shr shiftAmount)
+            "<<" -> SimpleValue(value.bits ushl shiftAmount)
+            "<<<" -> SimpleValue(value.bits shl shiftAmount)
+            else -> {
+                errorListener.reportError(ctx.getChild(1), "Unknown operator $operand")
+                return
+            }
+        }
     }
 
-    override fun exitExprAndOr(ctx: ExprAndOrContext) {
+    override fun exitExprBitwise(ctx: ExprBitwiseContext) {
+        if (ctx.childCount != 3 || ctx.expr().size != 2) return
 
+        // is constant if all operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
+
+        val op1 = values[ctx.expr(0)] ?: return
+        val op2 = values[ctx.expr(1)] ?: return
+        val op1Width = op1.signalWidth
+        val op2Width = op2.signalWidth
+
+        val operand = ctx.getChild(1).text
+
+        var error = false
+
+        if (op1Width is UndefinedSimpleWidth && !op2Width.isFlatArray()) {
+            errorListener.reportError(ctx.expr(1), ErrorStrings.OP_DIM_MISMATCH.format(operand))
+            error = true
+        }
+
+        if (op2Width is UndefinedSimpleWidth && !op1Width.isFlatArray()) {
+            errorListener.reportError(ctx.expr(0), ErrorStrings.OP_DIM_MISMATCH.format(operand))
+            error = true
+        }
+
+        if (error) return
+
+        if (op1 is UndefinedValue || op2 is UndefinedValue) {
+            if (!op1Width.isFlatArray()) {
+                errorListener.reportError(ctx.expr(0), ErrorStrings.OP_DIM_MISMATCH.format(operand))
+                error = true
+            }
+            if (!op2Width.isFlatArray()) {
+                errorListener.reportError(ctx.expr(1), ErrorStrings.OP_DIM_MISMATCH.format(operand))
+                error = true
+            }
+            if (error) return
+
+            val isSigned = op1.signed && op2.signed
+
+            if (op1Width is ArrayWidth && op2Width is ArrayWidth) {
+                if (op1Width != op2Width) {
+                    errorListener.reportError(ctx.expr(1), ErrorStrings.OP_DIM_MISMATCH.format(operand))
+                    return
+                }
+                values[ctx] = UndefinedValue(ctx.text, op1Width, isSigned)
+            } else {
+                values[ctx] = UndefinedValue(ctx.text, signed = isSigned)
+            }
+            return
+        }
+
+        if (op1Width != op2Width) {
+            errorListener.reportError(ctx.expr(1), ErrorStrings.OP_DIM_MISMATCH.format(operand))
+            return
+        }
+
+        values[ctx] = when (operand) {
+            "&" -> op1 and op2
+            "|" -> op1 or op2
+            "^" -> op1 xor op2
+            else -> {
+                errorListener.reportError(ctx.getChild(1), "Unknown operator $operand")
+                return
+            }
+        }
     }
 
-    override fun exitExprCompress(ctx: ExprCompressContext) {
+    override fun exitExprReduction(ctx: ExprReductionContext) {
+        if (ctx.childCount != 2 || ctx.expr() == null) return
+
+        constant[ctx] = constant[ctx.expr()] == true
+
+        val value = values[ctx.expr()] ?: return
+
+        if (value is UndefinedValue) {
+            values[ctx] = UndefinedValue(ctx.text, ArrayWidth(1), false)
+            return
+        }
+
+        values[ctx] = when (ctx.getChild(0).text) {
+            "&" -> value.andReduce()
+            "|" -> value.orReduce()
+            "^" -> value.xorReduce()
+            else -> {
+                errorListener.reportError(ctx.getChild(0), "Unknown operator ${ctx.getChild(0).text}")
+                return
+            }
+        }
 
     }
 

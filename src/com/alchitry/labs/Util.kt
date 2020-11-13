@@ -279,6 +279,11 @@ object Util {
     }
 
     @JvmStatic
+    fun widthOfMult(w1: Int, w2: Int): Int {
+        return widthOfMult(w1.toLong(), w2.toLong()) // max
+    }
+
+    @JvmStatic
     var workspace: String
         get() = Settings.WORKSPACE ?: assemblePath(FileSystemView.getFileSystemView().defaultDirectory.path, "alchitry")
         set(workspace) {

@@ -63,6 +63,80 @@ sealed class Value {
         return SimpleValue(MutableBitArray(isTrueBit()))
     }
 
+    infix fun and(other: Value): Value {
+        check(other::class == this::class) { "And operator can't be used on different value types" }
+        return when (this) {
+            is SimpleValue -> SimpleValue(bits and (other as SimpleValue).bits)
+            is ArrayValue -> ArrayValue(List(elements.size) { elements[it] and (other as ArrayValue).elements[it] })
+            is StructValue -> {
+                if (isComplete() && (other as StructValue).isComplete()) {
+                    StructValue(type, elements.mapValues { (k, v) -> v and (other.elements[k] as Value) })
+                } else {
+                    error("Both structs are not complete")
+                }
+            }
+            is UndefinedValue -> this
+        }
+    }
+
+    infix fun or(other: Value): Value {
+        check(other::class == this::class) { "Or operator can't be used on different value types" }
+        return when (this) {
+            is SimpleValue -> SimpleValue(bits or (other as SimpleValue).bits)
+            is ArrayValue -> ArrayValue(List(elements.size) { elements[it] or (other as ArrayValue).elements[it] })
+            is StructValue -> {
+                if (isComplete() && (other as StructValue).isComplete()) {
+                    StructValue(type, elements.mapValues { (k, v) -> v or (other.elements[k] as Value) })
+                } else {
+                    error("Both structs are not complete")
+                }
+            }
+            is UndefinedValue -> this
+        }
+    }
+
+    infix fun xor(other: Value): Value {
+        check(other::class == this::class) { "Xor operator can't be used on different value types" }
+        return when (this) {
+            is SimpleValue -> SimpleValue(bits xor (other as SimpleValue).bits)
+            is ArrayValue -> ArrayValue(List(elements.size) { elements[it] xor (other as ArrayValue).elements[it] })
+            is StructValue -> {
+                if (isComplete() && (other as StructValue).isComplete()) {
+                    StructValue(type, elements.mapValues { (k, v) -> v xor (other.elements[k] as Value) })
+                } else {
+                    error("Both structs are not complete")
+                }
+            }
+            is UndefinedValue -> this
+        }
+    }
+
+    private fun reduceOp(op: (BitArray) -> BitValue): BitValue {
+        return when (this) {
+            is SimpleValue -> op(bits)
+            is ArrayValue -> op(MutableBitArray(false, elements.size) { elements[it].reduceOp(op) })
+            is StructValue -> {
+                if (isComplete()) {
+                    op(MutableBitArray(false).also { it.addAll(elements.map { (k, v) -> v.reduceOp(op) }) })
+                } else {
+                    BitValue.Bx
+                }
+            }
+            is UndefinedValue -> BitValue.Bx
+        }
+    }
+
+    fun andReduce(): SimpleValue {
+        return SimpleValue(MutableBitArray(false, 1) { reduceOp { it.reduce { a, b -> a and b } } })
+    }
+
+    fun orReduce(): SimpleValue {
+        return SimpleValue(MutableBitArray(false, 1) { reduceOp { it.reduce { a, b -> a or b } } })
+    }
+
+    fun xorReduce(): SimpleValue {
+        return SimpleValue(MutableBitArray(false, 1) { reduceOp { it.reduce { a, b -> a xor b } } })
+    }
 }
 
 data class ArrayValue(

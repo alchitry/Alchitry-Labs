@@ -90,8 +90,7 @@ public class ErrorStrings {
 	public static final String SHIFT_MULTI_DIM = "Only single dimensional arrays can be shifted";
 	public static final String BUILD_MULTI_DIM = "Only single dimensional arrays can be built";
 
-	public static final String OR_MULTI_DIM_MISMATCH = "When performing an OR on multi-dimensional arrays their dimensions must match";
-	public static final String AND_MULTI_DIM_MISMATCH = "When performing an AND on multi-dimensional arrays their dimensions must match";
+	public static final String OP_DIM_MISMATCH = "When performing an %s operation the argument's dimensions must match";
 
 	public static final String VALUE_TOO_BIG = "The value \"%s\" is wider than %s bits and it will be truncated";
 
@@ -116,7 +115,7 @@ public class ErrorStrings {
 	public static final String READ_BEFORE_WRITE = "The signal \"%s\" must be written before it can be read in this always block";
 	public static final String MULTIPLE_DRIVERS = "The signal \"%s\" has already been assigned";
 
-	public static final String OUPUT_NEVER_ASSIGNED = "The output \"%s\" was never assigned";
+	public static final String OUTPUT_NEVER_ASSIGNED = "The output \"%s\" was never assigned";
 	public static final String NEVER_USED = "\"%s\" was never used";
 
 	public static final String INVALID_ATTRIBUTE = "\"%s\" is not a valid attribute. Only \"" + Lucid.WIDTH_ATTR + "\" is";

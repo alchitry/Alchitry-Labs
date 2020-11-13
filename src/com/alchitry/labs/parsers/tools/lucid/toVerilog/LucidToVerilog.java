@@ -616,7 +616,7 @@ public class LucidToVerilog extends LucidBaseListener {
 	}
 
 	@Override
-	public void exitExprAndOr(ExprAndOrContext ctx) {
+	public void exitExprBitwise(ExprBitwiseContext ctx) {
 		ConstValue cv = getValue(ctx);
 
 		if (cv != null)
@@ -626,7 +626,7 @@ public class LucidToVerilog extends LucidBaseListener {
 	}
 
 	@Override
-	public void exitExprCompress(ExprCompressContext ctx) {
+	public void exitExprReduction(ExprReductionContext ctx) {
 		ConstValue cv = getValue(ctx);
 
 		if (cv != null)

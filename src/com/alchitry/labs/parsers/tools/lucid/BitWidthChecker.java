@@ -23,13 +23,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BitWidthChecker extends LucidBaseListener implements WidthProvider {
-	private ErrorListener errorChecker;
-	private ConstExprParser constExprParser;
+	private final ErrorListener errorChecker;
+	private final ConstExprParser constExprParser;
 	private ConstProvider constParser;
 	private BoundsProvider boundsProvider;
-	private LucidExtractor lucid;
+	private final LucidExtractor lucid;
 
-	private HashMap<String, SignalWidth> widthMap = new HashMap<>();
+	private final HashMap<String, SignalWidth> widthMap = new HashMap<>();
 	protected ParseTreeProperty<SignalWidth> widths;
 
 	private InstModule currentModule;
@@ -216,7 +216,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			widthMap.put(ctx.name().getText(), width);
 			widths.put(ctx, width);
 		}
-	};
+	}
 
 	@Override
 	public void exitOutput_dec(Output_decContext ctx) {
@@ -246,7 +246,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				widthMap.put(ctx.name().getText(), width);
 			}
 		}
-	};
+	}
 
 	@Override
 	public void exitConst_dec(Const_decContext ctx) {
@@ -282,7 +282,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 		}
 	}
 
-	private ConstProvider paramsProvider = new ConstProvider() {
+	private final ConstProvider paramsProvider = new ConstProvider() {
 
 		@Override
 		public ConstValue getValue(String s) {
@@ -576,13 +576,13 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					for (int j = 0; j < i - 1; j++)
 						sb.append(ctx.children.get(j).getText());
 					if (listener != null)
-						listener.reportError((NameContext) pt, String.format(ErrorStrings.NOT_A_MEMBER, pt.getText(), sb.toString()));
+						listener.reportError(pt, String.format(ErrorStrings.NOT_A_MEMBER, pt.getText(), sb.toString()));
 					return false;
 				}
 				SignalWidth w = width.getStruct().getWidthOfMember(name);
 				if (w == null) {
 					if (listener != null)
-						listener.reportError((NameContext) pt, String.format(ErrorStrings.UNKNOWN_STRUCT_NAME, name, width.getStruct()));
+						listener.reportError(pt, String.format(ErrorStrings.UNKNOWN_STRUCT_NAME, name, width.getStruct()));
 					return false;
 				} else {
 					width.set(w);
@@ -1037,7 +1037,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			return;
 		}
 
-		aw.getWidths().set(0, (int) (aw.getWidths().get(0) * dupValue.getBigInt().intValue()));
+		aw.getWidths().set(0, aw.getWidths().get(0) * dupValue.getBigInt().intValue());
 		widths.put(ctx, aw);
 		debug(ctx);
 	}
@@ -1243,7 +1243,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	}
 
 	@Override
-	public void exitExprAndOr(ExprAndOrContext ctx) {
+	public void exitExprBitwise(ExprBitwiseContext ctx) {
 		if (constExprParser.getValue(ctx) != null) {
 			widths.put(ctx, new SignalWidth(constExprParser.getValue(ctx).getWidths()));
 			return;
@@ -1258,10 +1258,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				return;
 
 			if ((op1.getDepth() != 1 || op2.getDepth() != 1 || !op1.isSimpleArray() || !op2.isSimpleArray()) && !op1.equals(op2)) {
-				if (andOp)
-					errorChecker.reportError(ctx.expr(1), ErrorStrings.AND_MULTI_DIM_MISMATCH);
-				else
-					errorChecker.reportError(ctx.expr(1), ErrorStrings.OR_MULTI_DIM_MISMATCH);
+				errorChecker.reportError(ctx.expr(1), String.format(ErrorStrings.OP_DIM_MISMATCH, andOp ? "AND" : "OR"));
 				return;
 			}
 
@@ -1274,7 +1271,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 	}
 
 	@Override
-	public void exitExprCompress(ExprCompressContext ctx) {
+	public void exitExprReduction(ExprReductionContext ctx) {
 		if (constExprParser.getValue(ctx) != null) {
 			widths.put(ctx, new SignalWidth(constExprParser.getValue(ctx).getWidths()));
 			return;

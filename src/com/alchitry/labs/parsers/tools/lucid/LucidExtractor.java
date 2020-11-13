@@ -362,7 +362,7 @@ public class LucidExtractor extends LucidBaseListener {
 				list.add(s);
 				moduleList.put(name[0], list);
 			} else {
-				errorListener.reportError(s.getNode(), String.format(ErrorStrings.OUPUT_NEVER_ASSIGNED, s.getName())); // it is a signal
+				errorListener.reportError(s.getNode(), String.format(ErrorStrings.OUTPUT_NEVER_ASSIGNED, s.getName())); // it is a signal
 			}
 		}
 

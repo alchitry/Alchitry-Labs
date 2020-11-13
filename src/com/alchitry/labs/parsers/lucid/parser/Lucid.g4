@@ -124,8 +124,8 @@ expr
   | expr ('*'|'/') expr                         #ExprMultDiv
   | expr ('+'|'-') expr                         #ExprAddSub
   | expr ('>>'|'<<'|'<<<'|'>>>') expr           #ExprShift
-  | expr ('|'|'&'|'^'|'~^') expr                #ExprAndOr
-  | ('|'|'&'|'~&'|'~|'|'^'|'~^') expr           #ExprCompress
+  | expr ('|'|'&'|'^') expr                     #ExprBitwise
+  | ('|'|'&'|'^') expr                          #ExprReduction
   | expr ('<'|'>'|'=='|'!='|'>='|'<=') expr     #ExprCompare
   | expr ('||'|'&&') expr                       #ExprLogical
   | expr '?' expr ':' expr                      #ExprTernary

@@ -45,7 +45,7 @@ interface BitArray : List<BitValue> {
 
     private inline fun doOp(b: BitArray, crossinline op: (BitValue, BitValue) -> BitValue): BitArray {
         val size = this.size.coerceAtLeast(b.size)
-        return MutableBitArray(this.signed || b.signed, size) { i ->
+        return MutableBitArray(this.signed && b.signed, size) { i ->
             val op1 = if (i < this.size) this[i] else BitValue.B0
             val op2 = if (i < b.size) b[i] else BitValue.B0
             op(op1, op2)
@@ -74,6 +74,29 @@ interface BitArray : List<BitValue> {
 
     infix fun xnor(b: BitArray): BitArray {
         return doOp(b) { b1, b2 -> b1 xnor b2 }
+    }
+
+    infix fun shl(n: Int): BitArray {
+        return MutableBitArray(this.signed, n) { BitValue.B0 }.also { it.addAll(this) }
+    }
+
+    infix fun ushl(n: Int): BitArray {
+        return MutableBitArray(false, n) { BitValue.B0 }.also { it.addAll(this) }
+    }
+
+    infix fun shr(n: Int): BitArray {
+        val value = MutableBitArray(signed)
+        val signBit = if (signed) last() else BitValue.B0
+        value.addAll(subList(n, size))
+        repeat(n) { value.add(signBit) }
+        return value
+    }
+
+    infix fun ushr(n: Int): BitArray {
+        val value = MutableBitArray(false)
+        value.addAll(subList(n, size))
+        repeat(n) { value.add(BitValue.B0) }
+        return value
     }
 
     fun equal(b: BitArray): BitValue {

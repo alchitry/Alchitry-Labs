@@ -43,7 +43,7 @@ public class ConstExprParser extends LucidBaseListener {
 
 	private static final ErrorListener dummyListener = new ErrorListener() {
 		@Override
-		public void reportWarning(ParserRuleContext ctx, String message) {
+		public void reportWarning(ParseTree ctx, String message) {
 		}
 
 		@Override
@@ -51,7 +51,7 @@ public class ConstExprParser extends LucidBaseListener {
 		}
 
 		@Override
-		public void reportError(ParserRuleContext ctx, String message) {
+		public void reportError(ParseTree ctx, String message) {
 		}
 
 		@Override
@@ -59,7 +59,7 @@ public class ConstExprParser extends LucidBaseListener {
 		}
 
 		@Override
-		public void reportDebug(ParserRuleContext ctx, String message) {
+		public void reportDebug(ParseTree ctx, String message) {
 		}
 
 		@Override
@@ -743,7 +743,7 @@ public class ConstExprParser extends LucidBaseListener {
 				return;
 			}
 			BigInteger bi = dupVal.getBigInt();
-			int dup = (int) bi.intValue();
+			int dup = bi.intValue();
 
 			if (val.isArray()) {
 				cv = new ConstValue(true);
@@ -968,7 +968,7 @@ public class ConstExprParser extends LucidBaseListener {
 	}
 
 	@Override
-	public void exitExprAndOr(ExprAndOrContext ctx) {
+	public void exitExprBitwise(ExprBitwiseContext ctx) {
 		if (ctx.getChildCount() == 3) {
 			ConstValue op1 = values.get(ctx.expr(0));
 			ConstValue op2 = values.get(ctx.expr(1));
@@ -982,10 +982,7 @@ public class ConstExprParser extends LucidBaseListener {
 
 			if (op1.isArray() || op2.isArray()) {
 				if (!op1.getWidths().equals(op2.getWidths())) {
-					if (operand.equals("|"))
-						listener.reportError(ctx.expr(1), ErrorStrings.OR_MULTI_DIM_MISMATCH);
-					else
-						listener.reportError(ctx.expr(1), ErrorStrings.AND_MULTI_DIM_MISMATCH);
+					listener.reportError(ctx.expr(1), String.format(ErrorStrings.OP_DIM_MISMATCH, operand.equals("|") ? "OR" : "AND"));
 					return;
 				}
 				switch (operand) {
@@ -1040,7 +1037,7 @@ public class ConstExprParser extends LucidBaseListener {
 	}
 
 	@Override
-	public void exitExprCompress(ExprCompressContext ctx) {
+	public void exitExprReduction(ExprReductionContext ctx) {
 		if (ctx.expr() != null) {
 			ConstValue op = values.get(ctx.expr());
 
@@ -1221,7 +1218,7 @@ public class ConstExprParser extends LucidBaseListener {
 		return parseExpr(text, provider.paramsParser, provider.constParser, provider.bitWidthChecker);
 	}
 
-	private static ConstProvider dummyConstProvider = new ConstProvider() {
+	private static final ConstProvider dummyConstProvider = new ConstProvider() {
 		@Override
 		public ConstValue getValue(String s) {
 			return null;
