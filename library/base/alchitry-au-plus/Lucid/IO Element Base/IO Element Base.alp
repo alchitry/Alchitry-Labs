@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IO Element Base" board="Alchitry Au+" language="Lucid" version="3">
+  <files>
+    <src top="true">au_plus_top.luc</src>
+    <constraint lib="true">alchitry.acf</constraint>
+    <constraint lib="true">io.acf</constraint>
+    <constraint lib="true">au.xdc</constraint>
+    <component>reset_conditioner.luc</component>
+  </files>
+</project>

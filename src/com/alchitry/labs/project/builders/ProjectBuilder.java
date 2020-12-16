@@ -228,7 +228,7 @@ public abstract class ProjectBuilder {
 					FileUtils.write(sdc, sb.toString());
 					constraintFiles.add(sdc);
 				}
-			} else if (board.isType(Board.AU)) {
+			} else if (board.isType(Board.AU | Board.AU_PLUS)) {
 				if (!extractor.getPinConstraints().isEmpty() || !extractor.getClockConstraints().isEmpty()) {
 					File xdc = Util.assembleFile(workFolder, "constraint", Util.changeExt(file, ".xdc").getName());
 					if (!xdc.exists() && !xdc.createNewFile()) {
@@ -273,6 +273,7 @@ public abstract class ProjectBuilder {
 	}
 
 	protected ArrayList<File> getConstraintFiles() throws IOException, ParseException {
+
 		File srcFolder = Util.assembleFile(workFolder, "constraint");
 		ArrayList<File> constraintFiles = new ArrayList<>();
 		if (!srcFolder.exists() || !srcFolder.isDirectory()) {
@@ -294,7 +295,6 @@ public abstract class ProjectBuilder {
 
 		if (project.getBoard().isType(Board.CU))
 			constraintFiles = mergeConstraintFiles(constraintFiles);
-
 		return constraintFiles;
 	}
 

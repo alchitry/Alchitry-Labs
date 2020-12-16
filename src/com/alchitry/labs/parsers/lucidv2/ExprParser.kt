@@ -449,18 +449,21 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         if (op1 !is SimpleValue || op2 !is SimpleValue)
             error("One (or both) of the operands isn't a simple array. This shouldn't be possible.")
 
-        val width = widthOfMult(op1.bits.size, op2.bits.size)
+
         values[ctx] = if (multOp) {
+            val width = widthOfMult(op1.bits.size, op2.bits.size)
             if (!op1.isNumber() || !op2.isNumber())
                 SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
             else
                 SimpleValue(MutableBitArray(op1.bits.toBigInt().multiply(op2.bits.toBigInt()), width, signed))
         } else {
+            val width = op1.bits.size
             if (!op1.isNumber() || !op2.isNumber() || op2.bits.toBigInt() == BigInteger.ZERO)
                 SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
             else
                 SimpleValue(MutableBitArray(op1.bits.toBigInt().divide(op2.bits.toBigInt()), width, signed))
         }
+        debug(ctx)
     }
 
     override fun exitExprShift(ctx: ExprShiftContext) {
@@ -523,10 +526,11 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             "<<" -> SimpleValue(value.bits ushl shiftAmount)
             "<<<" -> SimpleValue(value.bits shl shiftAmount)
             else -> {
-                errorListener.reportError(ctx.getChild(1), "Unknown operator $operand")
+                errorListener.reportError(ctx.getChild(ParserRuleContext::class.java, 1), "Unknown operator $operand")
                 return
             }
         }
+        debug(ctx)
     }
 
     override fun exitExprBitwise(ctx: ExprBitwiseContext) {
@@ -581,7 +585,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             return
         }
 
-        if (op1Width != op2Width) {
+        if ((op1 !is SimpleValue || op2 !is SimpleValue) && op1Width != op2Width) {
             errorListener.reportError(ctx.expr(1), ErrorStrings.OP_DIM_MISMATCH.format(operand))
             return
         }
@@ -591,10 +595,11 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             "|" -> op1 or op2
             "^" -> op1 xor op2
             else -> {
-                errorListener.reportError(ctx.getChild(1), "Unknown operator $operand")
+                errorListener.reportError(ctx.getChild(ParserRuleContext::class.java, 1), "Unknown operator $operand")
                 return
             }
         }
+        debug(ctx)
     }
 
     override fun exitExprReduction(ctx: ExprReductionContext) {
@@ -614,10 +619,12 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             "|" -> value.orReduce()
             "^" -> value.xorReduce()
             else -> {
-                errorListener.reportError(ctx.getChild(0), "Unknown operator ${ctx.getChild(0).text}")
+                errorListener.reportError(ctx.getChild(ParserRuleContext::class.java, 0), "Unknown operator ${ctx.getChild(0).text}")
                 return
             }
         }
+
+        debug(ctx)
 
     }
 

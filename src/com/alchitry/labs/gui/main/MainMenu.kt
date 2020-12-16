@@ -140,26 +140,30 @@ class MainMenu {
             }
             MainWindow.coreGen.launch(MainWindow.project)
         })
-        if (Board.isType(board, Board.AU)) createItem(subMenu, "Vivado IP Catalog", createSelectionAdapter {
-            if (MainWindow.project == null) {
-                showError("You need to open or create a project first!")
-                return@createSelectionAdapter
+        if (Board.isType(board, Board.AU or Board.AU_PLUS)) createItem(subMenu, "Vivado IP Catalog", createSelectionAdapter {
+            MainWindow.project.let { project ->
+                if (project == null) {
+                    showError("You need to open or create a project first!")
+                    return@createSelectionAdapter
+                }
+                MainWindow.vivadoIP.launch(project)
             }
-            MainWindow.vivadoIP.launch(MainWindow.project)
         })
-        if (Board.isType(board, Board.AU)) createItem(subMenu, "Add Memory Controller", createSelectionAdapter {
-            if (MainWindow.project == null) {
-                showError("You need to open or create a project first!")
-                return@createSelectionAdapter
-            }
-            try {
-                MainWindow.vivadoIP.generateMigCore(MainWindow.project)
-            } catch (e1: InterruptedException) {
-                reportException(e1, "Failed to generate MIG core!")
-                showError("Failed to generate MIG core!")
-            } catch (e1: IOException) {
-                reportException(e1, "Failed to generate MIG core!")
-                showError("Failed to generate MIG core!")
+        if (Board.isType(board, Board.AU or Board.AU_PLUS)) createItem(subMenu, "Add Memory Controller", createSelectionAdapter {
+            MainWindow.project.let { project ->
+                if (project == null) {
+                    showError("You need to open or create a project first!")
+                    return@createSelectionAdapter
+                }
+                try {
+                    MainWindow.vivadoIP.generateMigCore(project)
+                } catch (e1: InterruptedException) {
+                    reportException(e1, "Failed to generate MIG core!")
+                    showError("Failed to generate MIG core!")
+                } catch (e1: IOException) {
+                    reportException(e1, "Failed to generate MIG core!")
+                    showError("Failed to generate MIG core!")
+                }
             }
         })
     }
@@ -198,7 +202,7 @@ class MainMenu {
                 }
             }
         })
-        if (Board.isType(board, Board.MOJO or Board.AU)) createItem(subMenu, "Wave Capture", createSelectionAdapter {
+        if (Board.isType(board, Board.MOJO or Board.AU or Board.AU_PLUS)) createItem(subMenu, "Wave Capture", createSelectionAdapter {
             MainWindow.openWave()
         })
     }

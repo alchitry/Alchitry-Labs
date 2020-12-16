@@ -3,6 +3,7 @@ package com.alchitry.labs.hardware.usb
 import com.alchitry.labs.Util
 import com.alchitry.labs.gui.DeviceSelector.DeviceSelectorRunnable
 import com.alchitry.labs.hardware.boards.AlchitryAu
+import com.alchitry.labs.hardware.boards.AlchitryAuPlus
 import com.alchitry.labs.hardware.boards.AlchitryCu
 import com.alchitry.labs.hardware.boards.Mojo
 import com.alchitry.labs.hardware.usb.ftdi.Ftdi
@@ -23,17 +24,18 @@ import java.util.*
 object UsbUtil {
     private val MOJO_DESC = Mojo.usbDescriptor
     private val AU_DESC = AlchitryAu.usbDescriptor
+    private val AU_PLUS_DESC = AlchitryAuPlus.usbDescriptor
     private val CU_DESC = AlchitryCu.usbDescriptor
 
     @JvmField
-    var ALL_DEVICES = listOf(MOJO_DESC, AU_DESC, CU_DESC)
+    var ALL_DEVICES = listOf(MOJO_DESC, AU_DESC, AU_PLUS_DESC, CU_DESC)
 
     @JvmField
     var MOJO_DEVICES = listOf(MOJO_DESC)
-    var ALCHITRY_DEVICES = listOf(AU_DESC, CU_DESC)
+    var ALCHITRY_DEVICES = listOf(AU_DESC, AU_PLUS_DESC, CU_DESC)
 
     @JvmField
-    var AU_DEVICES = listOf(AU_DESC)
+    var AU_DEVICES = listOf(AU_DESC, AU_PLUS_DESC)
 
     @JvmField
     var CU_DEVICES = listOf(CU_DESC)

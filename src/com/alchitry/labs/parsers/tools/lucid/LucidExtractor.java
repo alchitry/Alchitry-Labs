@@ -12,7 +12,6 @@ import com.alchitry.labs.parsers.lucid.AssignBlock;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
-import com.alchitry.labs.parsers.lucidv2.ExprParser;
 import com.alchitry.labs.parsers.types.*;
 import com.alchitry.labs.project.Primitive;
 import com.alchitry.labs.project.Primitive.Parameter;
@@ -212,7 +211,7 @@ public class LucidExtractor extends LucidBaseListener {
 		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		addToParser(listeners);
-		listeners.add(new ExprParser(errorListener));
+		//listeners.add(new ExprParser(errorListener));
 		ParserCache.walk(file, listeners);
 	}
 

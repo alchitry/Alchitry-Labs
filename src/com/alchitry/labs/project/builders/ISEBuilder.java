@@ -114,27 +114,27 @@ public class ISEBuilder extends ProjectBuilder {
 		try {
 			vFiles = getVerilogFiles();
 		} catch (ParseException e) {
-			Util.println("Error: " + e.getMessage(), true);
-			return false;
-		}
-		if (vFiles == null || vFiles.size() == 0) {
-			Util.showError("Error building the project", "Error with getting list of Verilog files!");
-		}
+            Util.println("Error: " + e.getMessage(), true);
+            return false;
+        }
+        if (vFiles == null || vFiles.size() == 0) {
+            Util.showError("Error building the project", "Error with getting list of Verilog files!");
+        }
 
-		file.write("set projDir \"" + workFolder.getAbsolutePath().replace("\\", "/") + ps + projectDir + "\"" + nl);
-		file.write("set projName \"" + project.getProjectName() + "\"" + nl);
-		file.write("set topName top" + nl);
-		file.write("set device " + project.getBoard().getFPGAName() + nl);
-		file.write("if {[file exists \"$projDir" + ps + "$projName\"]} { file delete -force \"$projDir" + ps + "$projName\" }" + nl);
-		file.write("create_project $projName \"$projDir" + ps + "$projName\" -part $device" + nl);
-		// file.write("set_property source_mgmt_mode None [current_project]" + nl);
-		file.write("set_property design_mode RTL [get_filesets sources_1]" + nl);
-		file.write("set verilogSources [list " + getSpacedList(vFiles) + "]" + nl);
-		file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
-		file.write("set ucfSources [list ");
-		HashSet<File> ucfFiles = project.getConstraintFiles();
-		if (ucfFiles.size() > 0)
-			file.write(getSpacedList(ucfFiles));
+        file.write("set projDir \"" + workFolder.getAbsolutePath().replace("\\", "/") + ps + projectDir + "\"" + nl);
+        file.write("set projName \"" + project.getProjectName() + "\"" + nl);
+        file.write("set topName top" + nl);
+        file.write("set device " + project.getBoard().getFpgaName() + nl);
+        file.write("if {[file exists \"$projDir" + ps + "$projName\"]} { file delete -force \"$projDir" + ps + "$projName\" }" + nl);
+        file.write("create_project $projName \"$projDir" + ps + "$projName\" -part $device" + nl);
+        // file.write("set_property source_mgmt_mode None [current_project]" + nl);
+        file.write("set_property design_mode RTL [get_filesets sources_1]" + nl);
+        file.write("set verilogSources [list " + getSpacedList(vFiles) + "]" + nl);
+        file.write("import_files -fileset [get_filesets sources_1] -force -norecurse $verilogSources" + nl);
+        file.write("set ucfSources [list ");
+        HashSet<File> ucfFiles = project.getConstraintFiles();
+        if (ucfFiles.size() > 0)
+            file.write(getSpacedList(ucfFiles));
 		file.write("]" + nl);
 		file.write("import_files -fileset [get_filesets constrs_1] -force -norecurse $ucfSources" + nl);
 		if (project.getIPCores().size() > 0) {

@@ -136,7 +136,7 @@ public class VivadoBuilder extends ProjectBuilder {
 		file.write("set projDir \"" + getSanitizedPath(workFolder) + ps + projectDir + "\"" + nl);
 		file.write("set projName \"" + project.getProjectName() + "\"" + nl);
 		file.write("set topName top" + nl);
-		file.write("set device " + project.getBoard().getFPGAName() + nl);
+		file.write("set device " + project.getBoard().getFpgaName() + nl);
 		file.write("if {[file exists \"$projDir" + ps + "$projName\"]} { file delete -force \"$projDir" + ps + "$projName\" }" + nl);
 		file.write("create_project $projName \"$projDir" + ps + "$projName\" -part $device" + nl);
 		file.write("set_property design_mode RTL [get_filesets sources_1]" + nl);

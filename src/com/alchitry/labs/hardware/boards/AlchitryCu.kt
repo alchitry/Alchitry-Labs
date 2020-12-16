@@ -22,7 +22,7 @@ object AlchitryCu : Board() {
 
     override val usbDescriptor = UsbDescriptor("Alchitry Cu", 0x0403.toShort(), 0x6010.toShort(), "Alchitry Cu")
 
-    override val fPGAName = "ICE40HX8K-CB132IC"
+    override val fpgaName = "ICE40HX8K-CB132IC"
     override val name = "Alchitry Cu"
     override val exampleProjectDir = "alchitry-cu"
     override val builder: ProjectBuilder

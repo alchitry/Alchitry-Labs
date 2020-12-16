@@ -6,7 +6,7 @@ import com.alchitry.labs.hardware.usb.UsbUtil.UsbDescriptor
 import com.alchitry.labs.project.builders.VivadoBuilder
 import com.alchitry.labs.widgets.IoRegion
 
-object AlchitryAu : Board() {
+object AlchitryAuPlus : Board() {
 
     override val ioRegions = arrayOf(IoRegion("Bank A", 0, 0.289769230769231, 0.0274666666666666, 0.235846153846154, 0.145044444444444).also {
         it.signals = arrayOf("A2", "A3", "A5", "A6", "A8", "A9", "A11", "A12", "A14", "A15", "A17", "A18", "A20", "A21", "A23", "A24", "A27", "A28", "A30",
@@ -35,17 +35,16 @@ object AlchitryAu : Board() {
             IoRegion("USB", 7, 0.00189230769230769, 0.107711111111111, 0.137446153846154, 0.221177777777778),
             IoRegion("Flash", 8, 0.756538461538461, 0.566666666666667, 0.135384615384615, 0.111111111111111),
             IoRegion("RAM", 9, 0.769230769230769, 0.233333333333333, 0.123076923076923, 0.311111111111111))
-    override val usbDescriptor = UsbDescriptor("Alchitry Au", 0x0403.toShort(), 0x6010.toShort(), "Alchitry Au")
+    override val usbDescriptor = UsbDescriptor("Alchitry Au+", 0x0403.toShort(), 0x6010.toShort(), "Alchitry Au+")
 
 
     //return "xc7a100tftg256-1";
-    override val fpgaName = "xc7a35tftg256-1"
+    override val fpgaName = "xc7a100tftg256-1"
 
-    //return "xc7a100tftg256-1";
-    override val name = "Alchitry Au"
-    override val exampleProjectDir = "alchitry-au"
+    override val name = "Alchitry Au+"
+    override val exampleProjectDir = "alchitry-au-plus"
     override val builder = VivadoBuilder()
-    override val loader = AuLoader()
+    override val loader = AuLoader(isPlus = true)
     override val sVGPath = "/images/au.svg"
     override val supportedConstraintExtensions = arrayOf(".acf", ".xdc")
     override val pinConverter = AlchitryAuPinConverter()

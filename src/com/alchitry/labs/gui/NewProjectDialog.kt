@@ -118,11 +118,7 @@ class NewProjectDialog(parent: Shell, style: Int = SWT.DIALOG_TRIM, private val 
             val map = HashMap<String, String>()
             val builder = SAXBuilder()
             val xmlFile = Util.assembleFile(Locations.BASE.path, board.exampleProjectDir, language, PROJECT_XML)
-            Util.logger.info("xml ${xmlFile.absolutePath}")
-            Util.logger.info("Board ${board.exampleProjectDir}")
-            Util.logger.info("Base ${Locations.BASE.absolutePath}")
-            val document: Document
-            document = try {
+            val document: Document = try {
                 builder.build(xmlFile) as Document
             } catch (e: JDOMException) {
                 Util.showError("Could not parse projects XML file! ${xmlFile.absolutePath}")

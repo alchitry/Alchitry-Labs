@@ -8,7 +8,7 @@ import com.alchitry.labs.widgets.IoRegion
 
 object Mojo : Board() {
     override val usbDescriptor = UsbDescriptor("Mojo", 0x29DD.toShort(), 0x8001.toShort(), null)
-    override val fPGAName = "xc6slx9-2tqg144"
+    override val fpgaName = "xc6slx9-2tqg144"
     override val name = "Mojo"
     override val exampleProjectDir = "mojo"
     override val builder = ISEBuilder()

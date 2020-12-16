@@ -11,8 +11,9 @@ abstract class Board {
     companion object {
         const val ANY = -0x1
         const val AU = 1 shl 0
-        const val CU = 1 shl 1
-        const val MOJO = 1 shl 2
+        const val AU_PLUS = 1 shl 1
+        const val CU = 1 shl 2
+        const val MOJO = 1 shl 3
         val constraintExtensions: Set<String> by lazy {
             HashSet<String>().also { list ->
                 boards.forEach { board -> board.supportedConstraintExtensions.forEach { list.add(it) } }
@@ -20,7 +21,7 @@ abstract class Board {
         }
 
         @JvmField
-        val boards = listOf(AlchitryAu, AlchitryCu, Mojo)
+        val boards = listOf(AlchitryAu, AlchitryAuPlus, AlchitryCu, Mojo)
 
         @JvmStatic
         fun getFromName(board: String): Board? {
@@ -40,6 +41,7 @@ abstract class Board {
         fun getType(board: Board?): Int {
             return when (board) {
                 is AlchitryAu -> AU
+                is AlchitryAuPlus -> AU_PLUS
                 is AlchitryCu -> CU
                 is Mojo -> MOJO
                 else -> 0
@@ -52,7 +54,7 @@ abstract class Board {
     }
 
     abstract val usbDescriptor: UsbDescriptor
-    abstract val fPGAName: String
+    abstract val fpgaName: String
     abstract val name: String
     abstract val exampleProjectDir: String
     abstract val builder: ProjectBuilder

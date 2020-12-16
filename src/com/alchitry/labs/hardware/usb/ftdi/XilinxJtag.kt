@@ -1,156 +1,152 @@
-package com.alchitry.labs.hardware.usb.ftdi;
+package com.alchitry.labs.hardware.usb.ftdi
 
-import com.alchitry.labs.Util;
-import com.alchitry.labs.gui.Theme;
+import com.alchitry.labs.Util.println
+import com.alchitry.labs.Util.reportException
+import com.alchitry.labs.gui.Theme
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+class XilinxJtag(private val ftdi: Ftdi) {
+    enum class Instruction(val code: Byte) {
+        EXTEST(0x26.toByte()), EXTEST_PULSE(0x3C.toByte()), EXTEST_TRAIN(0x3D.toByte()), SAMPLE(0x01.toByte()), USER1(0x02.toByte()), USER2(0x03.toByte()), USER3(0x22.toByte()), USER4(
+                0x23.toByte()),
+        CFG_OUT(0x04.toByte()), CFG_IN(0x05.toByte()), USERCODE(0x08.toByte()), IDCODE(0x09.toByte()), HIGHZ_IO(0x0A.toByte()), JPROGRAM(0x0B.toByte()), JSTART(
+                0x0C.toByte()),
+        JSHUTDOWN(0x0D.toByte()), XADC_DRP(0x37.toByte()), ISC_ENABLE(0x10.toByte()), ISC_PROGRAM(0x11.toByte()), XSC_PROGRAM_KEY(
+                0x12.toByte()),
+        XSC_DNA(0x17.toByte()), FUSE_DNA(0x32.toByte()), ISC_NOOP(0x14.toByte()), ISC_DISABLE(0x16.toByte()), BYPASS(0x2F.toByte());
 
-public class XilinxJtag {
-	private static final String LOADER_FILE = "/fpga/au_loader.bin";
+    }
 
-	public enum Instruction {
-		EXTEST((byte) 0x26), EXTEST_PULSE((byte) 0x3C), EXTEST_TRAIN((byte) 0x3D), SAMPLE((byte) 0x01), USER1((byte) 0x02), USER2((byte) 0x03), USER3((byte) 0x22), USER4(
-				(byte) 0x23), CFG_OUT((byte) 0x04), CFG_IN((byte) 0x05), USERCODE((byte) 0x08), IDCODE((byte) 0x09), HIGHZ_IO((byte) 0x0A), JPROGRAM((byte) 0x0B), JSTART(
-				(byte) 0x0C), JSHUTDOWN((byte) 0x0D), XADC_DRP((byte) 0x37), ISC_ENABLE((byte) 0x10), ISC_PROGRAM((byte) 0x11), XSC_PROGRAM_KEY(
-				(byte) 0x12), XSC_DNA((byte) 0x17), FUSE_DNA((byte) 0x32), ISC_NOOP((byte) 0x14), ISC_DISABLE((byte) 0x16), BYPASS((byte) 0x2F);
+    private val jtag: Jtag
+    fun setIR(inst: Instruction) {
+        jtag.shiftIR(6, byteArrayOf(inst.code))
+    }
 
-		private final byte code;
+    fun checkIDCODE(idCode: String) {
+        ftdi.usbPurgeBuffers()
+        setIR(Instruction.IDCODE)
+        jtag.shiftDRWithCheck(32, "00000000", idCode, "0FFFFFFF")
+    }
 
-		public byte getCode() {
-			return code;
-		}
+    private fun reverse(b: Byte): Byte {
+        var tmp = b.toInt()
+        tmp = (((tmp and 0xF0) ushr 4) or ((tmp and 0x0F) shl 4))
+        tmp = (((tmp and 0xCC) ushr 2) or ((tmp and 0x33) shl 2))
+        tmp = (((tmp and 0xAA) ushr 1) or ((tmp and 0x55) shl 1))
+        return tmp.toUByte().toByte()
+    }
 
-		Instruction(byte code) {
-			this.code = code;
-		}
-	}
+    @Throws(IOException::class)
+    private fun loadBridge(loaderFile: String) {
+        val inStream = javaClass.getResourceAsStream(loaderFile)
+        val os = ByteArrayOutputStream()
+        val buffer = ByteArray(1024)
+        var len: Int
 
-	private final Jtag jtag;
-	private final Ftdi ftdi;
+        // read bytes from the input stream and store them in buffer
+        while (inStream.read(buffer).also { len = it } != -1) {
+            // write bytes from the buffer into output stream
+            os.write(buffer, 0, len)
+        }
+        loadBin(os.toByteArray())
+    }
 
-	public XilinxJtag(Ftdi ftdi) {
-		this.ftdi = ftdi;
-		jtag = new Jtag(ftdi);
-		jtag.init();
-		jtag.resetState();
-	}
+    @Throws(IOException::class)
+    private fun loadBin(binPath: String) {
+        val binData = Files.readAllBytes(Paths.get(binPath))
+        loadBin(binData)
+    }
 
-	public void setIR(Instruction inst) {
-		jtag.shiftIR(6, new byte[]{inst.getCode()});
-	}
+    @Throws(IOException::class)
+    private fun loadBin(binData: ByteArray) {
+        for (i in binData.indices) binData[i] = reverse(binData[i])
+        ftdi.usbPurgeBuffers()
+        jtag.setFreq(30000000.0)
+        jtag.resetState()
+        jtag.navitageToState(JtagState.RUN_TEST_IDLE)
+        setIR(Instruction.JPROGRAM)
+        setIR(Instruction.ISC_NOOP)
+        try {
+            Thread.sleep(100)
+        } catch (e: InterruptedException) {
+        }
 
-	public void checkIDCODE() {
-		ftdi.usbPurgeBuffers();
-		setIR(Instruction.IDCODE);
-		jtag.shiftDRWithCheck(32, "00000000", "0362D093", "0FFFFFFF"); // Au 35T IDCODE
-		//jtag.shiftDRWithCheck(32, "00000000", "13631093", "0FFFFFFF"); // Au+ 100T IDCODE
-	}
+        // config/jprog/poll
+        jtag.sendClocks(10000)
+        jtag.shiftIRWithCheck(6, "14", "11", "31")
 
-	private byte reverse(byte b) {
-		b = (byte) ((b & 0xF0) >>> 4 | (b & 0x0F) << 4);
-		b = (byte) ((b & 0xCC) >>> 2 | (b & 0x33) << 2);
-		b = (byte) ((b & 0xAA) >>> 1 | (b & 0x55) << 1);
-		return b;
-	}
+        // config/slr
+        setIR(Instruction.CFG_IN)
+        jtag.shiftDR(binData.size * 8, binData)
 
-	private void loadBridge() throws IOException {
-		InputStream in = getClass().getResourceAsStream(LOADER_FILE);
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
+        // config/start
+        jtag.navitageToState(JtagState.RUN_TEST_IDLE)
+        jtag.sendClocks(10000)
+        setIR(Instruction.JSTART)
+        jtag.navitageToState(JtagState.RUN_TEST_IDLE)
+        jtag.sendClocks(100)
+        jtag.shiftIRWithCheck(6, "09", "31", "11")
+        jtag.navitageToState(JtagState.TEST_LOGIC_RESET)
+    }
 
-		byte[] buffer = new byte[1024];
-		int len;
+    @Throws(IOException::class)
+    private fun erase(loaderFile: String) {
+        println("Loading bridge configuration...")
+        loadBridge(loaderFile)
+        println("Erasing...")
+        jtag.setFreq(1500000.0)
+        setIR(Instruction.USER1)
+        jtag.shiftDR(1, byteArrayOf(0))
+        try {
+            Thread.sleep(100)
+        } catch (e: InterruptedException) {
+            reportException(e, "Sleep interrupted, don't really care.")
+        }
+    }
 
-		// read bytes from the input stream and store them in buffer
-		while ((len = in.read(buffer)) != -1) {
-			// write bytes from the buffer into output stream
-			os.write(buffer, 0, len);
-		}
-		loadBin(os.toByteArray());
-	}
+    @Throws(IOException::class)
+    fun eraseFlash(loaderFile: String) {
+        erase(loaderFile)
+        setIR(Instruction.JPROGRAM) // reset the FPGA
+        jtag.resetState()
+        println("Done.", Theme.successTextColor)
+    }
 
-	private void loadBin(String binPath) throws IOException {
-		byte[] binData = Files.readAllBytes(Paths.get(binPath));
-		loadBin(binData);
-	}
+    @Throws(IOException::class)
+    fun writeBin(binFile: String, flash: Boolean, loaderFile: String) {
+        if (flash) {
+            erase(loaderFile) // configure the FPGA with the bridge and erase the flash
+            println("Writing flash...")
+            setIR(Instruction.USER2)
+            val binData = Files.readAllBytes(Paths.get(binFile))
+            jtag.shiftDR(binData.size * 8, binData)
+            println("Resetting FPGA...")
+            jtag.resetState()
+            try {
+                Thread.sleep(100)
+            } catch (e: InterruptedException) {
+                reportException(e, "Sleep interrupted, don't really care.")
+            }
+            setIR(Instruction.JPROGRAM)
+        } else {
+            println("Loading bin...")
+            loadBin(binFile)
+        }
+        jtag.resetState()
+        println("Done.", Theme.successTextColor)
+    }
 
-	private void loadBin(byte[] binData) throws IOException {
-		for (int i = 0; i < binData.length; i++)
-			binData[i] = reverse(binData[i]);
+    companion object {
+        const val AU_LOADER_FILE = "/fpga/au_loader.bin"
+        const val AU_PLUS_LOADER_FILE = "/fpga/au_plus_loader.bin"
+    }
 
-		ftdi.usbPurgeBuffers();
-		jtag.setFreq(30000000);
-		jtag.resetState();
-		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
-		setIR(Instruction.JPROGRAM);
-		setIR(Instruction.ISC_NOOP);
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-		}
-
-		// config/jprog/poll
-		jtag.sendClocks(10000);
-		jtag.shiftIRWithCheck(6, "14", "11", "31");
-
-		// config/slr
-		setIR(Instruction.CFG_IN);
-		jtag.shiftDR(binData.length * 8, binData);
-
-		// config/start
-		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
-		jtag.sendClocks(10000);
-		setIR(Instruction.JSTART);
-		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
-		jtag.sendClocks(100);
-		jtag.shiftIRWithCheck(6, "09", "31", "11");
-		jtag.navitageToState(JtagState.TEST_LOGIC_RESET);
-	}
-
-	private void erase() throws IOException {
-		Util.println("Loading bridge configuration...");
-		loadBridge();
-		Util.println("Erasing...");
-		jtag.setFreq(1500000);
-		setIR(Instruction.USER1);
-		jtag.shiftDR(1, new byte[] { 0 });
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			Util.reportException(e, "Sleep interrupted, don't really care.");
-		}
-	}
-
-	public void eraseFlash() throws IOException {
-		erase();
-		setIR(Instruction.JPROGRAM); // reset the FPGA
-		jtag.resetState();
-		Util.println("Done.", Theme.successTextColor);
-	}
-
-	public void writeBin(String binFile, boolean flash) throws IOException {
-		if (flash) {
-			erase(); // configure the FPGA with the bridge and erase the flash
-			Util.println("Writing flash...");
-			setIR(Instruction.USER2);
-			byte[] binData = Files.readAllBytes(Paths.get(binFile));
-			jtag.shiftDR(binData.length * 8, binData);
-			Util.println("Resetting FPGA...");
-			jtag.resetState();
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				Util.reportException(e, "Sleep interrupted, don't really care.");
-			}
-			setIR(Instruction.JPROGRAM);
-		} else {
-			Util.println("Loading bin...");
-			loadBin(binFile);
-		}
-		jtag.resetState();
-		Util.println("Done.", Theme.successTextColor);
-	}
+    init {
+        jtag = Jtag(ftdi)
+        jtag.init()
+        jtag.resetState()
+    }
 }

@@ -43,7 +43,7 @@ public class ConstExprParser extends LucidBaseListener {
 
 	private static final ErrorListener dummyListener = new ErrorListener() {
 		@Override
-		public void reportWarning(ParseTree ctx, String message) {
+		public void reportWarning(ParserRuleContext ctx, String message) {
 		}
 
 		@Override
@@ -51,7 +51,7 @@ public class ConstExprParser extends LucidBaseListener {
 		}
 
 		@Override
-		public void reportError(ParseTree ctx, String message) {
+		public void reportError(ParserRuleContext ctx, String message) {
 		}
 
 		@Override
@@ -59,7 +59,7 @@ public class ConstExprParser extends LucidBaseListener {
 		}
 
 		@Override
-		public void reportDebug(ParseTree ctx, String message) {
+		public void reportDebug(ParserRuleContext ctx, String message) {
 		}
 
 		@Override

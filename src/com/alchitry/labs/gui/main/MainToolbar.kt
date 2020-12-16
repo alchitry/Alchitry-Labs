@@ -80,7 +80,7 @@ class MainToolbar {
                 }
                 project.build(true)
             })
-            if (Board.isType(board, Board.MOJO or Board.AU)) createButton(Images.loadTempIcon, Images.loadTempIconHover, "Program (Temporary)") { MainWindow.programProject(flash = false, verify = false) }
+            if (Board.isType(board, Board.MOJO or Board.AU or Board.AU_PLUS)) createButton(Images.loadTempIcon, Images.loadTempIconHover, "Program (Temporary)") { MainWindow.programProject(flash = false, verify = false) }
             if (Board.isType(board, Board.ANY)) createButton(Images.loadIcon, Images.loadIconHover, "Program (Flash)") { event -> MainWindow.programProject(true, event.button == 2) }
             if (Board.isType(board, Board.ANY)) createButton(Images.eraseIcon, Images.eraseIconHover, "Erase", Listener {
                 if (project.isBusy) {

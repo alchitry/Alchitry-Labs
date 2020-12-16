@@ -576,13 +576,13 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					for (int j = 0; j < i - 1; j++)
 						sb.append(ctx.children.get(j).getText());
 					if (listener != null)
-						listener.reportError(pt, String.format(ErrorStrings.NOT_A_MEMBER, pt.getText(), sb.toString()));
+						listener.reportError((NameContext) pt, String.format(ErrorStrings.NOT_A_MEMBER, pt.getText(), sb.toString()));
 					return false;
 				}
 				SignalWidth w = width.getStruct().getWidthOfMember(name);
 				if (w == null) {
 					if (listener != null)
-						listener.reportError(pt, String.format(ErrorStrings.UNKNOWN_STRUCT_NAME, name, width.getStruct()));
+						listener.reportError((NameContext) pt, String.format(ErrorStrings.UNKNOWN_STRUCT_NAME, name, width.getStruct()));
 					return false;
 				} else {
 					width.set(w);
@@ -591,7 +591,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 			} else if (pt instanceof TerminalNode) {
 				continue;
 			} else {
-				System.out.println("Uknown " + ctx.getText());
+				System.out.println("Unknown " + ctx.getText());
 			}
 		}
 
