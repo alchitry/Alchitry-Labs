@@ -44,7 +44,7 @@ class WelcomeDialog(parent: Shell) : Dialog(parent, SWT.DIALOG_TRIM or SWT.APPLI
         lblReleaseInfo.layoutData = GridData(SWT.HORIZONTAL, SWT.TOP, true, true, 1, 1)
         lblReleaseInfo.text = """|Welcome to version $VERSION of Alchitry Labs! We are actively working to improve the IDE so please send us your feedback at bugspray@alchitry.com
                                  |
-                                 |Bug fixes. Lots of them.
+                                 |Added support for the Au+
                                  |
                                  |As always, we hope you enjoy this version!""".trimMargin()
         val btnOk = Button(shell, SWT.NONE)

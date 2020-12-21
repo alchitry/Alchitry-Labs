@@ -2,10 +2,8 @@ package com.alchitry.labs.gui.main
 
 import com.alchitry.labs.Util
 import com.alchitry.labs.VERSION
-import com.alchitry.labs.hardware.boards.AlchitryAu
-import com.alchitry.labs.hardware.boards.AlchitryCu
-import com.alchitry.labs.hardware.boards.Board
-import com.alchitry.labs.hardware.boards.Mojo
+import com.alchitry.labs.gui.Theme
+import com.alchitry.labs.hardware.boards.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -22,6 +20,7 @@ class LoaderWindow {
     private val shell = Shell()
     private val binText: Text
     private val btnAuButton: Button
+    private val btnAuPlusButton: Button
     private val btnCuButton: Button
     private val btnEraseButton: Button
     private val btnFlashCheckbox: Button
@@ -37,9 +36,13 @@ class LoaderWindow {
      */
     fun open() {
         val display = Display.getDefault()
+        Theme.init(display)
         Util.display = display
         shell.open()
         shell.layout()
+        shell.addDisposeListener {
+            Theme.dispose()
+        }
         while (!shell.isDisposed) {
             if (!display.readAndDispatch()) {
                 display.sleep()
@@ -49,6 +52,7 @@ class LoaderWindow {
 
     private fun setEnabled(enabled: Boolean) {
         btnAuButton.isEnabled = enabled
+        btnAuPlusButton.isEnabled = enabled
         btnCuButton.isEnabled = enabled
         btnEraseButton.isEnabled = enabled
         btnProgramButton.isEnabled = enabled
@@ -83,10 +87,13 @@ class LoaderWindow {
             val file = fd.open()
             if (file != null) binText.text = file
         }
-        Label(shell, SWT.NONE).run{text = "Board:"}
+
         btnAuButton = Button(shell, SWT.RADIO)
         btnAuButton.selection = true
         btnAuButton.text = "Alchitry Au"
+
+        btnAuPlusButton = Button(shell, SWT.RADIO)
+        btnAuPlusButton.text = "Alchitry Au+"
 
         btnCuButton = Button(shell, SWT.RADIO)
         btnCuButton.text = "Alchitry Cu"
@@ -100,6 +107,8 @@ class LoaderWindow {
         btnFlashCheckbox.text = "Program Flash"
 
         btnAuButton.addListener(SWT.Selection) { btnFlashCheckbox.isEnabled = true }
+        btnAuPlusButton.addListener(SWT.Selection) { btnFlashCheckbox.isEnabled = true }
+        btnMojoButton.addListener(SWT.Selection) { btnFlashCheckbox.isEnabled = true }
         btnCuButton.addListener(SWT.Selection) {
             btnFlashCheckbox.selection = true
             btnFlashCheckbox.isEnabled = false
@@ -138,7 +147,12 @@ class LoaderWindow {
     }
 
     private val board: Board
-        get() = if (btnAuButton.selection) AlchitryAu else if (btnCuButton.selection) AlchitryCu else Mojo
+        get() = when {
+            btnAuButton.selection -> AlchitryAu
+            btnAuPlusButton.selection -> AlchitryAuPlus
+            btnCuButton.selection -> AlchitryCu
+            else -> Mojo
+        }
 
     private fun checkBinFileExists(): Boolean {
         val f = File(binText.text)

@@ -1189,7 +1189,11 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         for (file in sourceFiles) {
             hasErrors = hasErrors or checkForErrors(file, true)
         }
-        for (im in list!!) if (!im.type.isPrimitive && im.type.file.name.endsWith(".v")) hasErrors = hasErrors or checkForIMErrors(im, modules, list)
+        if (list != null) {
+            for (im in list) if (!im.type.isPrimitive && im.type.file.name.endsWith(".v")) hasErrors = hasErrors or checkForIMErrors(im, modules, list)
+        } else {
+            hasErrors = true
+        }
         for (file in getConstraintFiles()) {
             hasErrors = hasErrors or checkForErrors(file, true)
         }

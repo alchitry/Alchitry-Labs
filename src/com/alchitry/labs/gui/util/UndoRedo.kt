@@ -40,7 +40,7 @@ class UndoRedo(private val editor: StyledCodeEditor) : VerifyListener {
             val edit = popStack.pop()
             pushStack.push(Edit())
             isEditing = true
-            editor.replaceTextRange(0, editor.charCount, edit.text)
+            editor.text = edit.text
             editor.caretOffset = edit.position
             editor.update()
         }

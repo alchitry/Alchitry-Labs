@@ -13,10 +13,7 @@ import com.alchitry.labs.Util.showError
 import com.alchitry.labs.Util.vivadoLocation
 import com.alchitry.labs.gui.Theme
 import com.alchitry.labs.hardware.boards.Board
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlinx.coroutines.swt.SWT
 import org.apache.commons.io.FileUtils
 import java.io.BufferedWriter
@@ -30,7 +27,7 @@ class VivadoIP {
     private var process: Process? = null
     private var thread: Thread? = null
     val isRunning: Boolean
-        get() = process != null && process!!.isAlive
+        get() = process?.isAlive == true
 
     private fun projectExists(project: Project): Boolean {
         val projectPath = assemblePath(project.projectFolder, Project.CORES_FOLDER, "managed_ip_project",
@@ -152,7 +149,7 @@ class VivadoIP {
     }
 
     private fun findPattern(dir: File, regex: Regex, isFile: Boolean): File? {
-        for (stub in dir.listFiles()) {
+        dir.listFiles()?.forEach { stub ->
             if (isFile == stub.isFile && stub.name.matches(regex)) {
                 return stub
             }
@@ -249,10 +246,10 @@ class VivadoIP {
     private fun checkForNewCores(project: Project) {
         project.removeAllIPCores()
         val coresDir = File(assemblePath(project.projectFolder, Project.CORES_FOLDER))
-        for (dir in coresDir.listFiles()) {
-            if (blackList.contains(dir.name)) continue
+        coresDir.listFiles()?.forEach { dir ->
+            if (blackList.contains(dir.name)) return@forEach
             if (!dir.isDirectory) {
-                continue
+                return@forEach
             }
             println("Looking in " + dir.name)
             val core = IPCore(dir.name)
@@ -268,20 +265,20 @@ class VivadoIP {
                     println("  Could not find stub file! Did you let synthesis finish before closing Vivado?",
                             true)
                 }
-                runBlocking<Unit>(Dispatchers.SWT) { { project.addIPCore(core) }.run() }
+                runBlocking(Dispatchers.SWT) { project.addIPCore(core) }
             } else {
                 println("  Could not find a .xci file!", true)
             }
         }
         GlobalScope.launch(Dispatchers.SWT) {
-            {
-                project.updateTree()
+            project.updateTree()
+            withContext(Dispatchers.IO) {
                 try {
                     project.saveXML()
                 } catch (e: IOException) {
                     showError("Failed to save project file!")
                 }
-            }.run()
+            }
         }
     }
 

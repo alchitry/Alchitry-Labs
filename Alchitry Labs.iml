@@ -21,6 +21,11 @@
       <src_folder value="file://$MODULE_DIR$/res" expected_position="2" />
     </src_description>
   </component>
+  <component name="FacetManager">
+    <facet type="kotlin-language" name="Kotlin">
+      <configuration version="3" useProjectSettings="false" />
+    </facet>
+  </component>
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/bin" />
     <exclude-output />

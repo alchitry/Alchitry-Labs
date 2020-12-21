@@ -59,9 +59,13 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
         Project p = MainWindow.getOpenProject();
         if (p != null) {
             Module top = p.getTopModule();
-            portSignals.addAll(top.getOutputs());
-            portSignals.addAll(top.getInputs());
-            portSignals.addAll(top.getInouts());
+            if (top != null) {
+                portSignals.addAll(top.getOutputs());
+                portSignals.addAll(top.getInputs());
+                portSignals.addAll(top.getInouts());
+            } else {
+                Util.println("Could not get top module!", true);
+            }
         }
     }
 

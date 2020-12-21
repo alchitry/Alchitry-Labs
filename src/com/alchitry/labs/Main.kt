@@ -7,7 +7,7 @@ import java.io.IOException
 import java.util.logging.Level
 import kotlin.system.exitProcess
 
-const val VERSION = "1.2.4"
+const val VERSION = "1.2.5"
 
 fun main(args: Array<String>) {
     parseCommand(args)

@@ -20,7 +20,7 @@ class XilinxJtag(private val ftdi: Ftdi) {
 
     }
 
-    private val jtag: Jtag
+    private val jtag: Jtag = Jtag(ftdi)
     fun setIR(inst: Instruction) {
         jtag.shiftIR(6, byteArrayOf(inst.code))
     }
@@ -145,7 +145,6 @@ class XilinxJtag(private val ftdi: Ftdi) {
     }
 
     init {
-        jtag = Jtag(ftdi)
         jtag.init()
         jtag.resetState()
     }

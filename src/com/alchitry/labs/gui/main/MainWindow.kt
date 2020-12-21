@@ -144,9 +144,10 @@ object MainWindow {
         if (Settings.VERSION != VERSION) {
             upgrade()
         }
-        UpdateChecker.checkForUpdates()
 
         promptSettings()
+
+        UpdateChecker.checkForUpdates()
 
         Settings.OPEN_PROJECT?.let { openProject(File(it)) }
         openFile(null, true)

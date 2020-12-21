@@ -106,8 +106,13 @@ public abstract class ProjectBuilder {
 					return;
 			}
 
-			if (workFolder.exists())
-				FileUtils.deleteDirectory(workFolder);
+			try {
+				if (workFolder.exists())
+					FileUtils.deleteDirectory(workFolder);
+			} catch (IOException e) {
+				Util.showError(e.getMessage());
+				return;
+			}
 			if (!workFolder.exists() || !workFolder.isDirectory()) {
 				boolean success = workFolder.mkdir();
 				if (!success) {
