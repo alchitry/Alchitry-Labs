@@ -656,6 +656,7 @@ object MainWindow {
             }
         }
         if (file != null && !file.exists()) {
+            Util.println("File ${file.absolutePath} doesn't exist!", true)
             Util.showError("This file doesn't exist!")
             return false
         }

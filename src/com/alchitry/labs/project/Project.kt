@@ -1031,10 +1031,22 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         oldProjectFile.delete()
 
         val newProject = Project(name, folder, board, language, shell, tree)
-        newProject.sourceFiles.addAll(sourceFiles)
-        newProject.constraintFiles.addAll(constraintFiles)
+        newProject.sourceFiles.addAll(sourceFiles.map {
+            if (isLibFile(it)) {
+                it
+            } else {
+                Util.assembleFile(newProject.sourceFolder, it.name)
+            }
+        })
+        newProject.constraintFiles.addAll(constraintFiles.map {
+            if (isLibFile(it)) {
+                it
+            } else {
+                Util.assembleFile(newProject.constraintFolder, it.name)
+            }
+        })
         newProject.primitives.addAll(primitives)
-        newProject.top = top
+        newProject.top = top?.let { Util.assembleFile(newProject.sourceFolder, it.name) }
         newProject.debugInfo = debugInfo
 
         println(newProject.iPCores)
