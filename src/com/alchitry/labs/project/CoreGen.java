@@ -7,6 +7,7 @@ import com.alchitry.labs.hardware.boards.Board;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CoreGen {
@@ -225,23 +226,23 @@ public class CoreGen {
 		for (File f : fList) {
 			if (f.isFile() && f.getName().endsWith(".fin")) {
 				try {
-					BufferedReader reader = new BufferedReader(new FileReader(f));
-					String line1 = reader.readLine();
-					String line2 = reader.readLine();
-					if (line1 == null || line2 == null || !line2.equals("SUCCESS"))
-						continue;
-					String coreName = line1.split(" ")[0];
-					final IPCore core = new IPCore(coreName);
-					File coreFolder = project.getIPCoreFolder();
-					for (File cf : coreFolder.listFiles()) {
-						if (cf.isFile()) {
-							String name = cf.getName();
-							if (name.startsWith(coreName)) {
-								if (name.endsWith(".v") || name.endsWith(".ngc")) {
-									core.addFile(cf);
-								}
-							}
-						}
+                    BufferedReader reader = new BufferedReader(new FileReader(f));
+                    String line1 = reader.readLine();
+                    String line2 = reader.readLine();
+                    if (line1 == null || line2 == null || !line2.equals("SUCCESS"))
+                        continue;
+                    String coreName = line1.split(" ")[0];
+                    final IPCore core = new IPCore(coreName, null, new ArrayList<File>());
+                    File coreFolder = project.getIPCoreFolder();
+                    for (File cf : coreFolder.listFiles()) {
+                        if (cf.isFile()) {
+                            String name = cf.getName();
+                            if (name.startsWith(coreName)) {
+                                if (name.endsWith(".v") || name.endsWith(".ngc")) {
+                                    core.getFiles().add(cf);
+                                }
+                            }
+                        }
 					}
 					updated = true;
 					Util.syncExec(new Runnable() {

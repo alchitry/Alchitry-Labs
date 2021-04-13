@@ -1,5 +1,6 @@
 package com.alchitry.labs.project.builders;
 
+import com.alchitry.labs.Locations;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.gui.Theme;
 import com.alchitry.labs.style.ParseException;
@@ -166,7 +167,7 @@ public class IceCubeBuilder extends ProjectBuilder {
 		file.write(nl);
 
 		if (Util.isWindows)
-			file.write(Util.assemblePath(Util.getIceCubeFolder(), "Aldec", "Active-HDL", "BIN", "tclsh85.exe") + " ");
+			file.write("\"" + Util.assemblePath(Locations.progDir.getAbsolutePath(), "tcl", "bin", "tclsh85.exe") + "\" ");
 		else
 			file.write("tclsh ");
 		file.write('"');

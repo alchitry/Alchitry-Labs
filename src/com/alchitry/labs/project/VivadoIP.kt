@@ -256,7 +256,7 @@ class VivadoIP {
             val xciFile = findPattern(dir, Regex(".*\\.xci"), true)
             if (xciFile != null) {
                 println("  Found core .xci file!")
-                core.addFile(xciFile)
+                core.files.add(xciFile)
                 val stub = findPattern(dir, Regex(".*_stub\\.v"), true)
                 if (stub != null) {
                     core.stub = stub

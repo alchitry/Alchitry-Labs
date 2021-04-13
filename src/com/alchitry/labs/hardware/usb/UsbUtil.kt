@@ -129,7 +129,7 @@ object UsbUtil {
                     }
                 }
                 if (portName == null) for (d in devices) {
-                    if (d === MOJO_DESC) {
+                    if (d == MOJO_DESC) {
                         for (sp in SerialPort.getCommPorts()) {
                             if (sp.descriptivePortName.contains("Mojo V")) {
                                 portName = sp.systemPortName

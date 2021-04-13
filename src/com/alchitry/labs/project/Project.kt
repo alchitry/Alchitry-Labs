@@ -141,7 +141,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
                                         val cFile = cFiles[k]
                                         val coreFile = File(Util.assemblePath(coreDir, cFile.text))
                                         when (cFile.name) {
-                                            Tags.source -> ipCore.addFile(coreFile)
+                                            Tags.source -> ipCore.files.add(coreFile)
                                             Tags.stub -> ipCore.stub = coreFile
                                             else -> throw ParseException("Unknown tag in core " + cFile.name)
                                         }
@@ -791,7 +791,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
                     val coreParentLeafs = coreParent.children
                     leafCt = 0
                     if (core.stub != null) {
-                        val leaf = TreeLeaf(core.stub)
+                        val leaf = TreeLeaf(core.stub!!)
                         coreParent.add(leafCt++, leaf)
                         leaf.addClickListener(coresListener)
                     } else {
@@ -933,7 +933,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
             addModules(modules, debugHelperFiles)
         }
         for (ipcore in iPCores) {
-            if (ipcore.stub != null) addModule(modules, ipcore.stub) else addModules(modules, ipcore.files)
+            if (ipcore.stub != null) addModule(modules, ipcore.stub!!) else addModules(modules, ipcore.files)
         }
         try {
             val prims = Primitive.getAvailable()
@@ -1031,27 +1031,29 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         oldProjectFile.delete()
 
         val newProject = Project(name, folder, board, language, shell, tree)
-        newProject.iPCores.addAll(iPCores)
         newProject.sourceFiles.addAll(sourceFiles)
         newProject.constraintFiles.addAll(constraintFiles)
         newProject.primitives.addAll(primitives)
         newProject.top = top
         newProject.debugInfo = debugInfo
 
+        println(newProject.iPCores)
+
         // Need to update core file references before saving so they don't point to the
         // old project
-        newProject.iPCores.forEach { core ->
-            val oldCorePath = Paths.get(File(Util.assemblePath(projectFile, CORES_FOLDER, core.name)).absolutePath)
-            val updatedFiles = ArrayList<File>(core.files.size)
-            for (coreFile in core.files) {
+        iPCores.forEach { oldCore ->
+            val core = oldCore.copy(files = mutableListOf())
+            val oldCorePath = Paths.get(File(Util.assemblePath(projectFolder, CORES_FOLDER, core.name)).absolutePath)
+            oldCore.files.forEach { coreFile ->
                 val p = oldCorePath.relativize(Paths.get(coreFile.absolutePath)).toString()
-                updatedFiles.add(Util.assembleFile(folder, CORES_FOLDER, core.name, p))
+                core.files.add(Util.assembleFile(folder, CORES_FOLDER, core.name, p))
             }
-            core.files = updatedFiles
             if (core.stub != null) {
-                val p = oldCorePath.relativize(Paths.get(core.stub.absolutePath)).toString()
+                val p = oldCorePath.relativize(Paths.get(core.stub!!.absolutePath)).toString()
                 core.stub = Util.assembleFile(folder, CORES_FOLDER, core.name, p)
             }
+
+            newProject.iPCores.add(core)
         }
         newProject.saveXML()
         return newProject
@@ -1085,11 +1087,13 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
             val coreElement = Element(Tags.core).setAttribute(Tags.Attributes.name, core.name)
             val corePath = Paths.get(File(Util.assemblePath(projectFolder, CORES_FOLDER, core.name)).absolutePath)
             for (coreFile in core.files) {
+                println("Original file ${coreFile.absolutePath}")
                 val p = corePath.relativize(Paths.get(coreFile.absolutePath)).toString()
+                println("Relative file ${p}")
                 coreElement.addContent(Element(Tags.source).setText(p))
             }
             if (core.stub != null) {
-                val p = corePath.relativize(Paths.get(core.stub.absolutePath)).toString()
+                val p = corePath.relativize(Paths.get(core.stub!!.absolutePath)).toString()
                 coreElement.addContent(Element(Tags.stub).setText(p))
             }
             source.addContent(coreElement)

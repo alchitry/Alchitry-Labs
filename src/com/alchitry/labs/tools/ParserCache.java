@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ParserCache {
-	private static HashMap<File, CacheEntry> treeMap = new HashMap<>();
+	private static final HashMap<File, CacheEntry> treeMap = new HashMap<>();
 
 	private ParserCache() {
 	}
@@ -156,7 +156,7 @@ public class ParserCache {
 		String text = Util.getFileText(entry.file);
 
 		if (text == null) {
-			Util.println("Could not read file " + entry, true);
+			Util.println("Could not read file " + entry.file, true);
 			return null;
 		}
 

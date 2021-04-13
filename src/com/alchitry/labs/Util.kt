@@ -605,7 +605,14 @@ object Util {
 
     @JvmStatic
     fun assemblePath(vararg pieces: String): String {
-        return pieces.filter { it.isNotBlank() }.joinToString(File.separator)
+        return pieces
+            .filter { it.isNotBlank() }
+            .joinToString(File.separator) {
+                if (it.endsWith(File.separatorChar))
+                    it.substring(0, it.length - 1)
+                else
+                    it
+            }
     }
 
 

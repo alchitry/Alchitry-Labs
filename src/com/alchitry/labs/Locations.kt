@@ -54,7 +54,7 @@ object Locations {
         else
             prog
 
-        progPrefix = if (progDir != null) progDir.path else ""
+        progPrefix = progDir?.path ?: ""
 
         LIBRARY = Util.assembleFile(progPrefix, "library")
         BASE = Util.assembleFile(LIBRARY, "base")
