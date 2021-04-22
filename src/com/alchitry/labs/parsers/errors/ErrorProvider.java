@@ -170,6 +170,7 @@ public abstract class ErrorProvider implements ModifyListener, LineStyleListener
 	}
 
 	private void underlineError(ParserRuleContext ctx, String message) {
+		System.out.println(message);
 		underline(ctx.start, ctx.stop, message, Theme.errorTextColor, SyntaxError.ERROR);
 	}
 

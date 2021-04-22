@@ -12,7 +12,7 @@ interface BitArray : List<BitValue> {
     fun toBigInt(): BigInteger {
         check(isNumber()) { "The value is not a number (it contains x and z values)" }
         val bytes = ByteArray(ceil((size + if (signed) 0 else 1).toDouble() / 8.0).toInt()) // if not signed need extra 0 sign bit
-        if (signed && this[size - 1] == BitValue.B1) // sign extension
+        if (signed && msb() == BitValue.B1) // sign extension
             Arrays.fill(bytes, 255.toByte()) else Arrays.fill(bytes, 0.toByte())
         repeat(size) { i ->
             val idx: Int = i / 8
@@ -121,6 +121,8 @@ interface BitArray : List<BitValue> {
         this.forEach { if (it != BitValue.B0 && it != BitValue.B1) return false }
         return true
     }
+
+    fun toMutableBitArray(): MutableBitArray = MutableBitArray(this)
 }
 
 class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue>(width), BitArray {
@@ -159,6 +161,12 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
     constructor(value: BigInteger, width: Int, signed: Boolean = value.signum() == -1) : this(width = width) {
         fromBigInt(value, width, signed)
     }
+
+    constructor(signed: Boolean, bits: List<BitValue>) : this(signed, bits.size) {
+        addAll(bits)
+    }
+
+    constructor(bitArray: BitArray) : this(bitArray.signed, bitArray)
 
     private fun fromBigInt(bigInt: BigInteger) {
         var w = bigInt.bitLength() // doesn't include sign bit
@@ -262,3 +270,6 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
         return sb.toString()
     }
 }
+
+fun List<BitValue>.lsb() = first()
+fun List<BitValue>.msb() = last()

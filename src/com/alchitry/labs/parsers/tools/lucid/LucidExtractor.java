@@ -12,6 +12,7 @@ import com.alchitry.labs.parsers.lucid.AssignBlock;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
+import com.alchitry.labs.parsers.lucidv2.ExprParser;
 import com.alchitry.labs.parsers.types.*;
 import com.alchitry.labs.project.Primitive;
 import com.alchitry.labs.project.Primitive.Parameter;
@@ -182,12 +183,14 @@ public class LucidExtractor extends LucidBaseListener {
 	}
 
 	public void addToParser(List<ParseTreeListener> listeners) {
-		listeners.add(constParser);
-		listeners.add(paramsParser);
-		listeners.add(constExprParser);
-		listeners.add(boundsParser);
-		listeners.add(bitWidthChecker);
-		listeners.add(this);
+		//listeners.add(constParser);
+		//listeners.add(paramsParser);
+		//listeners.add(constExprParser);
+		//listeners.add(boundsParser);
+		//listeners.add(bitWidthChecker);
+		//listeners.add(this);
+
+		listeners.add(new ExprParser(errorListener)); // NEW
 
 		paramsParser.reset();
 	}
@@ -211,7 +214,7 @@ public class LucidExtractor extends LucidBaseListener {
 		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
 		List<ParseTreeListener> listeners = new ArrayList<>();
 		addToParser(listeners);
-		//listeners.add(new ExprParser(errorListener));
+
 		ParserCache.walk(file, listeners);
 	}
 
@@ -731,7 +734,7 @@ public class LucidExtractor extends LucidBaseListener {
 						first = false;
 					iosb.append(s.getName());
 				}
-				errorListener.reportError(ctx, String.format(ErrorStrings.MODULE_IO_MISSING, iosb.toString()));
+				errorListener.reportError(ctx, String.format(ErrorStrings.MODULE_IO_MISSING, iosb));
 			}
 
 			for (Param p : instModule.getParams())
@@ -752,7 +755,7 @@ public class LucidExtractor extends LucidBaseListener {
 
 						sb.append(p.getName());
 					}
-					errorListener.reportError(ctx.name(1), String.format(ErrorStrings.MODULE_MISSING_REQ_PARAMS, sb.toString()));
+					errorListener.reportError(ctx.name(1), String.format(ErrorStrings.MODULE_MISSING_REQ_PARAMS, sb));
 				}
 			} else {
 				final List<Param> iparams = instModule.getParams();

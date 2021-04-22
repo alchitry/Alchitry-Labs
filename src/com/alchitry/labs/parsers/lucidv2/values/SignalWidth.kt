@@ -1,10 +1,12 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
 sealed class SignalWidth {
+    // specifies if width is 1D array
     fun isFlatArray(): Boolean {
         return (this is ArrayWidth && next == null) || this is UndefinedSimpleWidth
     }
 
+    // specifies if width is JUST and array (no structs)
     fun isSimpleArray(): Boolean {
         return (this is ArrayWidth && (next == null || next.isSimpleArray())) || this is UndefinedSimpleWidth
     }
@@ -53,4 +55,4 @@ data class StructWidth(
         val struct: StructType
 ) : SignalWidth()
 
-class UndefinedSimpleWidth : SignalWidth()
+object UndefinedSimpleWidth : SignalWidth()

@@ -90,9 +90,10 @@ public class ErrorStrings {
 	public static final String SHIFT_MULTI_DIM = "Only single dimensional arrays can be shifted";
 	public static final String BUILD_MULTI_DIM = "Only single dimensional arrays can be built";
 
-	public static final String OP_DIM_MISMATCH = "When performing an %s operation the argument's dimensions must match";
-
 	public static final String VALUE_TOO_BIG = "The value \"%s\" is wider than %s bits and it will be truncated";
+
+	public static final String OP_DIM_MISMATCH = "When performing an %s operation the argument's dimensions must match";
+	public static final String OP_NOT_NUMBER = "The operator \"%s\" can only be used on simple values";
 
 	public static final String OP_GT_NOT_NUMBER = "The greater than operator \">\" can only be used on simple values";
 	public static final String OP_LT_NOT_NUMBER = "The less than operator \"<\" can only be used on simple values";

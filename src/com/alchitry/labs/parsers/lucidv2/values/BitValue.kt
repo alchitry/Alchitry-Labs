@@ -8,17 +8,20 @@ enum class BitValue {
 
     infix fun or(b: BitValue): BitValue {
         if (this == B1 || b == B1) return B1
-        return if (this == Bz || b == Bz || this == Bx || b == Bx) Bx else B0
+        if (!isNumber() || !b.isNumber()) return Bx
+        return B0
     }
 
     infix fun and(b: BitValue): BitValue {
         if (this == B1 && b == B1) return B1
-        return if (this == Bz || b == Bz || this == Bx || b == Bx) Bx else B0
+        if (!isNumber() || !b.isNumber()) return Bx
+        return B0
     }
 
     infix fun xor(b: BitValue): BitValue {
+        if (!isNumber() || !b.isNumber()) return Bx
         if (this == B1 != (b == B1)) return B1
-        return if (this == Bz || b == Bz || this == Bx || b == Bx) Bx else B0
+        return B0
     }
 
     val char: Char
@@ -53,4 +56,14 @@ enum class BitValue {
             Bz -> Bx
         }
     }
+
+    fun isNumber(): Boolean {
+        return when (this) {
+            B0, B1 -> true
+            Bx, Bz -> false
+        }
+    }
+
+    fun toBitArray(): BitArray = MutableBitArray(this)
+    fun toSimpleValue(): SimpleValue = SimpleValue(toBitArray())
 }

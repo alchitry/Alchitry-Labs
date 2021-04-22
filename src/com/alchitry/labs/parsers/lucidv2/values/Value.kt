@@ -55,12 +55,12 @@ sealed class Value {
         }
     }
 
-    fun not(): Value {
-        return SimpleValue(MutableBitArray(!isTrueBit()))
+    fun not(): SimpleValue {
+        return isTrueBit().not().toSimpleValue()
     }
 
-    fun isTrue(): Value {
-        return SimpleValue(MutableBitArray(isTrueBit()))
+    fun isTrue(): SimpleValue {
+        return isTrueBit().toSimpleValue()
     }
 
     infix fun and(other: Value): Value {
@@ -111,6 +111,14 @@ sealed class Value {
         }
     }
 
+    infix fun isNotEqualTo(other: Value): SimpleValue {
+        return xor(other).orReduce()
+    }
+
+    infix fun isEqualTo(other: Value): SimpleValue {
+        return isNotEqualTo(other).lsb().not().toSimpleValue()
+    }
+
     private fun reduceOp(op: (BitArray) -> BitValue): BitValue {
         return when (this) {
             is SimpleValue -> op(bits)
@@ -127,29 +135,67 @@ sealed class Value {
     }
 
     fun andReduce(): SimpleValue {
-        return SimpleValue(MutableBitArray(false, 1) { reduceOp { it.reduce { a, b -> a and b } } })
+        return reduceOp { it.reduce { a, b -> a and b } }.toSimpleValue()
     }
 
     fun orReduce(): SimpleValue {
-        return SimpleValue(MutableBitArray(false, 1) { reduceOp { it.reduce { a, b -> a or b } } })
+        return reduceOp { it.reduce { a, b -> a or b } }.toSimpleValue()
     }
 
     fun xorReduce(): SimpleValue {
-        return SimpleValue(MutableBitArray(false, 1) { reduceOp { it.reduce { a, b -> a xor b } } })
+        return reduceOp { it.reduce { a, b -> a xor b } }.toSimpleValue()
     }
 }
 
 data class ArrayValue(
-        val elements: List<Value>
-) : Value()
+    val elements: List<Value>
+) : Value(), List<Value> by elements
 
 data class SimpleValue(
-        val bits: BitArray
-) : Value() {
+    val bits: BitArray
+) : Value(), List<BitValue> by bits {
     override val signed: Boolean
         get() = bits.signed
-    val size: Int
-        get() = bits.size
+
+    fun resize(width: Int): SimpleValue {
+        if (width == size)
+            return this
+        if (width < size)
+            return SimpleValue(MutableBitArray(signed, subList(0, width)))
+        val extendBit = if (!signed && bits.msb() == BitValue.B1) BitValue.B0 else bits.msb()
+        val newValue = bits.toMutableBitArray()
+        repeat(width - size) { newValue.add(extendBit) }
+        return SimpleValue(newValue)
+    }
+
+    infix fun isLessThan(other: SimpleValue): SimpleValue {
+        val longest = size.coerceAtLeast(other.size)
+        val op1 = resize(longest)
+        val op2 = other.resize(longest)
+        for (i in op1.indices.reversed()) {
+            if (!op1[i].isNumber() || !op2[i].isNumber())
+                return BitValue.Bx.toSimpleValue()
+
+            if (op1[i] == BitValue.B1 && op2[i] == BitValue.B0)
+                return BitValue.B0.toSimpleValue()
+
+            if (op1[i] == BitValue.B0 && op2[i] == BitValue.B1)
+                return BitValue.B1.toSimpleValue()
+        }
+        return BitValue.B0.toSimpleValue()
+    }
+
+    infix fun isGreaterThan(other: SimpleValue): SimpleValue {
+        return isLessThan(other).lsb().not().toSimpleValue()
+    }
+
+    infix fun isLessOrEqualTo(other: SimpleValue): SimpleValue {
+        return (isLessThan(other).lsb() or isEqualTo(other).lsb()).toSimpleValue()
+    }
+
+    infix fun isGreaterOrEqualTo(other: SimpleValue): SimpleValue {
+        return (isGreaterThan(other).lsb() or isEqualTo(other).lsb()).toSimpleValue()
+    }
 }
 
 data class StructValue(
@@ -166,7 +212,7 @@ data class StructValue(
 }
 
 data class UndefinedValue(
-        val expression: String,
-        val width: SignalWidth = UndefinedSimpleWidth(),
-        override val signed: Boolean = false
+    val expression: String,
+    val width: SignalWidth = UndefinedSimpleWidth,
+    override val signed: Boolean = false
 ) : Value()
