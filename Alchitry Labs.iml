@@ -68,42 +68,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="batik-all-1.10.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/batik/lib/batik-all-1.10.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="batik-rasterizer-1.10.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/batik/batik-rasterizer-1.10.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="batik-1.10.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/batik/batik-1.10.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="serializer-2.7.2.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/batik/lib/serializer-2.7.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="swt-linux.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/swt-linux.jar!/" />

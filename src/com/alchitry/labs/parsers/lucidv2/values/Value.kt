@@ -116,7 +116,7 @@ sealed class Value {
     }
 
     infix fun isEqualTo(other: Value): SimpleValue {
-        return isNotEqualTo(other).lsb().not().toSimpleValue()
+        return isNotEqualTo(other).lsb.not().toSimpleValue()
     }
 
     private fun reduceOp(op: (BitArray) -> BitValue): BitValue {
@@ -157,21 +157,29 @@ data class SimpleValue(
     override val signed: Boolean
         get() = bits.signed
 
-    fun resize(width: Int): SimpleValue {
-        if (width == size)
-            return this
-        if (width < size)
-            return SimpleValue(MutableBitArray(signed, subList(0, width)))
-        val extendBit = if (!signed && bits.msb() == BitValue.B1) BitValue.B0 else bits.msb()
-        val newValue = bits.toMutableBitArray()
-        repeat(width - size) { newValue.add(extendBit) }
-        return SimpleValue(newValue)
+    fun resize(width: Int) = bits.resize(width).toSimpleValue()
+
+    /** Changes sign without changing bits */
+    fun setSign(signed: Boolean): SimpleValue {
+        return SimpleValue(MutableBitArray(signed, bits))
     }
 
     infix fun isLessThan(other: SimpleValue): SimpleValue {
         val longest = size.coerceAtLeast(other.size)
-        val op1 = resize(longest)
-        val op2 = other.resize(longest)
+        val signedOp = signed && other.signed
+        val op1 = setSign(signedOp).resize(longest)
+        val op2 = other.setSign(signedOp).resize(longest)
+
+        val neg1 = signedOp && bits.isNegative()
+        val neg2 = signedOp && other.bits.isNegative()
+
+        if (neg1 && !neg2) // negative < positive
+            return BitValue.B1.toSimpleValue()
+
+        if (!neg1 && neg2) // positive !< negative
+            return BitValue.B0.toSimpleValue()
+
+        // negative to negative or positive to positive can be directly compared
         for (i in op1.indices.reversed()) {
             if (!op1[i].isNumber() || !op2[i].isNumber())
                 return BitValue.Bx.toSimpleValue()
@@ -186,15 +194,15 @@ data class SimpleValue(
     }
 
     infix fun isGreaterThan(other: SimpleValue): SimpleValue {
-        return isLessThan(other).lsb().not().toSimpleValue()
+        return isLessThan(other).lsb.not().toSimpleValue()
     }
 
     infix fun isLessOrEqualTo(other: SimpleValue): SimpleValue {
-        return (isLessThan(other).lsb() or isEqualTo(other).lsb()).toSimpleValue()
+        return (isLessThan(other).lsb or isEqualTo(other).lsb).toSimpleValue()
     }
 
     infix fun isGreaterOrEqualTo(other: SimpleValue): SimpleValue {
-        return (isGreaterThan(other).lsb() or isEqualTo(other).lsb()).toSimpleValue()
+        return (isGreaterThan(other).lsb or isEqualTo(other).lsb).toSimpleValue()
     }
 }
 

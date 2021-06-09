@@ -140,9 +140,9 @@ public class IceCubeBuilder extends ProjectBuilder {
 			file.write(":$LD_LIBRARY_PATH");
 			file.write(nl);
 		} else {
-			file.write(export + " TCL_LIBRARY=");
-			file.write(Util.assemblePath(Util.getIceCubeFolder(), "Aldec", "Active-HDL", "tcl", "lib", "tcl"));
-			file.write(nl);
+//			file.write(export + " TCL_LIBRARY=");
+//			file.write(Util.assemblePath(Util.getIceCubeFolder(), "Aldec", "Active-HDL", "tcl", "lib", "tcl"));
+//			file.write(nl);
 		}
 
 		file.write(export + " LM_LICENSE_FILE=");
@@ -161,8 +161,6 @@ public class IceCubeBuilder extends ProjectBuilder {
 				"synpwrap" + (Util.isWindows ? ".exe" : "")));
 		file.write(" -prj \"");
 		file.write(Util.assemblePath(workFolder, SYN_PROJECT_FILE));
-		file.write("\" -log \"");
-		file.write(Util.assemblePath(workFolder, "icelog.log"));
 		file.write('"');
 		file.write(nl);
 

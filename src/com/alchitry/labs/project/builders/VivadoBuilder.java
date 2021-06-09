@@ -63,8 +63,10 @@ public class VivadoBuilder extends ProjectBuilder {
 		Util.println("Starting Vivado...", Theme.infoTextColor);
 
 		builder = Util.runCommand(cmd);
-		if (builder == null) return;
+		if (builder == null) throw new Exception("Failed to start vivado!");
 		builder.waitFor();
+
+		Util.println("Vivado exited.", Theme.infoTextColor);
 
 		Thread.sleep(150);
 
@@ -160,9 +162,11 @@ public class VivadoBuilder extends ProjectBuilder {
 		file.write("set_property STEPS.WRITE_BITSTREAM.ARGS.BIN_FILE true [get_runs impl_1]" + nl);
 		file.write("update_compile_order -fileset sources_1" + nl);
 
-		file.write("launch_runs -runs synth_1 -jobs 8" + nl);
+		final int cores = Runtime.getRuntime().availableProcessors();
+
+		file.write("launch_runs -runs synth_1 -jobs " + cores + nl);
 		file.write("wait_on_run synth_1" + nl);
-		file.write("launch_runs impl_1 -to_step write_bitstream -jobs 8" + nl);
+		file.write("launch_runs impl_1 -to_step write_bitstream -jobs " + cores + nl);
 		file.write("wait_on_run impl_1" + nl);
 
 		return true;

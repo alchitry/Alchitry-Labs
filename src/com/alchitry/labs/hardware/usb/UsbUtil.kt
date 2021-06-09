@@ -19,7 +19,6 @@ import net.sf.yad2xx.FTDIException
 import net.sf.yad2xx.FTDIInterface
 import org.usb4java.LibUsb
 import org.usb4java.LibUsbException
-import java.util.*
 
 object UsbUtil {
     private val MOJO_DESC = Mojo.usbDescriptor
@@ -111,45 +110,59 @@ object UsbUtil {
     @JvmStatic
     @JvmOverloads
     fun openSerial(devices: List<UsbDescriptor> = ALL_DEVICES): SerialDevice? {
-        return try {
-            val dev = getDevice(devices)
-            if (dev == null) {
-                var portName: String? = null
-                if (Util.isWindows) {
-                    try {
-                        val d2xx = findD2xxDevice(PortInterfaceType.INTERFACE_B, devices)
-                        if (d2xx != null) {
-                            d2xx.open()
-                            portName = "COM" + d2xx.comPortNumber
-                            d2xx.close()
+        try {
+            if (devices.any { it == MOJO_DESC }) {
+                Util.println("Looking for Mojo serial port...")
+                for (sp in SerialPort.getCommPorts()) {
+                    if (sp.descriptivePortName.contains("Mojo V")) {
+                        val portName = sp.systemPortName
+                        if (portName != null) {
                             Util.println("Found board on $portName")
-                        }
-                    } catch (e: FTDIException) {
-                        Util.printException(e)
-                    }
-                }
-                if (portName == null) for (d in devices) {
-                    if (d == MOJO_DESC) {
-                        for (sp in SerialPort.getCommPorts()) {
-                            if (sp.descriptivePortName.contains("Mojo V")) {
-                                portName = sp.systemPortName
-                                break
+                            val port = SerialPort.getCommPort(portName)
+                            if (port != null) {
+                                val serial = GenericSerial(port)
+                                if (serial.open()) return serial else Util.println(
+                                    "Failed to open serial port $portName",
+                                    true
+                                )
                             }
                         }
+                        break
                     }
                 }
-                if (portName != null) {
-                    val port = SerialPort.getCommPort(portName)
-                    if (port != null) {
-                        val serial = GenericSerial(port)
-                        if (serial.open()) return serial else Util.println("Failed to open serial port $portName", true)
+            }
+
+            if (Util.isWindows) {
+                try {
+                    val d2xx = findD2xxDevice(PortInterfaceType.INTERFACE_B, devices)
+                    if (d2xx != null) {
+                        d2xx.open()
+                        val portName = "COM" + d2xx.comPortNumber
+                        d2xx.close()
+                        Util.println("Found board on $portName")
+                        val port = SerialPort.getCommPort(portName)
+                        if (port != null) {
+                            val serial = GenericSerial(port)
+                            if (serial.open()) return serial else Util.println(
+                                "Failed to open serial port $portName",
+                                true
+                            )
+                        }
                     }
+                } catch (e: FTDIException) {
+                    Util.printException(e)
                 }
+            }
+
+            val dev = getDevice(devices)
+
+            if (dev == null) {
                 Util.println("No devices found...", true)
                 return null
             }
+
             val device: SerialDevice
-            if (dev.description === MOJO_DESC) {
+            if (dev.description == MOJO_DESC) {
                 device = MojoLibUsbSerial()
                 device.usbOpenDev(dev.device)
             } else {
@@ -158,10 +171,10 @@ object UsbUtil {
                 device.usbOpenDev(dev.device)
             }
             LibUsb.unrefDevice(dev.device)
-            device
+            return device
         } catch (e: LibUsbException) {
             Util.printException(e)
-            null
+            return null
         }
     }
 

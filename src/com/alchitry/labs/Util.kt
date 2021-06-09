@@ -12,11 +12,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.swt.SWT
 import kotlinx.coroutines.swt.swt
-import org.apache.batik.transcoder.SVGAbstractTranscoder
-import org.apache.batik.transcoder.TranscoderException
-import org.apache.batik.transcoder.TranscoderInput
-import org.apache.batik.transcoder.TranscoderOutput
-import org.apache.batik.transcoder.image.PNGTranscoder
 import org.apache.commons.io.IOUtils
 import org.apache.commons.io.filefilter.DirectoryFileFilter
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -521,8 +516,7 @@ object Util {
     @Throws(InterruptedException::class)
     fun runCommand(cmd: List<String?>?, showRed: Boolean = true): Process? {
         val pb = ProcessBuilder(cmd)
-        val process: Process
-        process = try {
+        val process: Process = try {
             pb.start()
         } catch (e: Exception) {
             logger.severe("Couldn't start " + pb.command()[0])
@@ -571,26 +565,27 @@ object Util {
 
     @JvmStatic
     fun svgToImage(svgFile: String, width: Int, height: Int): Image? {
-        val resultByteStream = ByteArrayOutputStream()
-        val input = TranscoderInput(MainWindow::class.java.getResourceAsStream(svgFile))
-        val output = TranscoderOutput(resultByteStream)
-        val png = PNGTranscoder()
-        if (height > 0) png.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, height.toFloat())
-        if (width > 0) png.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, width.toFloat())
-        try {
-            png.transcode(input, output)
-        } catch (e1: TranscoderException) {
-            System.err.println("Failed to transcode image $svgFile!")
-            return null
-        }
-        try {
-            resultByteStream.flush()
-        } catch (e1: IOException) {
-            System.err.println("Failed to flush stream for image $svgFile!")
-            return null
-        }
-        val imgStream = ByteArrayInputStream(resultByteStream.toByteArray())
-        return Image(display, imgStream)
+        TODO("Implement svg image generator")
+//        val resultByteStream = ByteArrayOutputStream()
+//        val input = TranscoderInput(MainWindow::class.java.getResourceAsStream(svgFile))
+//        val output = TranscoderOutput(resultByteStream)
+//        val png = PNGTranscoder()
+//        if (height > 0) png.addTranscodingHint(SVGAbstractTranscoder.KEY_HEIGHT, height.toFloat())
+//        if (width > 0) png.addTranscodingHint(SVGAbstractTranscoder.KEY_WIDTH, width.toFloat())
+//        try {
+//            png.transcode(input, output)
+//        } catch (e1: TranscoderException) {
+//            System.err.println("Failed to transcode image $svgFile!")
+//            return null
+//        }
+//        try {
+//            resultByteStream.flush()
+//        } catch (e1: IOException) {
+//            System.err.println("Failed to flush stream for image $svgFile!")
+//            return null
+//        }
+//        val imgStream = ByteArrayInputStream(resultByteStream.toByteArray())
+//        return Image(display, imgStream)
     }
 
     @JvmStatic

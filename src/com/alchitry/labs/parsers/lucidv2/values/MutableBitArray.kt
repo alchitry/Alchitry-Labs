@@ -12,7 +12,7 @@ interface BitArray : List<BitValue> {
     fun toBigInt(): BigInteger {
         check(isNumber()) { "The value is not a number (it contains x and z values)" }
         val bytes = ByteArray(ceil((size + if (signed) 0 else 1).toDouble() / 8.0).toInt()) // if not signed need extra 0 sign bit
-        if (signed && msb() == BitValue.B1) // sign extension
+        if (signed && msb == BitValue.B1) // sign extension
             Arrays.fill(bytes, 255.toByte()) else Arrays.fill(bytes, 0.toByte())
         repeat(size) { i ->
             val idx: Int = i / 8
@@ -43,12 +43,25 @@ interface BitArray : List<BitValue> {
         return MutableBitArray(this.signed, this.size) { !this[it] }
     }
 
+    fun resize(width: Int, signExtend: Boolean = signed): BitArray {
+        if (width == size)
+            return MutableBitArray(signExtend, this)
+        if (width < size)
+            return MutableBitArray(signExtend, subList(0, width))
+        val extendBit = if (!signExtend && msb == BitValue.B1) BitValue.B0 else msb
+        val newValue = toMutableBitArray()
+        newValue.signed = signExtend
+        repeat(width - size) { newValue.add(extendBit) }
+        return newValue
+    }
+
     private inline fun doOp(b: BitArray, crossinline op: (BitValue, BitValue) -> BitValue): BitArray {
-        val size = this.size.coerceAtLeast(b.size)
-        return MutableBitArray(this.signed && b.signed, size) { i ->
-            val op1 = if (i < this.size) this[i] else BitValue.B0
-            val op2 = if (i < b.size) b[i] else BitValue.B0
-            op(op1, op2)
+        val size = size.coerceAtLeast(b.size)
+        val signedOp = signed && b.signed
+        val op1 = resize(size, signedOp)
+        val op2 = b.resize(size, signedOp)
+        return MutableBitArray(signedOp, size) { i ->
+            op(op1[i], op2[i])
         }
     }
 
@@ -77,7 +90,7 @@ interface BitArray : List<BitValue> {
     }
 
     infix fun shl(n: Int): BitArray {
-        return MutableBitArray(this.signed, n) { BitValue.B0 }.also { it.addAll(this) }
+        return MutableBitArray(signed, n) { BitValue.B0 }.also { it.addAll(this) }
     }
 
     infix fun ushl(n: Int): BitArray {
@@ -86,7 +99,7 @@ interface BitArray : List<BitValue> {
 
     infix fun shr(n: Int): BitArray {
         val value = MutableBitArray(signed)
-        val signBit = if (signed) last() else BitValue.B0
+        val signBit = if (signed) msb else BitValue.B0
         value.addAll(subList(n, size))
         repeat(n) { value.add(signBit) }
         return value
@@ -99,30 +112,15 @@ interface BitArray : List<BitValue> {
         return value
     }
 
-    fun equal(b: BitArray): BitValue {
-        val size = this.size.coerceAtLeast(b.size)
-        val se1 = if (this.signed) this[this.size - 1] else BitValue.B0
-        val se2 = if (b.signed) b[b.size - 1] else BitValue.B0
-        for (i in 0 until size) {
-            if (i < this.size) {
-                if (i < b.size) {
-                    if (this[i] != b[i]) return BitValue.B0
-                } else {
-                    if (this[i] != se2) return BitValue.B0
-                }
-            } else {
-                if (b[i] != se1) return BitValue.B0
-            }
-        }
-        return BitValue.B1
-    }
-
     fun isNumber(): Boolean {
         this.forEach { if (it != BitValue.B0 && it != BitValue.B1) return false }
         return true
     }
 
+    fun isNegative(): Boolean = signed && msb == BitValue.B1
+
     fun toMutableBitArray(): MutableBitArray = MutableBitArray(this)
+    fun toSimpleValue(): SimpleValue = SimpleValue(this)
 }
 
 class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue>(width), BitArray {
@@ -271,5 +269,8 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
     }
 }
 
-fun List<BitValue>.lsb() = first()
-fun List<BitValue>.msb() = last()
+/** Least significant bit */
+val List<BitValue>.lsb get() = first()
+
+/** Most significant bit */
+val List<BitValue>.msb get() = last()

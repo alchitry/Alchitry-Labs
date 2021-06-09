@@ -15,8 +15,6 @@
  */
 package com.alchitry.labs.hardware.usb.ftdi.enums;
 
-import org.apache.batik.apps.svgbrowser.Application;
-
 import net.sf.yad2xx.FTDIBitMode;
 
 /**
@@ -89,17 +87,18 @@ public enum BitMode {
 
 	private final byte mask;
 
-	private BitMode(byte mask) {
+	BitMode(byte mask) {
 		this.mask = mask;
 	}
-	
+
 	public byte getMask() {
 		return mask;
 	}
-	
+
 	public FTDIBitMode getFTDIMode() {
-		switch(this) {
-		case RESET: return FTDIBitMode.FT_BITMODE_RESET;
+		switch (this) {
+			case RESET:
+				return FTDIBitMode.FT_BITMODE_RESET;
 		case BITBANG: return FTDIBitMode.FT_BITMODE_ASYNC_BITBANG;
 		case MPSSE: return FTDIBitMode.FT_BITMODE_MPSSE;
 		case SYNCBB: return FTDIBitMode.FT_BITMODE_SYNC_BITBANG;
