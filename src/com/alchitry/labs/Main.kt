@@ -2,7 +2,6 @@ package com.alchitry.labs
 
 import com.alchitry.labs.gui.main.LoaderWindow
 import com.alchitry.labs.gui.main.MainWindow
-import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.util.logging.Level
 import kotlin.system.exitProcess
@@ -16,12 +15,10 @@ fun main(args: Array<String>) {
         MainWindow.open()
     } catch (e: Throwable) {
         Util.logger.log(Level.SEVERE, "", e)
-        if (Util.envType != Util.OS.IDE) Reporter.reportException(e, true)
         MainWindow.saveOnCrash()
     } finally {
         Settings.commit()
     }
-    runBlocking { Reporter.waitForAll() }
     return
 }
 
@@ -63,8 +60,6 @@ private fun runLoader() {
         loader.open()
     } catch (e: Throwable) {
         Util.logger.log(Level.SEVERE, "", e)
-        if (Util.envType != Util.OS.IDE) Reporter.reportException(e, true)
     }
-    runBlocking { Reporter.waitForAll() }
     exitProcess(0)
 }

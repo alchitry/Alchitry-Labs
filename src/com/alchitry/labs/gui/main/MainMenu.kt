@@ -1,6 +1,5 @@
 package com.alchitry.labs.gui.main
 
-import com.alchitry.labs.Reporter
 import com.alchitry.labs.Settings
 import com.alchitry.labs.UpdateChecker
 import com.alchitry.labs.Util
@@ -328,13 +327,6 @@ class MainMenu {
 
     private fun buildHelpMenu() {
         val subMenu = createSubMenu(menu, "Help")
-        createItem(subMenu, "Send Feedback", createSelectionAdapter {
-            val feedbackDialog = FeedbackDialog()
-            val message = feedbackDialog.open()
-            if (message != null) {
-                Reporter.sendFeedback(message, true)
-            }
-        })
         createItem(subMenu, "About", createSelectionAdapter {
             WelcomeDialog(MainWindow.shell).open()
         })

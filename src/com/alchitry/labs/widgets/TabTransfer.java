@@ -47,7 +47,7 @@ public class TabTransfer extends ByteArrayTransfer {
 			if (buffer == null)
 				return null;
 
-			Integer index = new Integer(-1);
+			Integer index = Integer.valueOf(-1);
 			try {
 				ByteArrayInputStream in = new ByteArrayInputStream(buffer);
 				DataInputStream readIn = new DataInputStream(in);

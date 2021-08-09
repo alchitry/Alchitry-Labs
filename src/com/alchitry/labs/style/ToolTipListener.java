@@ -34,39 +34,45 @@ public class ToolTipListener implements MouseTrackListener, MouseMoveListener {
 
 	@Override
 	public void mouseHover(MouseEvent e) {
-		try {
-			int offset = editor.getOffsetAtPoint(new Point(e.x, e.y));
-			if (errorChecker != null)
-				error = errorChecker.getErrorAtOffset(offset);
-			if (error != null) {
-				toolTip.setMessage(error.message);
-				Point base = editor.toDisplay(editor.getLocation());
-				toolTip.setLocation(base.x + e.x, base.y + e.y);
-				toolTip.setVisible(true);
-			} else {
-				toolTip.setVisible(false);
-				error = null;
-			}
-		} catch (IllegalArgumentException ex) {
-			toolTip.setVisible(false);
-			error = null;
-		}
+		// FIXME:
+		//   error: cannot find symbol "editor.getOffsetAtPoint"
+		//
+		// try {
+		// 	int offset = editor.getOffsetAtPoint(new Point(e.x, e.y));
+		// 	if (errorChecker != null)
+		// 		error = errorChecker.getErrorAtOffset(offset);
+		// 	if (error != null) {
+		// 		toolTip.setMessage(error.message);
+		// 		Point base = editor.toDisplay(editor.getLocation());
+		// 		toolTip.setLocation(base.x + e.x, base.y + e.y);
+		// 		toolTip.setVisible(true);
+		// 	} else {
+		// 		toolTip.setVisible(false);
+		// 		error = null;
+		// 	}
+		// } catch (IllegalArgumentException ex) {
+		// 	toolTip.setVisible(false);
+		// 	error = null;
+		// }
 	}
 
 	@Override
 	public void mouseMove(MouseEvent e) {
-		if (error != null) {
-			try {
-				int offset = editor.getOffsetAtPoint(new Point(e.x, e.y));
-				if (error.start > offset || error.stop < offset) {
-					toolTip.setVisible(false);
-					error = null;
-				}
-			} catch (IllegalArgumentException ex) {
-				toolTip.setVisible(false);
-				error = null;
-			}
-		}
+		// FIXME:
+		//   error: cannot find symbol "editor.getOffsetAtPoint"
+		//
+		// if (error != null) {
+		// 	try {
+		// 		int offset = editor.getOffsetAtPoint(new Point(e.x, e.y));
+		// 		if (error.start > offset || error.stop < offset) {
+		// 			toolTip.setVisible(false);
+		// 			error = null;
+		// 		}
+		// 	} catch (IllegalArgumentException ex) {
+		// 		toolTip.setVisible(false);
+		// 		error = null;
+		// 	}
+		// }
 	}
 
 }

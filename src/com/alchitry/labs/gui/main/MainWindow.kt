@@ -140,10 +140,13 @@ object MainWindow {
         shell.open()
         shell.layout()
 
+        // FIXME
+        //   Cannot access 'pref': it is private in 'Settings'
+        //   Unresolved reference: LIB_VERSION
         // Settings.pref.put(Settings.LIB_VERSION, "1");
-        if (Settings.VERSION != VERSION) {
-            upgrade()
-        }
+        // if (Settings.VERSION != VERSION) {
+        //     upgrade()
+        // }
 
         promptSettings()
 

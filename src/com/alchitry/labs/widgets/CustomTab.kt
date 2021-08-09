@@ -61,7 +61,7 @@ class CustomTab(private val folder: CustomTabs, style: Int, private var index: I
         })
         val dnd = DragSource(this, DND.DROP_MOVE or DND.DROP_COPY)
         val types = arrayOf<Transfer>(TabTransfer.getInstance())
-        dnd.setTransfer(*types)
+        dnd.setTransfer(types)
         dnd.addDragListener(object : DragSourceListener {
             var gc: GC? = null
             var image: Image? = null

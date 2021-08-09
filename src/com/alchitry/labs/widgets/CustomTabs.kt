@@ -61,7 +61,7 @@ class CustomTabs(parent: Composite, style: Int) : Composite(parent, style), List
         val dnd = DropTarget(this, DND.DROP_MOVE or DND.DROP_COPY or DND.DROP_DEFAULT)
         val tabTransfer = TabTransfer.getInstance()
         val types = arrayOf<Transfer>(tabTransfer)
-        dnd.setTransfer(*types)
+        dnd.setTransfer(types)
         dnd.addDropListener(object : DropTargetListener {
             override fun dropAccept(event: DropTargetEvent) {}
             override fun drop(event: DropTargetEvent) {

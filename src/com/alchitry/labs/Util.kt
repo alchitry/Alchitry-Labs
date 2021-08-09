@@ -191,7 +191,6 @@ object Util {
     @JvmStatic
     fun reportException(e: Throwable, message: String? = "An exception occurred:") {
         printException(e, message)
-        Reporter.reportException(e)
     }
 
     @JvmOverloads

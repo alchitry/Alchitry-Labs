@@ -362,11 +362,11 @@ public class Primitive implements Named, Serializable {
 		public boolean inRange(int i) {
 			if (type.equals(TYPE_INTEGER)) {
 				for (Range<?> r : ranges)
-					if (((Range<Integer>) r).inRange(new Integer(i)))
+					if (((Range<Integer>) r).inRange(Integer.valueOf(i)))
 						return true;
 			} else if (type.equals(TYPE_REAL))
 				for (Range<?> r : ranges)
-					if (((Range<Double>) r).inRange(new Double(i)))
+					if (((Range<Double>) r).inRange(Double.valueOf(i)))
 						return true;
 			return false;
 		}
@@ -377,7 +377,7 @@ public class Primitive implements Named, Serializable {
 				throw new InvalidParameterException("inRange(double d) can only be used with \"real\" type parameters");
 			} else if (type.equals(TYPE_REAL))
 				for (Range<?> r : ranges)
-					if (((Range<Double>) r).inRange(new Double(d)))
+					if (((Range<Double>) r).inRange(Double.valueOf(d)))
 						return true;
 			return false;
 		}
