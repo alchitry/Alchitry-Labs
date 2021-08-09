@@ -35,25 +35,9 @@ object Locations {
 
 
     init {
-        var prog: File? = null
-        try {
-            var uri = MainWindow::class.java.protectionDomain.codeSource.location.toURI()
-            if (Util.isWindows && uri.authority != null && uri.authority.isNotEmpty()) {
-                // Hack for UNC Path
-                uri = URL("file://" + uri.toString().substring("file:".length)).toURI()
-            }
-            prog = File(uri)
-        } catch (e1: URISyntaxException) {
-            e1.printStackTrace()
-            logger.severe("Could not detect program directory!")
-        }
-        prog = prog?.parentFile
-
-        progDir = if (prog != null && !Util.assembleFile(prog.path, "lib").exists())
-            prog.parentFile
-        else
-            prog
-
+        // env LUCIDHDL_HOME or current folder to find library/components
+        val home = System.getenv("LUCIDHDL_HOME")
+        progDir = File(home ?: System.getProperty("user.dir"))
         progPrefix = progDir?.path ?: ""
 
         LIBRARY = Util.assembleFile(progPrefix, "library")

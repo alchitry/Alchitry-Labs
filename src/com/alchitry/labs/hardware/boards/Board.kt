@@ -21,7 +21,7 @@ abstract class Board {
         }
 
         @JvmField
-        val boards = listOf(AlchitryAu, AlchitryAuPlus, AlchitryCu, Mojo)
+        val boards = listOf(AlchitryAu, AlchitryAuPlus, AlchitryCu, Mojo, VirtualBoard)
 
         @JvmStatic
         fun getFromName(board: String): Board? {

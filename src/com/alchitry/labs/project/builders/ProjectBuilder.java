@@ -128,9 +128,9 @@ public abstract class ProjectBuilder {
 				Util.setConsoleLogger(logWriter);
 			}
 
-			if (project.checkForErrors()) {
-				return;
-			}
+			// if (project.checkForErrors()) {
+			// 	return;
+			// }
 
 			if (debug) {
 				File debugDir = Util.assembleFile(workFolder, "debug");
