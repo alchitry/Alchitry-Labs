@@ -1,11 +1,6 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
 sealed class Value {
-    companion object {
-        val Zero = BitValue.B0.toSimpleValue()
-        val One = BitValue.B1.toSimpleValue()
-    }
-
     open val signed = false
 
     fun isNumber(): Boolean {
@@ -18,7 +13,7 @@ sealed class Value {
                 return this.bits.isNumber()
             }
             is StructValue -> {
-                this.elements.forEach { (k, v) -> if (!v.isNumber()) return false }
+                this.elements.forEach { (_, v) -> if (!v.isNumber()) return false }
                 return true
             }
             is UndefinedValue -> {
@@ -41,14 +36,14 @@ sealed class Value {
         return when (this) {
             is SimpleValue -> SimpleValue(bits.invert())
             is ArrayValue -> ArrayValue((List(elements.size) { elements[it].invert() }))
-            is StructValue -> StructValue(type, elements.mapValues { (k, v) -> v.invert() })
+            is StructValue -> StructValue(type, elements.mapValues { (_, v) -> v.invert() })
             is UndefinedValue -> this
         }
     }
 
     private fun isTrueBit(): BitValue {
         return when (this) {
-            is SimpleValue -> !bits
+            is SimpleValue -> bits.isTrue()
             is ArrayValue -> MutableBitArray(false, elements.size) { elements[it].isTrueBit() }.isTrue()
             is StructValue -> {
                 if (isComplete())
@@ -130,7 +125,7 @@ sealed class Value {
             is ArrayValue -> op(MutableBitArray(false, elements.size) { elements[it].reduceOp(op) })
             is StructValue -> {
                 if (isComplete()) {
-                    op(MutableBitArray(false).also { it.addAll(elements.map { (k, v) -> v.reduceOp(op) }) })
+                    op(MutableBitArray(false).also { it.addAll(elements.map { (_, v) -> v.reduceOp(op) }) })
                 } else {
                     BitValue.Bx
                 }
@@ -199,7 +194,7 @@ data class SimpleValue(
     }
 
     infix fun isGreaterThan(other: SimpleValue): SimpleValue {
-        return isLessThan(other).lsb.not().toSimpleValue()
+        return other.isLessThan(this).lsb.toSimpleValue()
     }
 
     infix fun isLessOrEqualTo(other: SimpleValue): SimpleValue {

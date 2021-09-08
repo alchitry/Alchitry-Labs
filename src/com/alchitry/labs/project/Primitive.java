@@ -1,23 +1,18 @@
 package com.alchitry.labs.project;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-
+import com.alchitry.labs.Locations;
+import com.alchitry.labs.Named;
+import com.alchitry.labs.style.ParseException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-import com.alchitry.labs.Locations;
-import com.alchitry.labs.Named;
-import com.alchitry.labs.style.ParseException;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.security.InvalidParameterException;
+import java.util.*;
 
 public class Primitive implements Named, Serializable {
 	private static final long serialVersionUID = -3360508608633313654L;
@@ -36,9 +31,9 @@ public class Primitive implements Named, Serializable {
 	private static final String DIRECTION_ATTR = "direction";
 	private static final String WIDTH_ATTR = "width";
 
-	private String name;
-	private List<Parameter> parameters;
-	private List<Port> ports;
+	private final String name;
+	private final List<Parameter> parameters;
+	private final List<Port> ports;
 
 	public static HashMap<String, HashSet<Primitive>> getAvailable() throws IOException, ParseException {
 		SAXBuilder builder = new SAXBuilder();
@@ -46,7 +41,7 @@ public class Primitive implements Named, Serializable {
 
 		Document document;
 		try {
-			document = (Document) builder.build(xmlFile);
+			document = builder.build(xmlFile);
 		} catch (JDOMException e) {
 			throw new ParseException(e.getMessage());
 		}
@@ -191,7 +186,7 @@ public class Primitive implements Named, Serializable {
 		public static final String DIR_OUTPUT = "output";
 		public static final String DIR_INOUT = "inout";
 
-		private String name;
+		private final String name;
 		private String direction;
 		private int width;
 
@@ -201,7 +196,7 @@ public class Primitive implements Named, Serializable {
 
 		public boolean setDirection(String dir) {
 			switch (dir) {
-			case DIR_INOUT:
+				case DIR_INOUT:
 			case DIR_INPUT:
 			case DIR_OUTPUT:
 				direction = dir;
@@ -242,8 +237,7 @@ public class Primitive implements Named, Serializable {
 				Port p = (Port) o;
 				if (Objects.equals(name, p.name)) {
 					if (Objects.equals(direction, p.direction)) {
-						if (width == p.width)
-							return true;
+						return width == p.width;
 					}
 				}
 			}
@@ -267,12 +261,12 @@ public class Primitive implements Named, Serializable {
 		public static final String TYPE_INTEGER = "integer";
 		public static final String TYPE_REAL = "real";
 
-		private String name;
+		private final String name;
 		private List<String> options;
 		private List<Range<?>> ranges;
 		private String type;
 
-		public static class Range<T extends Number & Comparable<T>> implements Serializable{
+		public static class Range<T extends Number & Comparable<T>> implements Serializable {
 			private static final long serialVersionUID = 6482276553489423635L;
 			public T min, max;
 
@@ -293,8 +287,7 @@ public class Primitive implements Named, Serializable {
 			@Override
 			public boolean equals(Object o) {
 				if (o instanceof Range)
-					if (((Range<?>) o).min.equals(min) && ((Range<?>) o).max.equals(max))
-						return true;
+					return ((Range<?>) o).min.equals(min) && ((Range<?>) o).max.equals(max);
 				return false;
 			}
 
@@ -362,11 +355,11 @@ public class Primitive implements Named, Serializable {
 		public boolean inRange(int i) {
 			if (type.equals(TYPE_INTEGER)) {
 				for (Range<?> r : ranges)
-					if (((Range<Integer>) r).inRange(new Integer(i)))
+					if (((Range<Integer>) r).inRange(i))
 						return true;
 			} else if (type.equals(TYPE_REAL))
 				for (Range<?> r : ranges)
-					if (((Range<Double>) r).inRange(new Double(i)))
+					if (((Range<Double>) r).inRange((double) i))
 						return true;
 			return false;
 		}
@@ -377,7 +370,7 @@ public class Primitive implements Named, Serializable {
 				throw new InvalidParameterException("inRange(double d) can only be used with \"real\" type parameters");
 			} else if (type.equals(TYPE_REAL))
 				for (Range<?> r : ranges)
-					if (((Range<Double>) r).inRange(new Double(d)))
+					if (((Range<Double>) r).inRange(d))
 						return true;
 			return false;
 		}
@@ -401,8 +394,7 @@ public class Primitive implements Named, Serializable {
 				if (Objects.equals(name, p.name))
 					if (Objects.equals(type, p.type))
 						if (Objects.equals(options, p.options))
-							if (Objects.equals(ranges, p.ranges))
-								return true;
+							return Objects.equals(ranges, p.ranges);
 			}
 			return false;
 		}

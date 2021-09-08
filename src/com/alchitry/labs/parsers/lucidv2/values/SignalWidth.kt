@@ -27,6 +27,7 @@ sealed class SignalWidth {
     /**
      * Returns true if this is a defined 1D array
      */
+    @OptIn(kotlin.contracts.ExperimentalContracts::class)
     fun isDefinedFlatArray(): Boolean {
         contract {
             returns(true) implies (this@SignalWidth is ArrayWidth)
@@ -37,6 +38,7 @@ sealed class SignalWidth {
     /**
      *  Returns true if this is JUST an array (no structs) and defined
      */
+    @OptIn(kotlin.contracts.ExperimentalContracts::class)
     fun isDefinedSimpleArray(): Boolean {
         contract {
             returns(true) implies (this@SignalWidth is ArrayWidth)

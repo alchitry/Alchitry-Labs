@@ -12,6 +12,7 @@ import com.alchitry.labs.parsers.lucid.AssignBlock;
 import com.alchitry.labs.parsers.lucid.Lucid;
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.*;
+import com.alchitry.labs.parsers.lucidv2.ExprParser;
 import com.alchitry.labs.parsers.types.*;
 import com.alchitry.labs.project.Primitive;
 import com.alchitry.labs.project.Primitive.Parameter;
@@ -189,7 +190,7 @@ public class LucidExtractor extends LucidBaseListener {
 		listeners.add(bitWidthChecker);
 		listeners.add(this);
 
-		//listeners.add(new ExprParser(errorListener)); // NEW
+		listeners.add(new ExprParser(errorListener)); // NEW
 
 		paramsParser.reset();
 	}

@@ -1,4 +1,4 @@
-// Generated from LucidIndent.g4 by ANTLR 4.8
+// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/lucid/indent/LucidIndent.g4 by ANTLR 4.9.1
 
 package com.alchitry.labs.parsers.lucid.indent;
 
@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.atn.ParserATNSimulator;
 import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class LucidIndentParser extends Parser {
 	static {
-		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+		RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION);
 	}
 
 	protected static final DFA[] _decisionToDFA;
@@ -45,16 +46,13 @@ public class LucidIndentParser extends Parser {
 				"')'", "'['", "']'", "'if'", "'for'", "'case'", "'else'", "';'", "'\\'"
 		};
 	}
-
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
-
 	private static String[] makeSymbolicNames() {
 		return new String[]{
 				null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, "BLOCK_COMMENT", "COMMENT", "WS", "STUFF"
 		};
 	}
-
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -63,7 +61,6 @@ public class LucidIndentParser extends Parser {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
-
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -130,14 +127,27 @@ public class LucidIndentParser extends Parser {
 		public LucidContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_lucid; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_lucid;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterLucid(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterLucid(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitLucid(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitLucid(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitLucid(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -221,14 +231,27 @@ public class LucidIndentParser extends Parser {
 		public ModuleContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterModule(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterModule(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitModule(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitModule(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitModule(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -301,14 +324,27 @@ public class LucidIndentParser extends Parser {
 		public GlobalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_global; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_global;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterGlobal(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterGlobal(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitGlobal(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitGlobal(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitGlobal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -385,14 +421,27 @@ public class LucidIndentParser extends Parser {
 		public ElemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_elem; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_elem;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterElem(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterElem(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitElem(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitElem(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitElem(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -496,14 +545,27 @@ public class LucidIndentParser extends Parser {
 		public IndentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_indent; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_indent;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterIndent(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterIndent(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitIndent(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitIndent(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitIndent(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -721,14 +783,27 @@ public class LucidIndentParser extends Parser {
 		public Always_lineContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_always_line; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_always_line;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterAlways_line(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterAlways_line(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitAlways_line(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitAlways_line(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitAlways_line(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -821,14 +896,27 @@ public class LucidIndentParser extends Parser {
 		public Else_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_else_block; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_else_block;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterElse_block(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterElse_block(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitElse_block(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitElse_block(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitElse_block(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -879,51 +967,91 @@ public class LucidIndentParser extends Parser {
 		public FluffContext fluff(int i) {
 			return getRuleContext(FluffContext.class,i);
 		}
-		public SingleBlockContext(BlockContext ctx) { copyFrom(ctx); }
+
+		public SingleBlockContext(BlockContext ctx) {
+			copyFrom(ctx);
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterSingleBlock(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterSingleBlock(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitSingleBlock(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitSingleBlock(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitSingleBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
+
 	public static class MultiBlockContext extends BlockContext {
 		public List<IndentContext> indent() {
 			return getRuleContexts(IndentContext.class);
 		}
+
 		public IndentContext indent(int i) {
-			return getRuleContext(IndentContext.class,i);
+			return getRuleContext(IndentContext.class, i);
 		}
+
 		public List<FluffContext> fluff() {
 			return getRuleContexts(FluffContext.class);
 		}
 		public FluffContext fluff(int i) {
 			return getRuleContext(FluffContext.class,i);
 		}
-		public MultiBlockContext(BlockContext ctx) { copyFrom(ctx); }
+
+		public MultiBlockContext(BlockContext ctx) {
+			copyFrom(ctx);
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterMultiBlock(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterMultiBlock(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitMultiBlock(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitMultiBlock(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitMultiBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
+
 	public static class AlwaysBlockContext extends BlockContext {
 		public Always_lineContext always_line() {
-			return getRuleContext(Always_lineContext.class,0);
+			return getRuleContext(Always_lineContext.class, 0);
 		}
-		public AlwaysBlockContext(BlockContext ctx) { copyFrom(ctx); }
+
+		public AlwaysBlockContext(BlockContext ctx) {
+			copyFrom(ctx);
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterAlwaysBlock(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterAlwaysBlock(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitAlwaysBlock(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitAlwaysBlock(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitAlwaysBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1062,14 +1190,27 @@ public class LucidIndentParser extends Parser {
 		public FluffContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_fluff; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_fluff;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).enterFluff(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).enterFluff(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LucidIndentListener ) ((LucidIndentListener)listener).exitFluff(this);
+			if (listener instanceof LucidIndentListener) ((LucidIndentListener) listener).exitFluff(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof LucidIndentVisitor)
+				return ((LucidIndentVisitor<? extends T>) visitor).visitFluff(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

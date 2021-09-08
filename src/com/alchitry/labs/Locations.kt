@@ -47,6 +47,7 @@ object Locations {
             e1.printStackTrace()
             logger.severe("Could not detect program directory!")
         }
+
         prog = prog?.parentFile
 
         progDir = if (prog != null && !Util.assembleFile(prog.path, "lib").exists())
@@ -54,7 +55,7 @@ object Locations {
         else
             prog
 
-        progPrefix = progDir?.path ?: ""
+        progPrefix = if (Util.envType == Util.OS.IDE) "" else progDir?.path ?: ""
 
         LIBRARY = Util.assembleFile(progPrefix, "library")
         BASE = Util.assembleFile(LIBRARY, "base")

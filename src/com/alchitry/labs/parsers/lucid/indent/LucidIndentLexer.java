@@ -1,4 +1,4 @@
-// Generated from LucidIndent.g4 by ANTLR 4.8
+// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/lucid/indent/LucidIndent.g4 by ANTLR 4.9.1
 
 package com.alchitry.labs.parsers.lucid.indent;
 
@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class LucidIndentLexer extends Lexer {
 	static {
-		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+		RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION);
 	}
 
 	protected static final DFA[] _decisionToDFA;
@@ -37,7 +37,6 @@ public class LucidIndentLexer extends Lexer {
 				"COMMENT", "WS", "STUFF"
 		};
 	}
-
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
@@ -46,16 +45,13 @@ public class LucidIndentLexer extends Lexer {
 				"')'", "'['", "']'", "'if'", "'for'", "'case'", "'else'", "';'", "'\\'"
 		};
 	}
-
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
-
 	private static String[] makeSymbolicNames() {
 		return new String[]{
 				null, null, null, null, null, null, null, null, null, null, null, null,
 				null, null, null, null, null, "BLOCK_COMMENT", "COMMENT", "WS", "STUFF"
 		};
 	}
-
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -64,7 +60,6 @@ public class LucidIndentLexer extends Lexer {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
-
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {

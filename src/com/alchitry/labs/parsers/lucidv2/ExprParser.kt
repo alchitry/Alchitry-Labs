@@ -75,7 +75,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                             elements.add(
                                 SimpleValue(
                                     MutableBitArray(
-                                        valueString[it].toLong(),
+                                        valueString[it].code.toLong(),
                                         8
                                     )
                                 )
@@ -84,7 +84,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                         value = ArrayValue(elements)
                     }
                     valueString.length == 1 -> {
-                        value = SimpleValue(MutableBitArray(valueString[0].toLong(), 8))
+                        value = SimpleValue(MutableBitArray(valueString[0].code.toLong(), 8))
                     }
                     else -> {
                         value = SimpleValue(MutableBitArray())
@@ -807,7 +807,10 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             return
         }
 
-        val value = if (cond.isTrue() == Value.One) op1 else op2
+        println("Cond $cond")
+        println("isTrue ${cond.isTrue()}")
+
+        val value = if (cond.isTrue().lsb == BitValue.B1) op1 else op2
         if (value.signalWidth != width) {
             if (value !is SimpleValue || !width.isDefinedFlatArray()) {
                 errorListener.reportError(

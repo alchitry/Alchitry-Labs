@@ -1,21 +1,17 @@
 package com.alchitry.labs.widgets;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
+
+import java.io.*;
 
 public class TabTransfer extends ByteArrayTransfer {
 	private static final String MYTYPENAME = "custom_tabs_transfer";
 
 	private static final int MYTYPEID = registerType(MYTYPENAME);
 
-	private static TabTransfer _instance = new TabTransfer();
+	private static final TabTransfer _instance = new TabTransfer();
 
 	public static TabTransfer getInstance() {
 		return _instance;
@@ -36,7 +32,7 @@ public class TabTransfer extends ByteArrayTransfer {
 			byte[] buffer = out.toByteArray();
 			writeOut.close();
 			super.javaToNative(buffer, transferData);
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
 	}
 
@@ -47,7 +43,7 @@ public class TabTransfer extends ByteArrayTransfer {
 			if (buffer == null)
 				return null;
 
-			Integer index = new Integer(-1);
+			int index = -1;
 			try {
 				ByteArrayInputStream in = new ByteArrayInputStream(buffer);
 				DataInputStream readIn = new DataInputStream(in);
@@ -75,10 +71,7 @@ public class TabTransfer extends ByteArrayTransfer {
 	}
 
 	boolean checkStringType(Object object) {
-		if (object == null || !(object instanceof Integer)) {
-			return false;
-		}
-		return true;
+		return object instanceof Integer;
 	}
 
 	@Override

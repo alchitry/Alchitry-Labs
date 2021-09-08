@@ -1,4 +1,4 @@
-// Generated from Lucid.g4 by ANTLR 4.8
+// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/lucid/parser/Lucid.g4 by ANTLR 4.9.1
 
 package com.alchitry.labs.parsers.lucid.parser;
 
@@ -790,16 +790,22 @@ public class LucidBaseListener implements LucidListener {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprNum(LucidParser.ExprNumContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExprConcat(LucidParser.ExprConcatContext ctx) { }
-	/**
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitExprNum(LucidParser.ExprNumContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterExprConcat(LucidParser.ExprConcatContext ctx) {
+    }
+
+    /**
      * {@inheritDoc}
      *
      * <p>The default implementation does nothing.</p>
@@ -834,16 +840,20 @@ public class LucidBaseListener implements LucidListener {
     @Override
     public void enterExprInvert(LucidParser.ExprInvertContext ctx) {
     }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprInvert(LucidParser.ExprInvertContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitExprInvert(LucidParser.ExprInvertContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterExprStruct(LucidParser.ExprStructContext ctx) { }
 	/**
@@ -905,19 +915,26 @@ public class LucidBaseListener implements LucidListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprNegate(LucidParser.ExprNegateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExprNegate(LucidParser.ExprNegateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExprGroup(LucidParser.ExprGroupContext ctx) {
+	@Override
+    public void enterExprNegate(LucidParser.ExprNegateContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void exitExprNegate(LucidParser.ExprNegateContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterExprGroup(LucidParser.ExprGroupContext ctx) {
     }
 
     /**
@@ -962,15 +979,20 @@ public class LucidBaseListener implements LucidListener {
      * <p>The default implementation does nothing.</p>
      */
     @Override
-    public void exitExprFunction(LucidParser.ExprFunctionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExprCompare(LucidParser.ExprCompareContext ctx) { }
-	/**
-	 * {@inheritDoc}
+    public void exitExprFunction(LucidParser.ExprFunctionContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The default implementation does nothing.</p>
+     */
+    @Override
+    public void enterExprCompare(LucidParser.ExprCompareContext ctx) {
+    }
+
+    /**
+     * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */

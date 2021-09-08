@@ -1,4 +1,4 @@
-// Generated from AlchitryConstraints.g4 by ANTLR 4.8
+// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/constraints/AlchitryConstraints.g4 by ANTLR 4.9.1
 
 package com.alchitry.labs.parsers.constraints;
 
@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.atn.ParserATNSimulator;
 import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class AlchitryConstraintsParser extends Parser {
 	static {
-		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+		RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION);
 	}
 
 	protected static final DFA[] _decisionToDFA;
@@ -45,16 +46,13 @@ public class AlchitryConstraintsParser extends Parser {
 				null, "'pin'", "';'", "'clock'", "'.'", "'['", "']'", "'pullup'", "'pulldown'"
 		};
 	}
-
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
-
 	private static String[] makeSymbolicNames() {
 		return new String[]{
 				null, null, null, null, null, null, null, "PULLUP", "PULLDOWN", "FREQ_UNIT",
 				"BASIC_NAME", "REAL", "INT", "BLOCK_COMMENT", "COMMENT", "WS"
 		};
 	}
-
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -63,7 +61,6 @@ public class AlchitryConstraintsParser extends Parser {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
-
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -124,14 +121,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public Alchitry_constraintsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_alchitry_constraints; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_alchitry_constraints;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterAlchitry_constraints(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterAlchitry_constraints(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitAlchitry_constraints(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitAlchitry_constraints(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitAlchitry_constraints(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -197,14 +209,28 @@ public class AlchitryConstraintsParser extends Parser {
 		public PinContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pin; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pin;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterPin(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterPin(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitPin(this);
+			if (listener instanceof AlchitryConstraintsListener) ((AlchitryConstraintsListener) listener).exitPin(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitPin(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -266,14 +292,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public ClockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_clock; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_clock;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterClock(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterClock(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitClock(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitClock(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitClock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -310,14 +351,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public NameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_name; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_name;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterName(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterName(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitName(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitName(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitName(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -367,14 +423,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public Port_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_port_name; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_port_name;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterPort_name(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterPort_name(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitPort_name(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitPort_name(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitPort_name(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -451,14 +522,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public Pin_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pin_name; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pin_name;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterPin_name(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterPin_name(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitPin_name(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitPin_name(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitPin_name(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -491,14 +577,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public FrequencyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_frequency; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_frequency;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterFrequency(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterFrequency(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitFrequency(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitFrequency(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitFrequency(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -530,14 +631,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public Array_indexContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_array_index; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_array_index;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterArray_index(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterArray_index(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitArray_index(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitArray_index(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitArray_index(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -572,14 +688,29 @@ public class AlchitryConstraintsParser extends Parser {
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_number; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_number;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).enterNumber(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).enterNumber(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AlchitryConstraintsListener ) ((AlchitryConstraintsListener)listener).exitNumber(this);
+			if (listener instanceof AlchitryConstraintsListener)
+				((AlchitryConstraintsListener) listener).exitNumber(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof AlchitryConstraintsVisitor)
+				return ((AlchitryConstraintsVisitor<? extends T>) visitor).visitNumber(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

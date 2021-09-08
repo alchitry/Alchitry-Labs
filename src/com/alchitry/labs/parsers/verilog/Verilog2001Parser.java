@@ -1,4 +1,4 @@
-// Generated from Verilog2001.g4 by ANTLR 4.8
+// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/verilog/Verilog2001.g4 by ANTLR 4.9.1
 
 package com.alchitry.labs.parsers.verilog;
 
@@ -10,6 +10,7 @@ import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class Verilog2001Parser extends Parser {
 	static {
-		RuntimeMetaData.checkVersion("4.8", RuntimeMetaData.VERSION);
+		RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION);
 	}
 
 	protected static final DFA[] _decisionToDFA;
@@ -29,137 +30,137 @@ public class Verilog2001Parser extends Parser {
 			T__17 = 18, T__18 = 19, T__19 = 20, T__20 = 21, T__21 = 22, T__22 = 23, T__23 = 24,
 			T__24 = 25, T__25 = 26, T__26 = 27, T__27 = 28, T__28 = 29, T__29 = 30, T__30 = 31,
 			T__31 = 32, T__32 = 33, T__33 = 34, T__34 = 35, T__35 = 36, T__36 = 37, T__37 = 38,
-		T__38=39, T__39=40, T__40=41, T__41=42, T__42=43, T__43=44, T__44=45, 
-		T__45=46, T__46=47, T__47=48, T__48=49, T__49=50, T__50=51, T__51=52, 
-		T__52=53, T__53=54, T__54=55, T__55=56, T__56=57, T__57=58, T__58=59, 
-		T__59=60, T__60=61, T__61=62, T__62=63, T__63=64, T__64=65, T__65=66, 
-		T__66=67, T__67=68, T__68=69, T__69=70, T__70=71, T__71=72, T__72=73, 
-		T__73=74, T__74=75, T__75=76, T__76=77, T__77=78, T__78=79, T__79=80, 
-		T__80=81, T__81=82, T__82=83, T__83=84, T__84=85, T__85=86, T__86=87, 
-		T__87=88, T__88=89, T__89=90, T__90=91, T__91=92, T__92=93, T__93=94, 
-		T__94=95, T__95=96, T__96=97, T__97=98, T__98=99, T__99=100, T__100=101, 
-		T__101=102, T__102=103, T__103=104, T__104=105, T__105=106, T__106=107, 
-		T__107=108, T__108=109, T__109=110, T__110=111, T__111=112, T__112=113, 
-		T__113=114, T__114=115, T__115=116, T__116=117, T__117=118, T__118=119, 
-		T__119=120, T__120=121, T__121=122, T__122=123, T__123=124, T__124=125, 
-		T__125=126, T__126=127, T__127=128, T__128=129, T__129=130, T__130=131, 
-		T__131=132, T__132=133, T__133=134, T__134=135, T__135=136, T__136=137, 
-		T__137=138, T__138=139, T__139=140, T__140=141, T__141=142, T__142=143, 
-		T__143=144, T__144=145, T__145=146, T__146=147, T__147=148, T__148=149, 
-		T__149=150, T__150=151, T__151=152, T__152=153, T__153=154, T__154=155, 
-		T__155=156, T__156=157, T__157=158, T__158=159, T__159=160, T__160=161, 
-		T__161=162, T__162=163, T__163=164, T__164=165, Real_number=166, Decimal_number=167, 
-		Binary_number=168, Octal_number=169, Hex_number=170, String=171, Ifdef_macro=172, 
-		Ifndef_macro=173, Define_macro=174, Endif_macro=175, Else_macro=176, Timescale_macro=177, 
-		Include_macro=178, Undefall_macro=179, Undef_macro=180, Line_macro=181, 
-		One_line_comment=182, Block_comment=183, Escaped_identifier=184, Simple_identifier=185, 
+			T__38 = 39, T__39 = 40, T__40 = 41, T__41 = 42, T__42 = 43, T__43 = 44, T__44 = 45,
+			T__45 = 46, T__46 = 47, T__47 = 48, T__48 = 49, T__49 = 50, T__50 = 51, T__51 = 52,
+			T__52 = 53, T__53 = 54, T__54 = 55, T__55 = 56, T__56 = 57, T__57 = 58, T__58 = 59,
+			T__59 = 60, T__60 = 61, T__61 = 62, T__62 = 63, T__63 = 64, T__64 = 65, T__65 = 66,
+			T__66 = 67, T__67 = 68, T__68 = 69, T__69 = 70, T__70 = 71, T__71 = 72, T__72 = 73,
+			T__73 = 74, T__74 = 75, T__75 = 76, T__76 = 77, T__77 = 78, T__78 = 79, T__79 = 80,
+			T__80 = 81, T__81 = 82, T__82 = 83, T__83 = 84, T__84 = 85, T__85 = 86, T__86 = 87,
+			T__87 = 88, T__88 = 89, T__89 = 90, T__90 = 91, T__91 = 92, T__92 = 93, T__93 = 94,
+			T__94 = 95, T__95 = 96, T__96 = 97, T__97 = 98, T__98 = 99, T__99 = 100, T__100 = 101,
+			T__101 = 102, T__102 = 103, T__103 = 104, T__104 = 105, T__105 = 106, T__106 = 107,
+		T__107=108, T__108=109, T__109=110, T__110=111, T__111=112, T__112=113,
+		T__113=114, T__114=115, T__115=116, T__116=117, T__117=118, T__118=119,
+		T__119=120, T__120=121, T__121=122, T__122=123, T__123=124, T__124=125,
+		T__125=126, T__126=127, T__127=128, T__128=129, T__129=130, T__130=131,
+		T__131=132, T__132=133, T__133=134, T__134=135, T__135=136, T__136=137,
+		T__137=138, T__138=139, T__139=140, T__140=141, T__141=142, T__142=143,
+		T__143=144, T__144=145, T__145=146, T__146=147, T__147=148, T__148=149,
+		T__149=150, T__150=151, T__151=152, T__152=153, T__153=154, T__154=155,
+		T__155=156, T__156=157, T__157=158, T__158=159, T__159=160, T__160=161,
+		T__161=162, T__162=163, T__163=164, T__164=165, Real_number=166, Decimal_number=167,
+		Binary_number=168, Octal_number=169, Hex_number=170, String=171, Ifdef_macro=172,
+		Ifndef_macro=173, Define_macro=174, Endif_macro=175, Else_macro=176, Timescale_macro=177,
+		Include_macro=178, Undefall_macro=179, Undef_macro=180, Line_macro=181,
+		One_line_comment=182, Block_comment=183, Escaped_identifier=184, Simple_identifier=185,
 		Dollar_Identifier=186, White_space=187;
 	public static final int
-		RULE_config_declaration = 0, RULE_design_statement = 1, RULE_config_rule_statement = 2, 
-		RULE_default_clause = 3, RULE_inst_clause = 4, RULE_inst_name = 5, RULE_liblist_clause = 6, 
-		RULE_cell_clause = 7, RULE_use_clause = 8, RULE_source_text = 9, RULE_description = 10, 
-		RULE_module_declaration = 11, RULE_module_keyword = 12, RULE_module_parameter_port_list = 13, 
-		RULE_list_of_ports = 14, RULE_list_of_port_declarations = 15, RULE_port = 16, 
-		RULE_port_expression = 17, RULE_port_reference = 18, RULE_port_declaration = 19, 
-		RULE_module_item = 20, RULE_module_or_generate_item = 21, RULE_non_port_module_item = 22, 
-		RULE_module_or_generate_item_declaration = 23, RULE_parameter_override = 24, 
-		RULE_local_parameter_declaration = 25, RULE_parameter_declaration = 26, 
-		RULE_parameter_declaration_ = 27, RULE_specparam_declaration = 28, RULE_inout_declaration = 29, 
-		RULE_input_declaration = 30, RULE_output_declaration = 31, RULE_event_declaration = 32, 
-		RULE_genvar_declaration = 33, RULE_integer_declaration = 34, RULE_time_declaration = 35, 
-		RULE_real_declaration = 36, RULE_realtime_declaration = 37, RULE_reg_declaration = 38, 
-		RULE_net_declaration = 39, RULE_net_type = 40, RULE_output_variable_type = 41, 
-		RULE_real_type = 42, RULE_variable_type = 43, RULE_drive_strength = 44, 
-		RULE_strength0 = 45, RULE_strength1 = 46, RULE_charge_strength = 47, RULE_delay3 = 48, 
-		RULE_delay2 = 49, RULE_delay_value = 50, RULE_list_of_event_identifiers = 51, 
-		RULE_list_of_net_identifiers = 52, RULE_list_of_genvar_identifiers = 53, 
-		RULE_list_of_port_identifiers = 54, RULE_list_of_net_decl_assignments = 55, 
-		RULE_list_of_param_assignments = 56, RULE_list_of_specparam_assignments = 57, 
-		RULE_list_of_real_identifiers = 58, RULE_list_of_variable_identifiers = 59, 
-		RULE_list_of_variable_port_identifiers = 60, RULE_net_decl_assignment = 61, 
-		RULE_param_assignment = 62, RULE_specparam_assignment = 63, RULE_pulse_control_specparam = 64, 
-		RULE_error_limit_value = 65, RULE_reject_limit_value = 66, RULE_limit_value = 67, 
-		RULE_dimension = 68, RULE_range = 69, RULE_function_declaration = 70, 
-		RULE_function_item_declaration = 71, RULE_function_port_list = 72, RULE_function_port = 73, 
-		RULE_range_or_type = 74, RULE_task_declaration = 75, RULE_task_item_declaration = 76, 
-		RULE_task_port_list = 77, RULE_task_port_item = 78, RULE_tf_decl_header = 79, 
-		RULE_tf_declaration = 80, RULE_task_port_type = 81, RULE_block_item_declaration = 82, 
-		RULE_block_reg_declaration = 83, RULE_list_of_block_variable_identifiers = 84, 
-		RULE_block_variable_type = 85, RULE_gate_instantiation = 86, RULE_cmos_switch_instance = 87, 
-		RULE_enable_gate_instance = 88, RULE_mos_switch_instance = 89, RULE_n_input_gate_instance = 90, 
-		RULE_n_output_gate_instance = 91, RULE_pass_switch_instance = 92, RULE_pass_enable_switch_instance = 93, 
-		RULE_pull_gate_instance = 94, RULE_name_of_gate_instance = 95, RULE_pulldown_strength = 96, 
-		RULE_pullup_strength = 97, RULE_enable_terminal = 98, RULE_ncontrol_terminal = 99, 
-		RULE_pcontrol_terminal = 100, RULE_input_terminal = 101, RULE_inout_terminal = 102, 
-		RULE_output_terminal = 103, RULE_cmos_switchtype = 104, RULE_enable_gatetype = 105, 
-		RULE_mos_switchtype = 106, RULE_n_input_gatetype = 107, RULE_n_output_gatetype = 108, 
-		RULE_pass_en_switchtype = 109, RULE_pass_switchtype = 110, RULE_module_instantiation = 111, 
-		RULE_parameter_value_assignment = 112, RULE_list_of_parameter_assignments = 113, 
-		RULE_ordered_parameter_assignment = 114, RULE_named_parameter_assignment = 115, 
-		RULE_module_instance = 116, RULE_name_of_instance = 117, RULE_list_of_port_connections = 118, 
-		RULE_ordered_port_connection = 119, RULE_named_port_connection = 120, 
-		RULE_generated_instantiation = 121, RULE_generate_item_or_null = 122, 
-		RULE_generate_item = 123, RULE_generate_conditional_statement = 124, RULE_generate_case_statement = 125, 
-		RULE_genvar_case_item = 126, RULE_generate_loop_statement = 127, RULE_genvar_assignment = 128, 
-		RULE_generate_block = 129, RULE_continuous_assign = 130, RULE_list_of_net_assignments = 131, 
-		RULE_net_assignment = 132, RULE_initial_construct = 133, RULE_always_construct = 134, 
-		RULE_blocking_assignment = 135, RULE_nonblocking_assignment = 136, RULE_procedural_continuous_assignments = 137, 
-		RULE_function_blocking_assignment = 138, RULE_function_statement_or_null = 139, 
-		RULE_function_seq_block = 140, RULE_variable_assignment = 141, RULE_par_block = 142, 
-		RULE_seq_block = 143, RULE_statement = 144, RULE_statement_or_null = 145, 
-		RULE_function_statement = 146, RULE_delay_or_event_control = 147, RULE_delay_control = 148, 
-		RULE_disable_statement = 149, RULE_event_control = 150, RULE_event_trigger = 151, 
-		RULE_event_expression = 152, RULE_event_primary = 153, RULE_procedural_timing_control_statement = 154, 
-		RULE_wait_statement = 155, RULE_conditional_statement = 156, RULE_if_else_if_statement = 157, 
-		RULE_function_conditional_statement = 158, RULE_function_if_else_if_statement = 159, 
-		RULE_case_statement = 160, RULE_case_item = 161, RULE_function_case_statement = 162, 
-		RULE_function_case_item = 163, RULE_function_loop_statement = 164, RULE_loop_statement = 165, 
-		RULE_system_task_enable = 166, RULE_task_enable = 167, RULE_specify_block = 168, 
-		RULE_specify_item = 169, RULE_pulsestyle_declaration = 170, RULE_showcancelled_declaration = 171, 
-		RULE_path_declaration = 172, RULE_simple_path_declaration = 173, RULE_parallel_path_description = 174, 
-		RULE_full_path_description = 175, RULE_list_of_path_inputs = 176, RULE_list_of_path_outputs = 177, 
-		RULE_specify_input_terminal_descriptor = 178, RULE_specify_output_terminal_descriptor = 179, 
-		RULE_input_identifier = 180, RULE_output_identifier = 181, RULE_path_delay_value = 182, 
-		RULE_list_of_path_delay_expressions = 183, RULE_t_path_delay_expression = 184, 
-		RULE_trise_path_delay_expression = 185, RULE_tfall_path_delay_expression = 186, 
-		RULE_tz_path_delay_expression = 187, RULE_t01_path_delay_expression = 188, 
-		RULE_t10_path_delay_expression = 189, RULE_t0z_path_delay_expression = 190, 
-		RULE_tz1_path_delay_expression = 191, RULE_t1z_path_delay_expression = 192, 
-		RULE_tz0_path_delay_expression = 193, RULE_t0x_path_delay_expression = 194, 
-		RULE_tx1_path_delay_expression = 195, RULE_t1x_path_delay_expression = 196, 
-		RULE_tx0_path_delay_expression = 197, RULE_txz_path_delay_expression = 198, 
-		RULE_tzx_path_delay_expression = 199, RULE_path_delay_expression = 200, 
-		RULE_edge_sensitive_path_declaration = 201, RULE_parallel_edge_sensitive_path_description = 202, 
-		RULE_full_edge_sensitive_path_description = 203, RULE_data_source_expression = 204, 
-		RULE_edge_identifier = 205, RULE_state_dependent_path_declaration = 206, 
-		RULE_polarity_operator = 207, RULE_checktime_condition = 208, RULE_delayed_data = 209, 
-		RULE_delayed_reference = 210, RULE_end_edge_offset = 211, RULE_event_based_flag = 212, 
-		RULE_notify_reg = 213, RULE_remain_active_flag = 214, RULE_stamptime_condition = 215, 
-		RULE_start_edge_offset = 216, RULE_threshold = 217, RULE_timing_check_limit = 218, 
-		RULE_concatenation = 219, RULE_constant_concatenation = 220, RULE_constant_multiple_concatenation = 221, 
-		RULE_module_path_concatenation = 222, RULE_module_path_multiple_concatenation = 223, 
-		RULE_multiple_concatenation = 224, RULE_net_concatenation = 225, RULE_net_concatenation_value = 226, 
-		RULE_variable_concatenation = 227, RULE_variable_concatenation_value = 228, 
-		RULE_constant_function_call = 229, RULE_function_call = 230, RULE_system_function_call = 231, 
-		RULE_genvar_function_call = 232, RULE_base_expression = 233, RULE_constant_base_expression = 234, 
-		RULE_constant_expression = 235, RULE_constant_mintypmax_expression = 236, 
-		RULE_constant_range_expression = 237, RULE_dimension_constant_expression = 238, 
-		RULE_expression = 239, RULE_term = 240, RULE_lsb_constant_expression = 241, 
-		RULE_mintypmax_expression = 242, RULE_module_path_conditional_expression = 243, 
-		RULE_module_path_expression = 244, RULE_module_path_mintypmax_expression = 245, 
-		RULE_msb_constant_expression = 246, RULE_range_expression = 247, RULE_width_constant_expression = 248, 
-		RULE_constant_primary = 249, RULE_module_path_primary = 250, RULE_primary = 251, 
-		RULE_net_lvalue = 252, RULE_variable_lvalue = 253, RULE_unary_operator = 254, 
-		RULE_binary_operator = 255, RULE_unary_module_path_operator = 256, RULE_binary_module_path_operator = 257, 
-		RULE_number = 258, RULE_attribute_instance = 259, RULE_attr_spec = 260, 
-		RULE_attr_name = 261, RULE_arrayed_identifier = 262, RULE_block_identifier = 263, 
-		RULE_cell_identifier = 264, RULE_config_identifier = 265, RULE_escaped_arrayed_identifier = 266, 
-		RULE_escaped_hierarchical_identifier = 267, RULE_event_identifier = 268, 
-		RULE_function_identifier = 269, RULE_gate_instance_identifier = 270, RULE_generate_block_identifier = 271, 
-		RULE_genvar_function_identifier = 272, RULE_genvar_identifier = 273, RULE_hierarchical_block_identifier = 274, 
-		RULE_hierarchical_event_identifier = 275, RULE_hierarchical_function_identifier = 276, 
-		RULE_hierarchical_identifier = 277, RULE_hierarchical_net_identifier = 278, 
-		RULE_hierarchical_variable_identifier = 279, RULE_hierarchical_task_identifier = 280,
+		RULE_config_declaration = 0, RULE_design_statement = 1, RULE_config_rule_statement = 2,
+		RULE_default_clause = 3, RULE_inst_clause = 4, RULE_inst_name = 5, RULE_liblist_clause = 6,
+		RULE_cell_clause = 7, RULE_use_clause = 8, RULE_source_text = 9, RULE_description = 10,
+		RULE_module_declaration = 11, RULE_module_keyword = 12, RULE_module_parameter_port_list = 13,
+		RULE_list_of_ports = 14, RULE_list_of_port_declarations = 15, RULE_port = 16,
+		RULE_port_expression = 17, RULE_port_reference = 18, RULE_port_declaration = 19,
+		RULE_module_item = 20, RULE_module_or_generate_item = 21, RULE_non_port_module_item = 22,
+		RULE_module_or_generate_item_declaration = 23, RULE_parameter_override = 24,
+		RULE_local_parameter_declaration = 25, RULE_parameter_declaration = 26,
+		RULE_parameter_declaration_ = 27, RULE_specparam_declaration = 28, RULE_inout_declaration = 29,
+		RULE_input_declaration = 30, RULE_output_declaration = 31, RULE_event_declaration = 32,
+		RULE_genvar_declaration = 33, RULE_integer_declaration = 34, RULE_time_declaration = 35,
+		RULE_real_declaration = 36, RULE_realtime_declaration = 37, RULE_reg_declaration = 38,
+		RULE_net_declaration = 39, RULE_net_type = 40, RULE_output_variable_type = 41,
+		RULE_real_type = 42, RULE_variable_type = 43, RULE_drive_strength = 44,
+		RULE_strength0 = 45, RULE_strength1 = 46, RULE_charge_strength = 47, RULE_delay3 = 48,
+		RULE_delay2 = 49, RULE_delay_value = 50, RULE_list_of_event_identifiers = 51,
+		RULE_list_of_net_identifiers = 52, RULE_list_of_genvar_identifiers = 53,
+		RULE_list_of_port_identifiers = 54, RULE_list_of_net_decl_assignments = 55,
+		RULE_list_of_param_assignments = 56, RULE_list_of_specparam_assignments = 57,
+		RULE_list_of_real_identifiers = 58, RULE_list_of_variable_identifiers = 59,
+		RULE_list_of_variable_port_identifiers = 60, RULE_net_decl_assignment = 61,
+		RULE_param_assignment = 62, RULE_specparam_assignment = 63, RULE_pulse_control_specparam = 64,
+		RULE_error_limit_value = 65, RULE_reject_limit_value = 66, RULE_limit_value = 67,
+		RULE_dimension = 68, RULE_range = 69, RULE_function_declaration = 70,
+		RULE_function_item_declaration = 71, RULE_function_port_list = 72, RULE_function_port = 73,
+		RULE_range_or_type = 74, RULE_task_declaration = 75, RULE_task_item_declaration = 76,
+		RULE_task_port_list = 77, RULE_task_port_item = 78, RULE_tf_decl_header = 79,
+		RULE_tf_declaration = 80, RULE_task_port_type = 81, RULE_block_item_declaration = 82,
+		RULE_block_reg_declaration = 83, RULE_list_of_block_variable_identifiers = 84,
+		RULE_block_variable_type = 85, RULE_gate_instantiation = 86, RULE_cmos_switch_instance = 87,
+		RULE_enable_gate_instance = 88, RULE_mos_switch_instance = 89, RULE_n_input_gate_instance = 90,
+		RULE_n_output_gate_instance = 91, RULE_pass_switch_instance = 92, RULE_pass_enable_switch_instance = 93,
+		RULE_pull_gate_instance = 94, RULE_name_of_gate_instance = 95, RULE_pulldown_strength = 96,
+		RULE_pullup_strength = 97, RULE_enable_terminal = 98, RULE_ncontrol_terminal = 99,
+		RULE_pcontrol_terminal = 100, RULE_input_terminal = 101, RULE_inout_terminal = 102,
+		RULE_output_terminal = 103, RULE_cmos_switchtype = 104, RULE_enable_gatetype = 105,
+		RULE_mos_switchtype = 106, RULE_n_input_gatetype = 107, RULE_n_output_gatetype = 108,
+		RULE_pass_en_switchtype = 109, RULE_pass_switchtype = 110, RULE_module_instantiation = 111,
+		RULE_parameter_value_assignment = 112, RULE_list_of_parameter_assignments = 113,
+		RULE_ordered_parameter_assignment = 114, RULE_named_parameter_assignment = 115,
+		RULE_module_instance = 116, RULE_name_of_instance = 117, RULE_list_of_port_connections = 118,
+		RULE_ordered_port_connection = 119, RULE_named_port_connection = 120,
+		RULE_generated_instantiation = 121, RULE_generate_item_or_null = 122,
+		RULE_generate_item = 123, RULE_generate_conditional_statement = 124, RULE_generate_case_statement = 125,
+		RULE_genvar_case_item = 126, RULE_generate_loop_statement = 127, RULE_genvar_assignment = 128,
+		RULE_generate_block = 129, RULE_continuous_assign = 130, RULE_list_of_net_assignments = 131,
+		RULE_net_assignment = 132, RULE_initial_construct = 133, RULE_always_construct = 134,
+		RULE_blocking_assignment = 135, RULE_nonblocking_assignment = 136, RULE_procedural_continuous_assignments = 137,
+		RULE_function_blocking_assignment = 138, RULE_function_statement_or_null = 139,
+		RULE_function_seq_block = 140, RULE_variable_assignment = 141, RULE_par_block = 142,
+		RULE_seq_block = 143, RULE_statement = 144, RULE_statement_or_null = 145,
+		RULE_function_statement = 146, RULE_delay_or_event_control = 147, RULE_delay_control = 148,
+		RULE_disable_statement = 149, RULE_event_control = 150, RULE_event_trigger = 151,
+		RULE_event_expression = 152, RULE_event_primary = 153, RULE_procedural_timing_control_statement = 154,
+		RULE_wait_statement = 155, RULE_conditional_statement = 156, RULE_if_else_if_statement = 157,
+		RULE_function_conditional_statement = 158, RULE_function_if_else_if_statement = 159,
+		RULE_case_statement = 160, RULE_case_item = 161, RULE_function_case_statement = 162,
+		RULE_function_case_item = 163, RULE_function_loop_statement = 164, RULE_loop_statement = 165,
+		RULE_system_task_enable = 166, RULE_task_enable = 167, RULE_specify_block = 168,
+		RULE_specify_item = 169, RULE_pulsestyle_declaration = 170, RULE_showcancelled_declaration = 171,
+		RULE_path_declaration = 172, RULE_simple_path_declaration = 173, RULE_parallel_path_description = 174,
+		RULE_full_path_description = 175, RULE_list_of_path_inputs = 176, RULE_list_of_path_outputs = 177,
+		RULE_specify_input_terminal_descriptor = 178, RULE_specify_output_terminal_descriptor = 179,
+		RULE_input_identifier = 180, RULE_output_identifier = 181, RULE_path_delay_value = 182,
+		RULE_list_of_path_delay_expressions = 183, RULE_t_path_delay_expression = 184,
+		RULE_trise_path_delay_expression = 185, RULE_tfall_path_delay_expression = 186,
+		RULE_tz_path_delay_expression = 187, RULE_t01_path_delay_expression = 188,
+		RULE_t10_path_delay_expression = 189, RULE_t0z_path_delay_expression = 190,
+		RULE_tz1_path_delay_expression = 191, RULE_t1z_path_delay_expression = 192,
+		RULE_tz0_path_delay_expression = 193, RULE_t0x_path_delay_expression = 194,
+		RULE_tx1_path_delay_expression = 195, RULE_t1x_path_delay_expression = 196,
+		RULE_tx0_path_delay_expression = 197, RULE_txz_path_delay_expression = 198,
+		RULE_tzx_path_delay_expression = 199, RULE_path_delay_expression = 200,
+		RULE_edge_sensitive_path_declaration = 201, RULE_parallel_edge_sensitive_path_description = 202,
+		RULE_full_edge_sensitive_path_description = 203, RULE_data_source_expression = 204,
+		RULE_edge_identifier = 205, RULE_state_dependent_path_declaration = 206,
+		RULE_polarity_operator = 207, RULE_checktime_condition = 208, RULE_delayed_data = 209,
+		RULE_delayed_reference = 210, RULE_end_edge_offset = 211, RULE_event_based_flag = 212,
+		RULE_notify_reg = 213, RULE_remain_active_flag = 214, RULE_stamptime_condition = 215,
+		RULE_start_edge_offset = 216, RULE_threshold = 217, RULE_timing_check_limit = 218,
+		RULE_concatenation = 219, RULE_constant_concatenation = 220, RULE_constant_multiple_concatenation = 221,
+		RULE_module_path_concatenation = 222, RULE_module_path_multiple_concatenation = 223,
+		RULE_multiple_concatenation = 224, RULE_net_concatenation = 225, RULE_net_concatenation_value = 226,
+		RULE_variable_concatenation = 227, RULE_variable_concatenation_value = 228,
+		RULE_constant_function_call = 229, RULE_function_call = 230, RULE_system_function_call = 231,
+		RULE_genvar_function_call = 232, RULE_base_expression = 233, RULE_constant_base_expression = 234,
+		RULE_constant_expression = 235, RULE_constant_mintypmax_expression = 236,
+		RULE_constant_range_expression = 237, RULE_dimension_constant_expression = 238,
+		RULE_expression = 239, RULE_term = 240, RULE_lsb_constant_expression = 241,
+		RULE_mintypmax_expression = 242, RULE_module_path_conditional_expression = 243,
+		RULE_module_path_expression = 244, RULE_module_path_mintypmax_expression = 245,
+		RULE_msb_constant_expression = 246, RULE_range_expression = 247, RULE_width_constant_expression = 248,
+		RULE_constant_primary = 249, RULE_module_path_primary = 250, RULE_primary = 251,
+			RULE_net_lvalue = 252, RULE_variable_lvalue = 253, RULE_unary_operator = 254,
+			RULE_binary_operator = 255, RULE_unary_module_path_operator = 256, RULE_binary_module_path_operator = 257,
+			RULE_number = 258, RULE_attribute_instance = 259, RULE_attr_spec = 260,
+			RULE_attr_name = 261, RULE_arrayed_identifier = 262, RULE_block_identifier = 263,
+			RULE_cell_identifier = 264, RULE_config_identifier = 265, RULE_escaped_arrayed_identifier = 266,
+			RULE_escaped_hierarchical_identifier = 267, RULE_event_identifier = 268,
+			RULE_function_identifier = 269, RULE_gate_instance_identifier = 270, RULE_generate_block_identifier = 271,
+			RULE_genvar_function_identifier = 272, RULE_genvar_identifier = 273, RULE_hierarchical_block_identifier = 274,
+			RULE_hierarchical_event_identifier = 275, RULE_hierarchical_function_identifier = 276,
+			RULE_hierarchical_identifier = 277, RULE_hierarchical_net_identifier = 278,
+			RULE_hierarchical_variable_identifier = 279, RULE_hierarchical_task_identifier = 280,
 			RULE_identifier = 281, RULE_inout_port_identifier = 282, RULE_input_port_identifier = 283,
 			RULE_instance_identifier = 284, RULE_library_identifier = 285, RULE_memory_identifier = 286,
 			RULE_module_identifier = 287, RULE_module_instance_identifier = 288, RULE_net_identifier = 289,
@@ -264,7 +265,6 @@ public class Verilog2001Parser extends Parser {
 				"escaped_hierarchical_branch"
 		};
 	}
-
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
@@ -296,9 +296,7 @@ public class Verilog2001Parser extends Parser {
 				"'<<<'"
 		};
 	}
-
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
-
 	private static String[] makeSymbolicNames() {
 		return new String[]{
 				null, null, null, null, null, null, null, null, null, null, null, null,
@@ -322,7 +320,6 @@ public class Verilog2001Parser extends Parser {
 				"Simple_identifier", "Dollar_Identifier", "White_space"
 		};
 	}
-
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -331,7 +328,6 @@ public class Verilog2001Parser extends Parser {
 	 */
 	@Deprecated
 	public static final String[] tokenNames;
-
 	static {
 		tokenNames = new String[_SYMBOLIC_NAMES.length];
 		for (int i = 0; i < tokenNames.length; i++) {
@@ -391,14 +387,27 @@ public class Verilog2001Parser extends Parser {
 		public Config_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_config_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_config_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConfig_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterConfig_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConfig_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitConfig_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConfig_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -462,14 +471,27 @@ public class Verilog2001Parser extends Parser {
 		public Design_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_design_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_design_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDesign_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDesign_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDesign_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDesign_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDesign_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -542,14 +564,29 @@ public class Verilog2001Parser extends Parser {
 		public Config_rule_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_config_rule_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_config_rule_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConfig_rule_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConfig_rule_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConfig_rule_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConfig_rule_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConfig_rule_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -622,14 +659,27 @@ public class Verilog2001Parser extends Parser {
 		public Default_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_default_clause; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_default_clause;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDefault_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDefault_clause(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDefault_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDefault_clause(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDefault_clause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -661,14 +711,27 @@ public class Verilog2001Parser extends Parser {
 		public Inst_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_inst_clause; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_inst_clause;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInst_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInst_clause(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInst_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInst_clause(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInst_clause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -708,14 +771,27 @@ public class Verilog2001Parser extends Parser {
 		public Inst_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_inst_name; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_inst_name;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInst_name(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInst_name(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInst_name(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInst_name(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInst_name(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -767,14 +843,27 @@ public class Verilog2001Parser extends Parser {
 		public Liblist_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_liblist_clause; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_liblist_clause;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterLiblist_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterLiblist_clause(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitLiblist_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitLiblist_clause(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitLiblist_clause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -824,14 +913,27 @@ public class Verilog2001Parser extends Parser {
 		public Cell_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cell_clause; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_cell_clause;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterCell_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterCell_clause(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitCell_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitCell_clause(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitCell_clause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -880,14 +982,27 @@ public class Verilog2001Parser extends Parser {
 		public Use_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_use_clause; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_use_clause;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterUse_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterUse_clause(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitUse_clause(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitUse_clause(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitUse_clause(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -948,14 +1063,27 @@ public class Verilog2001Parser extends Parser {
 		public Source_textContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_source_text; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_source_text;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSource_text(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterSource_text(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSource_text(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitSource_text(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSource_text(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1002,14 +1130,27 @@ public class Verilog2001Parser extends Parser {
 		public DescriptionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_description; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_description;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDescription(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDescription(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDescription(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDescription(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDescription(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1071,14 +1212,27 @@ public class Verilog2001Parser extends Parser {
 		public Module_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterModule_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitModule_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1229,14 +1383,27 @@ public class Verilog2001Parser extends Parser {
 		public Module_keywordContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_keyword; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_keyword;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_keyword(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterModule_keyword(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_keyword(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitModule_keyword(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_keyword(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1280,14 +1447,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_parameter_port_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_parameter_port_list; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_parameter_port_list;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_parameter_port_list(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_parameter_port_list(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_parameter_port_list(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_parameter_port_list(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_parameter_port_list(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1345,14 +1527,27 @@ public class Verilog2001Parser extends Parser {
 		public List_of_portsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_ports; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_ports;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_ports(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterList_of_ports(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_ports(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitList_of_ports(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_ports(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1408,14 +1603,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_port_declarationsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_port_declarations; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_port_declarations;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_port_declarations(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_port_declarations(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_port_declarations(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_port_declarations(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_port_declarations(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1486,14 +1696,27 @@ public class Verilog2001Parser extends Parser {
 		public PortContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_port; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_port;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPort(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPort(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPort(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPort(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPort(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1572,14 +1795,27 @@ public class Verilog2001Parser extends Parser {
 		public Port_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_port_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_port_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPort_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPort_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPort_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPort_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPort_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1654,14 +1890,27 @@ public class Verilog2001Parser extends Parser {
 		public Port_referenceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_port_reference; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_port_reference;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPort_reference(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPort_reference(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPort_reference(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPort_reference(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPort_reference(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1737,14 +1986,27 @@ public class Verilog2001Parser extends Parser {
 		public Port_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_port_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_port_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPort_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPort_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPort_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPort_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPort_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1863,14 +2125,27 @@ public class Verilog2001Parser extends Parser {
 		public Module_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterModule_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitModule_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2047,14 +2322,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_or_generate_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_or_generate_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_or_generate_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_or_generate_item(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_or_generate_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_or_generate_item(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_or_generate_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_or_generate_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2254,14 +2544,29 @@ public class Verilog2001Parser extends Parser {
 		public Non_port_module_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_non_port_module_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_non_port_module_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNon_port_module_item(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterNon_port_module_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNon_port_module_item(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitNon_port_module_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNon_port_module_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2329,7 +2634,7 @@ public class Verilog2001Parser extends Parser {
 						setState(964);
 						attribute_instance();
 						}
-						} 
+						}
 					}
 					setState(969);
 					_errHandler.sync(this);
@@ -2449,14 +2754,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_or_generate_item_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_or_generate_item_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_or_generate_item_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_or_generate_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_or_generate_item_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_or_generate_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_or_generate_item_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_or_generate_item_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2569,14 +2889,27 @@ public class Verilog2001Parser extends Parser {
 		public Parameter_overrideContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_parameter_override; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_parameter_override;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParameter_override(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterParameter_override(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParameter_override(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitParameter_override(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParameter_override(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2615,14 +2948,29 @@ public class Verilog2001Parser extends Parser {
 		public Local_parameter_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_local_parameter_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_local_parameter_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterLocal_parameter_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterLocal_parameter_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitLocal_parameter_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitLocal_parameter_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitLocal_parameter_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2737,14 +3085,29 @@ public class Verilog2001Parser extends Parser {
 		public Parameter_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_parameter_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_parameter_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParameter_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterParameter_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParameter_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitParameter_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParameter_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2781,14 +3144,29 @@ public class Verilog2001Parser extends Parser {
 		public Parameter_declaration_Context(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_parameter_declaration_; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_parameter_declaration_;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParameter_declaration_(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterParameter_declaration_(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParameter_declaration_(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitParameter_declaration_(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParameter_declaration_(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2896,14 +3274,29 @@ public class Verilog2001Parser extends Parser {
 		public Specparam_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_specparam_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_specparam_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSpecparam_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSpecparam_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSpecparam_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSpecparam_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSpecparam_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2956,14 +3349,27 @@ public class Verilog2001Parser extends Parser {
 		public Inout_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_inout_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_inout_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInout_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInout_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInout_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInout_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInout_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3034,14 +3440,27 @@ public class Verilog2001Parser extends Parser {
 		public Input_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_input_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_input_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInput_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInput_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInput_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInput_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInput_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3118,14 +3537,27 @@ public class Verilog2001Parser extends Parser {
 		public Output_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_output_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_output_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterOutput_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterOutput_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitOutput_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitOutput_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitOutput_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3296,14 +3728,27 @@ public class Verilog2001Parser extends Parser {
 		public Event_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_event_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_event_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEvent_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEvent_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEvent_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEvent_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEvent_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3339,14 +3784,27 @@ public class Verilog2001Parser extends Parser {
 		public Genvar_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_genvar_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_genvar_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenvar_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterGenvar_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenvar_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitGenvar_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenvar_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3382,14 +3840,28 @@ public class Verilog2001Parser extends Parser {
 		public Integer_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_integer_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_integer_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInteger_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterInteger_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInteger_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInteger_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInteger_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3425,14 +3897,27 @@ public class Verilog2001Parser extends Parser {
 		public Time_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_time_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_time_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTime_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTime_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTime_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTime_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTime_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3468,14 +3953,27 @@ public class Verilog2001Parser extends Parser {
 		public Real_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_real_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_real_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterReal_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterReal_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitReal_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitReal_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitReal_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3511,14 +4009,29 @@ public class Verilog2001Parser extends Parser {
 		public Realtime_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_realtime_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_realtime_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterRealtime_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterRealtime_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitRealtime_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitRealtime_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitRealtime_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3557,14 +4070,27 @@ public class Verilog2001Parser extends Parser {
 		public Reg_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_reg_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_reg_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterReg_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterReg_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitReg_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitReg_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitReg_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3639,14 +4165,27 @@ public class Verilog2001Parser extends Parser {
 		public Net_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNet_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNet_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4063,14 +4602,27 @@ public class Verilog2001Parser extends Parser {
 		public Net_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_type; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_type;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNet_type(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNet_type(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4108,14 +4660,29 @@ public class Verilog2001Parser extends Parser {
 		public Output_variable_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_output_variable_type; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_output_variable_type;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterOutput_variable_type(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterOutput_variable_type(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitOutput_variable_type(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitOutput_variable_type(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitOutput_variable_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4165,14 +4732,27 @@ public class Verilog2001Parser extends Parser {
 		public Real_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_real_type; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_real_type;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterReal_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterReal_type(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitReal_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitReal_type(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitReal_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4255,14 +4835,27 @@ public class Verilog2001Parser extends Parser {
 		public Variable_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variable_type; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_variable_type;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterVariable_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterVariable_type(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitVariable_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitVariable_type(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitVariable_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4339,14 +4932,27 @@ public class Verilog2001Parser extends Parser {
 		public Drive_strengthContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_drive_strength; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_drive_strength;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDrive_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDrive_strength(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDrive_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDrive_strength(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDrive_strength(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4476,14 +5082,27 @@ public class Verilog2001Parser extends Parser {
 		public Strength0Context(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_strength0; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_strength0;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterStrength0(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterStrength0(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitStrength0(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitStrength0(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitStrength0(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4521,14 +5140,27 @@ public class Verilog2001Parser extends Parser {
 		public Strength1Context(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_strength1; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_strength1;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterStrength1(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterStrength1(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitStrength1(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitStrength1(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitStrength1(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4566,14 +5198,27 @@ public class Verilog2001Parser extends Parser {
 		public Charge_strengthContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_charge_strength; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_charge_strength;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterCharge_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterCharge_strength(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitCharge_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitCharge_strength(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitCharge_strength(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4640,14 +5285,27 @@ public class Verilog2001Parser extends Parser {
 		public Delay3Context(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delay3; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_delay3;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDelay3(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDelay3(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDelay3(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDelay3(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDelay3(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4728,14 +5386,27 @@ public class Verilog2001Parser extends Parser {
 		public Delay2Context(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delay2; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_delay2;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDelay2(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDelay2(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDelay2(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDelay2(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDelay2(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4808,14 +5479,27 @@ public class Verilog2001Parser extends Parser {
 		public Delay_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delay_value; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_delay_value;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDelay_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDelay_value(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDelay_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDelay_value(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDelay_value(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4883,14 +5567,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_event_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_event_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_event_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_event_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_event_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_event_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_event_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_event_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4996,14 +5695,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_net_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_net_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_net_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_net_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_net_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_net_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_net_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_net_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5103,14 +5817,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_genvar_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_genvar_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_genvar_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_genvar_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_genvar_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_genvar_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_genvar_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_genvar_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5162,14 +5891,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_port_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_port_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_port_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_port_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_port_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_port_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_port_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_port_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5194,7 +5938,7 @@ public class Verilog2001Parser extends Parser {
 					setState(1481);
 					port_identifier();
 					}
-					} 
+					}
 				}
 				setState(1486);
 				_errHandler.sync(this);
@@ -5223,14 +5967,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_net_decl_assignmentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_net_decl_assignments; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_net_decl_assignments;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_net_decl_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_net_decl_assignments(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_net_decl_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_net_decl_assignments(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_net_decl_assignments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5282,14 +6041,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_param_assignmentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_param_assignments; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_param_assignments;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_param_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_param_assignments(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_param_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_param_assignments(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_param_assignments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5314,7 +6088,7 @@ public class Verilog2001Parser extends Parser {
 					setState(1497);
 					param_assignment();
 					}
-					} 
+					}
 				}
 				setState(1502);
 				_errHandler.sync(this);
@@ -5343,14 +6117,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_specparam_assignmentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_specparam_assignments; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_specparam_assignments;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_specparam_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_specparam_assignments(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_specparam_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_specparam_assignments(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_specparam_assignments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5402,14 +6191,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_real_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_real_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_real_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_real_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_real_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_real_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_real_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_real_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5461,14 +6265,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_variable_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_variable_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_variable_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_variable_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_variable_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_variable_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_variable_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_variable_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5526,14 +6345,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_variable_port_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_variable_port_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_variable_port_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_variable_port_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_variable_port_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_variable_port_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_variable_port_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_variable_port_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5583,7 +6417,7 @@ public class Verilog2001Parser extends Parser {
 					}
 
 					}
-					} 
+					}
 				}
 				setState(1542);
 				_errHandler.sync(this);
@@ -5612,14 +6446,28 @@ public class Verilog2001Parser extends Parser {
 		public Net_decl_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_decl_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_decl_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_decl_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterNet_decl_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_decl_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNet_decl_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_decl_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5658,14 +6506,27 @@ public class Verilog2001Parser extends Parser {
 		public Param_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_param_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_param_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParam_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterParam_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParam_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitParam_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParam_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5707,14 +6568,29 @@ public class Verilog2001Parser extends Parser {
 		public Specparam_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_specparam_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_specparam_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSpecparam_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSpecparam_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSpecparam_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSpecparam_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSpecparam_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5775,14 +6651,29 @@ public class Verilog2001Parser extends Parser {
 		public Pulse_control_specparamContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pulse_control_specparam; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pulse_control_specparam;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPulse_control_specparam(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterPulse_control_specparam(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPulse_control_specparam(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitPulse_control_specparam(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPulse_control_specparam(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5878,14 +6769,27 @@ public class Verilog2001Parser extends Parser {
 		public Error_limit_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_error_limit_value; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_error_limit_value;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterError_limit_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterError_limit_value(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitError_limit_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitError_limit_value(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitError_limit_value(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5917,14 +6821,27 @@ public class Verilog2001Parser extends Parser {
 		public Reject_limit_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_reject_limit_value; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_reject_limit_value;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterReject_limit_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterReject_limit_value(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitReject_limit_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitReject_limit_value(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitReject_limit_value(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5956,14 +6873,27 @@ public class Verilog2001Parser extends Parser {
 		public Limit_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_limit_value; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_limit_value;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterLimit_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterLimit_value(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitLimit_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitLimit_value(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitLimit_value(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5998,14 +6928,27 @@ public class Verilog2001Parser extends Parser {
 		public DimensionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_dimension; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_dimension;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDimension(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDimension(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDimension(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDimension(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDimension(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6048,14 +6991,27 @@ public class Verilog2001Parser extends Parser {
 		public RangeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_range; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_range;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterRange(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterRange(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitRange(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitRange(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitRange(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6116,14 +7072,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6185,7 +7156,7 @@ public class Verilog2001Parser extends Parser {
 						setState(1615);
 						function_item_declaration();
 						}
-						} 
+						}
 					}
 					setState(1620);
 					_errHandler.sync(this);
@@ -6260,7 +7231,7 @@ public class Verilog2001Parser extends Parser {
 						setState(1641);
 						block_item_declaration();
 						}
-						} 
+						}
 					}
 					setState(1646);
 					_errHandler.sync(this);
@@ -6303,14 +7274,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_item_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_item_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_item_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_item_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_item_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_item_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6372,14 +7358,27 @@ public class Verilog2001Parser extends Parser {
 		public Function_port_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_port_list; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_port_list;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_port_list(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterFunction_port_list(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_port_list(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitFunction_port_list(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_port_list(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6434,14 +7433,27 @@ public class Verilog2001Parser extends Parser {
 		public Function_portContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_port; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_port;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_port(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterFunction_port(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_port(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitFunction_port(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_port(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6488,14 +7500,27 @@ public class Verilog2001Parser extends Parser {
 		public Range_or_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_range_or_type; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_range_or_type;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterRange_or_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterRange_or_type(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitRange_or_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitRange_or_type(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitRange_or_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6581,14 +7606,27 @@ public class Verilog2001Parser extends Parser {
 		public Task_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_task_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_task_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTask_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTask_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTask_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTask_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTask_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6630,7 +7668,7 @@ public class Verilog2001Parser extends Parser {
 						setState(1689);
 						task_item_declaration();
 						}
-						} 
+						}
 					}
 					setState(1694);
 					_errHandler.sync(this);
@@ -6685,7 +7723,7 @@ public class Verilog2001Parser extends Parser {
 						setState(1709);
 						block_item_declaration();
 						}
-						} 
+						}
 					}
 					setState(1714);
 					_errHandler.sync(this);
@@ -6726,14 +7764,29 @@ public class Verilog2001Parser extends Parser {
 		public Task_item_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_task_item_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_task_item_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTask_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTask_item_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTask_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTask_item_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTask_item_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6798,14 +7851,27 @@ public class Verilog2001Parser extends Parser {
 		public Task_port_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_task_port_list; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_task_port_list;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTask_port_list(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTask_port_list(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTask_port_list(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTask_port_list(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTask_port_list(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6860,14 +7926,27 @@ public class Verilog2001Parser extends Parser {
 		public Task_port_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_task_port_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_task_port_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTask_port_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTask_port_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTask_port_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTask_port_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTask_port_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -6920,14 +7999,27 @@ public class Verilog2001Parser extends Parser {
 		public Tf_decl_headerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tf_decl_header; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tf_decl_header;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTf_decl_header(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTf_decl_header(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTf_decl_header(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTf_decl_header(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTf_decl_header(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7052,14 +8144,27 @@ public class Verilog2001Parser extends Parser {
 		public Tf_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tf_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tf_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTf_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTf_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTf_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTf_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTf_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7090,14 +8195,27 @@ public class Verilog2001Parser extends Parser {
 		public Task_port_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_task_port_type; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_task_port_type;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTask_port_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTask_port_type(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTask_port_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTask_port_type(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTask_port_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7165,14 +8283,29 @@ public class Verilog2001Parser extends Parser {
 		public Block_item_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_block_item_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_block_item_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBlock_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterBlock_item_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBlock_item_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitBlock_item_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBlock_item_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7375,14 +8508,29 @@ public class Verilog2001Parser extends Parser {
 		public Block_reg_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_block_reg_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_block_reg_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBlock_reg_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterBlock_reg_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBlock_reg_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitBlock_reg_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBlock_reg_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7442,14 +8590,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_block_variable_identifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_block_variable_identifiers; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_block_variable_identifiers;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_block_variable_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_block_variable_identifiers(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_block_variable_identifiers(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_block_variable_identifiers(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_block_variable_identifiers(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7504,14 +8667,28 @@ public class Verilog2001Parser extends Parser {
 		public Block_variable_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_block_variable_type; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_block_variable_type;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBlock_variable_type(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterBlock_variable_type(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBlock_variable_type(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitBlock_variable_type(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBlock_variable_type(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -7654,14 +8831,27 @@ public class Verilog2001Parser extends Parser {
 		public Gate_instantiationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_gate_instantiation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_gate_instantiation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGate_instantiation(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterGate_instantiation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGate_instantiation(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitGate_instantiation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGate_instantiation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8077,14 +9267,29 @@ public class Verilog2001Parser extends Parser {
 		public Cmos_switch_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cmos_switch_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_cmos_switch_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterCmos_switch_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterCmos_switch_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitCmos_switch_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitCmos_switch_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitCmos_switch_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8152,14 +9357,29 @@ public class Verilog2001Parser extends Parser {
 		public Enable_gate_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_enable_gate_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_enable_gate_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEnable_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterEnable_gate_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEnable_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitEnable_gate_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEnable_gate_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8223,14 +9443,28 @@ public class Verilog2001Parser extends Parser {
 		public Mos_switch_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_mos_switch_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_mos_switch_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterMos_switch_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterMos_switch_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitMos_switch_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitMos_switch_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitMos_switch_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8294,14 +9528,29 @@ public class Verilog2001Parser extends Parser {
 		public N_input_gate_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_n_input_gate_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_n_input_gate_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterN_input_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterN_input_gate_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitN_input_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitN_input_gate_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitN_input_gate_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8377,14 +9626,29 @@ public class Verilog2001Parser extends Parser {
 		public N_output_gate_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_n_output_gate_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_n_output_gate_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterN_output_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterN_output_gate_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitN_output_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitN_output_gate_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitN_output_gate_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8422,7 +9686,7 @@ public class Verilog2001Parser extends Parser {
 					setState(2053);
 					output_terminal();
 					}
-					} 
+					}
 				}
 				setState(2058);
 				_errHandler.sync(this);
@@ -8460,14 +9724,29 @@ public class Verilog2001Parser extends Parser {
 		public Pass_switch_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pass_switch_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pass_switch_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPass_switch_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterPass_switch_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPass_switch_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitPass_switch_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPass_switch_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8527,14 +9806,29 @@ public class Verilog2001Parser extends Parser {
 		public Pass_enable_switch_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pass_enable_switch_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pass_enable_switch_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPass_enable_switch_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterPass_enable_switch_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPass_enable_switch_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitPass_enable_switch_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPass_enable_switch_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8592,14 +9886,27 @@ public class Verilog2001Parser extends Parser {
 		public Pull_gate_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pull_gate_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pull_gate_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPull_gate_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPull_gate_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPull_gate_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPull_gate_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPull_gate_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8649,14 +9956,29 @@ public class Verilog2001Parser extends Parser {
 		public Name_of_gate_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_name_of_gate_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_name_of_gate_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterName_of_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterName_of_gate_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitName_of_gate_instance(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitName_of_gate_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitName_of_gate_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8702,14 +10024,27 @@ public class Verilog2001Parser extends Parser {
 		public Pulldown_strengthContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pulldown_strength; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pulldown_strength;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPulldown_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPulldown_strength(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPulldown_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPulldown_strength(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPulldown_strength(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8784,14 +10119,27 @@ public class Verilog2001Parser extends Parser {
 		public Pullup_strengthContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pullup_strength; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pullup_strength;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPullup_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPullup_strength(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPullup_strength(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPullup_strength(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPullup_strength(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8863,14 +10211,27 @@ public class Verilog2001Parser extends Parser {
 		public Enable_terminalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_enable_terminal; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_enable_terminal;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEnable_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEnable_terminal(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEnable_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEnable_terminal(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEnable_terminal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8902,14 +10263,27 @@ public class Verilog2001Parser extends Parser {
 		public Ncontrol_terminalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_ncontrol_terminal; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_ncontrol_terminal;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNcontrol_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNcontrol_terminal(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNcontrol_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNcontrol_terminal(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNcontrol_terminal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8941,14 +10315,27 @@ public class Verilog2001Parser extends Parser {
 		public Pcontrol_terminalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pcontrol_terminal; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pcontrol_terminal;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPcontrol_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPcontrol_terminal(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPcontrol_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPcontrol_terminal(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPcontrol_terminal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -8980,14 +10367,27 @@ public class Verilog2001Parser extends Parser {
 		public Input_terminalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_input_terminal; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_input_terminal;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInput_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInput_terminal(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInput_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInput_terminal(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInput_terminal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9019,14 +10419,27 @@ public class Verilog2001Parser extends Parser {
 		public Inout_terminalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_inout_terminal; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_inout_terminal;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInout_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInout_terminal(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInout_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInout_terminal(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInout_terminal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9058,14 +10471,27 @@ public class Verilog2001Parser extends Parser {
 		public Output_terminalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_output_terminal; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_output_terminal;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterOutput_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterOutput_terminal(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitOutput_terminal(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitOutput_terminal(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitOutput_terminal(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9094,14 +10520,27 @@ public class Verilog2001Parser extends Parser {
 		public Cmos_switchtypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cmos_switchtype; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_cmos_switchtype;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterCmos_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterCmos_switchtype(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitCmos_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitCmos_switchtype(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitCmos_switchtype(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9139,14 +10578,27 @@ public class Verilog2001Parser extends Parser {
 		public Enable_gatetypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_enable_gatetype; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_enable_gatetype;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEnable_gatetype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEnable_gatetype(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEnable_gatetype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEnable_gatetype(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEnable_gatetype(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9184,14 +10636,27 @@ public class Verilog2001Parser extends Parser {
 		public Mos_switchtypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_mos_switchtype; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_mos_switchtype;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterMos_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterMos_switchtype(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitMos_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitMos_switchtype(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitMos_switchtype(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9229,14 +10694,27 @@ public class Verilog2001Parser extends Parser {
 		public N_input_gatetypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_n_input_gatetype; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_n_input_gatetype;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterN_input_gatetype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterN_input_gatetype(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitN_input_gatetype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitN_input_gatetype(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitN_input_gatetype(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9274,14 +10752,27 @@ public class Verilog2001Parser extends Parser {
 		public N_output_gatetypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_n_output_gatetype; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_n_output_gatetype;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterN_output_gatetype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterN_output_gatetype(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitN_output_gatetype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitN_output_gatetype(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitN_output_gatetype(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9319,14 +10810,27 @@ public class Verilog2001Parser extends Parser {
 		public Pass_en_switchtypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pass_en_switchtype; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pass_en_switchtype;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPass_en_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPass_en_switchtype(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPass_en_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPass_en_switchtype(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPass_en_switchtype(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9364,14 +10868,27 @@ public class Verilog2001Parser extends Parser {
 		public Pass_switchtypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pass_switchtype; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pass_switchtype;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPass_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPass_switchtype(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPass_switchtype(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPass_switchtype(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPass_switchtype(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9421,14 +10938,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_instantiationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_instantiation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_instantiation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_instantiation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_instantiation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_instantiation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_instantiation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_instantiation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9491,14 +11023,29 @@ public class Verilog2001Parser extends Parser {
 		public Parameter_value_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_parameter_value_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_parameter_value_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParameter_value_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterParameter_value_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParameter_value_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitParameter_value_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParameter_value_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9545,14 +11092,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_parameter_assignmentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_parameter_assignments; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_parameter_assignments;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_parameter_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_parameter_assignments(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_parameter_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_parameter_assignments(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_parameter_assignments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9653,14 +11215,29 @@ public class Verilog2001Parser extends Parser {
 		public Ordered_parameter_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_ordered_parameter_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_ordered_parameter_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterOrdered_parameter_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterOrdered_parameter_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitOrdered_parameter_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitOrdered_parameter_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitOrdered_parameter_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9695,14 +11272,29 @@ public class Verilog2001Parser extends Parser {
 		public Named_parameter_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_named_parameter_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_named_parameter_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNamed_parameter_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterNamed_parameter_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNamed_parameter_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitNamed_parameter_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNamed_parameter_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9754,14 +11346,27 @@ public class Verilog2001Parser extends Parser {
 		public Module_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterModule_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitModule_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9802,14 +11407,27 @@ public class Verilog2001Parser extends Parser {
 		public Name_of_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_name_of_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_name_of_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterName_of_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterName_of_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitName_of_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitName_of_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitName_of_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9861,14 +11479,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_port_connectionsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_port_connections; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_port_connections;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_port_connections(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_port_connections(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_port_connections(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_port_connections(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_port_connections(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9952,14 +11585,29 @@ public class Verilog2001Parser extends Parser {
 		public Ordered_port_connectionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_ordered_port_connection; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_ordered_port_connection;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterOrdered_port_connection(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterOrdered_port_connection(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitOrdered_port_connection(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitOrdered_port_connection(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitOrdered_port_connection(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -9981,7 +11629,7 @@ public class Verilog2001Parser extends Parser {
 					setState(2230);
 					attribute_instance();
 					}
-					} 
+					}
 				}
 				setState(2235);
 				_errHandler.sync(this);
@@ -10026,14 +11674,29 @@ public class Verilog2001Parser extends Parser {
 		public Named_port_connectionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_named_port_connection; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_named_port_connection;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNamed_port_connection(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterNamed_port_connection(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNamed_port_connection(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitNamed_port_connection(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNamed_port_connection(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10099,14 +11762,29 @@ public class Verilog2001Parser extends Parser {
 		public Generated_instantiationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generated_instantiation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generated_instantiation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerated_instantiation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenerated_instantiation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerated_instantiation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenerated_instantiation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerated_instantiation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10155,14 +11833,29 @@ public class Verilog2001Parser extends Parser {
 		public Generate_item_or_nullContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generate_item_or_null; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generate_item_or_null;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerate_item_or_null(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenerate_item_or_null(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerate_item_or_null(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenerate_item_or_null(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerate_item_or_null(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10277,14 +11970,27 @@ public class Verilog2001Parser extends Parser {
 		public Generate_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generate_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generate_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerate_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterGenerate_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerate_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitGenerate_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerate_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10410,14 +12116,29 @@ public class Verilog2001Parser extends Parser {
 		public Generate_conditional_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generate_conditional_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generate_conditional_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerate_conditional_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenerate_conditional_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerate_conditional_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenerate_conditional_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerate_conditional_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10475,14 +12196,29 @@ public class Verilog2001Parser extends Parser {
 		public Generate_case_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generate_case_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generate_case_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerate_case_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenerate_case_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerate_case_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenerate_case_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerate_case_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10545,14 +12281,27 @@ public class Verilog2001Parser extends Parser {
 		public Genvar_case_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_genvar_case_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_genvar_case_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenvar_case_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterGenvar_case_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenvar_case_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitGenvar_case_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenvar_case_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10662,14 +12411,29 @@ public class Verilog2001Parser extends Parser {
 		public Generate_loop_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generate_loop_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generate_loop_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerate_loop_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenerate_loop_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerate_loop_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenerate_loop_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerate_loop_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10720,14 +12484,27 @@ public class Verilog2001Parser extends Parser {
 		public Genvar_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_genvar_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_genvar_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenvar_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterGenvar_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenvar_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitGenvar_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenvar_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10769,14 +12546,27 @@ public class Verilog2001Parser extends Parser {
 		public Generate_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generate_block; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generate_block;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerate_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterGenerate_block(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerate_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitGenerate_block(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerate_block(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10843,14 +12633,27 @@ public class Verilog2001Parser extends Parser {
 		public Continuous_assignContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_continuous_assign; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_continuous_assign;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterContinuous_assign(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterContinuous_assign(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitContinuous_assign(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitContinuous_assign(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitContinuous_assign(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10910,14 +12713,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_net_assignmentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_net_assignments; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_net_assignments;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_net_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_net_assignments(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_net_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_net_assignments(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_net_assignments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -10969,14 +12787,27 @@ public class Verilog2001Parser extends Parser {
 		public Net_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNet_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNet_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11012,14 +12843,27 @@ public class Verilog2001Parser extends Parser {
 		public Initial_constructContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_initial_construct; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_initial_construct;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInitial_construct(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInitial_construct(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInitial_construct(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInitial_construct(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInitial_construct(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11053,14 +12897,27 @@ public class Verilog2001Parser extends Parser {
 		public Always_constructContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_always_construct; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_always_construct;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterAlways_construct(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterAlways_construct(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitAlways_construct(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitAlways_construct(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitAlways_construct(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11100,14 +12957,28 @@ public class Verilog2001Parser extends Parser {
 		public Blocking_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_blocking_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_blocking_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBlocking_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterBlocking_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBlocking_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitBlocking_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBlocking_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11160,14 +13031,29 @@ public class Verilog2001Parser extends Parser {
 		public Nonblocking_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_nonblocking_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_nonblocking_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNonblocking_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterNonblocking_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNonblocking_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitNonblocking_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNonblocking_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11223,14 +13109,29 @@ public class Verilog2001Parser extends Parser {
 		public Procedural_continuous_assignmentsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_procedural_continuous_assignments; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_procedural_continuous_assignments;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterProcedural_continuous_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterProcedural_continuous_assignments(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitProcedural_continuous_assignments(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitProcedural_continuous_assignments(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitProcedural_continuous_assignments(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11318,14 +13219,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_blocking_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_blocking_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_blocking_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_blocking_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_blocking_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_blocking_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_blocking_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_blocking_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11367,14 +13283,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_statement_or_nullContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_statement_or_null; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_statement_or_null;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_statement_or_null(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_statement_or_null(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_statement_or_null(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_statement_or_null(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_statement_or_null(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11446,14 +13377,27 @@ public class Verilog2001Parser extends Parser {
 		public Function_seq_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_seq_block; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_seq_block;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_seq_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterFunction_seq_block(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_seq_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitFunction_seq_block(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_seq_block(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11486,7 +13430,7 @@ public class Verilog2001Parser extends Parser {
 						setState(2413);
 						block_item_declaration();
 						}
-						} 
+						}
 					}
 					setState(2418);
 					_errHandler.sync(this);
@@ -11534,14 +13478,28 @@ public class Verilog2001Parser extends Parser {
 		public Variable_assignmentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variable_assignment; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_variable_assignment;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterVariable_assignment(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterVariable_assignment(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitVariable_assignment(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitVariable_assignment(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitVariable_assignment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11589,14 +13547,27 @@ public class Verilog2001Parser extends Parser {
 		public Par_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_par_block; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_par_block;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPar_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPar_block(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPar_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPar_block(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPar_block(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11629,7 +13600,7 @@ public class Verilog2001Parser extends Parser {
 						setState(2436);
 						block_item_declaration();
 						}
-						} 
+						}
 					}
 					setState(2441);
 					_errHandler.sync(this);
@@ -11686,14 +13657,27 @@ public class Verilog2001Parser extends Parser {
 		public Seq_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_seq_block; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_seq_block;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSeq_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterSeq_block(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSeq_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitSeq_block(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSeq_block(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -11726,7 +13710,7 @@ public class Verilog2001Parser extends Parser {
 						setState(2455);
 						block_item_declaration();
 						}
-						} 
+						}
 					}
 					setState(2460);
 					_errHandler.sync(this);
@@ -11816,14 +13800,27 @@ public class Verilog2001Parser extends Parser {
 		public StatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterStatement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterStatement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitStatement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitStatement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12161,14 +14158,27 @@ public class Verilog2001Parser extends Parser {
 		public Statement_or_nullContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_statement_or_null; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_statement_or_null;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterStatement_or_null(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterStatement_or_null(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitStatement_or_null(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitStatement_or_null(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitStatement_or_null(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12252,14 +14262,27 @@ public class Verilog2001Parser extends Parser {
 		public Function_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterFunction_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitFunction_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12446,14 +14469,29 @@ public class Verilog2001Parser extends Parser {
 		public Delay_or_event_controlContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delay_or_event_control; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_delay_or_event_control;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDelay_or_event_control(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterDelay_or_event_control(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDelay_or_event_control(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitDelay_or_event_control(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDelay_or_event_control(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12518,14 +14556,27 @@ public class Verilog2001Parser extends Parser {
 		public Delay_controlContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delay_control; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_delay_control;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDelay_control(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDelay_control(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDelay_control(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDelay_control(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDelay_control(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12581,14 +14632,27 @@ public class Verilog2001Parser extends Parser {
 		public Disable_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_disable_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_disable_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDisable_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDisable_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDisable_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDisable_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDisable_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12644,14 +14708,27 @@ public class Verilog2001Parser extends Parser {
 		public Event_controlContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_event_control; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_event_control;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEvent_control(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEvent_control(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEvent_control(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEvent_control(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEvent_control(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12726,14 +14803,27 @@ public class Verilog2001Parser extends Parser {
 		public Event_triggerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_event_trigger; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_event_trigger;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEvent_trigger(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEvent_trigger(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEvent_trigger(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEvent_trigger(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEvent_trigger(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12772,14 +14862,27 @@ public class Verilog2001Parser extends Parser {
 		public Event_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_event_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_event_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEvent_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEvent_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEvent_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEvent_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEvent_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12844,14 +14947,27 @@ public class Verilog2001Parser extends Parser {
 		public Event_primaryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_event_primary; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_event_primary;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEvent_primary(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEvent_primary(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEvent_primary(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEvent_primary(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEvent_primary(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12933,14 +15049,29 @@ public class Verilog2001Parser extends Parser {
 		public Procedural_timing_control_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_procedural_timing_control_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_procedural_timing_control_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterProcedural_timing_control_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterProcedural_timing_control_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitProcedural_timing_control_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitProcedural_timing_control_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitProcedural_timing_control_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -12977,14 +15108,27 @@ public class Verilog2001Parser extends Parser {
 		public Wait_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_wait_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_wait_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterWait_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterWait_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitWait_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitWait_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitWait_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13033,14 +15177,29 @@ public class Verilog2001Parser extends Parser {
 		public Conditional_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_conditional_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_conditional_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConditional_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConditional_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConditional_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConditional_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConditional_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13114,14 +15273,29 @@ public class Verilog2001Parser extends Parser {
 		public If_else_if_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_if_else_if_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_if_else_if_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterIf_else_if_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterIf_else_if_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitIf_else_if_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitIf_else_if_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitIf_else_if_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13162,7 +15336,7 @@ public class Verilog2001Parser extends Parser {
 					setState(2736);
 					statement_or_null();
 					}
-					} 
+					}
 				}
 				setState(2742);
 				_errHandler.sync(this);
@@ -13209,14 +15383,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_conditional_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_conditional_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_conditional_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_conditional_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_conditional_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_conditional_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_conditional_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_conditional_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13290,14 +15479,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_if_else_if_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_if_else_if_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_if_else_if_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_if_else_if_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_if_else_if_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_if_else_if_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_if_else_if_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_if_else_if_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13338,7 +15542,7 @@ public class Verilog2001Parser extends Parser {
 					setState(2769);
 					function_statement_or_null();
 					}
-					} 
+					}
 				}
 				setState(2775);
 				_errHandler.sync(this);
@@ -13382,14 +15586,27 @@ public class Verilog2001Parser extends Parser {
 		public Case_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_case_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_case_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterCase_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterCase_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitCase_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitCase_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitCase_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13522,14 +15739,27 @@ public class Verilog2001Parser extends Parser {
 		public Case_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_case_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_case_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterCase_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterCase_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitCase_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitCase_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitCase_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13636,14 +15866,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_case_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_case_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_case_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_case_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_case_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_case_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_case_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_case_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13776,14 +16021,27 @@ public class Verilog2001Parser extends Parser {
 		public Function_case_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_case_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_case_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_case_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterFunction_case_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_case_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitFunction_case_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_case_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -13893,14 +16151,29 @@ public class Verilog2001Parser extends Parser {
 		public Function_loop_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_loop_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_loop_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_loop_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_loop_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_loop_statement(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFunction_loop_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_loop_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14004,14 +16277,27 @@ public class Verilog2001Parser extends Parser {
 		public Loop_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_loop_statement; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_loop_statement;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterLoop_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterLoop_statement(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitLoop_statement(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitLoop_statement(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitLoop_statement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14112,14 +16398,27 @@ public class Verilog2001Parser extends Parser {
 		public System_task_enableContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_system_task_enable; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_system_task_enable;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSystem_task_enable(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterSystem_task_enable(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSystem_task_enable(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitSystem_task_enable(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSystem_task_enable(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14198,14 +16497,27 @@ public class Verilog2001Parser extends Parser {
 		public Task_enableContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_task_enable; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_task_enable;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTask_enable(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTask_enable(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTask_enable(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTask_enable(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTask_enable(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14281,14 +16593,27 @@ public class Verilog2001Parser extends Parser {
 		public Specify_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_specify_block; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_specify_block;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSpecify_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterSpecify_block(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSpecify_block(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitSpecify_block(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSpecify_block(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14346,14 +16671,27 @@ public class Verilog2001Parser extends Parser {
 		public Specify_itemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_specify_item; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_specify_item;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSpecify_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterSpecify_item(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSpecify_item(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitSpecify_item(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSpecify_item(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14420,14 +16758,29 @@ public class Verilog2001Parser extends Parser {
 		public Pulsestyle_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_pulsestyle_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_pulsestyle_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPulsestyle_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterPulsestyle_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPulsestyle_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitPulsestyle_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPulsestyle_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14482,14 +16835,29 @@ public class Verilog2001Parser extends Parser {
 		public Showcancelled_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_showcancelled_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_showcancelled_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterShowcancelled_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterShowcancelled_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitShowcancelled_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitShowcancelled_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitShowcancelled_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14550,14 +16918,27 @@ public class Verilog2001Parser extends Parser {
 		public Path_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_path_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_path_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPath_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPath_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPath_declaration(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPath_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPath_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14621,14 +17002,29 @@ public class Verilog2001Parser extends Parser {
 		public Simple_path_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_simple_path_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_simple_path_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSimple_path_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSimple_path_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSimple_path_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSimple_path_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSimple_path_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14690,14 +17086,29 @@ public class Verilog2001Parser extends Parser {
 		public Parallel_path_descriptionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_parallel_path_description; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_parallel_path_description;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParallel_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterParallel_path_description(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParallel_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitParallel_path_description(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParallel_path_description(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14752,14 +17163,29 @@ public class Verilog2001Parser extends Parser {
 		public Full_path_descriptionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_full_path_description; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_full_path_description;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFull_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFull_path_description(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFull_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFull_path_description(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFull_path_description(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14813,14 +17239,28 @@ public class Verilog2001Parser extends Parser {
 		public List_of_path_inputsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_path_inputs; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_path_inputs;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_path_inputs(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_path_inputs(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_path_inputs(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitList_of_path_inputs(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_path_inputs(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14872,14 +17312,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_path_outputsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_path_outputs; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_path_outputs;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_path_outputs(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_path_outputs(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_path_outputs(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_path_outputs(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_path_outputs(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -14934,14 +17389,29 @@ public class Verilog2001Parser extends Parser {
 		public Specify_input_terminal_descriptorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_specify_input_terminal_descriptor; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_specify_input_terminal_descriptor;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSpecify_input_terminal_descriptor(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSpecify_input_terminal_descriptor(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSpecify_input_terminal_descriptor(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSpecify_input_terminal_descriptor(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSpecify_input_terminal_descriptor(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15011,14 +17481,29 @@ public class Verilog2001Parser extends Parser {
 		public Specify_output_terminal_descriptorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_specify_output_terminal_descriptor; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_specify_output_terminal_descriptor;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSpecify_output_terminal_descriptor(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSpecify_output_terminal_descriptor(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSpecify_output_terminal_descriptor(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSpecify_output_terminal_descriptor(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSpecify_output_terminal_descriptor(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15085,14 +17570,27 @@ public class Verilog2001Parser extends Parser {
 		public Input_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_input_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_input_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInput_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterInput_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInput_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInput_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInput_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15140,14 +17638,27 @@ public class Verilog2001Parser extends Parser {
 		public Output_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_output_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_output_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterOutput_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterOutput_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitOutput_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitOutput_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitOutput_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15192,14 +17703,27 @@ public class Verilog2001Parser extends Parser {
 		public Path_delay_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_path_delay_value; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_path_delay_value;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPath_delay_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPath_delay_value(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPath_delay_value(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPath_delay_value(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPath_delay_value(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15293,14 +17817,29 @@ public class Verilog2001Parser extends Parser {
 		public List_of_path_delay_expressionsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_list_of_path_delay_expressions; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_list_of_path_delay_expressions;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterList_of_path_delay_expressions(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterList_of_path_delay_expressions(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitList_of_path_delay_expressions(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitList_of_path_delay_expressions(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitList_of_path_delay_expressions(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15442,14 +17981,29 @@ public class Verilog2001Parser extends Parser {
 		public T_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_t_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_t_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterT_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterT_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitT_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitT_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitT_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15481,14 +18035,29 @@ public class Verilog2001Parser extends Parser {
 		public Trise_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_trise_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_trise_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTrise_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTrise_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTrise_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTrise_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTrise_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15520,14 +18089,29 @@ public class Verilog2001Parser extends Parser {
 		public Tfall_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tfall_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tfall_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTfall_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTfall_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTfall_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTfall_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTfall_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15559,14 +18143,29 @@ public class Verilog2001Parser extends Parser {
 		public Tz_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tz_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tz_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTz_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTz_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTz_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTz_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTz_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15598,14 +18197,29 @@ public class Verilog2001Parser extends Parser {
 		public T01_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_t01_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_t01_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterT01_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterT01_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitT01_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitT01_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitT01_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15637,14 +18251,29 @@ public class Verilog2001Parser extends Parser {
 		public T10_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_t10_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_t10_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterT10_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterT10_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitT10_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitT10_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitT10_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15676,14 +18305,29 @@ public class Verilog2001Parser extends Parser {
 		public T0z_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_t0z_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_t0z_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterT0z_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterT0z_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitT0z_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitT0z_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitT0z_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15715,14 +18359,29 @@ public class Verilog2001Parser extends Parser {
 		public Tz1_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tz1_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tz1_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTz1_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTz1_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTz1_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTz1_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTz1_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15754,14 +18413,29 @@ public class Verilog2001Parser extends Parser {
 		public T1z_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_t1z_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_t1z_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterT1z_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterT1z_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitT1z_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitT1z_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitT1z_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15793,14 +18467,29 @@ public class Verilog2001Parser extends Parser {
 		public Tz0_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tz0_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tz0_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTz0_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTz0_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTz0_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTz0_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTz0_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15832,14 +18521,29 @@ public class Verilog2001Parser extends Parser {
 		public T0x_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_t0x_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_t0x_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterT0x_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterT0x_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitT0x_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitT0x_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitT0x_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15871,14 +18575,29 @@ public class Verilog2001Parser extends Parser {
 		public Tx1_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tx1_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tx1_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTx1_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTx1_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTx1_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTx1_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTx1_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15910,14 +18629,29 @@ public class Verilog2001Parser extends Parser {
 		public T1x_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_t1x_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_t1x_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterT1x_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterT1x_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitT1x_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitT1x_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitT1x_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15949,14 +18683,29 @@ public class Verilog2001Parser extends Parser {
 		public Tx0_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tx0_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tx0_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTx0_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTx0_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTx0_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTx0_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTx0_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -15988,14 +18737,29 @@ public class Verilog2001Parser extends Parser {
 		public Txz_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_txz_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_txz_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTxz_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTxz_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTxz_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTxz_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTxz_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16027,14 +18791,29 @@ public class Verilog2001Parser extends Parser {
 		public Tzx_path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tzx_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_tzx_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTzx_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTzx_path_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTzx_path_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTzx_path_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTzx_path_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16066,14 +18845,29 @@ public class Verilog2001Parser extends Parser {
 		public Path_delay_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_path_delay_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_path_delay_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPath_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterPath_delay_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPath_delay_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitPath_delay_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPath_delay_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16111,14 +18905,29 @@ public class Verilog2001Parser extends Parser {
 		public Edge_sensitive_path_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_edge_sensitive_path_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_edge_sensitive_path_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEdge_sensitive_path_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterEdge_sensitive_path_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEdge_sensitive_path_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitEdge_sensitive_path_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEdge_sensitive_path_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16183,14 +18992,29 @@ public class Verilog2001Parser extends Parser {
 		public Parallel_edge_sensitive_path_descriptionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_parallel_edge_sensitive_path_description; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_parallel_edge_sensitive_path_description;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParallel_edge_sensitive_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterParallel_edge_sensitive_path_description(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParallel_edge_sensitive_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitParallel_edge_sensitive_path_description(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParallel_edge_sensitive_path_description(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16267,14 +19091,29 @@ public class Verilog2001Parser extends Parser {
 		public Full_edge_sensitive_path_descriptionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_full_edge_sensitive_path_description; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_full_edge_sensitive_path_description;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFull_edge_sensitive_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFull_edge_sensitive_path_description(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFull_edge_sensitive_path_description(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitFull_edge_sensitive_path_description(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFull_edge_sensitive_path_description(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16339,14 +19178,29 @@ public class Verilog2001Parser extends Parser {
 		public Data_source_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_data_source_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_data_source_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterData_source_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterData_source_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitData_source_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitData_source_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitData_source_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16375,14 +19229,27 @@ public class Verilog2001Parser extends Parser {
 		public Edge_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_edge_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_edge_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEdge_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEdge_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEdge_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEdge_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEdge_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16429,14 +19296,29 @@ public class Verilog2001Parser extends Parser {
 		public State_dependent_path_declarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_state_dependent_path_declaration; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_state_dependent_path_declaration;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterState_dependent_path_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterState_dependent_path_declaration(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitState_dependent_path_declaration(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitState_dependent_path_declaration(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitState_dependent_path_declaration(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16503,14 +19385,27 @@ public class Verilog2001Parser extends Parser {
 		public Polarity_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_polarity_operator; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_polarity_operator;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPolarity_operator(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPolarity_operator(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPolarity_operator(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPolarity_operator(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPolarity_operator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16551,14 +19446,28 @@ public class Verilog2001Parser extends Parser {
 		public Checktime_conditionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_checktime_condition; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_checktime_condition;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterChecktime_condition(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterChecktime_condition(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitChecktime_condition(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitChecktime_condition(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitChecktime_condition(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16593,14 +19502,27 @@ public class Verilog2001Parser extends Parser {
 		public Delayed_dataContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delayed_data; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_delayed_data;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDelayed_data(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDelayed_data(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDelayed_data(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDelayed_data(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDelayed_data(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16654,14 +19576,27 @@ public class Verilog2001Parser extends Parser {
 		public Delayed_referenceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_delayed_reference; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_delayed_reference;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDelayed_reference(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterDelayed_reference(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDelayed_reference(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitDelayed_reference(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDelayed_reference(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16712,14 +19647,27 @@ public class Verilog2001Parser extends Parser {
 		public End_edge_offsetContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_end_edge_offset; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_end_edge_offset;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEnd_edge_offset(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEnd_edge_offset(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEnd_edge_offset(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEnd_edge_offset(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEnd_edge_offset(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16751,14 +19699,27 @@ public class Verilog2001Parser extends Parser {
 		public Event_based_flagContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_event_based_flag; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_event_based_flag;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEvent_based_flag(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEvent_based_flag(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEvent_based_flag(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEvent_based_flag(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEvent_based_flag(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16790,14 +19751,27 @@ public class Verilog2001Parser extends Parser {
 		public Notify_regContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_notify_reg; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_notify_reg;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNotify_reg(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNotify_reg(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNotify_reg(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNotify_reg(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNotify_reg(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16829,14 +19803,27 @@ public class Verilog2001Parser extends Parser {
 		public Remain_active_flagContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_remain_active_flag; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_remain_active_flag;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterRemain_active_flag(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterRemain_active_flag(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitRemain_active_flag(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitRemain_active_flag(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitRemain_active_flag(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16868,14 +19855,28 @@ public class Verilog2001Parser extends Parser {
 		public Stamptime_conditionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_stamptime_condition; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_stamptime_condition;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterStamptime_condition(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterStamptime_condition(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitStamptime_condition(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitStamptime_condition(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitStamptime_condition(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16907,14 +19908,27 @@ public class Verilog2001Parser extends Parser {
 		public Start_edge_offsetContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_start_edge_offset; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_start_edge_offset;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterStart_edge_offset(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterStart_edge_offset(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitStart_edge_offset(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitStart_edge_offset(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitStart_edge_offset(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16946,14 +19960,27 @@ public class Verilog2001Parser extends Parser {
 		public ThresholdContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_threshold; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_threshold;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterThreshold(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterThreshold(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitThreshold(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitThreshold(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitThreshold(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -16985,14 +20012,27 @@ public class Verilog2001Parser extends Parser {
 		public Timing_check_limitContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_timing_check_limit; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_timing_check_limit;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTiming_check_limit(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTiming_check_limit(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTiming_check_limit(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTiming_check_limit(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTiming_check_limit(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17027,14 +20067,27 @@ public class Verilog2001Parser extends Parser {
 		public ConcatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConcatenation(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterConcatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConcatenation(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitConcatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConcatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17090,14 +20143,29 @@ public class Verilog2001Parser extends Parser {
 		public Constant_concatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConstant_concatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConstant_concatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_concatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17153,14 +20221,29 @@ public class Verilog2001Parser extends Parser {
 		public Constant_multiple_concatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_multiple_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_multiple_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_multiple_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConstant_multiple_concatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_multiple_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConstant_multiple_concatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_multiple_concatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17201,14 +20284,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_path_concatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_path_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_path_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_path_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_path_concatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_path_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_path_concatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_path_concatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17264,14 +20362,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_path_multiple_concatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_path_multiple_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_path_multiple_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_path_multiple_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_path_multiple_concatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_path_multiple_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_path_multiple_concatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_path_multiple_concatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17312,14 +20425,29 @@ public class Verilog2001Parser extends Parser {
 		public Multiple_concatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_multiple_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_multiple_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterMultiple_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterMultiple_concatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitMultiple_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitMultiple_concatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitMultiple_concatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17360,14 +20488,27 @@ public class Verilog2001Parser extends Parser {
 		public Net_concatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_concatenation(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNet_concatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_concatenation(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNet_concatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_concatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17432,14 +20573,29 @@ public class Verilog2001Parser extends Parser {
 		public Net_concatenation_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_concatenation_value; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_concatenation_value;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_concatenation_value(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterNet_concatenation_value(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_concatenation_value(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitNet_concatenation_value(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_concatenation_value(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17515,7 +20671,7 @@ public class Verilog2001Parser extends Parser {
 						setState(3369);
 						match(T__21);
 						}
-						} 
+						}
 					}
 					setState(3375);
 					_errHandler.sync(this);
@@ -17572,14 +20728,29 @@ public class Verilog2001Parser extends Parser {
 		public Variable_concatenationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variable_concatenation; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_variable_concatenation;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterVariable_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterVariable_concatenation(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitVariable_concatenation(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitVariable_concatenation(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitVariable_concatenation(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17644,14 +20815,29 @@ public class Verilog2001Parser extends Parser {
 		public Variable_concatenation_valueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variable_concatenation_value; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_variable_concatenation_value;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterVariable_concatenation_value(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterVariable_concatenation_value(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitVariable_concatenation_value(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitVariable_concatenation_value(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitVariable_concatenation_value(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17727,7 +20913,7 @@ public class Verilog2001Parser extends Parser {
 						setState(3419);
 						match(T__21);
 						}
-						} 
+						}
 					}
 					setState(3425);
 					_errHandler.sync(this);
@@ -17793,14 +20979,29 @@ public class Verilog2001Parser extends Parser {
 		public Constant_function_callContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_function_call; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_function_call;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_function_call(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConstant_function_call(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_function_call(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConstant_function_call(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_function_call(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17824,7 +21025,7 @@ public class Verilog2001Parser extends Parser {
 					setState(3439);
 					attribute_instance();
 					}
-					} 
+					}
 				}
 				setState(3444);
 				_errHandler.sync(this);
@@ -17892,14 +21093,27 @@ public class Verilog2001Parser extends Parser {
 		public Function_callContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_call; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_call;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_call(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterFunction_call(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_call(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitFunction_call(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_call(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -17923,7 +21137,7 @@ public class Verilog2001Parser extends Parser {
 					setState(3459);
 					attribute_instance();
 					}
-					} 
+					}
 				}
 				setState(3464);
 				_errHandler.sync(this);
@@ -17985,14 +21199,29 @@ public class Verilog2001Parser extends Parser {
 		public System_function_callContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_system_function_call; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_system_function_call;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSystem_function_call(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSystem_function_call(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSystem_function_call(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSystem_function_call(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSystem_function_call(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18024,7 +21253,7 @@ public class Verilog2001Parser extends Parser {
 						setState(3481);
 						expression();
 						}
-						} 
+						}
 					}
 					setState(3486);
 					_errHandler.sync(this);
@@ -18065,14 +21294,29 @@ public class Verilog2001Parser extends Parser {
 		public Genvar_function_callContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_genvar_function_call; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_genvar_function_call;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenvar_function_call(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenvar_function_call(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenvar_function_call(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenvar_function_call(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenvar_function_call(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18096,7 +21340,7 @@ public class Verilog2001Parser extends Parser {
 					setState(3490);
 					attribute_instance();
 					}
-					} 
+					}
 				}
 				setState(3495);
 				_errHandler.sync(this);
@@ -18152,14 +21396,27 @@ public class Verilog2001Parser extends Parser {
 		public Base_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_base_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_base_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBase_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterBase_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBase_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitBase_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBase_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18191,14 +21448,29 @@ public class Verilog2001Parser extends Parser {
 		public Constant_base_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_base_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_base_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_base_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConstant_base_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_base_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConstant_base_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_base_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18230,14 +21502,28 @@ public class Verilog2001Parser extends Parser {
 		public Constant_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConstant_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitConstant_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18272,14 +21558,29 @@ public class Verilog2001Parser extends Parser {
 		public Constant_mintypmax_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_mintypmax_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_mintypmax_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_mintypmax_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConstant_mintypmax_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_mintypmax_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConstant_mintypmax_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_mintypmax_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18344,14 +21645,29 @@ public class Verilog2001Parser extends Parser {
 		public Constant_range_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_range_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_range_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_range_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterConstant_range_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_range_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitConstant_range_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_range_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18422,14 +21738,29 @@ public class Verilog2001Parser extends Parser {
 		public Dimension_constant_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_dimension_constant_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_dimension_constant_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterDimension_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterDimension_constant_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitDimension_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitDimension_constant_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitDimension_constant_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18482,14 +21813,27 @@ public class Verilog2001Parser extends Parser {
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterExpression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterExpression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitExpression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitExpression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18549,7 +21893,7 @@ public class Verilog2001Parser extends Parser {
 								setState(3543);
 								attribute_instance();
 								}
-								} 
+								}
 							}
 							setState(3548);
 							_errHandler.sync(this);
@@ -18573,7 +21917,7 @@ public class Verilog2001Parser extends Parser {
 								setState(3552);
 								attribute_instance();
 								}
-								} 
+								}
 							}
 							setState(3557);
 							_errHandler.sync(this);
@@ -18590,7 +21934,7 @@ public class Verilog2001Parser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					} 
+					}
 				}
 				setState(3566);
 				_errHandler.sync(this);
@@ -18626,14 +21970,27 @@ public class Verilog2001Parser extends Parser {
 		public TermContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_term; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_term;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTerm(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTerm(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTerm(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTerm(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTerm(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18670,7 +22027,7 @@ public class Verilog2001Parser extends Parser {
 						setState(3568);
 						attribute_instance();
 						}
-						} 
+						}
 					}
 					setState(3573);
 					_errHandler.sync(this);
@@ -18725,14 +22082,29 @@ public class Verilog2001Parser extends Parser {
 		public Lsb_constant_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_lsb_constant_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_lsb_constant_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterLsb_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterLsb_constant_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitLsb_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitLsb_constant_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitLsb_constant_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18767,14 +22139,29 @@ public class Verilog2001Parser extends Parser {
 		public Mintypmax_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_mintypmax_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_mintypmax_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterMintypmax_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterMintypmax_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitMintypmax_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitMintypmax_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitMintypmax_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18832,14 +22219,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_path_conditional_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_path_conditional_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_path_conditional_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_path_conditional_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_path_conditional_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_path_conditional_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_path_conditional_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_path_conditional_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18864,7 +22266,7 @@ public class Verilog2001Parser extends Parser {
 					setState(3592);
 					attribute_instance();
 					}
-					} 
+					}
 				}
 				setState(3597);
 				_errHandler.sync(this);
@@ -18917,14 +22319,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_path_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_path_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_path_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_path_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_path_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_path_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_path_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_path_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -18975,7 +22392,7 @@ public class Verilog2001Parser extends Parser {
 						setState(3604);
 						attribute_instance();
 						}
-						} 
+						}
 					}
 					setState(3609);
 					_errHandler.sync(this);
@@ -19019,7 +22436,7 @@ public class Verilog2001Parser extends Parser {
 								setState(3615);
 								attribute_instance();
 								}
-								} 
+								}
 							}
 							setState(3620);
 							_errHandler.sync(this);
@@ -19043,7 +22460,7 @@ public class Verilog2001Parser extends Parser {
 								setState(3624);
 								attribute_instance();
 								}
-								} 
+								}
 							}
 							setState(3629);
 							_errHandler.sync(this);
@@ -19060,7 +22477,7 @@ public class Verilog2001Parser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					} 
+					}
 				}
 				setState(3638);
 				_errHandler.sync(this);
@@ -19089,14 +22506,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_path_mintypmax_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_path_mintypmax_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_path_mintypmax_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_path_mintypmax_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_path_mintypmax_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_path_mintypmax_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_path_mintypmax_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_path_mintypmax_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19145,14 +22577,29 @@ public class Verilog2001Parser extends Parser {
 		public Msb_constant_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_msb_constant_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_msb_constant_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterMsb_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterMsb_constant_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitMsb_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitMsb_constant_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitMsb_constant_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19196,14 +22643,27 @@ public class Verilog2001Parser extends Parser {
 		public Range_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_range_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_range_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterRange_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterRange_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitRange_expression(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitRange_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitRange_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19274,14 +22734,29 @@ public class Verilog2001Parser extends Parser {
 		public Width_constant_expressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_width_constant_expression; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_width_constant_expression;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterWidth_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterWidth_constant_expression(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitWidth_constant_expression(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitWidth_constant_expression(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitWidth_constant_expression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19334,14 +22809,27 @@ public class Verilog2001Parser extends Parser {
 		public Constant_primaryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_constant_primary; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_constant_primary;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConstant_primary(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterConstant_primary(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConstant_primary(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitConstant_primary(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConstant_primary(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19453,14 +22941,28 @@ public class Verilog2001Parser extends Parser {
 		public Module_path_primaryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_path_primary; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_path_primary;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_path_primary(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_path_primary(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_path_primary(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitModule_path_primary(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_path_primary(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19581,14 +23083,27 @@ public class Verilog2001Parser extends Parser {
 		public PrimaryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_primary; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_primary;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPrimary(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPrimary(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPrimary(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPrimary(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPrimary(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19620,7 +23135,7 @@ public class Verilog2001Parser extends Parser {
 				{
 				setState(3694);
 				hierarchical_identifier();
-				setState(3699); 
+				setState(3699);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
@@ -19634,7 +23149,7 @@ public class Verilog2001Parser extends Parser {
 					match(T__21);
 					}
 					}
-					setState(3701); 
+					setState(3701);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==T__20 );
@@ -19645,7 +23160,7 @@ public class Verilog2001Parser extends Parser {
 				{
 				setState(3703);
 				hierarchical_identifier();
-				setState(3708); 
+				setState(3708);
 				_errHandler.sync(this);
 				_alt = 1;
 				do {
@@ -19665,7 +23180,7 @@ public class Verilog2001Parser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(3710); 
+					setState(3710);
 					_errHandler.sync(this);
 					_alt = getInterpreter().adaptivePredict(_input,395,_ctx);
 				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
@@ -19768,14 +23283,27 @@ public class Verilog2001Parser extends Parser {
 		public Net_lvalueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_lvalue; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_lvalue;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_lvalue(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNet_lvalue(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_lvalue(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNet_lvalue(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_lvalue(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -19851,7 +23379,7 @@ public class Verilog2001Parser extends Parser {
 						setState(3752);
 						match(T__21);
 						}
-						} 
+						}
 					}
 					setState(3758);
 					_errHandler.sync(this);
@@ -19917,14 +23445,27 @@ public class Verilog2001Parser extends Parser {
 		public Variable_lvalueContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variable_lvalue; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_variable_lvalue;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterVariable_lvalue(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterVariable_lvalue(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitVariable_lvalue(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitVariable_lvalue(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitVariable_lvalue(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20000,7 +23541,7 @@ public class Verilog2001Parser extends Parser {
 						setState(3791);
 						match(T__21);
 						}
-						} 
+						}
 					}
 					setState(3797);
 					_errHandler.sync(this);
@@ -20051,14 +23592,27 @@ public class Verilog2001Parser extends Parser {
 		public Unary_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_unary_operator; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_unary_operator;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterUnary_operator(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterUnary_operator(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitUnary_operator(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitUnary_operator(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitUnary_operator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20096,14 +23650,27 @@ public class Verilog2001Parser extends Parser {
 		public Binary_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_binary_operator; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_binary_operator;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBinary_operator(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterBinary_operator(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBinary_operator(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitBinary_operator(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBinary_operator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20141,14 +23708,29 @@ public class Verilog2001Parser extends Parser {
 		public Unary_module_path_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_unary_module_path_operator; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_unary_module_path_operator;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterUnary_module_path_operator(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterUnary_module_path_operator(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitUnary_module_path_operator(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitUnary_module_path_operator(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitUnary_module_path_operator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20186,14 +23768,29 @@ public class Verilog2001Parser extends Parser {
 		public Binary_module_path_operatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_binary_module_path_operator; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_binary_module_path_operator;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBinary_module_path_operator(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterBinary_module_path_operator(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBinary_module_path_operator(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitBinary_module_path_operator(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBinary_module_path_operator(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20236,14 +23833,27 @@ public class Verilog2001Parser extends Parser {
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_number; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_number;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNumber(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNumber(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNumber(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNumber(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNumber(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20287,14 +23897,27 @@ public class Verilog2001Parser extends Parser {
 		public Attribute_instanceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_attribute_instance; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_attribute_instance;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterAttribute_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterAttribute_instance(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitAttribute_instance(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitAttribute_instance(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitAttribute_instance(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20354,14 +23977,27 @@ public class Verilog2001Parser extends Parser {
 		public Attr_specContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_attr_spec; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_attr_spec;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterAttr_spec(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterAttr_spec(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitAttr_spec(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitAttr_spec(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitAttr_spec(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20410,14 +24046,27 @@ public class Verilog2001Parser extends Parser {
 		public Attr_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_attr_name; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_attr_name;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterAttr_name(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterAttr_name(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitAttr_name(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitAttr_name(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitAttr_name(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20452,14 +24101,27 @@ public class Verilog2001Parser extends Parser {
 		public Arrayed_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_arrayed_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_arrayed_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterArrayed_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterArrayed_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitArrayed_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitArrayed_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitArrayed_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20506,14 +24168,27 @@ public class Verilog2001Parser extends Parser {
 		public Block_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_block_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_block_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterBlock_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterBlock_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitBlock_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitBlock_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitBlock_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20545,14 +24220,27 @@ public class Verilog2001Parser extends Parser {
 		public Cell_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cell_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_cell_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterCell_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterCell_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitCell_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitCell_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitCell_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20584,14 +24272,27 @@ public class Verilog2001Parser extends Parser {
 		public Config_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_config_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_config_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterConfig_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterConfig_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitConfig_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitConfig_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitConfig_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20624,14 +24325,29 @@ public class Verilog2001Parser extends Parser {
 		public Escaped_arrayed_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_escaped_arrayed_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_escaped_arrayed_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEscaped_arrayed_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterEscaped_arrayed_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEscaped_arrayed_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitEscaped_arrayed_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEscaped_arrayed_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20682,14 +24398,29 @@ public class Verilog2001Parser extends Parser {
 		public Escaped_hierarchical_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_escaped_hierarchical_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_escaped_hierarchical_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEscaped_hierarchical_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterEscaped_hierarchical_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEscaped_hierarchical_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitEscaped_hierarchical_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEscaped_hierarchical_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20752,14 +24483,27 @@ public class Verilog2001Parser extends Parser {
 		public Event_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_event_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_event_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEvent_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterEvent_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEvent_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitEvent_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEvent_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20791,14 +24535,28 @@ public class Verilog2001Parser extends Parser {
 		public Function_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_function_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_function_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterFunction_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterFunction_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitFunction_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitFunction_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitFunction_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20830,14 +24588,29 @@ public class Verilog2001Parser extends Parser {
 		public Gate_instance_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_gate_instance_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_gate_instance_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGate_instance_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGate_instance_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGate_instance_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGate_instance_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGate_instance_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20869,14 +24642,29 @@ public class Verilog2001Parser extends Parser {
 		public Generate_block_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_generate_block_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_generate_block_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenerate_block_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenerate_block_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenerate_block_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenerate_block_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenerate_block_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20908,14 +24696,29 @@ public class Verilog2001Parser extends Parser {
 		public Genvar_function_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_genvar_function_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_genvar_function_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenvar_function_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterGenvar_function_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenvar_function_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitGenvar_function_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenvar_function_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20947,14 +24750,27 @@ public class Verilog2001Parser extends Parser {
 		public Genvar_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_genvar_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_genvar_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterGenvar_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterGenvar_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitGenvar_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitGenvar_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitGenvar_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -20986,14 +24802,29 @@ public class Verilog2001Parser extends Parser {
 		public Hierarchical_block_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_hierarchical_block_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_hierarchical_block_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterHierarchical_block_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterHierarchical_block_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitHierarchical_block_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitHierarchical_block_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitHierarchical_block_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21025,14 +24856,29 @@ public class Verilog2001Parser extends Parser {
 		public Hierarchical_event_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_hierarchical_event_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_hierarchical_event_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterHierarchical_event_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterHierarchical_event_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitHierarchical_event_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitHierarchical_event_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitHierarchical_event_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21064,14 +24910,29 @@ public class Verilog2001Parser extends Parser {
 		public Hierarchical_function_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_hierarchical_function_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_hierarchical_function_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterHierarchical_function_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterHierarchical_function_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitHierarchical_function_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitHierarchical_function_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitHierarchical_function_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21106,14 +24967,29 @@ public class Verilog2001Parser extends Parser {
 		public Hierarchical_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_hierarchical_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_hierarchical_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterHierarchical_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterHierarchical_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitHierarchical_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitHierarchical_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitHierarchical_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21160,14 +25036,29 @@ public class Verilog2001Parser extends Parser {
 		public Hierarchical_net_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_hierarchical_net_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_hierarchical_net_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterHierarchical_net_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterHierarchical_net_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitHierarchical_net_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitHierarchical_net_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitHierarchical_net_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21199,14 +25090,29 @@ public class Verilog2001Parser extends Parser {
 		public Hierarchical_variable_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_hierarchical_variable_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_hierarchical_variable_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterHierarchical_variable_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterHierarchical_variable_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitHierarchical_variable_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitHierarchical_variable_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitHierarchical_variable_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21238,14 +25144,29 @@ public class Verilog2001Parser extends Parser {
 		public Hierarchical_task_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_hierarchical_task_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_hierarchical_task_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterHierarchical_task_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterHierarchical_task_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitHierarchical_task_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitHierarchical_task_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitHierarchical_task_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21276,14 +25197,27 @@ public class Verilog2001Parser extends Parser {
 		public IdentifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterIdentifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterIdentifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitIdentifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitIdentifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitIdentifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21324,14 +25258,29 @@ public class Verilog2001Parser extends Parser {
 		public Inout_port_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_inout_port_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_inout_port_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInout_port_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterInout_port_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInout_port_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitInout_port_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInout_port_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21363,14 +25312,29 @@ public class Verilog2001Parser extends Parser {
 		public Input_port_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_input_port_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_input_port_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInput_port_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterInput_port_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInput_port_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitInput_port_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInput_port_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21402,14 +25366,28 @@ public class Verilog2001Parser extends Parser {
 		public Instance_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_instance_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_instance_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterInstance_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterInstance_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitInstance_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitInstance_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitInstance_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21441,14 +25419,27 @@ public class Verilog2001Parser extends Parser {
 		public Library_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_library_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_library_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterLibrary_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterLibrary_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitLibrary_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitLibrary_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitLibrary_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21480,14 +25471,27 @@ public class Verilog2001Parser extends Parser {
 		public Memory_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_memory_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_memory_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterMemory_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterMemory_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitMemory_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitMemory_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitMemory_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21519,14 +25523,27 @@ public class Verilog2001Parser extends Parser {
 		public Module_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterModule_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitModule_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21558,14 +25575,29 @@ public class Verilog2001Parser extends Parser {
 		public Module_instance_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_module_instance_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_module_instance_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterModule_instance_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterModule_instance_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitModule_instance_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitModule_instance_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitModule_instance_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21597,14 +25629,27 @@ public class Verilog2001Parser extends Parser {
 		public Net_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_net_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_net_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterNet_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterNet_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitNet_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitNet_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitNet_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21636,14 +25681,29 @@ public class Verilog2001Parser extends Parser {
 		public Output_port_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_output_port_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_output_port_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterOutput_port_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterOutput_port_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitOutput_port_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitOutput_port_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitOutput_port_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21675,14 +25735,29 @@ public class Verilog2001Parser extends Parser {
 		public Parameter_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_parameter_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_parameter_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterParameter_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterParameter_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitParameter_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitParameter_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitParameter_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21714,14 +25789,27 @@ public class Verilog2001Parser extends Parser {
 		public Port_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_port_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_port_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterPort_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterPort_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitPort_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitPort_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitPort_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21753,14 +25841,27 @@ public class Verilog2001Parser extends Parser {
 		public Real_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_real_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_real_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterReal_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterReal_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitReal_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitReal_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitReal_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21793,14 +25894,29 @@ public class Verilog2001Parser extends Parser {
 		public Simple_arrayed_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_simple_arrayed_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_simple_arrayed_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSimple_arrayed_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSimple_arrayed_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSimple_arrayed_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSimple_arrayed_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSimple_arrayed_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21843,14 +25959,29 @@ public class Verilog2001Parser extends Parser {
 		public Simple_hierarchical_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_simple_hierarchical_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_simple_hierarchical_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSimple_hierarchical_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSimple_hierarchical_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSimple_hierarchical_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSimple_hierarchical_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSimple_hierarchical_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21895,14 +26026,29 @@ public class Verilog2001Parser extends Parser {
 		public Specparam_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_specparam_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_specparam_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSpecparam_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSpecparam_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSpecparam_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSpecparam_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSpecparam_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21932,14 +26078,29 @@ public class Verilog2001Parser extends Parser {
 		public System_function_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_system_function_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_system_function_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSystem_function_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSystem_function_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSystem_function_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSystem_function_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSystem_function_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -21969,14 +26130,29 @@ public class Verilog2001Parser extends Parser {
 		public System_task_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_system_task_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_system_task_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSystem_task_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSystem_task_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSystem_task_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSystem_task_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSystem_task_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22008,14 +26184,27 @@ public class Verilog2001Parser extends Parser {
 		public Task_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_task_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_task_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTask_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterTask_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTask_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTask_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTask_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22047,14 +26236,28 @@ public class Verilog2001Parser extends Parser {
 		public Terminal_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_terminal_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_terminal_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTerminal_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTerminal_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTerminal_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitTerminal_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTerminal_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22084,14 +26287,29 @@ public class Verilog2001Parser extends Parser {
 		public Text_macro_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_text_macro_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_text_macro_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterText_macro_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterText_macro_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitText_macro_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitText_macro_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitText_macro_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22123,14 +26341,29 @@ public class Verilog2001Parser extends Parser {
 		public Topmodule_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_topmodule_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_topmodule_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterTopmodule_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterTopmodule_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitTopmodule_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitTopmodule_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitTopmodule_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22162,14 +26395,27 @@ public class Verilog2001Parser extends Parser {
 		public Udp_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_udp_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_udp_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterUdp_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).enterUdp_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitUdp_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitUdp_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitUdp_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22201,14 +26447,29 @@ public class Verilog2001Parser extends Parser {
 		public Udp_instance_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_udp_instance_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_udp_instance_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterUdp_instance_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterUdp_instance_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitUdp_instance_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitUdp_instance_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitUdp_instance_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22240,14 +26501,28 @@ public class Verilog2001Parser extends Parser {
 		public Variable_identifierContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_variable_identifier; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_variable_identifier;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterVariable_identifier(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterVariable_identifier(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitVariable_identifier(this);
+			if (listener instanceof Verilog2001Listener) ((Verilog2001Listener) listener).exitVariable_identifier(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitVariable_identifier(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22284,14 +26559,29 @@ public class Verilog2001Parser extends Parser {
 		public Simple_hierarchical_branchContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_simple_hierarchical_branch; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_simple_hierarchical_branch;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterSimple_hierarchical_branch(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterSimple_hierarchical_branch(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitSimple_hierarchical_branch(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitSimple_hierarchical_branch(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitSimple_hierarchical_branch(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -22344,7 +26634,7 @@ public class Verilog2001Parser extends Parser {
 						break;
 					}
 					}
-					} 
+					}
 				}
 				setState(3966);
 				_errHandler.sync(this);
@@ -22375,14 +26665,29 @@ public class Verilog2001Parser extends Parser {
 		public Escaped_hierarchical_branchContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_escaped_hierarchical_branch; }
+
+		@Override
+		public int getRuleIndex() {
+			return RULE_escaped_hierarchical_branch;
+		}
+
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).enterEscaped_hierarchical_branch(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).enterEscaped_hierarchical_branch(this);
 		}
+
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Verilog2001Listener ) ((Verilog2001Listener)listener).exitEscaped_hierarchical_branch(this);
+			if (listener instanceof Verilog2001Listener)
+				((Verilog2001Listener) listener).exitEscaped_hierarchical_branch(this);
+		}
+
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if (visitor instanceof Verilog2001Visitor)
+				return ((Verilog2001Visitor<? extends T>) visitor).visitEscaped_hierarchical_branch(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 

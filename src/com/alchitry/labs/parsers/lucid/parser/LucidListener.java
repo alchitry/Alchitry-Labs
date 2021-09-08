@@ -1,4 +1,4 @@
-// Generated from Lucid.g4 by ANTLR 4.8
+// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/lucid/parser/Lucid.g4 by ANTLR 4.9.1
 
 package com.alchitry.labs.parsers.lucid.parser;
 
@@ -690,18 +690,22 @@ public interface LucidListener extends ParseTreeListener {
 	/**
 	 * Exit a parse tree produced by the {@code ExprNum}
 	 * labeled alternative in {@link LucidParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprNum(LucidParser.ExprNumContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ExprConcat}
-	 * labeled alternative in {@link LucidParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprConcat(LucidParser.ExprConcatContext ctx);
-	/**
+     * @param ctx the parse tree
+     */
+    void exitExprNum(LucidParser.ExprNumContext ctx);
+
+    /**
+     * Enter a parse tree produced by the {@code ExprConcat}
+     * labeled alternative in {@link LucidParser#expr}.
+     *
+     * @param ctx the parse tree
+     */
+    void enterExprConcat(LucidParser.ExprConcatContext ctx);
+
+    /**
      * Exit a parse tree produced by the {@code ExprConcat}
      * labeled alternative in {@link LucidParser#expr}.
+     *
      * @param ctx the parse tree
      */
     void exitExprConcat(LucidParser.ExprConcatContext ctx);
@@ -729,16 +733,19 @@ public interface LucidListener extends ParseTreeListener {
      * @param ctx the parse tree
      */
     void enterExprInvert(LucidParser.ExprInvertContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ExprInvert}
-	 * labeled alternative in {@link LucidParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprInvert(LucidParser.ExprInvertContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ExprStruct}
-	 * labeled alternative in {@link LucidParser#expr}.
-	 * @param ctx the parse tree
+
+    /**
+     * Exit a parse tree produced by the {@code ExprInvert}
+     * labeled alternative in {@link LucidParser#expr}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitExprInvert(LucidParser.ExprInvertContext ctx);
+
+    /**
+     * Enter a parse tree produced by the {@code ExprStruct}
+     * labeled alternative in {@link LucidParser#expr}.
+     * @param ctx the parse tree
 	 */
 	void enterExprStruct(LucidParser.ExprStructContext ctx);
 	/**
@@ -797,19 +804,23 @@ public interface LucidListener extends ParseTreeListener {
 	void exitExprLogical(LucidParser.ExprLogicalContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ExprNegate}
-	 * labeled alternative in {@link LucidParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterExprNegate(LucidParser.ExprNegateContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ExprNegate}
-	 * labeled alternative in {@link LucidParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprNegate(LucidParser.ExprNegateContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ExprGroup}
      * labeled alternative in {@link LucidParser#expr}.
+     * @param ctx the parse tree
+     */
+    void enterExprNegate(LucidParser.ExprNegateContext ctx);
+
+    /**
+     * Exit a parse tree produced by the {@code ExprNegate}
+     * labeled alternative in {@link LucidParser#expr}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitExprNegate(LucidParser.ExprNegateContext ctx);
+
+    /**
+     * Enter a parse tree produced by the {@code ExprGroup}
+     * labeled alternative in {@link LucidParser#expr}.
+     *
      * @param ctx the parse tree
      */
     void enterExprGroup(LucidParser.ExprGroupContext ctx);
@@ -849,12 +860,14 @@ public interface LucidListener extends ParseTreeListener {
     /**
      * Exit a parse tree produced by the {@code ExprFunction}
      * labeled alternative in {@link LucidParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitExprFunction(LucidParser.ExprFunctionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ExprCompare}
-	 * labeled alternative in {@link LucidParser#expr}.
+     *
+     * @param ctx the parse tree
+     */
+    void exitExprFunction(LucidParser.ExprFunctionContext ctx);
+
+    /**
+     * Enter a parse tree produced by the {@code ExprCompare}
+     * labeled alternative in {@link LucidParser#expr}.
 	 * @param ctx the parse tree
 	 */
 	void enterExprCompare(LucidParser.ExprCompareContext ctx);
