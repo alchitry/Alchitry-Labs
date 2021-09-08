@@ -89,6 +89,7 @@ public class ErrorStrings {
 	public static final String SUB_MULTI_DIM = "Only single dimensional arrays can be subtracted";
 	public static final String SHIFT_MULTI_DIM = "Only single dimensional arrays can be shifted";
 	public static final String BUILD_MULTI_DIM = "Only single dimensional arrays can be built";
+	public static final String TERN_SELECTOR_MULTI_DIM = "Only single dimensional arrays can be used as the selector";
 
 	public static final String VALUE_TOO_BIG = "The value \"%s\" is wider than %s bits and it will be truncated";
 
@@ -171,15 +172,17 @@ public class ErrorStrings {
 	public static final String PRIMITIVE_NAI = "The parameter \"%s\" only accepts integers";
 	public static final String PRIMITIVE_NAD = "The parameter \"%s\" only accepts real numbers";
 	public static final String PRIMITIVE_OUT_OF_RANGE = "%s must be in the range %s";
-	
+
 	public static final String CONSTRAINT_PORT_UNKNOWN = "The port %s is not a port of the top module";
 	public static final String CONSTRAINT_UNSUPPORTED_ARRAY = "The port %s is of an unsupported type";
 	public static final String CONSTRAINT_UP_AND_DOWN = "Only pullup or pulldown can be specified for a single pin";
 	public static final String CONSTRAINT_UNKNOWN_UNIT = "Unknown frequency unit \"%s\"";
 	public static final String CONSTRAINT_MULTI_BIT = "Constraints can only be applied to a single bit";
-	
+
 	public static final String VALUE_BIGGER_THAN_INT = "The value %s can't fit into 32bits";
-	
+
 	public static final String STRUCT_CONST_MISSING_VALUE = "The member \"%s\" was not assigned";
-	
+
+	public static final String UNKNOWN_WIDTH = "The width of the \"%s\" couldn't be determined but is required!";
+
 }

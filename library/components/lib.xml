@@ -1,15 +1,27 @@
 <library>
   <category name="Interfaces">
-    <module file="avr_interface.luc" name="AVR Interface">
-      <description>Interface to the AVR (for the default firmware). This give you access to the USB port and analog pins on the Mojo.</description>
-      <depends>UART TX</depends>
-      <depends>UART RX</depends>
-      <depends>SPI Peripheral</depends>
-      <depends>CCLK Detector</depends>
-    </module>
-    <module file="reg_interface.luc" name="Register Interface">
-      <description>Turn a basic serial interface into an register (address) based interface. This can allow you to easily connect various parts of your design to the serial port by mapping them to different regions in the address space.</description>
-    </module>
+      <module file="avr_interface.luc" name="AVR Interface">
+          <description>Interface to the AVR (for the default firmware). This give you access to the USB port and analog
+              pins on the Mojo.
+          </description>
+          <depends>UART TX</depends>
+          <depends>UART RX</depends>
+          <depends>SPI Peripheral</depends>
+          <depends>CCLK Detector</depends>
+      </module>
+      <module file="reg_interface.luc" name="Register Interface">
+          <description>Turn a basic serial interface into an register (address) based interface. This can allow you to
+              easily connect various parts of your design to the serial port by mapping them to different regions in the
+              address space.
+          </description>
+      </module>
+      <module file="ft600.luc" name="FT600 Interface">
+          <description>Send and receive data from an FT600 USB bridge from FTDI. This is the chip on the Ft element
+              board.
+          </description>
+          <depends>Asynchronous FIFO</depends>
+          <depends>Reset Conditioner</depends>
+      </module>
   </category>
   <category name="Protocols">
     <module file="uart_tx.luc" name="UART TX">
@@ -254,25 +266,29 @@
       <description>Memory bus for the interfacing with the SDRAM controller.</description>
     </module>
   </category>
-  <category name="Constraints">
-    <constraint file="alchitry.acf" name="Alchitry">
-      <description>This file contains the basic pin and clock constraints for the Alchitry Au and Cu.</description>
-    </constraint>
-    <constraint file="au.xdc" name="Au Base">
-      <description>This file contains the basic constraints for the Alchitry Au.</description>
-    </constraint>
-    <constraint file="io.acf" name="IO Element">
-      <description>Pin definitions for the Alchitry IO Element.</description>
-    </constraint>
-    <constraint file="mojo.ucf" name="Mojo">
-      <description>This file contains the core constraints for the Mojo V2 and V3.</description>
-    </constraint>
-    <constraint file="sdram_shield.ucf" name="SDRAM Shield">
-      <description>Pin definitions for the SDRAM Shield.</description>
-    </constraint>
-    <constraint file="io_shield.ucf" name="IO Shield">
-      <description>Pin definitions for the IO Shield.</description>
-    </constraint>
+    <category name="Constraints">
+        <constraint file="alchitry.acf" name="Alchitry">
+            <description>This file contains the basic pin and clock constraints for the Alchitry Au and Cu.
+            </description>
+        </constraint>
+        <constraint file="au.xdc" name="Au Base">
+            <description>This file contains the basic constraints for the Alchitry Au.</description>
+        </constraint>
+        <constraint file="io.acf" name="Io Element">
+            <description>Pin definitions for the Alchitry Io Element.</description>
+        </constraint>
+        <constraint file="ft.acf" name="Ft Element">
+            <description>Pin definitions for the Alchitry Ft Element.</description>
+        </constraint>
+        <constraint file="mojo.ucf" name="Mojo">
+            <description>This file contains the core constraints for the Mojo V2 and V3.</description>
+        </constraint>
+        <constraint file="sdram_shield.ucf" name="SDRAM Shield">
+            <description>Pin definitions for the SDRAM Shield.</description>
+        </constraint>
+        <constraint file="io_shield.ucf" name="IO Shield">
+            <description>Pin definitions for the IO Shield.</description>
+        </constraint>
     <constraint file="servo_shield.ucf" name="Servo Shield">
       <description>Pin definitions for the Servo Shield.</description>
     </constraint>

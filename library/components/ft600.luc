@@ -1,0 +1,107 @@
+module ft600 #(
+    RX_FIFO_DEPTH = 512 : RX_FIFO_DEPTH == $pow(2,$clog2(RX_FIFO_DEPTH)),
+    TX_FIFO_DEPTH = 512 : TX_FIFO_DEPTH == $pow(2,$clog2(TX_FIFO_DEPTH))
+  )(
+    input clk,  // 100Mhz system clock
+    input rst,  // reset synced to system clock
+    input ft_clk, // 100Mhz clock from FT600
+    input ft_rxf, // RX buffer empty (1 = empty,  0 = not empty)
+    input ft_txe, // TX buffer full (1 = full, 0 = has space)
+    inout ft_data[16], // bidirectional data bus
+    inout ft_be[2], // bidirectional byte enable (1 = valid)
+    output ft_rd, // read flag (1 = inactive, 0 = read)
+    output ft_wr, // write flag (1 = inactive, 0 = write)
+    output ft_oe, // output enable (1 = FPGA output, 0 = FT600 output)
+    output ui_dout[16], // user interface data out (data read from FT600)
+    output ui_dout_valid[2], // user interface dout valid, one bit per byte
+    input ui_din[16], // user interface data in (data to send to FT600)
+    input ui_din_valid[2], // valid flags for data in (one bit per byte) set to 2b11 to send 16bits
+    output ui_full // flag that FIFO for write data is full, ui_din and ui_din_valid are ignored when this is 1
+  ) {
+  
+  /* 
+     This module deals with two clock domains. One is the system clock and one is the FT600 bus clock.
+     Both run at 100Mhz. The two FIFOs are used to cross domains effiently. The write FIFO (FPGA->FT600)
+     should be rather large to handle any big bursts or slack in software reads.
+     
+     The read fifo can be as small as possible since there are no mechanisms for backpressure. In other
+     words, data is read out of it as soon as it is presented.
+  */
+  
+  reset_conditioner ft_rst(.clk(ft_clk), .in(rst));
+  
+  async_fifo read_fifo(#SIZE(16+2), #DEPTH(RX_FIFO_DEPTH), .wclk(ft_clk), .wrst(ft_rst.out), .rclk(clk), .rrst(rst));
+  async_fifo write_fifo(#SIZE(16+2), #DEPTH(TX_FIFO_DEPTH), .rclk(ft_clk), .rrst(ft_rst.out), .wclk(clk), .wrst(rst));
+  
+  /*
+     This module defaults to the write state as write will typically have a higher priority due to limited 
+     on FPGA buffering.
+     
+     The module will ping-pong back and forth between writes and reads as required emptying each
+     buffer before switching to the other mode.
+     
+     The START_READ cycle is just to set ft_oe low before setting ft_rd low.
+  */
+  .clk(ft_clk) { // synced to the ft clock NOT system clock, DO NOT USE SYSTEM rst
+    fsm state = {WRITE, START_READ, READ};
+  }
+  
+  sig output_enabled; // output enable signal used to drive multiple lines
+  
+  always {
+    // default values
+    output_enabled = 1; // enable output
+    ft_rd = 1;          // don't read
+    ft_wr = 1;          // don't write
+    
+    write_fifo.rget = 0;                     // don't read fifo
+    write_fifo.wput = |ui_din_valid;         // write when the user provides data (either valid bit is 1)
+    write_fifo.din = c{ui_din_valid, ui_din}; // concatenate valid bits to data so we can set the ft_be flag later
+    
+    ui_full = write_fifo.full; // set ui_full flag as FIFO full flag
+    
+    read_fifo.rget = !read_fifo.empty; // read the fifo if there is data (aka not empty)
+    read_fifo.wput = 0;                // default to not writing
+    read_fifo.din = c{ft_be.read, ft_data.read}; // data to write is always ft_be and ft_data
+    
+    ui_dout = read_fifo.dout[15:0]; // data out is first 16 bits of fifo data
+    ui_dout_valid = 2x{!read_fifo.empty} & read_fifo.dout[17:16]; // byte valid bits are 2 MSBs of fifo but ONLY when fifo isn't empty
+    
+    ft_data.write = write_fifo.dout[15:0]; // drive the ft data with fifo output (first 16 bits)
+    ft_be.write = write_fifo.dout[17:16];  // drive the ft be with fifo output (last 2 bits)
+    
+    case (state.q) { 
+      state.WRITE:
+        ft_wr = write_fifo.empty; // signal a write command if we have data
+        write_fifo.rget = ~ft_txe; // read from the fifo if the FT600 read the data
+        
+        // switch to reading if we aren't writing and there is data to read
+        if ((write_fifo.empty || ft_txe) && (ft_rxf == 0 && read_fifo.full == 0)) { 
+          state.d = state.START_READ; // switch states
+          output_enabled = 0; // stop driving the bus
+          // docs show output_enabled goes low before ft_rd
+          // so we set oe low here and set both low next cycle
+        }
+      
+      state.START_READ: 
+        ft_rd = 0; // signal a read command should start
+        output_enabled = 0; // don't drive the bus (defaults to 1 so need 0 here)
+        state.d = state.READ; // switch states
+      
+      state.READ:
+        ft_rd = 0; // signal a read command
+        output_enabled = 0; // don't drive the bus
+        if (ft_rxf || read_fifo.full) { // if there isn't data to read or we don't have space for it
+          ft_rd = 1; // stop the read
+          output_enabled = 1;
+          state.d = state.WRITE; // switch back to the write state
+        } else {
+          read_fifo.wput = 1; // tell the fifo to grab the data
+        }
+    }
+    
+    // set bus direction
+    ft_oe = output_enabled; // tell the ft the bus direction
+    ft_data.enable = 16x{output_enabled}; // enable the data drivers
+    ft_be.enable = 2x{output_enabled}; // enable the be drives
+}

@@ -387,9 +387,9 @@ public class ConstExprParser extends LucidBaseListener {
 							values.put(ctx, new ConstValue(
 									BigFunctions.ln(new BigDecimal(bi), 32).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.CEILING).toBigInteger()));
 						else
-							listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(0).getText(), args[0].toString()));
+							listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(0).getText(), args[0]));
 					} else {
-						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0]));
 					}
 				} else {
 					debugNullConstant(ctx);
@@ -407,12 +407,12 @@ public class ConstExprParser extends LucidBaseListener {
 					if (args[0].isNumber())
 						b1 = args[0].getBigInt();
 					else
-						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0]));
 
 					if (args[1].isNumber())
 						b2 = args[1].getBigInt();
 					else
-						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
+						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1]));
 
 					try {
 						if (b1 != null && b2 != null)
@@ -533,12 +533,12 @@ public class ConstExprParser extends LucidBaseListener {
 					if (args[0].isNumber())
 						b1 = args[0].getBigInt();
 					else
-						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0].toString()));
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0]));
 
 					if (args[1].isNumber())
 						b2 = args[1].getBigInt();
 					else
-						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
+						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1]));
 
 					if (b1 != null && b2 != null) {
 						if (!b2.equals(BigInteger.ZERO)) {
@@ -574,7 +574,7 @@ public class ConstExprParser extends LucidBaseListener {
 							listener.reportError(ctx.expr(1), String.format(ErrorStrings.VALUE_BIGGER_THAN_INT, ctx.expr(1).getText()));
 						}
 					else
-						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1].toString()));
+						listener.reportError(ctx.expr(1), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(1).getText(), args[1]));
 
 					if (!args[0].isArray()) {
 						if (size > 0) {
@@ -1208,7 +1208,7 @@ public class ConstExprParser extends LucidBaseListener {
 		debug(ctx);
 	}
 
-	/************** end expr *****************/
+	/* ************* end expr **************** */
 
 	public ConstValue parseExpr(String text) {
 		return parseExpr(text, this);

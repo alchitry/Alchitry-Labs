@@ -1,22 +1,51 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
+import kotlin.contracts.contract
+
 sealed class SignalWidth {
-    // specifies if width is 1D array
+    /**
+     * Returns true if this is a 1D array
+     */
     fun isFlatArray(): Boolean {
         return (this is ArrayWidth && next == null) || this is UndefinedSimpleWidth
     }
 
-    // specifies if width is JUST and array (no structs)
+    /**
+     *  Returns true if this is JUST an array (no structs)
+     */
     fun isSimpleArray(): Boolean {
         return (this is ArrayWidth && (next == null || next.isSimpleArray())) || this is UndefinedSimpleWidth
     }
 
+    /**
+     * Returns true if this is an array. May be an array of anything, including structs.
+     */
     fun isArray(): Boolean {
         return this is ArrayWidth || this is UndefinedSimpleWidth
     }
 
+    /**
+     * Returns true if this is a defined 1D array
+     */
+    fun isDefinedFlatArray(): Boolean {
+        contract {
+            returns(true) implies (this@SignalWidth is ArrayWidth)
+        }
+        return this is ArrayWidth && next == null
+    }
+
+    /**
+     *  Returns true if this is JUST an array (no structs) and defined
+     */
+    fun isDefinedSimpleArray(): Boolean {
+        contract {
+            returns(true) implies (this@SignalWidth is ArrayWidth)
+        }
+        return (this is ArrayWidth && (next == null || next.isDefinedSimpleArray()))
+    }
+
     fun getDimensions(): List<Int> {
-        require(isSimpleArray()) { "getDimensions can only be called on arrays" }
+        require(isDefinedFlatArray()) { "getDimensions can only be called on arrays" }
         val dims = mutableListOf<Int>()
         var array: ArrayWidth? = this as ArrayWidth
         while (array != null) {

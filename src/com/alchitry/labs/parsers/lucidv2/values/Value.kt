@@ -1,6 +1,11 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
 sealed class Value {
+    companion object {
+        val Zero = BitValue.B0.toSimpleValue()
+        val One = BitValue.B1.toSimpleValue()
+    }
+
     open val signed = false
 
     fun isNumber(): Boolean {

@@ -183,9 +183,9 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                 }
                 if (error) return
 
-                val value = mutableListOf<Value>()
-                operands.asReversed().forEach { value.addAll((it.first as ArrayValue).elements) }
-                values[ctx] = ArrayValue(value)
+                val valueList = mutableListOf<Value>()
+                operands.asReversed().forEach { valueList.addAll((it.first as ArrayValue).elements) }
+                values[ctx] = ArrayValue(valueList)
             }
             is SimpleValue, is UndefinedValue -> {
                 var bitCount = 0
@@ -246,9 +246,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             return
         }
 
-        val dupWidth = dupCount.signalWidth
-
-        if (!dupWidth.isFlatArray()) {
+        if (!dupCount.signalWidth.isFlatArray()) {
             errorListener.reportError(ctx.expr(0), ErrorStrings.ARRAY_DUP_INDEX_MULTI_DIM)
             return
         }
@@ -599,48 +597,62 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
     }
 
+    /**
+     * This returns true when all the expressions are flat. Aka they are all 1D arrays.
+     *
+     * The values themselves may be undefined.
+     */
     private fun checkFlat(vararg exprCtx: ExprContext, onError: (ExprContext) -> Unit): Boolean {
-        return !exprCtx.map {
+        return exprCtx.map {
             val op = values[it] ?: throw IllegalArgumentException("exprCtx wasn't defined")
-            if (!op.signalWidth.isFlatArray()) {
-                onError(it)
+            if (op.signalWidth.isFlatArray()) {
                 true
             } else {
+                onError(it)
                 false
             }
-        }.any { it }
+        }.all { it }
     }
 
+    /**
+     * This returns true when all expressions are SimpleValues.
+     *
+     * This differs from checkFlat in that the values may not be undefined.
+     */
     private fun checkSimpleValue(vararg exprCtx: ExprContext, onError: (ExprContext) -> Unit): Boolean {
-        return !exprCtx.map {
+        return exprCtx.map {
             val op = values[it] ?: throw IllegalArgumentException("exprCtx wasn't defined")
-            if (op !is SimpleValue) {
-                onError(it)
+            if (op is SimpleValue) {
                 true
             } else {
+                onError(it)
                 false
             }
-        }.any { it }
+        }.all { it }
     }
 
-    // checks that all expressions have the same widths or are flat arrays
+    /**
+     * checks that all expressions have the same widths or are flat arrays
+     */
     private fun checkFlatOrMatchingDims(vararg exprCtx: ExprContext, onError: (ExprContext) -> Unit): Boolean {
         if (exprCtx.isEmpty())
             return true
 
         val first = values[exprCtx.first()]?.signalWidth ?: throw IllegalArgumentException("exprCtx wasn't defined")
 
-        return !exprCtx.map {
+        return exprCtx.map {
             val op = values[it]?.signalWidth ?: throw IllegalArgumentException("exprCtx wasn't defined")
             if (!((op.isFlatArray() && first.isFlatArray()) || op == first)) {
                 onError(it)
-                return@map true
+                return@map false
             }
-            return@map false
-        }.any { it }
+            return@map true
+        }.all { it }
     }
 
-    // checks if any widths are undefined and if so, flags any non-flat widths as errors
+    /**
+     * checks if any widths are undefined and if so, flags any non-flat widths as errors
+     */
     private fun checkUndefinedMatchingDims(
         vararg exprCtx: ExprContext,
         onError: (ExprContext) -> Unit
@@ -719,15 +731,97 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         }
 
         debug(ctx)
-
     }
 
     override fun exitExprLogical(ctx: ExprLogicalContext) {
+        if (ctx.childCount != 3 || ctx.expr().size != 2) return
 
+        // is constant if all operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
+
+        val op1 = values[ctx.expr(0)] ?: return
+        val op2 = values[ctx.expr(1)] ?: return
+
+        val operand = ctx.getChild(1).text
+
+        if (!checkFlat(*ctx.expr().toTypedArray()) {
+                errorListener.reportError(it, ErrorStrings.OP_NOT_NUMBER.format(operand))
+            }) return
+
+
+        if (op1 is UndefinedValue || op2 is UndefinedValue) {
+            values[ctx] = UndefinedValue(ctx.text, ArrayWidth(1), false)
+            return
+        }
+
+        if (!checkSimpleValue(*ctx.expr().toTypedArray()) {
+                errorListener.reportError(it, ErrorStrings.OP_NOT_NUMBER.format(operand))
+            }) return
+
+        op1 as SimpleValue
+        op2 as SimpleValue
+
+        values[ctx] = when (operand) {
+            "||" -> op1.isTrue() or op2.isTrue()
+            "&&" -> op1.isTrue() and op2.isTrue()
+            else -> throw IllegalStateException()
+        }
+
+        debug(ctx)
     }
 
     override fun exitExprTernary(ctx: ExprTernaryContext) {
+        if (ctx.expr().size != 3) return
 
+        // is constant if all operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
+
+        val cond = values[ctx.expr(0)] ?: return
+        val op1 = values[ctx.expr(1)] ?: return
+        val op2 = values[ctx.expr(2)] ?: return
+
+        val op1Width = op1.signalWidth
+        val op2Width = op2.signalWidth
+
+        if (!cond.signalWidth.isFlatArray()) {
+            errorListener.reportError(ctx.expr(0), ErrorStrings.TERN_SELECTOR_MULTI_DIM)
+            return
+        }
+
+        if (!checkFlatOrMatchingDims(ctx.expr(1), ctx.expr(2)) {
+                errorListener.reportError(it, ErrorStrings.OP_TERN_DIM_MISMATCH)
+            }) return
+
+        val width = when {
+            op1Width == op2Width -> op1Width
+            op1Width is ArrayWidth && op2Width is ArrayWidth ->
+                ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size))
+            else -> {
+                errorListener.reportError(ctx, ErrorStrings.UNKNOWN_WIDTH.format(ctx))
+                return
+            }
+        }
+
+        if (cond is UndefinedValue) {
+            values[ctx] = UndefinedValue(ctx.text, width, op1.signed && op2.signed)
+            return
+        }
+
+        val value = if (cond.isTrue() == Value.One) op1 else op2
+        if (value.signalWidth != width) {
+            if (value !is SimpleValue || !width.isDefinedFlatArray()) {
+                errorListener.reportError(
+                    ctx,
+                    "BUG in exitExprTernary! Width of value couldn't be determined after passing checks!"
+                )
+                return
+            }
+            values[ctx] = value.resize(width.size)
+        } else {
+            values[ctx] = value
+        }
+
+        debug(ctx)
     }
 
     override fun exitFunction(ctx: FunctionContext) {
