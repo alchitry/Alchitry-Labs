@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
+import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 sealed class SignalWidth {
@@ -27,7 +28,7 @@ sealed class SignalWidth {
     /**
      * Returns true if this is a defined 1D array
      */
-    @OptIn(kotlin.contracts.ExperimentalContracts::class)
+    @OptIn(ExperimentalContracts::class)
     fun isDefinedFlatArray(): Boolean {
         contract {
             returns(true) implies (this@SignalWidth is ArrayWidth)
@@ -38,12 +39,23 @@ sealed class SignalWidth {
     /**
      *  Returns true if this is JUST an array (no structs) and defined
      */
-    @OptIn(kotlin.contracts.ExperimentalContracts::class)
+    @OptIn(ExperimentalContracts::class)
     fun isDefinedSimpleArray(): Boolean {
         contract {
             returns(true) implies (this@SignalWidth is ArrayWidth)
         }
         return (this is ArrayWidth && (next == null || next.isDefinedSimpleArray()))
+    }
+
+    /**
+     * Returns true if the width is well defined.
+     */
+    fun isDefined(): Boolean {
+        return when (this) {
+            is ArrayWidth -> next?.isDefined() ?: true
+            is StructWidth -> struct.all { it.width.isDefined() }
+            UndefinedSimpleWidth -> false
+        }
     }
 
     fun getDimensions(): List<Int> {
@@ -55,6 +67,14 @@ sealed class SignalWidth {
             array = array.next as ArrayWidth?
         }
         return dims
+    }
+
+    fun getBitCount(): Int {
+        return when (this) {
+            is ArrayWidth -> size * (next?.getBitCount() ?: 1)
+            is StructWidth -> struct.sumOf { it.width.getBitCount() }
+            UndefinedSimpleWidth -> error("getBitCount() can't be used when width isn't well defined")
+        }
     }
 
     override fun equals(other: Any?): Boolean {

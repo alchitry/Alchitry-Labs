@@ -607,7 +607,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 				if (ctx.getChildCount() <= width.getDepth()) {
 					if (width.isStruct()) {
 						if (listener != null)
-							listener.reportError(ctx, ErrorStrings.STRUCT_NOT_ARRAY);
+							listener.reportError(ctx, ErrorStrings.BIT_SELECTOR_STRUCT_NOT_ARRAY);
 						return false;
 					}
 					for (Array_indexContext aic : ctx.array_index()) {

@@ -387,7 +387,7 @@ public class ConstExprParser extends LucidBaseListener {
 							values.put(ctx, new ConstValue(
 									BigFunctions.ln(new BigDecimal(bi), 32).divide(BigFunctions.LOG2, RoundingMode.HALF_UP).setScale(0, RoundingMode.CEILING).toBigInteger()));
 						else
-							listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(0).getText(), args[0]));
+							listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_ZERO, ctx.expr(0).getText()));
 					} else {
 						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_ARG_NAN, ctx.expr(0).getText(), args[0]));
 					}
@@ -583,7 +583,7 @@ public class ConstExprParser extends LucidBaseListener {
 							values.put(ctx, args[0].resize(size));
 						}
 					} else {
-						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_NO_ARRAY, ctx.FUNCTION_ID()));
+						listener.reportError(ctx.expr(0), String.format(ErrorStrings.FUNCTION_NOT_FLAT, ctx.FUNCTION_ID()));
 					}
 				} else {
 					debugNullConstant(ctx);

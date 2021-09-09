@@ -6,12 +6,13 @@ import kotlin.experimental.and
 import kotlin.experimental.or
 import kotlin.math.ceil
 
-interface BitArray : List<BitValue> {
+interface BitList : List<BitValue> {
     val signed: Boolean
 
     fun toBigInt(): BigInteger {
         check(isNumber()) { "The value is not a number (it contains x and z values)" }
-        val bytes = ByteArray(ceil((size + if (signed) 0 else 1).toDouble() / 8.0).toInt()) // if not signed need extra 0 sign bit
+        val bytes =
+            ByteArray(ceil((size + if (signed) 0 else 1).toDouble() / 8.0).toInt()) // if not signed need extra 0 sign bit
         if (signed && msb == BitValue.B1) // sign extension
             Arrays.fill(bytes, 255.toByte()) else Arrays.fill(bytes, 0.toByte())
         repeat(size) { i ->
@@ -39,15 +40,15 @@ interface BitArray : List<BitValue> {
         return if (hasX) BitValue.Bx else BitValue.B0
     }
 
-    fun invert(): BitArray {
-        return MutableBitArray(this.signed, this.size) { !this[it] }
+    fun invert(): BitList {
+        return MutableBitList(this.signed, this.size) { !this[it] }
     }
 
-    fun resize(width: Int, signExtend: Boolean = signed): BitArray {
+    fun resize(width: Int, signExtend: Boolean = signed): BitList {
         if (width == size)
-            return MutableBitArray(signExtend, this)
+            return MutableBitList(signExtend, this)
         if (width < size)
-            return MutableBitArray(signExtend, subList(0, width))
+            return MutableBitList(signExtend, subList(0, width))
         val extendBit = if (!signExtend && msb == BitValue.B1) BitValue.B0 else msb
         val newValue = toMutableBitArray()
         newValue.signed = signExtend
@@ -55,58 +56,58 @@ interface BitArray : List<BitValue> {
         return newValue
     }
 
-    private inline fun doOp(b: BitArray, crossinline op: (BitValue, BitValue) -> BitValue): BitArray {
+    private inline fun doOp(b: BitList, crossinline op: (BitValue, BitValue) -> BitValue): BitList {
         val size = size.coerceAtLeast(b.size)
         val signedOp = signed && b.signed
         val op1 = resize(size, signedOp)
         val op2 = b.resize(size, signedOp)
-        return MutableBitArray(signedOp, size) { i ->
+        return MutableBitList(signedOp, size) { i ->
             op(op1[i], op2[i])
         }
     }
 
-    infix fun or(b: BitArray): BitArray {
+    infix fun or(b: BitList): BitList {
         return doOp(b) { b1, b2 -> b1 or b2 }
     }
 
-    infix fun and(b: BitArray): BitArray {
+    infix fun and(b: BitList): BitList {
         return doOp(b) { b1, b2 -> b1 and b2 }
     }
 
-    infix fun xor(b: BitArray): BitArray {
+    infix fun xor(b: BitList): BitList {
         return doOp(b) { b1, b2 -> b1 xor b2 }
     }
 
-    infix fun nor(b: BitArray): BitArray {
+    infix fun nor(b: BitList): BitList {
         return doOp(b) { b1, b2 -> b1 nor b2 }
     }
 
-    infix fun nand(b: BitArray): BitArray {
+    infix fun nand(b: BitList): BitList {
         return doOp(b) { b1, b2 -> b1 nand b2 }
     }
 
-    infix fun xnor(b: BitArray): BitArray {
+    infix fun xnor(b: BitList): BitList {
         return doOp(b) { b1, b2 -> b1 xnor b2 }
     }
 
-    infix fun shl(n: Int): BitArray {
-        return MutableBitArray(signed, n) { BitValue.B0 }.also { it.addAll(this) }
+    infix fun shl(n: Int): BitList {
+        return MutableBitList(signed, n) { BitValue.B0 }.also { it.addAll(this) }
     }
 
-    infix fun ushl(n: Int): BitArray {
-        return MutableBitArray(false, n) { BitValue.B0 }.also { it.addAll(this) }
+    infix fun ushl(n: Int): BitList {
+        return MutableBitList(false, n) { BitValue.B0 }.also { it.addAll(this) }
     }
 
-    infix fun shr(n: Int): BitArray {
-        val value = MutableBitArray(signed)
+    infix fun shr(n: Int): BitList {
+        val value = MutableBitList(signed)
         val signBit = if (signed) msb else BitValue.B0
         value.addAll(subList(n, size))
         repeat(n) { value.add(signBit) }
         return value
     }
 
-    infix fun ushr(n: Int): BitArray {
-        val value = MutableBitArray(false)
+    infix fun ushr(n: Int): BitList {
+        val value = MutableBitList(false)
         value.addAll(subList(n, size))
         repeat(n) { value.add(BitValue.B0) }
         return value
@@ -119,11 +120,31 @@ interface BitArray : List<BitValue> {
 
     fun isNegative(): Boolean = signed && msb == BitValue.B1
 
-    fun toMutableBitArray(): MutableBitArray = MutableBitArray(this)
+    fun toMutableBitArray(): MutableBitList = MutableBitList(this)
     fun toSimpleValue(): SimpleValue = SimpleValue(this)
+
+    override fun subList(fromIndex: Int, toIndex: Int): BitList
+
+    /**
+     * Returns the minimum number of bits needed to represent this value
+     */
+    fun minBits(): Int {
+        if (isNegative()) {
+            for (i in indices.reversed()) {
+                if (get(i) != BitValue.B1)
+                    return i + 2
+            }
+        } else {
+            for (i in indices.reversed()) {
+                if (get(1) != BitValue.B0)
+                    return i + 1 + if (signed) 1 else 0
+            }
+        }
+        return 1
+    }
 }
 
-class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue>(width), BitArray {
+class MutableBitList(override var signed: Boolean = false, width: Int = 0) : ArrayList<BitValue>(width), BitList {
     constructor(signed: Boolean, size: Int, init: (Int) -> BitValue) : this(signed, size) {
         for (i in 0 until size) add(init(i))
     }
@@ -164,7 +185,11 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
         addAll(bits)
     }
 
-    constructor(bitArray: BitArray) : this(bitArray.signed, bitArray)
+    constructor(bitList: BitList) : this(bitList.signed, bitList)
+
+    override fun subList(fromIndex: Int, toIndex: Int): MutableBitList {
+        return MutableBitList(signed, super.subList(fromIndex, toIndex))
+    }
 
     private fun fromBigInt(bigInt: BigInteger) {
         var w = bigInt.bitLength() // doesn't include sign bit
@@ -196,16 +221,18 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
 
     private fun set(str: String, radix: Int, width: Int, signed: Boolean) {
         this.signed = signed
-        val strl = str.toLowerCase()
+        val strlower = str.lowercase()
         when (radix) {
-            10 -> fromBigInt(BigInteger(strl), width)
+            10 -> fromBigInt(BigInteger(strlower), width)
             16 -> {
                 var idx = 0
                 while (idx < width) {
                     val charIdx = idx / 4
                     val bitIdx = idx % 4
                     var c = '0'
-                    if (strl.length > charIdx) c = strl[strl.length - 1 - charIdx] else if (strl[0] == 'x' || strl[0] == 'z') c = strl[0]
+                    if (strlower.length > charIdx) c =
+                        strlower[strlower.length - 1 - charIdx] else if (strlower[0] == 'x' || strlower[0] == 'z') c =
+                        strlower[0]
                     if (c == 'x') {
                         add(BitValue.Bx)
                     } else if (c == 'z') {
@@ -225,7 +252,9 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
                 var idx = 0
                 while (idx < width) {
                     var c = '0'
-                    if (strl.length > idx) c = strl[strl.length - 1 - idx] else if (strl[0] == 'x' || strl[0] == 'z') c = strl[0]
+                    if (strlower.length > idx) c =
+                        strlower[strlower.length - 1 - idx] else if (strlower[0] == 'x' || strlower[0] == 'z') c =
+                        strlower[0]
                     when (c) {
                         '0' -> add(BitValue.B0)
                         '1' -> add(BitValue.B1)
@@ -243,7 +272,7 @@ class MutableBitArray(override var signed: Boolean = false, width: Int = 0) : Ar
                     val bitIdx = idx % 8
                     var c = 0.toChar()
                     if (str.length > charIdx) c = str[str.length - 1 - charIdx]
-                    if (c.toInt() and (1 shl bitIdx) != 0) {
+                    if (c.code and (1 shl bitIdx) != 0) {
                         add(BitValue.B1)
                     } else {
                         add(BitValue.B0)

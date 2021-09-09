@@ -1,16 +1,21 @@
 package com.alchitry.labs.parsers.lucidv2
 
 import com.alchitry.labs.Util.widthOfMult
+import com.alchitry.labs.parsers.BigFunctions
 import com.alchitry.labs.parsers.errors.ErrorListener
 import com.alchitry.labs.parsers.errors.ErrorStrings
 import com.alchitry.labs.parsers.errors.dummyErrorListener
 import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.*
 import com.alchitry.labs.parsers.lucidv2.values.*
+import com.alchitry.labs.parsers.lucidv2.values.Function
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 import org.apache.commons.text.StringEscapeUtils
+import java.math.BigDecimal
 import java.math.BigInteger
+import java.math.RoundingMode
+import kotlin.math.absoluteValue
 
 class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidBaseListener() {
     val values = mutableMapOf<ParseTree, Value>()
@@ -21,7 +26,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
     }
 
     override fun exitSignal(ctx: SignalContext) {
-
+        // TODO: Implement signals
     }
 
     override fun exitNumber(ctx: NumberContext) {
@@ -48,12 +53,12 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         }
 
         val valueString: String
-        var width: MutableBitArray? = null
+        var width: MutableBitList? = null
 
         if (split != null) {
             valueString = split[1]
             if (split[0].isNotBlank()) {
-                width = MutableBitArray(split[0])
+                width = MutableBitList(split[0])
                 if (!width.isNumber()) {
                     errorListener.reportError(ctx, ErrorStrings.NUM_WIDTH_NAN)
                     return
@@ -74,7 +79,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                         repeat(valueString.length) {
                             elements.add(
                                 SimpleValue(
-                                    MutableBitArray(
+                                    MutableBitList(
                                         valueString[it].code.toLong(),
                                         8
                                     )
@@ -84,10 +89,10 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                         value = ArrayValue(elements)
                     }
                     valueString.length == 1 -> {
-                        value = SimpleValue(MutableBitArray(valueString[0].code.toLong(), 8))
+                        value = SimpleValue(MutableBitList(valueString[0].code.toLong(), 8))
                     }
                     else -> {
-                        value = SimpleValue(MutableBitArray())
+                        value = SimpleValue(MutableBitList())
                         errorListener.reportError(ctx, ErrorStrings.STRING_CANNOT_BE_EMPTY)
                     }
                 }
@@ -96,9 +101,9 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             }
         }
 
-        val unbound = MutableBitArray(valueString, radix)
+        val unbound = MutableBitList(valueString, radix)
         val value = if (width != null) {
-            SimpleValue(MutableBitArray(valueString, radix, width.toBigInt().intValueExact()))
+            SimpleValue(MutableBitList(valueString, radix, width.toBigInt().intValueExact()))
         } else {
             SimpleValue(unbound)
         }
@@ -214,7 +219,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                     return
                 }
 
-                val bits = MutableBitArray()
+                val bits = MutableBitList()
                 operands.asReversed().forEach { bits.addAll((it.first as SimpleValue).bits) }
                 values[ctx] = SimpleValue(bits)
             }
@@ -286,7 +291,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             }
             values[ctx] = ArrayValue(elements)
         } else if (dupValue is SimpleValue) {
-            val bits = MutableBitArray(dupValue.signed)
+            val bits = MutableBitList(dupValue.signed)
             repeat(dupTimes) {
                 bits.addAll(dupValue.bits)
             }
@@ -345,11 +350,11 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         expr as SimpleValue
 
         if (!expr.bits.isNumber()) {
-            values[ctx] = SimpleValue(MutableBitArray(expr.signed, expr.size) { BitValue.Bx })
+            values[ctx] = SimpleValue(MutableBitList(expr.signed, expr.size) { BitValue.Bx })
             return
         }
 
-        values[ctx] = SimpleValue(MutableBitArray(expr.bits.toBigInt().negate(), expr.size, expr.signed))
+        values[ctx] = SimpleValue(MutableBitList(expr.bits.toBigInt().negate(), expr.size, expr.signed))
         debug(ctx)
     }
 
@@ -403,9 +408,9 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         val width = op1.bits.size.coerceAtLeast(op2.bits.size) + 1
 
         values[ctx] = when {
-            !op1.isNumber() || !op2.isNumber() -> SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
-            operand == "+" -> SimpleValue(MutableBitArray(op1.bits.toBigInt().add(op2.bits.toBigInt()), width, signed))
-            else -> SimpleValue(MutableBitArray(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), width, signed))
+            !op1.isNumber() || !op2.isNumber() -> SimpleValue(MutableBitList(BitValue.Bx, width, signed))
+            operand == "+" -> SimpleValue(MutableBitList(op1.bits.toBigInt().add(op2.bits.toBigInt()), width, signed))
+            else -> SimpleValue(MutableBitList(op1.bits.toBigInt().subtract(op2.bits.toBigInt()), width, signed))
         }
     }
 
@@ -446,15 +451,15 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         values[ctx] = if (multOp) {
             val width = widthOfMult(op1.bits.size, op2.bits.size)
             if (!op1.isNumber() || !op2.isNumber())
-                SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
+                SimpleValue(MutableBitList(BitValue.Bx, width, signed))
             else
-                SimpleValue(MutableBitArray(op1.bits.toBigInt().multiply(op2.bits.toBigInt()), width, signed))
+                SimpleValue(MutableBitList(op1.bits.toBigInt().multiply(op2.bits.toBigInt()), width, signed))
         } else {
             val width = op1.bits.size
             if (!op1.isNumber() || !op2.isNumber() || op2.bits.toBigInt() == BigInteger.ZERO)
-                SimpleValue(MutableBitArray(BitValue.Bx, width, signed))
+                SimpleValue(MutableBitList(BitValue.Bx, width, signed))
             else
-                SimpleValue(MutableBitArray(op1.bits.toBigInt().divide(op2.bits.toBigInt()), width, signed))
+                SimpleValue(MutableBitList(op1.bits.toBigInt().divide(op2.bits.toBigInt()), width, signed))
         }
         debug(ctx)
     }
@@ -496,7 +501,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         check(value is SimpleValue) { "Value is flat array but not SimpleValue or UndefinedValue" }
 
         if (!shift.bits.isNumber()) {
-            values[ctx] = SimpleValue(MutableBitArray(isSigned, value.size) { BitValue.Bx })
+            values[ctx] = SimpleValue(MutableBitList(isSigned, value.size) { BitValue.Bx })
             return
         }
 
@@ -807,9 +812,6 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             return
         }
 
-        println("Cond $cond")
-        println("isTrue ${cond.isTrue()}")
-
         val value = if (cond.isTrue().lsb == BitValue.B1) op1 else op2
         if (value.signalWidth != width) {
             if (value !is SimpleValue || !width.isDefinedFlatArray()) {
@@ -828,6 +830,271 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
     }
 
     override fun exitFunction(ctx: FunctionContext) {
+        // is constant if all operands are constant
+        constant[ctx] = !ctx.expr().any { constant[it] != true }
 
+        val fid = ctx.FUNCTION_ID().text
+        val function = Function.values().firstOrNull { it.label == fid }
+
+        if (function == null) {
+            errorListener.reportError(ctx.FUNCTION_ID(), ErrorStrings.UNKNOWN_FUNCTION.format(fid))
+            return
+        }
+
+        val args = ctx.expr().map { values[it] ?: return }
+
+        if (function.argCount >= 0) {
+            if (args.size != function.argCount) {
+                errorListener.reportError(
+                    ctx.FUNCTION_ID(),
+                    ErrorStrings.FUNCTION_ARG_COUNT.format(ctx.FUNCTION_ID().toString(), function.argCount)
+                )
+                return
+            }
+        } else {
+            if (args.size < function.argCount.absoluteValue) {
+                errorListener.reportError(
+                    ctx.FUNCTION_ID(),
+                    String.format(
+                        ErrorStrings.FUNCTION_MIN_ARG_COUNT,
+                        ctx.FUNCTION_ID(),
+                        function.argCount.absoluteValue
+                    )
+                )
+                return
+            }
+        }
+
+        if (function.constOnly && constant[ctx] != true) {
+            errorListener.reportError(ctx.FUNCTION_ID(), ErrorStrings.CONST_FUNCTION.format(ctx.FUNCTION_ID().text))
+            return
+        }
+
+        when (function) {
+            Function.CLOG2 -> {
+                val arg = args[0]
+                if (arg !is SimpleValue) {
+                    errorListener.reportError(
+                        ctx.expr(0),
+                        ErrorStrings.FUNCTION_ARG_NAN.format(ctx.expr(0).text, arg.toString())
+                    )
+                    return
+                }
+                val bigInt = arg.toBigInt()
+                if (bigInt == BigInteger.ZERO) {
+                    errorListener.reportError(ctx.expr(0), ErrorStrings.FUNCTION_ARG_ZERO.format(ctx.expr(0).text))
+                    return
+                }
+                values[ctx] = BigFunctions.ln(BigDecimal(bigInt), 32)
+                    .divide(BigFunctions.LOG2, RoundingMode.HALF_UP)
+                    .setScale(0, RoundingMode.CEILING)
+                    .toBigInteger()
+                    .toValue()
+            }
+            Function.POWER -> {
+                val arg1 = args[0]
+                val arg2 = args[1]
+                if (arg1 !is SimpleValue) {
+                    errorListener.reportError(
+                        ctx.expr(0),
+                        ErrorStrings.FUNCTION_ARG_NAN.format(ctx.expr(0).text, arg1.toString())
+                    )
+                    return
+                }
+                if (arg2 !is SimpleValue) {
+                    errorListener.reportError(
+                        ctx.expr(1),
+                        ErrorStrings.FUNCTION_ARG_NAN.format(ctx.expr(1).text, arg2.toString())
+                    )
+                    return
+                }
+                val b1 = arg1.toBigInt()
+                val b2 = arg2.toBigInt()
+                try {
+                    values[ctx] = b1.pow(b2.intValueExact()).toValue()
+                } catch (e: ArithmeticException) {
+                    errorListener.reportError(ctx.expr(1), ErrorStrings.VALUE_BIGGER_THAN_INT.format(ctx.expr(1).text))
+                }
+            }
+            Function.REVERSE -> {
+                val arg = args[0]
+                if (!arg.signalWidth.isArray()) {
+                    errorListener.reportError(ctx.expr(0), ErrorStrings.FUNCTION_ARG_NOT_ARRAY.format(ctx.expr(0).text))
+                    return
+                }
+                values[ctx] = arg.reverse()
+            }
+            Function.FLATTEN -> {
+                if (!args[0].signalWidth.isDefined()) {
+                    errorListener.reportError(ctx.expr(0), ErrorStrings.UNKNOWN_WIDTH.format(ctx.expr(0).text))
+                    return
+                }
+                values[ctx] = args[0].flatten()
+            }
+            Function.BUILD -> {
+                val value = args[0]
+                if (value !is SimpleValue) {
+                    errorListener.reportError(ctx.expr(0), ErrorStrings.BUILD_MULTI_DIM)
+                    return
+                }
+                for (i in 1 until args.size) {
+                    if (!args[i].isNumber() || args[i] !is SimpleValue) {
+                        errorListener.reportError(
+                            ctx.expr(i),
+                            ErrorStrings.FUNCTION_ARG_NAN.format(ctx.expr(i).text, args[i].toString())
+                        )
+                        return
+                    }
+                }
+                val dims = args.subList(1, args.size).mapIndexed { i, it ->
+                    try {
+                        (it as SimpleValue).toBigInt().intValueExact()
+                    } catch (e: ArithmeticException) {
+                        errorListener.reportError(
+                            ctx.expr(i + 1),
+                            ErrorStrings.VALUE_BIGGER_THAN_INT.format(ctx.expr(i + 1).text)
+                        )
+                        return
+                    }
+                }
+
+                dims.forEachIndexed { i, dim ->
+                    if (dim < 0) {
+                        errorListener.reportError(
+                            ctx.expr(i + 1),
+                            ErrorStrings.FUNCTION_ARG_NEG.format(ctx.expr(i + 1).text)
+                        )
+                        return
+                    }
+                    if (dim == 0) {
+                        errorListener.reportError(
+                            ctx.expr(i + 1),
+                            ErrorStrings.FUNCTION_ARG_ZERO.format(ctx.expr(i + 1).text)
+                        )
+                        return
+                    }
+                }
+                val factor = dims.foldRight(1L) { dim, acc -> dim * acc }
+
+                if (value.size % factor != 0L) {
+                    errorListener.reportError(ctx.expr(0), ErrorStrings.ARRAY_NOT_DIVISIBLE.format(ctx.expr(0).text))
+                    return
+                }
+
+                fun buildRecursive(bits: BitList, dims: List<Int>): ArrayValue {
+                    val d = dims.last()
+                    val vCt = bits.size
+                    val step = vCt / d
+                    val root = mutableListOf<Value>()
+                    check(step * d == vCt) { "Dimensions don't split evenly!" }
+                    if (dims.size == 1) {
+                        repeat(d) {
+                            root.add(SimpleValue(bits.subList(step * it, step * it + step)))
+                        }
+                    } else {
+                        repeat(d) {
+                            root.add(
+                                buildRecursive(
+                                    bits.subList(step * it, step * it + step),
+                                    dims.subList(0, dims.size - 1)
+                                )
+                            )
+                        }
+                    }
+                    return ArrayValue(root.asReversed())
+                }
+
+                values[ctx] = buildRecursive(value.bits, dims)
+            }
+            Function.SIGNED -> {
+                when (val arg = args[0]) {
+                    is SimpleValue -> values[ctx] = SimpleValue(MutableBitList(true, arg))
+                    is UndefinedValue -> values[ctx] = arg.copy(signed = true)
+                    else -> errorListener.reportError(ctx.expr(0), ErrorStrings.SIGNED_MULTI_DIM)
+                }
+            }
+            Function.UNSIGNED -> {
+                when (val arg = args[0]) {
+                    is SimpleValue -> values[ctx] = SimpleValue(MutableBitList(false, arg))
+                    is UndefinedValue -> values[ctx] = arg.copy(signed = false)
+                    else -> errorListener.reportError(ctx.expr(0), ErrorStrings.UNSIGNED_MULTI_DIM)
+                }
+            }
+            Function.CDIV -> {
+                val arg1 = args[0]
+                val arg2 = args[1]
+                if (arg1 !is SimpleValue) {
+                    errorListener.reportError(
+                        ctx.expr(0),
+                        ErrorStrings.FUNCTION_ARG_NAN.format(ctx.expr(0).text, arg1.toString())
+                    )
+                    return
+                }
+                if (arg2 !is SimpleValue) {
+                    errorListener.reportError(
+                        ctx.expr(1),
+                        ErrorStrings.FUNCTION_ARG_NAN.format(ctx.expr(1).text, arg2.toString())
+                    )
+                    return
+                }
+                val b1 = arg1.toBigInt()
+                val b2 = arg2.toBigInt()
+
+                if (b2 == BigInteger.ZERO) {
+                    errorListener.reportError(ctx.expr(1), ErrorStrings.FUNCTION_ARG_ZERO.format(ctx.expr(1).text))
+                    return
+                }
+
+                val d1 = BigDecimal(b1, 10)
+                val d2 = BigDecimal(b2, 10)
+                values[ctx] = d1
+                    .divide(d2, RoundingMode.HALF_UP)
+                    .setScale(0, RoundingMode.CEILING)
+                    .toBigInteger()
+                    .toValue()
+            }
+            Function.RESIZE -> {
+                val value = args[0]
+                val size = args[1]
+                if (size.isNumber() && size is SimpleValue) {
+                    val numBits = try {
+                        size.toBigInt().intValueExact()
+                    } catch (e: ArithmeticException) {
+                        errorListener.reportError(
+                            ctx.expr(1),
+                            ErrorStrings.VALUE_BIGGER_THAN_INT.format(ctx.expr(1).text)
+                        )
+                        return
+                    }
+                    if (numBits < 0) {
+                        errorListener.reportError(ctx.expr(1), ErrorStrings.FUNCTION_ARG_NEG.format(ctx.expr(1).text))
+                        return
+                    }
+                    if (numBits == 0) {
+                        errorListener.reportError(ctx.expr(1), ErrorStrings.FUNCTION_ARG_ZERO.format(ctx.expr(1).text))
+                        return
+                    }
+                    if (!value.signalWidth.isFlatArray()) {
+                        errorListener.reportError(
+                            ctx.expr(0),
+                            ErrorStrings.FUNCTION_NOT_FLAT.format(ctx.FUNCTION_ID().text)
+                        )
+                        return
+                    }
+                    if (value is SimpleValue && value.bits.minBits() < numBits) {
+                        errorListener.reportWarning(
+                            ctx.expr(0),
+                            ErrorStrings.TRUNC_WARN.format(ctx.expr(1).text, size.toString())
+                        )
+                    }
+                    values[ctx] = when (value) {
+                        is SimpleValue -> value.resize(numBits)
+                        is UndefinedValue -> value.copy(width = ArrayWidth(numBits))
+                        else -> error("Previous error checks failed. This shouldn't be reached!")
+                    }
+                }
+            }
+        }
+        debug(ctx)
     }
 }

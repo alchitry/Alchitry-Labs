@@ -89,6 +89,8 @@ public class ErrorStrings {
 	public static final String SUB_MULTI_DIM = "Only single dimensional arrays can be subtracted";
 	public static final String SHIFT_MULTI_DIM = "Only single dimensional arrays can be shifted";
 	public static final String BUILD_MULTI_DIM = "Only single dimensional arrays can be built";
+	public static final String SIGNED_MULTI_DIM = "Only single dimensional values can use $signed()";
+	public static final String UNSIGNED_MULTI_DIM = "Only single dimensional values can use $unsigned()";
 	public static final String TERN_SELECTOR_MULTI_DIM = "Only single dimensional arrays can be used as the selector";
 
 	public static final String VALUE_TOO_BIG = "The value \"%s\" is wider than %s bits and it will be truncated";
@@ -129,9 +131,10 @@ public class ErrorStrings {
 	public static final String FUNCTION_ARG_NAN = "The argument \"%s\" with value \"%s\" must be a number";
 	public static final String FUNCTION_ARG_COUNT = "The function \"%s\" takes exactly %d argument(s)";
 	public static final String FUNCTION_MIN_ARG_COUNT = "The function \"%s\" requires at least %d argument(s)";
-	public static final String FUNCTION_NO_ARRAY = "The function \"%s\" can't be used on multidimensional arrays";
+	public static final String FUNCTION_NOT_FLAT = "The function \"%s\" can't be used on multidimensional arrays or structs";
 	public static final String FUNCTION_ARG_ZERO = "The argument \"%s\" can't be zero";
 	public static final String FUNCTION_ARG_NEG = "The argument \"%s\" can't be negative";
+	public static final String FUNCTION_ARG_NOT_ARRAY = "The argument \"%s\" isn't an array";
 
 	public static final String EXPR_NOT_CONSTANT = "The expression \"%s\" must be constant";
 	public static final String NAME_NOT_CONST = "The name \"%s\" is not a constant name. Constants can only consist of capital letters and underscores";
@@ -140,7 +143,7 @@ public class ErrorStrings {
 	public static final String CONST_READ_ONLY = "Constants can only be read";
 	public static final String BIT_SELECT_WIDTH = "Bit selection can not be used on the constant WIDTH";
 	public static final String SIG_AFTER_BIT_SELECT = "The only signal or attribute that can come after a bit selection is WIDTH";
-	
+
 	public static final String STRING_CANNOT_BE_EMPTY = "String constants cannot be empty.";
 	public static final String MULTIPLE_MODULES = "You can only have one module declaration per file";
 	public static final String UNKNOWN_STRUCT_NAME = "The member \"%s\" does not belong to struct \"%s\"";
@@ -162,12 +165,12 @@ public class ErrorStrings {
 	public static final String UNKNOWN_NAMESPACE = "\"%s\" is not a known global namespace";
 	public static final String NOT_IN_NAMESPACE = "\"%s\" is no in the global namespace \"%s\"";
 	public static final String NOT_A_MEMBER = "\"%s\" is not a member of \"%s\"";
-	public static final String STRUCT_NOT_ARRAY = "Bit selectors can only be used on arrays, not structs";
+	public static final String BIT_SELECTOR_STRUCT_NOT_ARRAY = "Bit selectors can only be used on arrays, not structs";
 	public static final String INOUT_NOT_ARRAY = "Bit selectors can only be used on arrays, not inouts (select an inout member first)";
 	public static final String MODULE_IO_MISSING = "The inout(s), %s, were not connected. Inouts can only be passed out of the module";
-	public static final String WIDTH_NOT_SIMPLE_ARRAY = Lucid.WIDTH_ATTR +" can only be used on arrays that do not contain structs";
+	public static final String WIDTH_NOT_SIMPLE_ARRAY = Lucid.WIDTH_ATTR + " can only be used on arrays that do not contain structs";
 	public static final String WIDTH_COULD_NOT_BE_EVALUATED = Lucid.WIDTH_ATTR + " can only be indexed with constants (it must be evaluated during synthesis)";
-	
+
 	public static final String PRIMITIVE_INVALID_OPTION = "The value %s is not a valid option. Use one of the following: %s";
 	public static final String PRIMITIVE_NAI = "The parameter \"%s\" only accepts integers";
 	public static final String PRIMITIVE_NAD = "The parameter \"%s\" only accepts real numbers";

@@ -1,5 +1,7 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
+import java.math.BigInteger
+
 sealed class Value {
     open val signed = false
 
@@ -13,7 +15,7 @@ sealed class Value {
                 return this.bits.isNumber()
             }
             is StructValue -> {
-                this.elements.forEach { (_, v) -> if (!v.isNumber()) return false }
+                this.forEach { (_, v) -> if (!v.isNumber()) return false }
                 return true
             }
             is UndefinedValue -> {
@@ -36,7 +38,7 @@ sealed class Value {
         return when (this) {
             is SimpleValue -> SimpleValue(bits.invert())
             is ArrayValue -> ArrayValue((List(elements.size) { elements[it].invert() }))
-            is StructValue -> StructValue(type, elements.mapValues { (_, v) -> v.invert() })
+            is StructValue -> StructValue(type, this.mapValues { (_, v) -> v.invert() }.toMutableMap())
             is UndefinedValue -> this
         }
     }
@@ -44,10 +46,10 @@ sealed class Value {
     private fun isTrueBit(): BitValue {
         return when (this) {
             is SimpleValue -> bits.isTrue()
-            is ArrayValue -> MutableBitArray(false, elements.size) { elements[it].isTrueBit() }.isTrue()
+            is ArrayValue -> MutableBitList(false, elements.size) { elements[it].isTrueBit() }.isTrue()
             is StructValue -> {
                 if (isComplete())
-                    MutableBitArray().also { elements.forEach { e -> it.add(e.value.isTrueBit()) } }.isTrue()
+                    MutableBitList().also { this.forEach { e -> it.add(e.value.isTrueBit()) } }.isTrue()
                 else
                     BitValue.Bx
             }
@@ -70,7 +72,7 @@ sealed class Value {
             is ArrayValue -> ArrayValue(List(elements.size) { elements[it] and (other as ArrayValue).elements[it] })
             is StructValue -> {
                 if (isComplete() && (other as StructValue).isComplete()) {
-                    StructValue(type, elements.mapValues { (k, v) -> v and (other.elements[k] as Value) })
+                    StructValue(type, this.mapValues { (k, v) -> v and (other[k] as Value) }.toMutableMap())
                 } else {
                     error("Both structs are not complete")
                 }
@@ -86,7 +88,7 @@ sealed class Value {
             is ArrayValue -> ArrayValue(List(elements.size) { elements[it] or (other as ArrayValue).elements[it] })
             is StructValue -> {
                 if (isComplete() && (other as StructValue).isComplete()) {
-                    StructValue(type, elements.mapValues { (k, v) -> v or (other.elements[k] as Value) })
+                    StructValue(type, this.mapValues { (k, v) -> v or (other[k] as Value) }.toMutableMap())
                 } else {
                     error("Both structs are not complete")
                 }
@@ -102,7 +104,7 @@ sealed class Value {
             is ArrayValue -> ArrayValue(List(elements.size) { elements[it] xor (other as ArrayValue).elements[it] })
             is StructValue -> {
                 if (isComplete() && (other as StructValue).isComplete()) {
-                    StructValue(type, elements.mapValues { (k, v) -> v xor (other.elements[k] as Value) })
+                    StructValue(type, this.mapValues { (k, v) -> v xor (other[k] as Value) }.toMutableMap())
                 } else {
                     error("Both structs are not complete")
                 }
@@ -119,13 +121,13 @@ sealed class Value {
         return isNotEqualTo(other).lsb.not().toSimpleValue()
     }
 
-    private fun reduceOp(op: (BitArray) -> BitValue): BitValue {
+    private fun reduceOp(op: (BitList) -> BitValue): BitValue {
         return when (this) {
             is SimpleValue -> op(bits)
-            is ArrayValue -> op(MutableBitArray(false, elements.size) { elements[it].reduceOp(op) })
+            is ArrayValue -> op(MutableBitList(false, elements.size) { elements[it].reduceOp(op) })
             is StructValue -> {
                 if (isComplete()) {
-                    op(MutableBitArray(false).also { it.addAll(elements.map { (_, v) -> v.reduceOp(op) }) })
+                    op(MutableBitList(false).also { it.addAll(this.map { (_, v) -> v.reduceOp(op) }) })
                 } else {
                     BitValue.Bx
                 }
@@ -145,23 +147,55 @@ sealed class Value {
     fun xorReduce(): SimpleValue {
         return reduceOp { it.reduce { a, b -> a xor b } }.toSimpleValue()
     }
+
+    fun reverse(): Value {
+        return when (this) {
+            is ArrayValue -> ArrayValue(elements.reversed())
+            is SimpleValue -> SimpleValue(MutableBitList(signed, bits.reversed()))
+            is StructValue -> error("reverse() can't be called on StructValues")
+            is UndefinedValue -> if (signalWidth.isArray()) this else error("reverse() can't be called on UndefinedValues that aren't arrays")
+        }
+    }
+
+    private fun getBits(): BitList {
+        return when (this) {
+            is ArrayValue -> MutableBitList().also { bits ->
+                elements.asReversed().forEach { bits.addAll(it.getBits()) }
+            }
+            is SimpleValue -> bits
+            is StructValue -> MutableBitList().also { bits ->
+                type.forEach {
+                    val elementBits =
+                        this[it]?.getBits() ?: MutableBitList(BitValue.Bx, it.width.getBitCount()) as List<BitValue>
+                    bits.addAll(elementBits.asReversed())
+                }
+            }
+            is UndefinedValue -> MutableBitList(BitValue.Bx, width.getBitCount(), signed)
+        }
+    }
+
+    fun flatten(): SimpleValue = SimpleValue(getBits())
 }
 
 data class ArrayValue(
     val elements: List<Value>
 ) : Value(), List<Value> by elements
 
+fun BigInteger.toValue(): SimpleValue = SimpleValue(MutableBitList(this))
+
 data class SimpleValue(
-    val bits: BitArray
+    val bits: BitList
 ) : Value(), List<BitValue> by bits {
     override val signed: Boolean
         get() = bits.signed
+
+    fun toBigInt(): BigInteger = bits.toBigInt()
 
     fun resize(width: Int) = bits.resize(width).toSimpleValue()
 
     /** Changes sign without changing bits */
     fun setSign(signed: Boolean): SimpleValue {
-        return SimpleValue(MutableBitArray(signed, bits))
+        return SimpleValue(MutableBitList(signed, bits))
     }
 
     infix fun isLessThan(other: SimpleValue): SimpleValue {
@@ -207,15 +241,26 @@ data class SimpleValue(
 }
 
 data class StructValue(
-        val type: StructType,
-        val elements: Map<String, Value>
-) : Value() {
-    fun isComplete(): Boolean {
-        type.members.forEach { (k, _) ->
-            if (!elements.containsKey(k))
-                return false
+    val type: StructType,
+    private val valueMap: MutableMap<StructMember, Value> = mutableMapOf()
+) : Value(), Map<StructMember, Value> by valueMap {
+    init {
+        valueMap.keys.removeIf { !type.contains(it) }
+        type.forEach {
+            valueMap.putIfAbsent(it, UndefinedValue(it))
         }
-        return true
+    }
+
+    operator fun get(key: String): Value? {
+        return valueMap.entries.firstOrNull { it.key.name == key }?.value
+    }
+
+    operator fun set(key: String, value: Value): Value? {
+        return valueMap.entries.firstOrNull { it.key.name == key }?.setValue(value)
+    }
+
+    fun isComplete(): Boolean {
+        return type.all { this[it] !is UndefinedValue }
     }
 }
 
@@ -223,4 +268,6 @@ data class UndefinedValue(
     val expression: String,
     val width: SignalWidth = UndefinedSimpleWidth,
     override val signed: Boolean = false
-) : Value()
+) : Value() {
+    constructor(structMember: StructMember) : this(structMember.name, structMember.width, structMember.signed)
+}
