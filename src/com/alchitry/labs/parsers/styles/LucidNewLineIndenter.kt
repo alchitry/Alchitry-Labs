@@ -155,7 +155,7 @@ class LucidNewLineIndenter(private val editor: StyledCodeEditor, private val und
                 e.text = newText.toString()
             } catch (ex: Exception) {
                 reportException(ex, "Failed to add indents to new line!")
-                println("Auto indending a new line failed! Check the logs for more details.", true)
+                println("Auto indenting a new line failed! Check the logs for more details.", true)
                 System.err.println(ex.toString())
             }
         }

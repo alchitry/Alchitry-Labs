@@ -42,7 +42,7 @@ object Theme {
     lateinit var toolBarHoverColor: Color
     lateinit var toolBarClickColor: Color
     lateinit var consoleBackgroundColor: Color
-    lateinit var consoleForegoundColor: Color
+    lateinit var consoleForegroundColor: Color
     lateinit var successTextColor: Color
     lateinit var errorTextColor: Color
     lateinit var warningTextColor: Color
@@ -108,7 +108,7 @@ object Theme {
             toolBarHoverColor = mainAccentColor
             toolBarClickColor = darkAccentColor
             consoleBackgroundColor = editorBackgroundColor
-            consoleForegoundColor = editorForegroundColor
+            consoleForegroundColor = editorForegroundColor
             successTextColor = Color(display, 25, 255, 25)
             errorTextColor = Color(display, 255, 25, 25)
             warningTextColor = Color(display, 222, 175, 0)
@@ -119,7 +119,7 @@ object Theme {
             tabNormalTextColor = editorForegroundColor
             tabHoverTextColor = editorBackgroundColor
             autocompleteBackgroundColor = Color(display, 220, 220, 220)
-            autocompleteForegroundColor = consoleForegoundColor
+            autocompleteForegroundColor = consoleForegroundColor
             autocompleteHighlightColor = mainAccentColor
             searchBackgroundColor = Color(display, 240, 240, 240)
             searchForegroundColor = editorForegroundColor
@@ -163,7 +163,7 @@ object Theme {
             toolBarHoverColor = mainAccentColor
             toolBarClickColor = darkAccentColor
             consoleBackgroundColor = editorBackgroundColor
-            consoleForegoundColor = editorForegroundColor
+            consoleForegroundColor = editorForegroundColor
             successTextColor = Color(display, 25, 255, 25)
             errorTextColor = Color(display, 255, 25, 25)
             warningTextColor = Color(display, 255, 255, 25)
@@ -174,7 +174,7 @@ object Theme {
             tabNormalTextColor = editorForegroundColor
             tabHoverTextColor = tabNormalTextColor
             autocompleteBackgroundColor = Color(display, 55, 55, 50)
-            autocompleteForegroundColor = consoleForegoundColor
+            autocompleteForegroundColor = consoleForegroundColor
             autocompleteHighlightColor = mainAccentColor
             searchBackgroundColor = Color(display, 60, 60, 55)
             searchForegroundColor = editorForegroundColor
@@ -228,7 +228,7 @@ object Theme {
         toolBarHoverColor.dispose()
         toolBarClickColor.dispose()
         consoleBackgroundColor.dispose()
-        consoleForegoundColor.dispose()
+        consoleForegroundColor.dispose()
         successTextColor.dispose()
         errorTextColor.dispose()
         warningTextColor.dispose()

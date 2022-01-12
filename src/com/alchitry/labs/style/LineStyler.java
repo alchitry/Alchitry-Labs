@@ -32,7 +32,7 @@ public class LineStyler implements LineStyleListener, ModifyListener {
 		if (styledText.getLineCount() > 999)
 			width = (int) ((Math.floor(Math.log10(styledText.getLineCount())) + 1) * 12);
 
-		// Set the style, 12 pixles wide for each digit
+		// Set the style, 12 pixels wide for each digit
 		StyleRange style = new StyleRange();
 		style.metrics = new GlyphMetrics(0, 0, width);
 

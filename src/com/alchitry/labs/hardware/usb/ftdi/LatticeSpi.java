@@ -132,7 +132,7 @@ public class LatticeSpi extends Mpsse {
 		flashChipSelect();
 		xferSpi(buf);
 		if (buf[4] == (byte) 0xFF) {
-			Util.println("Extended device string lenght is 0xff. This is likely an error. Ignoring...", Theme.infoTextColor);
+			Util.println("Extended device string length is 0xff. This is likely an error. Ignoring...", Theme.infoTextColor);
 		} else if (buf[4] != 0) {
 			ext = new byte[buf[4]];
 			xferSpi(ext);

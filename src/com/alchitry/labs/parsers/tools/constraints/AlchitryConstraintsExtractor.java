@@ -148,7 +148,7 @@ public class AlchitryConstraintsExtractor extends AlchitryConstraintsBaseListene
             } else if (pt instanceof TerminalNode) {
                 continue;
             } else {
-                Util.logger.severe("Uknown " + ctx.getText());
+                Util.logger.severe("Unknown " + ctx.getText());
             }
         }
 

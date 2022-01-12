@@ -99,9 +99,9 @@ public class NewSourceDialog extends Dialog {
 		btnConstraintsFile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String[] constratintExtensions = board.getSupportedConstraintExtensions();
-				if (constratintExtensions.length > 0) {
-					String ext = constratintExtensions[0];
+				String[] constraintExtensions = board.getSupportedConstraintExtensions();
+				if (constraintExtensions.length > 0) {
+					String ext = constraintExtensions[0];
 					String name = text.getText();
 					if (!Util.isConstraintFile(name, board)) {
 						String newName;

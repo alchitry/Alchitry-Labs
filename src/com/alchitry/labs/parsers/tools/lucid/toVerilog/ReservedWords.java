@@ -33,7 +33,7 @@ public class ReservedWords {
 		case "event":
 		case "for":
 		case "force":
-		case "foreve":
+		case "forever":
 		case "fork":
 		case "function":
 		case "generate":

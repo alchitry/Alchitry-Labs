@@ -85,7 +85,7 @@ public class UsbDevice {
         readBuffer = null;
         writeBufferChunksize = 16384;
         maxPacketSize = 0;
-        detachMode = DetachMode.AUTO_DETACH_REATACH_SIO_MODULE;
+        detachMode = DetachMode.AUTO_DETACH_REATTACH_SIO_MODULE;
 
         iface = 0;
         readDataSetChunkSize(16384);
@@ -142,7 +142,7 @@ public class UsbDevice {
                         String sDesc = LibUsb.getStringDescriptor(device, desc.iProduct());
                         if (sDesc == null) {
                             UsbCloseInternal(device);
-                            throw new LibUsbException("unalbe to fetch product description", -8);
+                            throw new LibUsbException("unable to fetch product description", -8);
                         }
                         if (!description.equals(sDesc)) {
                             UsbCloseInternal(device);
@@ -153,7 +153,7 @@ public class UsbDevice {
                         String sSer = LibUsb.getStringDescriptor(device, desc.iSerialNumber());
                         if (sSer == null) {
                             UsbCloseInternal(device);
-                            throw new LibUsbException("unalbe to fetch serial number", -9);
+                            throw new LibUsbException("unable to fetch serial number", -9);
                         }
                         if (!serial.equals(sSer)) {
                             UsbCloseInternal(device);
@@ -270,7 +270,7 @@ public class UsbDevice {
         return strings;
     }
 
-    protected int determinMaxPacketSize(Device dev, int defSize) {
+    protected int determineMaxPacketSize(Device dev, int defSize) {
         int packetSize = defSize;
         DeviceDescriptor desc = new DeviceDescriptor();
         ConfigDescriptor config = new ConfigDescriptor();
@@ -326,7 +326,7 @@ public class UsbDevice {
         if (DetachMode.AUTO_DETACH_SIO_MODULE.equals(detachMode)) {
             if ((errno = LibUsb.detachKernelDriver(device, iface)) != LibUsb.SUCCESS)
                 detachErrno = errno;
-        } else if (DetachMode.AUTO_DETACH_REATACH_SIO_MODULE.equals(detachMode)) {
+        } else if (DetachMode.AUTO_DETACH_REATTACH_SIO_MODULE.equals(detachMode)) {
             if ((errno = LibUsb.setAutoDetachKernelDriver(device, true)) != LibUsb.SUCCESS)
                 detachErrno = errno;
             if (detachErrno == LibUsb.ERROR_NOT_SUPPORTED)
@@ -356,7 +356,7 @@ public class UsbDevice {
                 throw new LibUsbException("unable to claim usb device. Make sure the default Ftdi driver is not in use", -5);
         }
 
-        maxPacketSize = determinMaxPacketSize(dev, 512);
+        maxPacketSize = determineMaxPacketSize(dev, 512);
     }
 
     public boolean usbOpen(short vendor, short product) {
@@ -389,7 +389,7 @@ public class UsbDevice {
                         String sDesc = LibUsb.getStringDescriptor(device, desc.iProduct());
                         if (sDesc == null) {
                             UsbCloseInternal();
-                            throw new LibUsbException("unalbe to fetch product description", -8);
+                            throw new LibUsbException("unable to fetch product description", -8);
                         }
                         if (!description.equals(sDesc)) {
                             UsbCloseInternal();
@@ -400,7 +400,7 @@ public class UsbDevice {
                         String sSer = LibUsb.getStringDescriptor(device, desc.iSerialNumber());
                         if (sSer == null) {
                             UsbCloseInternal();
-                            throw new LibUsbException("unalbe to fetch serial number", -9);
+                            throw new LibUsbException("unable to fetch serial number", -9);
                         }
                         if (!serial.equals(sSer)) {
                             UsbCloseInternal();

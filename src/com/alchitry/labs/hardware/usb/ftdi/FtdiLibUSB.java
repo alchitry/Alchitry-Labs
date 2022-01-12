@@ -238,12 +238,12 @@ public class FtdiLibUSB extends UsbDevice implements Ftdi, SerialDevice {
 	}
 
 	@Override
-	protected int determinMaxPacketSize(Device dev, int defSize) {
+	protected int determineMaxPacketSize(Device dev, int defSize) {
 		if (ChipType.TYPE_2232H.equals(type) || ChipType.TYPE_4232H.equals(type) || ChipType.TYPE_232H.equals(type))
 			defSize = 512;
 		else
 			defSize = 64;
-		return super.determinMaxPacketSize(dev, defSize);
+		return super.determineMaxPacketSize(dev, defSize);
 	}
 
 	@Override

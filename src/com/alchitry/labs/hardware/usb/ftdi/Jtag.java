@@ -32,10 +32,10 @@ public class Jtag extends Mpsse {
 
 	public void resetState() {
 		currentState = JtagState.CAPTURE_DR;
-		navitageToState(JtagState.TEST_LOGIC_RESET);
+		navigateToState(JtagState.TEST_LOGIC_RESET);
 	}
 
-	public void navitageToState(JtagState state) {
+	public void navigateToState(JtagState state) {
 		Transistions transistions = currentState.getTransitions(state);
 
 		if (transistions.moves > 0) {
@@ -184,9 +184,9 @@ public class Jtag extends Mpsse {
 	}
 
 	public void shiftDRWithCheck(int bits, byte[] write, byte[] read, byte[] mask) {
-		navitageToState(JtagState.SHIFT_DR);
+		navigateToState(JtagState.SHIFT_DR);
 		shiftDataWithCheck(bits, write, read, mask);
-		navitageToState(JtagState.RUN_TEST_IDLE);
+		navigateToState(JtagState.RUN_TEST_IDLE);
 	}
 
 	public void shiftIRWithCheck(int bits, String write, String read, String mask) {
@@ -200,9 +200,9 @@ public class Jtag extends Mpsse {
 	}
 
 	public void shiftIRWithCheck(int bits, byte[] write, byte[] read, byte[] mask) {
-		navitageToState(JtagState.SHIFT_IR);
+		navigateToState(JtagState.SHIFT_IR);
 		shiftDataWithCheck(bits, write, read, mask);
-		navitageToState(JtagState.RUN_TEST_IDLE);
+		navigateToState(JtagState.RUN_TEST_IDLE);
 	}
 
 	public void shiftIR(int bits, byte[] write) {
@@ -210,9 +210,9 @@ public class Jtag extends Mpsse {
 	}
 
 	public void shiftIR(int bits, byte[] write, byte[] read) {
-		navitageToState(JtagState.SHIFT_IR);
+		navigateToState(JtagState.SHIFT_IR);
 		shiftData(bits, write, read);
-		navitageToState(JtagState.RUN_TEST_IDLE);
+		navigateToState(JtagState.RUN_TEST_IDLE);
 	}
 
 	public void shiftDR(int bits, byte[] write) {
@@ -220,9 +220,9 @@ public class Jtag extends Mpsse {
 	}
 
 	public void shiftDR(int bits, byte[] write, byte[] read) {
-		navitageToState(JtagState.SHIFT_DR);
+		navigateToState(JtagState.SHIFT_DR);
 		shiftData(bits, write, read);
-		navitageToState(JtagState.RUN_TEST_IDLE);
+		navigateToState(JtagState.RUN_TEST_IDLE);
 	}
 
 }

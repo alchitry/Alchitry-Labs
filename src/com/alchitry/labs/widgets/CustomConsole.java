@@ -48,7 +48,7 @@ public class CustomConsole extends StyledText {
         styles = new ArrayList<>();
 
         setBackground(Theme.consoleBackgroundColor);
-        setForeground(Theme.consoleForegoundColor);
+        setForeground(Theme.consoleForegroundColor);
         setSelectionBackground(Theme.editorTextSelectedColor);
         setSelectionForeground(null);
 

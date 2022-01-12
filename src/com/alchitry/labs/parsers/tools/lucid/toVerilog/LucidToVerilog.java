@@ -313,13 +313,13 @@ public class LucidToVerilog extends LucidBaseListener {
 			}
 			newLine(sb);
 
-			// assign IO_iosig_reag = IO_iosig;
+			// assign IO_iosig_read = IO_iosig;
 			sb.append("assign ").append(readName).append(" = ").append(inout.getName()).append(";");
 			newLine(sb);
 		}
 	}
 
-	private void addPamameterHeader(StringBuilder sb) {
+	private void addParameterHeader(StringBuilder sb) {
 		if (thisModule.getParams().size() > 0) {
 			sb.append("/*\n   Parameters:\n");
 			for (Param p : thisModule.getParams()) {
@@ -351,7 +351,7 @@ public class LucidToVerilog extends LucidBaseListener {
 	public void exitModule(ModuleContext ctx) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(LucidConvertedHeader.header).append("\n");
-		addPamameterHeader(sb);
+		addParameterHeader(sb);
 		sb.append("module");
 		sb.append(" " + ctx.name().getText() + "_" + projModules.indexOf(thisModule) + " ");
 		// Lucid doesn't use parameter lists
@@ -948,7 +948,7 @@ public class LucidToVerilog extends LucidBaseListener {
 
 		final List<Param> modParams = instModule.getParams();
 		ArrayList<Connection> params = new ArrayList<>();
-		ArrayList<Connection> connetions = new ArrayList<>();
+		ArrayList<Connection> connections = new ArrayList<>();
 
 		for (AssignBlock block : assignBlocks) {
 			if (block != null) {
@@ -958,7 +958,7 @@ public class LucidToVerilog extends LucidBaseListener {
 						Util.removeByName(inouts, c.port);
 						// if (Util.removeByName(inouts, c.port))
 						// Util.removeByName(this.inouts, c.signal);
-						connetions.add(c);
+						connections.add(c);
 					} else { // is a param
 						params.add(c);
 					}
@@ -1050,7 +1050,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			sb.append("{1'bz}};");
 			newLine(sb);
 
-			// assign M_iosig_reag = M_iosig;
+			// assign M_iosig_read = M_iosig;
 			sb.append("assign ").append(readName).append(" = ").append(sanitize(ioName)).append(";");
 			newLine(sb);
 		}
@@ -1147,7 +1147,7 @@ public class LucidToVerilog extends LucidBaseListener {
 
 		boolean first = true;
 
-		for (Connection c : connetions) {
+		for (Connection c : connections) {
 			if (!first)
 				sb.append(",");
 			else
@@ -1848,7 +1848,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			 * else { sb.append(sw.getWidths().get(0)); } }
 			 * 
 			 * } else { sb.append("1"); } } } } else { if (ctx.bit_selection().size() > 1) Util.log.severe(
-			 * "Multiple bit selectors on constants aren't suppored for widths yet!"); if (!widths.isArray()) { Util.log.severe(
+			 * "Multiple bit selectors on constants aren't supported for widths yet!"); if (!widths.isArray()) { Util.log.severe(
 			 * "Signal width was not an array when trying to get WIDTH with no bit selection!"); } else { sb.append(widths.getWidths().get(0)); } }
 			 * 
 			 * sb.append(")");

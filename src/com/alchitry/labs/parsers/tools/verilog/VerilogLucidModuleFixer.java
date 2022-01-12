@@ -62,13 +62,13 @@ public class VerilogLucidModuleFixer {
 		private InstModule thisModule;
 		private VerilogConstExprParser constExpr;
 
-		public ModuleReplaceWalker(InstModule thisModule, List<Module> modules, List<InstModule> instModules, TokenStream tokens, VerilogConstExprParser cosntExpr) {
+		public ModuleReplaceWalker(InstModule thisModule, List<Module> modules, List<InstModule> instModules, TokenStream tokens, VerilogConstExprParser constExpr) {
 			this.modules = modules;
 			this.instModules = instModules;
 			this.thisModule = thisModule;
 			rewriter = new TokenStreamRewriter(tokens);
 			errors = new ArrayList<>();
-			this.constExpr = cosntExpr;
+			this.constExpr = constExpr;
 		}
 
 		public String getText() {
