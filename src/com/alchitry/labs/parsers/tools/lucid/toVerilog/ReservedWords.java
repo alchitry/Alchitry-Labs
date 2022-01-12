@@ -5,13 +5,18 @@ public class ReservedWords {
 	public static boolean check(String s) {
 		switch (s) {
 		case "always":
+		case "and":
 		case "assign":
 		case "automatic":
 		case "begin":
+		case "buf":
+		case "bufif0":
+		case "bufif1":
 		case "case":
 		case "casex":
 		case "casez":
 		case "cell":
+		case "cmos":
 		case "config":
 		case "deassign":
 		case "default":
@@ -38,52 +43,91 @@ public class ReservedWords {
 		case "function":
 		case "generate":
 		case "genvar":
+		case "highz0":
+		case "highz1":
 		case "if":
 		case "ifnone":
 		case "incdir":
 		case "include":
 		case "initial":
 		case "inout":
+		case "input":
 		case "instance":
+		case "integer":
 		case "join":
+		case "large":
 		case "liblist":
 		case "library":
 		case "localparam":
 		case "macromodule":
+		case "medium":
 		case "module":
+		case "nand":
 		case "negedge":
+		case "nmos":
+		case "nor":
 		case "noshowcancelled":
+		case "not":
+		case "notif0":
+		case "notif1":
+		case "or":
 		case "output":
 		case "parameter":
+		case "pmos":
 		case "posedge":
 		case "primitive":
+		case "pull0":
+		case "pull1":
+		case "pulldown":
+		case "pullup":
 		case "pulsestyle_ondetect":
 		case "pulsestyle_onevent":
+		case "rcmos":
+		case "real":
+		case "realtime":
 		case "reg":
 		case "release":
 		case "repeat":
+		case "rnmos":
+		case "rpmos":
+		case "rtran":
+		case "rtranif0":
+		case "rtranif1":
 		case "scalared":
 		case "showcancelled":
 		case "signed":
+		case "small":
 		case "specify":
 		case "specparam":
 		case "strength":
+		case "strong0":
+		case "strong1":
+		case "supply0":
+		case "supply1":
 		case "table":
 		case "task":
+		case "time":
+		case "tran":
+		case "tranif0":
+		case "tranif1":
 		case "tri":
 		case "tri0":
 		case "tri1":
 		case "triand":
-		case "wand":
 		case "trior":
-		case "wor":
 		case "trireg":
 		case "unsigned":
 		case "use":
 		case "vectored":
 		case "wait":
+		case "wand":
+		case "weak0":
+		case "weak1":
 		case "while":
 		case "wire":
+		case "wor":
+		case "xnor":
+		case "xor":
 			return true;
 		}
 		return false;
