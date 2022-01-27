@@ -522,7 +522,7 @@ class Project(val projectName: String, val projectFolder: File, val board: Board
         val file = item.file
         if (isLibFile(file)) return
         val mi = MenuItem(treeMenu, SWT.NONE)
-        mi.text = "Raname " + item.name
+        mi.text = "Rename " + item.name
         mi.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(e: SelectionEvent) {
                 val ogFileName = file.name
