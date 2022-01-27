@@ -328,7 +328,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         if (error) return
 
         val elements = mutableListOf<Value>()
-        operands.forEach { elements.add(it.first) }
+        operands.asReversed().forEach { elements.add(it.first) }
         values[ctx] = ArrayValue(elements)
     }
 
