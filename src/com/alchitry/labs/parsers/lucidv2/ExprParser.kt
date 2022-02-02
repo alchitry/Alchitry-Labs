@@ -115,11 +115,12 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
     }
 
     override fun exitParam_constraint(ctx: Param_constraintContext) {
-
+        values[ctx.expr()]?.let { values[ctx] = it }
+        constant[ctx.expr()]?.let { constant[ctx] = it }
     }
 
     override fun exitStruct_const(ctx: Struct_constContext) {
-
+        // TODO Struct constants
     }
 
     override fun exitExprSignal(ctx: ExprSignalContext) {

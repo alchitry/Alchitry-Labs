@@ -91,33 +91,17 @@ public class LucidToVerilog extends LucidBaseListener {
 	private String generateSyncBlocks() {
 		StringBuilder sb = new StringBuilder();
 
-		HashMap<ExprContext, HashMap<ExprContext, ArrayList<SyncLogic>>> hm = new HashMap<ExprContext, HashMap<ExprContext, ArrayList<SyncLogic>>>();
+		HashMap<ExprContext, HashMap<ExprContext, ArrayList<SyncLogic>>> hm = new HashMap<>();
 
 		for (Dff d : extractor.getDffs()) {
-			HashMap<ExprContext, ArrayList<SyncLogic>> hash = hm.get(d.getClk());
-			if (hash == null) {
-				hash = new HashMap<ExprContext, ArrayList<SyncLogic>>();
-				hm.put(d.getClk(), hash);
-			}
-			ArrayList<SyncLogic> list = hash.get(d.getRst());
-			if (list == null) {
-				list = new ArrayList<SyncLogic>();
-				hash.put(d.getRst(), list);
-			}
+			HashMap<ExprContext, ArrayList<SyncLogic>> hash = hm.computeIfAbsent(d.getClk(), k -> new HashMap<>());
+			ArrayList<SyncLogic> list = hash.computeIfAbsent(d.getRst(), k -> new ArrayList<>());
 			list.add(d);
 		}
 
 		for (Fsm f : extractor.getFsms()) {
-			HashMap<ExprContext, ArrayList<SyncLogic>> hash = hm.get(f.getClk());
-			if (hash == null) {
-				hash = new HashMap<ExprContext, ArrayList<SyncLogic>>();
-				hm.put(f.getClk(), hash);
-			}
-			ArrayList<SyncLogic> list = hash.get(f.getRst());
-			if (list == null) {
-				list = new ArrayList<SyncLogic>();
-				hash.put(f.getRst(), list);
-			}
+			HashMap<ExprContext, ArrayList<SyncLogic>> hash = hm.computeIfAbsent(f.getClk(), k -> new HashMap<>());
+			ArrayList<SyncLogic> list = hash.computeIfAbsent(f.getRst(), k -> new ArrayList<>());
 			list.add(f);
 		}
 
@@ -1697,7 +1681,7 @@ public class LucidToVerilog extends LucidBaseListener {
 			}
 		}
 		if (bitOffset.length() > 0 && bitWidth != width.getTotalWidth()) {
-			sb.append("[").append(bitOffset.toString()).append("+").append(bitWidth - 1).append("-:").append(bitWidth).append("]");
+			sb.append("[").append(bitOffset).append("+").append(bitWidth - 1).append("-:").append(bitWidth).append("]");
 		}
 		return signed;
 	}
@@ -1878,7 +1862,7 @@ public class LucidToVerilog extends LucidBaseListener {
 		if (offset < ctx.name().size() || ctx.bit_selection().size() != 0)
 			signed = parseComplexWidth(sb, ctx, widths, offset);
 		if (signed && !write)
-			verilog.put(ctx, "$signed(" + sb.toString() + ")");
+			verilog.put(ctx, "$signed(" + sb + ")");
 		else
 			verilog.put(ctx, sb.toString());
 	}

@@ -1,4 +1,4 @@
-// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/lucid/parser/Lucid.g4 by ANTLR 4.9.1
+// Generated from Lucid.g4 by ANTLR 4.9.3
 
 package com.alchitry.labs.parsers.lucid.parser;
 
@@ -9,7 +9,6 @@ import org.antlr.v4.runtime.atn.ParserATNSimulator;
 import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class LucidParser extends Parser {
 	static {
-		RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION);
+		RuntimeMetaData.checkVersion("4.9.3", RuntimeMetaData.VERSION);
 	}
 
 	protected static final DFA[] _decisionToDFA;
@@ -55,14 +54,14 @@ public class LucidParser extends Parser {
 		return new String[]{
 				"source", "global", "global_stat", "module", "param_list", "port_list",
 				"param_dec", "port_dec", "input_dec", "output_dec", "inout_dec", "param_name",
-			"param_constraint", "array_size", "struct_type", "struct_member_const", 
-			"struct_const", "module_body", "stat", "const_dec", "assign_block", "sig_con", 
-			"param_con", "type_dec", "dff_single", "var_dec", "sig_dec", "dff_dec", 
-			"fsm_dec", "fsm_states", "module_inst", "inst_cons", "con_list", "connection", 
-			"struct_member", "struct_dec", "always_block", "always_stat", "block", 
-			"assign_stat", "array_index", "bit_selector", "bit_selection", "signal", 
-			"case_stat", "case_elem", "if_stat", "else_stat", "for_stat", "function", 
-			"number", "expr", "var_assign", "name"
+				"param_constraint", "array_size", "struct_type", "struct_member_const",
+				"struct_const", "module_body", "stat", "const_dec", "assign_block", "sig_con",
+				"param_con", "type_dec", "dff_single", "var_dec", "sig_dec", "dff_dec",
+				"fsm_dec", "fsm_states", "module_inst", "inst_cons", "con_list", "connection",
+				"struct_member", "struct_dec", "always_block", "always_stat", "block",
+				"assign_stat", "array_index", "bit_selector", "bit_selection", "signal",
+				"case_stat", "case_elem", "if_stat", "else_stat", "for_stat", "function",
+				"number", "expr", "var_assign", "name"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -156,6 +155,7 @@ public class LucidParser extends Parser {
 		public ModuleContext module(int i) {
 			return getRuleContext(ModuleContext.class,i);
 		}
+
 		public SourceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -169,16 +169,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterSource(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitSource(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitSource(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -242,6 +235,7 @@ public class LucidParser extends Parser {
 		public Global_statContext global_stat(int i) {
 			return getRuleContext(Global_statContext.class,i);
 		}
+
 		public GlobalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -255,16 +249,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterGlobal(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitGlobal(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitGlobal(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -317,6 +304,7 @@ public class LucidParser extends Parser {
 		public Const_decContext const_dec() {
 			return getRuleContext(Const_decContext.class,0);
 		}
+
 		public Global_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -330,16 +318,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterGlobal_stat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitGlobal_stat(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitGlobal_stat(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -394,6 +375,7 @@ public class LucidParser extends Parser {
 		public Param_listContext param_list() {
 			return getRuleContext(Param_listContext.class,0);
 		}
+
 		public ModuleContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -407,16 +389,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterModule(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitModule(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitModule(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -465,6 +440,7 @@ public class LucidParser extends Parser {
 		public Param_decContext param_dec(int i) {
 			return getRuleContext(Param_decContext.class,i);
 		}
+
 		public Param_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -478,16 +454,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterParam_list(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitParam_list(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitParam_list(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -540,6 +509,7 @@ public class LucidParser extends Parser {
 		public Port_decContext port_dec(int i) {
 			return getRuleContext(Port_decContext.class,i);
 		}
+
 		public Port_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -553,16 +523,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterPort_list(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitPort_list(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitPort_list(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -615,6 +578,7 @@ public class LucidParser extends Parser {
 		public Param_constraintContext param_constraint() {
 			return getRuleContext(Param_constraintContext.class,0);
 		}
+
 		public Param_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -628,16 +592,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterParam_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitParam_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitParam_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -685,6 +642,7 @@ public class LucidParser extends Parser {
 		public Inout_decContext inout_dec() {
 			return getRuleContext(Inout_decContext.class,0);
 		}
+
 		public Port_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -698,16 +656,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterPort_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitPort_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitPort_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -766,6 +717,7 @@ public class LucidParser extends Parser {
 		public Array_sizeContext array_size(int i) {
 			return getRuleContext(Array_sizeContext.class,i);
 		}
+
 		public Input_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -779,16 +731,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterInput_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitInput_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitInput_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -864,6 +809,7 @@ public class LucidParser extends Parser {
 		public Array_sizeContext array_size(int i) {
 			return getRuleContext(Array_sizeContext.class,i);
 		}
+
 		public Output_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -877,16 +823,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterOutput_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitOutput_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitOutput_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -962,6 +901,7 @@ public class LucidParser extends Parser {
 		public Array_sizeContext array_size(int i) {
 			return getRuleContext(Array_sizeContext.class,i);
 		}
+
 		public Inout_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -975,16 +915,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterInout_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitInout_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitInout_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1053,6 +986,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Param_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1066,16 +1000,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterParam_name(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitParam_name(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitParam_name(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1117,6 +1044,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Param_constraintContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1130,17 +1058,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterParam_constraint(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitParam_constraint(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor)
-				return ((LucidVisitor<? extends T>) visitor).visitParam_constraint(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1169,6 +1089,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Array_sizeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1182,16 +1103,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterArray_size(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitArray_size(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitArray_size(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1227,6 +1141,7 @@ public class LucidParser extends Parser {
 		public NameContext name(int i) {
 			return getRuleContext(NameContext.class,i);
 		}
+
 		public Struct_typeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1240,16 +1155,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStruct_type(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStruct_type(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStruct_type(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1298,6 +1206,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Struct_member_constContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1311,17 +1220,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStruct_member_const(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStruct_member_const(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor)
-				return ((LucidVisitor<? extends T>) visitor).visitStruct_member_const(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1362,6 +1263,7 @@ public class LucidParser extends Parser {
 		public Struct_member_constContext struct_member_const(int i) {
 			return getRuleContext(Struct_member_constContext.class,i);
 		}
+
 		public Struct_constContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1375,16 +1277,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStruct_const(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStruct_const(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStruct_const(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1439,6 +1334,7 @@ public class LucidParser extends Parser {
 		public StatContext stat(int i) {
 			return getRuleContext(StatContext.class,i);
 		}
+
 		public Module_bodyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1452,16 +1348,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterModule_body(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitModule_body(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitModule_body(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1516,7 +1405,7 @@ public class LucidParser extends Parser {
 	}
 	public static class StatModuleInstContext extends StatContext {
 		public Module_instContext module_inst() {
-			return getRuleContext(Module_instContext.class,0);
+			return getRuleContext(Module_instContext.class, 0);
 		}
 
 		public StatModuleInstContext(StatContext ctx) {
@@ -1527,19 +1416,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatModuleInst(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatModuleInst(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatModuleInst(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatConstContext extends StatContext {
 		public Const_decContext const_dec() {
 			return getRuleContext(Const_decContext.class, 0);
@@ -1553,19 +1434,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatConst(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatConst(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatConst(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatDFFContext extends StatContext {
 		public Dff_decContext dff_dec() {
 			return getRuleContext(Dff_decContext.class, 0);
@@ -1579,19 +1452,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatDFF(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatDFF(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatDFF(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatVarContext extends StatContext {
 		public Var_decContext var_dec() {
 			return getRuleContext(Var_decContext.class, 0);
@@ -1605,19 +1470,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatVar(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatVar(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatVar(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatFSMContext extends StatContext {
 		public Fsm_decContext fsm_dec() {
 			return getRuleContext(Fsm_decContext.class, 0);
@@ -1631,19 +1488,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatFSM(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatFSM(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatFSM(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatAlwaysContext extends StatContext {
 		public Always_blockContext always_block() {
 			return getRuleContext(Always_blockContext.class, 0);
@@ -1657,19 +1506,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatAlways(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatAlways(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatAlways(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatStructContext extends StatContext {
 		public Struct_decContext struct_dec() {
 			return getRuleContext(Struct_decContext.class, 0);
@@ -1683,19 +1524,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatStruct(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatStruct(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatStruct(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatSigContext extends StatContext {
 		public Sig_decContext sig_dec() {
 			return getRuleContext(Sig_decContext.class, 0);
@@ -1709,19 +1542,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatSig(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatSig(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatSig(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class StatAssignContext extends StatContext {
 		public Assign_blockContext assign_block() {
 			return getRuleContext(Assign_blockContext.class, 0);
@@ -1735,16 +1560,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStatAssign(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStatAssign(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStatAssign(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1859,6 +1677,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Const_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1872,16 +1691,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterConst_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitConst_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitConst_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -1940,6 +1752,7 @@ public class LucidParser extends Parser {
 		public Module_instContext module_inst(int i) {
 			return getRuleContext(Module_instContext.class,i);
 		}
+
 		public Assign_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1953,16 +1766,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterAssign_block(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitAssign_block(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitAssign_block(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2060,6 +1866,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Sig_conContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2073,16 +1880,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterSig_con(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitSig_con(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitSig_con(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2123,6 +1923,7 @@ public class LucidParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode REAL() { return getToken(LucidParser.REAL, 0); }
+
 		public Param_conContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2136,16 +1937,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterParam_con(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitParam_con(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitParam_con(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2222,6 +2016,7 @@ public class LucidParser extends Parser {
 		public Array_sizeContext array_size(int i) {
 			return getRuleContext(Array_sizeContext.class,i);
 		}
+
 		public Type_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2235,16 +2030,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterType_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitType_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitType_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2297,6 +2085,7 @@ public class LucidParser extends Parser {
 		public Inst_consContext inst_cons() {
 			return getRuleContext(Inst_consContext.class,0);
 		}
+
 		public Dff_singleContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2310,16 +2099,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterDff_single(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitDff_single(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitDff_single(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2376,6 +2158,7 @@ public class LucidParser extends Parser {
 		public Type_decContext type_dec(int i) {
 			return getRuleContext(Type_decContext.class,i);
 		}
+
 		public Var_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2389,16 +2172,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterVar_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitVar_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitVar_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2453,6 +2229,7 @@ public class LucidParser extends Parser {
 		public Struct_typeContext struct_type() {
 			return getRuleContext(Struct_typeContext.class,0);
 		}
+
 		public Sig_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2466,16 +2243,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterSig_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitSig_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitSig_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2550,6 +2320,7 @@ public class LucidParser extends Parser {
 		public Struct_typeContext struct_type() {
 			return getRuleContext(Struct_typeContext.class,0);
 		}
+
 		public Dff_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2563,16 +2334,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterDff_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitDff_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitDff_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2652,6 +2416,7 @@ public class LucidParser extends Parser {
 		public Inst_consContext inst_cons() {
 			return getRuleContext(Inst_consContext.class,0);
 		}
+
 		public Fsm_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2665,16 +2430,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterFsm_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitFsm_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitFsm_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2741,6 +2499,7 @@ public class LucidParser extends Parser {
 		public NameContext name(int i) {
 			return getRuleContext(NameContext.class,i);
 		}
+
 		public Fsm_statesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2754,16 +2513,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterFsm_states(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitFsm_states(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitFsm_states(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2821,6 +2573,7 @@ public class LucidParser extends Parser {
 		public Inst_consContext inst_cons() {
 			return getRuleContext(Inst_consContext.class,0);
 		}
+
 		public Module_instContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2834,16 +2587,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterModule_inst(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitModule_inst(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitModule_inst(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2899,6 +2645,7 @@ public class LucidParser extends Parser {
 		public Con_listContext con_list() {
 			return getRuleContext(Con_listContext.class,0);
 		}
+
 		public Inst_consContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2912,16 +2659,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterInst_cons(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitInst_cons(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitInst_cons(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -2957,6 +2697,7 @@ public class LucidParser extends Parser {
 		public ConnectionContext connection(int i) {
 			return getRuleContext(ConnectionContext.class,i);
 		}
+
 		public Con_listContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2970,16 +2711,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterCon_list(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitCon_list(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitCon_list(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3028,6 +2762,7 @@ public class LucidParser extends Parser {
 		public Sig_conContext sig_con() {
 			return getRuleContext(Sig_conContext.class,0);
 		}
+
 		public ConnectionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3041,16 +2776,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterConnection(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitConnection(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitConnection(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3104,6 +2832,7 @@ public class LucidParser extends Parser {
 		public Array_sizeContext array_size(int i) {
 			return getRuleContext(Array_sizeContext.class,i);
 		}
+
 		public Struct_memberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3117,16 +2846,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStruct_member(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStruct_member(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStruct_member(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3196,6 +2918,7 @@ public class LucidParser extends Parser {
 		public Struct_memberContext struct_member(int i) {
 			return getRuleContext(Struct_memberContext.class,i);
 		}
+
 		public Struct_decContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3209,16 +2932,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterStruct_dec(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitStruct_dec(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitStruct_dec(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3272,6 +2988,7 @@ public class LucidParser extends Parser {
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
 		}
+
 		public Always_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3285,16 +3002,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterAlways_block(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitAlways_block(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitAlways_block(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3334,7 +3044,7 @@ public class LucidParser extends Parser {
 	}
 	public static class AlwaysStatContext extends Always_statContext {
 		public Assign_statContext assign_stat() {
-			return getRuleContext(Assign_statContext.class,0);
+			return getRuleContext(Assign_statContext.class, 0);
 		}
 
 		public AlwaysStatContext(Always_statContext ctx) {
@@ -3345,19 +3055,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterAlwaysStat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitAlwaysStat(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitAlwaysStat(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class AlwaysIfContext extends Always_statContext {
 		public If_statContext if_stat() {
 			return getRuleContext(If_statContext.class, 0);
@@ -3371,19 +3073,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterAlwaysIf(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitAlwaysIf(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitAlwaysIf(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class AlwaysForContext extends Always_statContext {
 		public For_statContext for_stat() {
 			return getRuleContext(For_statContext.class, 0);
@@ -3397,19 +3091,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterAlwaysFor(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitAlwaysFor(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitAlwaysFor(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class AlwaysCaseContext extends Always_statContext {
 		public Case_statContext case_stat() {
 			return getRuleContext(Case_statContext.class, 0);
@@ -3423,16 +3109,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterAlwaysCase(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitAlwaysCase(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitAlwaysCase(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3501,6 +3180,7 @@ public class LucidParser extends Parser {
 		public Always_statContext always_stat(int i) {
 			return getRuleContext(Always_statContext.class,i);
 		}
+
 		public BlockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3514,16 +3194,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterBlock(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitBlock(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitBlock(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3592,6 +3265,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Assign_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3605,16 +3279,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterAssign_stat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitAssign_stat(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitAssign_stat(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3647,6 +3314,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+
 		public Array_indexContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3660,16 +3328,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterArray_index(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitArray_index(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitArray_index(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3713,8 +3374,9 @@ public class LucidParser extends Parser {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+
 		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
+			return getRuleContext(ExprContext.class, i);
 		}
 
 		public BitSelectorConstContext(Bit_selectorContext ctx) {
@@ -3725,20 +3387,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterBitSelectorConst(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitBitSelectorConst(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor)
-				return ((LucidVisitor<? extends T>) visitor).visitBitSelectorConst(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class BitSelectorFixWidthContext extends Bit_selectorContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -3756,17 +3409,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterBitSelectorFixWidth(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitBitSelectorFixWidth(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor)
-				return ((LucidVisitor<? extends T>) visitor).visitBitSelectorFixWidth(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3843,6 +3488,7 @@ public class LucidParser extends Parser {
 		public Bit_selectorContext bit_selector() {
 			return getRuleContext(Bit_selectorContext.class,0);
 		}
+
 		public Bit_selectionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3856,16 +3502,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterBit_selection(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitBit_selection(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitBit_selection(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -3934,6 +3573,7 @@ public class LucidParser extends Parser {
 		public Bit_selectionContext bit_selection(int i) {
 			return getRuleContext(Bit_selectionContext.class,i);
 		}
+
 		public SignalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3947,16 +3587,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterSignal(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitSignal(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitSignal(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4030,6 +3663,7 @@ public class LucidParser extends Parser {
 		public Case_elemContext case_elem(int i) {
 			return getRuleContext(Case_elemContext.class,i);
 		}
+
 		public Case_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4043,16 +3677,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterCase_stat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitCase_stat(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitCase_stat(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4063,9 +3690,9 @@ public class LucidParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(523);
-			match(T__29);
-			setState(524);
+				setState(523);
+				match(T__29);
+				setState(524);
 				match(T__8);
 				setState(525);
 				expr(0);
@@ -4112,6 +3739,7 @@ public class LucidParser extends Parser {
 		public Always_statContext always_stat(int i) {
 			return getRuleContext(Always_statContext.class,i);
 		}
+
 		public Case_elemContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4125,16 +3753,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterCase_elem(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitCase_elem(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitCase_elem(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4226,6 +3847,7 @@ public class LucidParser extends Parser {
 		public Else_statContext else_stat() {
 			return getRuleContext(Else_statContext.class,0);
 		}
+
 		public If_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4239,16 +3861,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterIf_stat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitIf_stat(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitIf_stat(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4295,6 +3910,7 @@ public class LucidParser extends Parser {
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
 		}
+
 		public Else_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4308,16 +3924,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterElse_stat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitElse_stat(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitElse_stat(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4357,6 +3966,7 @@ public class LucidParser extends Parser {
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
 		}
+
 		public For_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4370,16 +3980,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterFor_stat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitFor_stat(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitFor_stat(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4428,6 +4031,7 @@ public class LucidParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
+
 		public FunctionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4441,16 +4045,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterFunction(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitFunction(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitFunction(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4504,6 +4101,7 @@ public class LucidParser extends Parser {
 		public TerminalNode DEC() { return getToken(LucidParser.DEC, 0); }
 		public TerminalNode INT() { return getToken(LucidParser.INT, 0); }
 		public TerminalNode STRING() { return getToken(LucidParser.STRING, 0); }
+
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4517,16 +4115,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterNumber(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitNumber(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitNumber(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -4574,8 +4165,9 @@ public class LucidParser extends Parser {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
 		}
+
 		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
+			return getRuleContext(ExprContext.class, i);
 		}
 
 		public ExprTernaryContext(ExprContext ctx) {
@@ -4586,19 +4178,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprTernary(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprTernary(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprTernary(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprNumContext extends ExprContext {
 		public NumberContext number() {
 			return getRuleContext(NumberContext.class, 0);
@@ -4612,19 +4196,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprNum(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprNum(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprNum(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprConcatContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -4642,19 +4218,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprConcat(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprConcat(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprConcat(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprReductionContext extends ExprContext {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class, 0);
@@ -4668,19 +4236,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprReduction(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprReduction(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprReduction(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprInvertContext extends ExprContext {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class, 0);
@@ -4694,19 +4254,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprInvert(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprInvert(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprInvert(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprStructContext extends ExprContext {
 		public Struct_constContext struct_const() {
 			return getRuleContext(Struct_constContext.class, 0);
@@ -4720,19 +4272,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprStruct(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprStruct(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprStruct(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprArrayContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -4750,19 +4294,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprArray(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprArray(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprArray(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprShiftContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -4780,19 +4316,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprShift(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprShift(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprShift(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprAddSubContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -4810,19 +4338,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprAddSub(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprAddSub(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprAddSub(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprLogicalContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -4840,19 +4360,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprLogical(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprLogical(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprLogical(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprNegateContext extends ExprContext {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class, 0);
@@ -4866,19 +4378,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprNegate(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprNegate(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprNegate(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprGroupContext extends ExprContext {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class, 0);
@@ -4892,19 +4396,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprGroup(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprGroup(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprGroup(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprBitwiseContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -4922,19 +4418,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprBitwise(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprBitwise(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprBitwise(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprFunctionContext extends ExprContext {
 		public FunctionContext function() {
 			return getRuleContext(FunctionContext.class, 0);
@@ -4948,19 +4436,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprFunction(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprFunction(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprFunction(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprCompareContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -4978,19 +4458,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprCompare(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprCompare(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprCompare(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprDupContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -5008,19 +4480,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprDup(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprDup(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprDup(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprMultDivContext extends ExprContext {
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -5038,19 +4502,11 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprMultDiv(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprMultDiv(this);
 		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprMultDiv(this);
-			else return visitor.visitChildren(this);
-		}
 	}
-
 	public static class ExprSignalContext extends ExprContext {
 		public SignalContext signal() {
 			return getRuleContext(SignalContext.class, 0);
@@ -5064,16 +4520,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterExprSignal(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitExprSignal(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitExprSignal(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5230,9 +4679,8 @@ public class LucidParser extends Parser {
 				expr(10);
 				}
 				break;
-			case T__28:
-				{
-				_localctx = new ExprNegateContext(_localctx);
+				case T__28: {
+					_localctx = new ExprNegateContext(_localctx);
 					_ctx = _localctx;
 					_prevctx = _localctx;
 					setState(613);
@@ -5240,7 +4688,7 @@ public class LucidParser extends Parser {
 					setState(614);
 					expr(9);
 				}
-			break;
+				break;
 				case T__44:
 				case T__45:
 				case T__46: {
@@ -5260,8 +4708,8 @@ public class LucidParser extends Parser {
 					expr(4);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
+				default:
+					throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
 			setState(650);
@@ -5321,15 +4769,15 @@ public class LucidParser extends Parser {
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(625);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
-						setState(626);
-						_la = _input.LA(1);
-						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__40) | (1L << T__41) | (1L << T__42) | (1L << T__43))) != 0)) ) {
-						_errHandler.recoverInline(this);
-						} else {
-							if (_input.LA(1) == Token.EOF) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
+							setState(626);
+							_la = _input.LA(1);
+							if (!((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__40) | (1L << T__41) | (1L << T__42) | (1L << T__43))) != 0))) {
+								_errHandler.recoverInline(this);
+							} else {
+								if (_input.LA(1) == Token.EOF) matchedEOF = true;
+								_errHandler.reportMatch(this);
+								consume();
+							}
 							setState(627);
 							expr(7);
 						}
@@ -5403,14 +4851,13 @@ public class LucidParser extends Parser {
 							expr(2);
 						}
 						break;
-					case 8:
-						{
-						_localctx = new ExprDupContext(new ExprContext(_parentctx, _parentState));
-						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(643);
-						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
-						setState(644);
-						match(T__35);
+						case 8: {
+							_localctx = new ExprDupContext(new ExprContext(_parentctx, _parentState));
+							pushNewRecursionContext(_localctx, _startState, RULE_expr);
+							setState(643);
+							if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
+							setState(644);
+							match(T__35);
 						setState(645);
 						expr(0);
 						setState(646);
@@ -5444,6 +4891,7 @@ public class LucidParser extends Parser {
 		public Assign_statContext assign_stat() {
 			return getRuleContext(Assign_statContext.class,0);
 		}
+
 		public Var_assignContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -5457,16 +4905,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterVar_assign(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitVar_assign(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitVar_assign(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5518,6 +4959,7 @@ public class LucidParser extends Parser {
 		public TerminalNode TYPE_ID() { return getToken(LucidParser.TYPE_ID, 0); }
 		public TerminalNode CONST_ID() { return getToken(LucidParser.CONST_ID, 0); }
 		public TerminalNode SPACE_ID() { return getToken(LucidParser.SPACE_ID, 0); }
+
 		public NameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -5531,16 +4973,9 @@ public class LucidParser extends Parser {
 		public void enterRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).enterName(this);
 		}
-
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if (listener instanceof LucidListener) ((LucidListener) listener).exitName(this);
-		}
-
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if (visitor instanceof LucidVisitor) return ((LucidVisitor<? extends T>) visitor).visitName(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -5624,16 +5059,16 @@ public class LucidParser extends Parser {
 					"\3\22\7\22\u00f8\n\22\f\22\16\22\u00fb\13\22\3\22\3\22\3\23\3\23\7\23" +
 					"\u0101\n\23\f\23\16\23\u0104\13\23\3\23\3\23\3\24\3\24\3\24\3\24\3\24" +
 					"\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24" +
-		"\3\24\3\24\5\24\u011d\n\24\3\25\3\25\3\25\3\25\3\25\3\26\3\26\3\26\3\26"+
-		"\3\26\5\26\u0129\n\26\3\26\3\26\3\26\7\26\u012e\n\26\f\26\16\26\u0131"+
-		"\13\26\3\26\3\26\3\27\3\27\3\27\3\27\3\27\3\27\3\30\3\30\3\30\3\30\3\30"+
-		"\5\30\u0140\n\30\3\30\3\30\3\31\3\31\7\31\u0146\n\31\f\31\16\31\u0149"+
-		"\13\31\3\32\3\32\7\32\u014d\n\32\f\32\16\32\u0150\13\32\3\32\5\32\u0153"+
-		"\n\32\3\33\3\33\3\33\3\33\7\33\u0159\n\33\f\33\16\33\u015c\13\33\3\34"+
-		"\5\34\u015f\n\34\3\34\3\34\5\34\u0163\n\34\3\34\3\34\3\34\7\34\u0168\n"+
-		"\34\f\34\16\34\u016b\13\34\3\35\5\35\u016e\n\35\3\35\3\35\5\35\u0172\n"+
-		"\35\3\35\3\35\3\35\7\35\u0177\n\35\f\35\16\35\u017a\13\35\3\36\3\36\3"+
-		"\36\7\36\u017f\n\36\f\36\16\36\u0182\13\36\3\36\5\36\u0185\n\36\3\36\3"+
+					"\3\24\3\24\5\24\u011d\n\24\3\25\3\25\3\25\3\25\3\25\3\26\3\26\3\26\3\26" +
+					"\3\26\5\26\u0129\n\26\3\26\3\26\3\26\7\26\u012e\n\26\f\26\16\26\u0131" +
+					"\13\26\3\26\3\26\3\27\3\27\3\27\3\27\3\27\3\27\3\30\3\30\3\30\3\30\3\30" +
+					"\5\30\u0140\n\30\3\30\3\30\3\31\3\31\7\31\u0146\n\31\f\31\16\31\u0149" +
+					"\13\31\3\32\3\32\7\32\u014d\n\32\f\32\16\32\u0150\13\32\3\32\5\32\u0153" +
+					"\n\32\3\33\3\33\3\33\3\33\7\33\u0159\n\33\f\33\16\33\u015c\13\33\3\34" +
+					"\5\34\u015f\n\34\3\34\3\34\5\34\u0163\n\34\3\34\3\34\3\34\7\34\u0168\n" +
+					"\34\f\34\16\34\u016b\13\34\3\35\5\35\u016e\n\35\3\35\3\35\5\35\u0172\n" +
+					"\35\3\35\3\35\3\35\7\35\u0177\n\35\f\35\16\35\u017a\13\35\3\36\3\36\3" +
+					"\36\7\36\u017f\n\36\f\36\16\36\u0182\13\36\3\36\5\36\u0185\n\36\3\36\3" +
 					"\36\3\36\3\36\3\36\3\37\3\37\3\37\7\37\u018f\n\37\f\37\16\37\u0192\13" +
 					"\37\3 \3 \3 \7 \u0197\n \f \16 \u019a\13 \3 \5 \u019d\n \3!\3!\3!\3!\3" +
 					"\"\3\"\3\"\7\"\u01a6\n\"\f\"\16\"\u01a9\13\"\3#\3#\5#\u01ad\n#\3$\5$\u01b0" +
@@ -5790,8 +5225,8 @@ public class LucidParser extends Parser {
 					"\u01e7\7\21\2\2\u01e7\u01e8\5h\65\2\u01e8\u01e9\7\f\2\2\u01e9\u01ea\5" +
 					"h\65\2\u01ea\u01eb\7\22\2\2\u01eb\u01f4\3\2\2\2\u01ec\u01ed\7\21\2\2\u01ed" +
 					"\u01ee\5h\65\2\u01ee\u01ef\t\2\2\2\u01ef\u01f0\7\f\2\2\u01f0\u01f1\5h" +
-		"\65\2\u01f1\u01f2\7\22\2\2\u01f2\u01f4\3\2\2\2\u01f3\u01e6\3\2\2\2\u01f3"+
-		"\u01ec\3\2\2\2\u01f4U\3\2\2\2\u01f5\u01f7\5R*\2\u01f6\u01f5\3\2\2\2\u01f7"+
+					"\65\2\u01f1\u01f2\7\22\2\2\u01f2\u01f4\3\2\2\2\u01f3\u01e6\3\2\2\2\u01f3" +
+					"\u01ec\3\2\2\2\u01f4U\3\2\2\2\u01f5\u01f7\5R*\2\u01f6\u01f5\3\2\2\2\u01f7" +
 					"\u01fa\3\2\2\2\u01f8\u01f6\3\2\2\2\u01f8\u01f9\3\2\2\2\u01f9\u01fd\3\2" +
 					"\2\2\u01fa\u01f8\3\2\2\2\u01fb\u01fe\5R*\2\u01fc\u01fe\5T+\2\u01fd\u01fb" +
 					"\3\2\2\2\u01fd\u01fc\3\2\2\2\u01feW\3\2\2\2\u01ff\u0201\5l\67\2\u0200" +

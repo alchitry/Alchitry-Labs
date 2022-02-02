@@ -34,3 +34,11 @@ local.properties
 /docs/
 /build/
 /.gradle/
+/src/gen/Lucid.interp
+/src/gen/Lucid.tokens
+/src/gen/LucidLexer.interp
+/src/gen/LucidLexer.tokens
+/src/com/alchitry/labs/parsers/lucidv2/grammar/Lucid.interp
+/src/com/alchitry/labs/parsers/lucidv2/grammar/Lucid.tokens
+/src/com/alchitry/labs/parsers/lucidv2/grammar/LucidLexer.interp
+/src/com/alchitry/labs/parsers/lucidv2/grammar/LucidLexer.tokens

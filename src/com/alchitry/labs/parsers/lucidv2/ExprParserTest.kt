@@ -92,7 +92,12 @@ internal class ExprParserTest {
     }
 
     private class Tester(text: String) :
-        LucidParser(CommonTokenStream(LucidLexer(CharStreams.fromString(text)).also { it.removeErrorListeners() })) {
+        LucidParser(
+            CommonTokenStream(
+                LucidLexer(
+                    CharStreams.fromString(text)
+                ).also { it.removeErrorListeners() })
+        ) {
 
         val errorCollector = ErrorCollector()
         val parser: ExprParser

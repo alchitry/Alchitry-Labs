@@ -1,4 +1,4 @@
-// Generated from /home/justin/IdeaProjects/Alchitry Labs/source/src/com/alchitry/labs/parsers/lucid/parser/Lucid.g4 by ANTLR 4.9.1
+// Generated from Lucid.g4 by ANTLR 4.9.3
 
 package com.alchitry.labs.parsers.lucid.parser;
 
@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class LucidLexer extends Lexer {
 	static {
-		RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION);
+		RuntimeMetaData.checkVersion("4.9.3", RuntimeMetaData.VERSION);
 	}
 
 	protected static final DFA[] _decisionToDFA;

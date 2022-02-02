@@ -415,8 +415,8 @@ object Util {
     @JvmStatic
     fun <T : Named?> getByName(list: Collection<T>?, name: String?): T? {
         list ?: return null
-        for (t in list) if (t!!.name == name) return t
-        return null
+        name ?: return null
+        return list.firstOrNull { it?.name == name }
     }
 
     @JvmStatic
