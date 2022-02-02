@@ -5,8 +5,8 @@ import com.alchitry.labs.parsers.BigFunctions
 import com.alchitry.labs.parsers.errors.ErrorListener
 import com.alchitry.labs.parsers.errors.ErrorStrings
 import com.alchitry.labs.parsers.errors.dummyErrorListener
-import com.alchitry.labs.parsers.lucid.parser.LucidBaseListener
-import com.alchitry.labs.parsers.lucid.parser.LucidParser.*
+import com.alchitry.labs.parsers.lucidv2.grammar.LucidBaseListener
+import com.alchitry.labs.parsers.lucidv2.grammar.LucidParser.*
 import com.alchitry.labs.parsers.lucidv2.values.*
 import com.alchitry.labs.parsers.lucidv2.values.Function
 import org.antlr.v4.runtime.ParserRuleContext

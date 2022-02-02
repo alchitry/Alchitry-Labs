@@ -1,8 +1,8 @@
 package com.alchitry.labs.parsers.lucidv2
 
 import com.alchitry.labs.parsers.errors.ErrorListener
-import com.alchitry.labs.parsers.lucid.parser.LucidLexer
-import com.alchitry.labs.parsers.lucid.parser.LucidParser
+import com.alchitry.labs.parsers.lucidv2.grammar.LucidLexer
+import com.alchitry.labs.parsers.lucidv2.grammar.LucidParser
 import com.alchitry.labs.parsers.lucidv2.values.ArrayValue
 import com.alchitry.labs.parsers.lucidv2.values.MutableBitList
 import com.alchitry.labs.parsers.lucidv2.values.SimpleValue

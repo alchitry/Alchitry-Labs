@@ -23,8 +23,8 @@ param_dec: param_name NL* (':' NL* param_constraint)?;
 port_dec: input_dec | output_dec | inout_dec;
 
 input_dec: SIGNED? NL* 'input' NL* struct_type? NL* name (array_size | NL)*;
-output_dec: SIGNED? 'output' struct_type? name array_size*;
-inout_dec: SIGNED? 'inout' struct_type? name array_size*;
+output_dec: SIGNED? NL* 'output' NL* struct_type? NL* name (array_size | NL)*;
+inout_dec: SIGNED? NL* 'inout' NL* struct_type? NL* name (array_size | NL)*;
 
 param_name: name NL* ('=' NL* expr)?;
 param_constraint: expr;
