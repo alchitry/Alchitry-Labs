@@ -6,27 +6,20 @@ import com.alchitry.labs.parsers.lucid.parser.LucidParser
 import com.alchitry.labs.parsers.lucidv2.values.ArrayValue
 import com.alchitry.labs.parsers.lucidv2.values.MutableBitList
 import com.alchitry.labs.parsers.lucidv2.values.SimpleValue
-import org.antlr.v4.runtime.CharStream
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.tree.ParseTree
+import org.antlr.v4.runtime.*
+import org.antlr.v4.runtime.atn.ATNConfigSet
+import org.antlr.v4.runtime.dfa.DFA
 import org.antlr.v4.runtime.tree.TerminalNode
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.*
 
 internal class ExprParserTest {
-
-    private class ErrorCollector : ErrorListener {
+    private class ErrorCollector : ErrorListener, ANTLRErrorListener {
         val errors = mutableListOf<String>()
         val warnings = mutableListOf<String>()
         val debugs = mutableListOf<String>()
-
-        fun clear() {
-            errors.clear()
-            warnings.clear()
-            debugs.clear()
-        }
+        val syntaxIssues = mutableListOf<String>()
 
         override fun reportError(node: TerminalNode, message: String) {
             errors.add("${node.text}: $message")
@@ -52,165 +45,224 @@ internal class ExprParserTest {
             debugs.add("${ctx.text}: $message")
         }
 
-        val hasNoErrors: Boolean get() = errors.isEmpty()
-        val hasNoWarnings: Boolean get() = warnings.isEmpty()
-        val hasErrors: Boolean get() = errors.isNotEmpty()
-        val hasWarnings: Boolean get() = warnings.isNotEmpty()
+        override fun syntaxError(
+            recognizer: Recognizer<*, *>?,
+            offendingSymbol: Any?,
+            line: Int,
+            charPositionInLine: Int,
+            msg: String?,
+            e: RecognitionException?
+        ) {
+            syntaxIssues.add("Syntax error: $msg")
+        }
+
+        override fun reportAmbiguity(
+            recognizer: Parser?,
+            dfa: DFA?,
+            startIndex: Int,
+            stopIndex: Int,
+            exact: Boolean,
+            ambigAlts: BitSet?,
+            configs: ATNConfigSet?
+        ) {
+            syntaxIssues.add("Syntax ambiguity at $startIndex to $stopIndex")
+        }
+
+        override fun reportAttemptingFullContext(
+            recognizer: Parser?,
+            dfa: DFA?,
+            startIndex: Int,
+            stopIndex: Int,
+            conflictingAlts: BitSet?,
+            configs: ATNConfigSet?
+        ) {
+            syntaxIssues.add("Syntax attempting full context at $startIndex to $stopIndex")
+        }
+
+        override fun reportContextSensitivity(
+            recognizer: Parser?,
+            dfa: DFA?,
+            startIndex: Int,
+            stopIndex: Int,
+            prediction: Int,
+            configs: ATNConfigSet?
+        ) {
+            syntaxIssues.add("Syntax context sensitivity at $startIndex to $stopIndex")
+        }
     }
 
-    private fun runExpr(expr: String, exprParser: ExprParser): ParseTree {
-        val input: CharStream = CharStreams.fromString(expr)
-        val lexer = LucidLexer(input)
-        lexer.removeErrorListeners()
-        val tokens = CommonTokenStream(lexer)
-        val parser = LucidParser(tokens)
-        parser.removeErrorListeners()
+    private class Tester(text: String) :
+        LucidParser(CommonTokenStream(LucidLexer(CharStreams.fromString(text)).also { it.removeErrorListeners() })) {
 
-        parser.addParseListener(exprParser)
+        val errorCollector = ErrorCollector()
+        val parser: ExprParser
 
-        return parser.expr()
+        init {
+            (tokenStream.tokenSource as LucidLexer).addErrorListener(errorCollector)
+            removeErrorListeners()
+            addErrorListener(errorCollector)
+            parser = ExprParser(errorCollector)
+            addParseListener(parser)
+        }
+
+        val hasNoIssues = hasNoErrors && hasNoWarnings && hasNoSyntaxIssues
+
+        val hasNoErrors: Boolean get() = errorCollector.errors.isEmpty()
+        val hasNoWarnings: Boolean get() = errorCollector.warnings.isEmpty()
+        val hasNoSyntaxIssues: Boolean get() = errorCollector.syntaxIssues.isEmpty()
+        val hasErrors: Boolean get() = errorCollector.errors.isNotEmpty()
+        val hasWarnings: Boolean get() = errorCollector.warnings.isNotEmpty()
+        val hasSyntaxIssues: Boolean get() = errorCollector.syntaxIssues.isNotEmpty()
     }
 
     @Test
     fun testNumbers() {
-        val errorCollector = ErrorCollector()
-        val exprParser = ExprParser(errorCollector)
-        var tree = runExpr("5b11011", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("11011", 2, 5)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        var test = Tester("5b11011")
+        var tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("11011", 2, 5)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("hFE01", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("65025", 10, 16)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("hFE01")
+        tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("65025", 10, 16)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("8hFFF", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("255", 10, 8)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasWarnings)
-        errorCollector.clear()
+        test = Tester("8hFFF")
+        tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("255", 10, 8)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("152", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("152", 10, 8)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("152")
+        tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("152", 10, 8)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("0", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("0", 10, 1)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("0")
+        tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("0", 10, 1)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("20d12", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("12", 10, 20)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("20d12")
+        tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("12", 10, 20)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
     }
 
     @Test
     fun testAddition() {
-        val errorCollector = ErrorCollector()
-        val exprParser = ExprParser(errorCollector)
-        val tree = runExpr("5b1101 + 4b0010", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("1111", 2, 6)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
+        val test = Tester("5b1101 + 4b0010")
+        val tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("1111", 2, 6)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
     }
 
     @Test
     fun testSubtraction() {
-        val errorCollector = ErrorCollector()
-        val exprParser = ExprParser(errorCollector)
-        val tree = runExpr("5b1101 - 4b0010", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("1011", 2, 6)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
+        val test = Tester("5b1101 - 4b0010")
+        val tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("1011", 2, 6)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
     }
 
     @Test
     fun testConcat() {
-        val errorCollector = ErrorCollector()
-        val exprParser = ExprParser(errorCollector)
-        var tree = runExpr("c{b1101, b0010, 0}", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("110100100", 2, 9)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        var test = Tester("c{b1101, b0010, 0}")
+        var tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("110100100", 2, 9)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("c{{b1101}, b0010, 0}", exprParser)
-        assertEquals(exprParser.values[tree], null)
-        assert(errorCollector.hasErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("c{{b1101}, b0010, 0}")
+        tree = test.expr()
+        assertEquals(null, test.parser.values[tree])
+        assert(test.hasErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("c{{b1101}, {b0010}, {0}}", exprParser)
-        assertEquals(exprParser.values[tree], null)
-        assert(errorCollector.hasErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("c{{b1101}, {b0010}, {0}}")
+        tree = test.expr()
+        assertEquals(null, test.parser.values[tree])
+        assert(test.hasErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("c{{b1101}, {b0010}, {4b0}}", exprParser)
+        test = Tester("c{{b1101}, {b0010}, {4b0}}")
+        tree = test.expr()
         assertEquals(
-            exprParser.values[tree], ArrayValue(
+            ArrayValue(
                 listOf(
                     SimpleValue(MutableBitList("0000", 2, 4)),
                     SimpleValue(MutableBitList("0010", 2, 4)),
                     SimpleValue(MutableBitList("1101", 2, 4))
                 )
-            )
+            ),
+            test.parser.values[tree]
         )
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
     }
 
     @Test
     fun testDup() {
-        val errorCollector = ErrorCollector()
-        val exprParser = ExprParser(errorCollector)
-        var tree = runExpr("2x{0}", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("00", 2, 2)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        var test = Tester("2x{0}")
+        var tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("00", 2, 2)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("8x{2b10}", exprParser)
-        assertEquals(exprParser.values[tree], SimpleValue(MutableBitList("1010101010101010", 2, 16)))
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("8x{2b10}")
+        tree = test.expr()
+        assertEquals(SimpleValue(MutableBitList("1010101010101010", 2, 16)), test.parser.values[tree])
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("{8}x{2b10}", exprParser)
-        assertEquals(exprParser.values[tree], null)
-        assert(errorCollector.hasErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("{8}x{2b10}")
+        tree = test.expr()
+        assertEquals(null, test.parser.values[tree])
+        assert(test.hasErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
     }
 
     @Test
     fun testArray() {
-        val errorCollector = ErrorCollector()
-        val exprParser = ExprParser(errorCollector)
-        var tree = runExpr("{0}", exprParser)
+        var test = Tester("{0}")
+        var tree = test.expr()
         assertEquals(
-            exprParser.values[tree], ArrayValue(
+            ArrayValue(
                 listOf(
                     SimpleValue(MutableBitList("0", 2, 1)),
                 )
-            )
+            ),
+            test.parser.values[tree]
         )
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("{{0}}", exprParser)
+        test = Tester("{{0}}")
+        tree = test.expr()
         assertEquals(
-            exprParser.values[tree],
             ArrayValue(
                 listOf(
                     ArrayValue(
@@ -219,31 +271,121 @@ internal class ExprParserTest {
                         )
                     )
                 )
-            )
+            ),
+            test.parser.values[tree]
         )
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
         // values of different sizes = error
-        tree = runExpr("{0, 2b10, 2b11}", exprParser)
-        assertEquals(exprParser.values[tree], null)
-        assert(errorCollector.hasErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        test = Tester("{0, 2b10, 2b11}")
+        tree = test.expr()
+        assertEquals(null, test.parser.values[tree])
+        assert(test.hasErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
 
-        tree = runExpr("{b00,b01,b10}", exprParser)
+        test = Tester("{b00,b01,b10}")
+        tree = test.expr()
         assertEquals(
-            exprParser.values[tree], ArrayValue(
+            ArrayValue(
                 listOf(
                     SimpleValue(MutableBitList("10", 2, 2)),
                     SimpleValue(MutableBitList("01", 2, 2)),
                     SimpleValue(MutableBitList("00", 2, 2)),
                 )
-            )
+            ),
+            test.parser.values[tree]
         )
-        assert(errorCollector.hasNoErrors)
-        assert(errorCollector.hasNoWarnings)
-        errorCollector.clear()
+        assert(test.hasNoErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
+    }
+
+    @Test
+    fun testBitSelectorConst() {
+        var test = Tester("[0:0]")
+        var tree = test.bit_selector()
+        assertEquals(0..0, test.parser.bounds[tree])
+        assert(test.hasNoIssues)
+
+        test = Tester("[5:0]")
+        tree = test.bit_selector()
+        assertEquals(0..5, test.parser.bounds[tree])
+        assert(test.hasNoIssues)
+
+        test = Tester("[0:5]")
+        tree = test.bit_selector()
+        assertEquals(null, test.parser.bounds[tree])
+        assert(test.hasErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
+
+        test = Tester("[bx0:5]")
+        tree = test.bit_selector()
+        assertEquals(null, test.parser.bounds[tree])
+        assert(test.hasErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
+
+        test = Tester("[[0:5]")
+        tree = test.bit_selector()
+        assertEquals(null, test.parser.bounds[tree])
+        assert(test.hasSyntaxIssues)
+
+        test = Tester("[1321612161321613216354132465162316516546546516513246:0]")
+        tree = test.bit_selector()
+        assertEquals(null, test.parser.bounds[tree])
+        assert(test.hasErrors)
+        assert(test.hasNoWarnings)
+        assert(test.hasNoSyntaxIssues)
+    }
+
+    @Test
+    fun testBitSelectorFixedWidth() {
+        var test = Tester("[0+:5]")
+        var tree = test.bit_selector()
+        assertEquals(0..4, test.parser.bounds[tree])
+        assert(test.hasNoIssues)
+
+        test = Tester("[5-:5]")
+        tree = test.bit_selector()
+        assertEquals(1..5, test.parser.bounds[tree])
+        assert(test.hasNoIssues)
+
+        test = Tester("[5-:2]")
+        tree = test.bit_selector()
+        assertEquals(4..5, test.parser.bounds[tree])
+        assert(test.hasNoIssues)
+
+        test = Tester("[5+:0]")
+        tree = test.bit_selector()
+        assertEquals(null, test.parser.bounds[tree])
+        assert(test.hasErrors)
+
+        test = Tester("[bx+:0]")
+        tree = test.bit_selector()
+        assertEquals(null, test.parser.bounds[tree])
+        assert(test.hasErrors)
+    }
+
+    @Test
+    fun testArrayIndex() {
+        var test = Tester("[5]")
+        var tree = test.array_index()
+        assertEquals(5..5, test.parser.bounds[tree])
+        assert(test.hasNoIssues)
+
+        test = Tester("[0]")
+        tree = test.array_index()
+        assertEquals(0..0, test.parser.bounds[tree])
+        assert(test.hasNoIssues)
+
+        test = Tester("[bx]")
+        tree = test.array_index()
+        assertEquals(null, test.parser.bounds[tree])
+        assert(test.hasErrors)
+
     }
 }

@@ -20,6 +20,7 @@ import kotlin.math.absoluteValue
 class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidBaseListener() {
     val values = mutableMapOf<ParseTree, Value>()
     val constant = mutableMapOf<ParseTree, Boolean>()
+    val bounds = mutableMapOf<ParseTree, IntRange>()
 
     private fun debug(ctx: ParserRuleContext) {
         errorListener.reportDebug(ctx, "${if (constant[ctx] == true) "const " else ""}${values[ctx]}")
@@ -175,7 +176,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         }
 
         // if width is array, value is array or simple
-        assert(baseSigWidth is ArrayWidth || baseSigWidth is UndefinedSimpleWidth)
+        assert(baseSigWidth.isArray())
         when (base) {
             is ArrayValue -> {
                 assert(baseSigWidth is ArrayWidth) { "The ArrayValue has a width that isn't an ArrayWidth" }
@@ -202,7 +203,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                         errorListener.reportError(it.second, ErrorStrings.ARRAY_CONCAT_DIM_MISMATCH)
                         error = true
                     }
-                    if (sigWidth is ArrayWidth)
+                    if (sigWidth is SimpleWidth)
                         bitCount += sigWidth.size
                     else // UndefinedWidth
                         definedWidth = false
@@ -212,7 +213,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
                 if (operands.any { it.first is UndefinedValue }) {
                     values[ctx] = if (definedWidth)
-                        UndefinedValue(ctx.text, ArrayWidth(bitCount))
+                        UndefinedValue(ctx.text, SimpleWidth(bitCount))
                     else
                         UndefinedValue(ctx.text)
 
@@ -275,10 +276,10 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         if (dupValue is UndefinedValue) {
             values[ctx] = UndefinedValue(
                 ctx.text,
-                width = if (valWidth is ArrayWidth) {
-                    ArrayWidth(valWidth.size * dupTimes, valWidth.next)
-                } else {
-                    UndefinedSimpleWidth
+                width = when (valWidth) {
+                    is ArrayWidth -> ArrayWidth(valWidth.size * dupTimes, valWidth.next)
+                    is SimpleWidth -> SimpleWidth(valWidth.size * dupTimes)
+                    else -> UndefinedSimpleWidth
                 }
             )
             return
@@ -394,9 +395,9 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         val signed = op1.signed && op2.signed
 
         if (op1 is UndefinedValue || op2 is UndefinedValue) {
-            if (op1Width is ArrayWidth && op2Width is ArrayWidth)
+            if (op1Width is SimpleWidth && op2Width is SimpleWidth)
                 values[ctx] =
-                    UndefinedValue(ctx.text, ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size) + 1), signed)
+                    UndefinedValue(ctx.text, SimpleWidth(op1Width.size.coerceAtLeast(op2Width.size) + 1), signed)
             else
                 values[ctx] = UndefinedValue(ctx.text, signed = signed)
             return
@@ -437,8 +438,8 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         val signed = op1.signed && op2.signed
 
         if (op1 is UndefinedValue || op2 is UndefinedValue) {
-            if (op1Width is ArrayWidth && op2Width is ArrayWidth)
-                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(widthOfMult(op1Width.size, op2Width.size)), signed)
+            if (op1Width is SimpleWidth && op2Width is SimpleWidth)
+                values[ctx] = UndefinedValue(ctx.text, SimpleWidth(widthOfMult(op1Width.size, op2Width.size)), signed)
             else
                 values[ctx] = UndefinedValue(ctx.text, signed = signed)
             return
@@ -490,10 +491,10 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
         if (value is UndefinedValue) {
             val vWidth = value.signalWidth
-            if (vWidth is ArrayWidth) {
+            if (vWidth is SimpleWidth) {
                 val w = if (operand == "<<" || operand == "<<<") vWidth.size + shift.bits.toBigInt()
                     .toInt() else vWidth.size
-                values[ctx] = UndefinedValue(ctx.text, ArrayWidth(w), signed = isSigned)
+                values[ctx] = UndefinedValue(ctx.text, SimpleWidth(w), signed = isSigned)
             } else
                 values[ctx] = UndefinedValue(ctx.text, signed = isSigned)
         }
@@ -545,7 +546,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
             val op1Width = op1.signalWidth
             val op2Width = op2.signalWidth
 
-            if (op1Width is ArrayWidth && op2Width is ArrayWidth) {
+            if (op1Width.isDefinedArray() && op2Width.isDefinedArray()) {
                 if (op1Width != op2Width) {
                     errorListener.reportError(ctx.expr(1), ErrorStrings.OP_DIM_MISMATCH.format(operand))
                     return
@@ -581,7 +582,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
         val value = values[ctx.expr()] ?: return
 
         if (value is UndefinedValue) {
-            values[ctx] = UndefinedValue(ctx.text, ArrayWidth(1), false)
+            values[ctx] = UndefinedValue(ctx.text, SimpleWidth(1), false)
             return
         }
 
@@ -603,7 +604,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
     }
 
     /**
-     * This returns true when all the expressions are flat. Aka they are all 1D arrays.
+     * This will return true when all the expressions are flat. Aka they are all 1D arrays.
      *
      * The values themselves may be undefined.
      */
@@ -620,7 +621,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
     }
 
     /**
-     * This returns true when all expressions are SimpleValues.
+     * This will return true when all expressions are SimpleValues.
      *
      * This differs from checkFlat in that the values may not be undefined.
      */
@@ -656,7 +657,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
     }
 
     /**
-     * checks if any widths are undefined and if so, flags any non-flat widths as errors
+     * Checks if any widths are undefined and if so, flags any non-flat widths as errors
      */
     private fun checkUndefinedMatchingDims(
         vararg exprCtx: ExprContext,
@@ -694,7 +695,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
 
                 if (op1 is UndefinedValue || op2 is UndefinedValue) {
-                    values[ctx] = UndefinedValue(ctx.text, ArrayWidth(1), false)
+                    values[ctx] = UndefinedValue(ctx.text, SimpleWidth(1), false)
                     return
                 }
 
@@ -719,7 +720,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                     }) return
 
                 if (op1 is UndefinedValue || op2 is UndefinedValue) {
-                    values[ctx] = UndefinedValue(ctx.text, ArrayWidth(1), false)
+                    values[ctx] = UndefinedValue(ctx.text, SimpleWidth(1), false)
                     return
                 }
 
@@ -755,7 +756,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
 
         if (op1 is UndefinedValue || op2 is UndefinedValue) {
-            values[ctx] = UndefinedValue(ctx.text, ArrayWidth(1), false)
+            values[ctx] = UndefinedValue(ctx.text, SimpleWidth(1), false)
             return
         }
 
@@ -799,8 +800,8 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
         val width = when {
             op1Width == op2Width -> op1Width
-            op1Width is ArrayWidth && op2Width is ArrayWidth ->
-                ArrayWidth(op1Width.size.coerceAtLeast(op2Width.size))
+            op1Width is SimpleWidth && op2Width is SimpleWidth ->
+                SimpleWidth(op1Width.size.coerceAtLeast(op2Width.size))
             else -> {
                 errorListener.reportError(ctx, ErrorStrings.UNKNOWN_WIDTH.format(ctx))
                 return
@@ -814,7 +815,7 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
 
         val value = if (cond.isTrue().lsb == BitValue.B1) op1 else op2
         if (value.signalWidth != width) {
-            if (value !is SimpleValue || !width.isDefinedFlatArray()) {
+            if (value !is SimpleValue || width !is SimpleWidth) {
                 errorListener.reportError(
                     ctx,
                     "BUG in exitExprTernary! Width of value couldn't be determined after passing checks!"
@@ -1089,12 +1090,133 @@ class ExprParser(val errorListener: ErrorListener = dummyErrorListener) : LucidB
                     }
                     values[ctx] = when (value) {
                         is SimpleValue -> value.resize(numBits)
-                        is UndefinedValue -> value.copy(width = ArrayWidth(numBits))
+                        is UndefinedValue -> value.copy(width = SimpleWidth(numBits))
                         else -> error("Previous error checks failed. This shouldn't be reached!")
                     }
                 }
             }
         }
         debug(ctx)
+    }
+
+    /* Bounds Section */
+    override fun exitBitSelectorConst(ctx: BitSelectorConstContext) {
+        if (ctx.expr().size == 2) {
+            if (constant[ctx.expr(0)] != true) errorListener.reportExprNotConstant(ctx.expr(0))
+            if (constant[ctx.expr(1)] != true) errorListener.reportExprNotConstant(ctx.expr(1))
+
+            val max = values[ctx.expr(0)] ?: return
+            val min = values[ctx.expr(1)] ?: return
+
+            if (!checkSimpleValue(*ctx.expr().toTypedArray()) {
+                    errorListener.reportBitSelectionNotSimpleValue(it)
+                }) return
+
+            max as SimpleValue
+            min as SimpleValue
+
+            val maxNan = !max.isNumber()
+            val minNan = !min.isNumber()
+            if (maxNan) errorListener.reportBitSelectorNotANumber(ctx.expr(0))
+            if (minNan) errorListener.reportBitSelectorNotANumber(ctx.expr(1))
+            if (maxNan || minNan) return
+            if (max.isLessThan(min).toBoolean()) {
+                errorListener.reportBitSelectorOutOfOrder(ctx)
+                return
+            }
+            val maxInt: Int = try {
+                max.toBigInt().intValueExact()
+            } catch (e: ArithmeticException) {
+                errorListener.reportArraySizeTooBig(ctx.expr(0))
+                return
+            }
+            val minInt: Int = try {
+                min.toBigInt().intValueExact()
+            } catch (e: ArithmeticException) {
+                errorListener.reportArraySizeTooBig(ctx.expr(1))
+                return
+            }
+            bounds[ctx] = minInt..maxInt
+        }
+    }
+
+    override fun exitBitSelectorFixWidth(ctx: BitSelectorFixWidthContext) {
+        if (ctx.expr().size != 2) return
+
+        val start = values[ctx.expr(0)] ?: return
+        val width = values[ctx.expr(1)] ?: return
+
+        if (constant[ctx.expr(1)] != true) {
+            errorListener.reportExprNotConstant(ctx.expr(1))
+            return
+        }
+
+        if (!checkSimpleValue(*ctx.expr().toTypedArray()) {
+                errorListener.reportBitSelectionNotSimpleValue(it)
+            }) return
+
+        width as SimpleValue
+        start as SimpleValue
+
+        if (!width.isNumber()) {
+            errorListener.reportBitSelectorNotANumber(ctx.expr(1))
+            return
+        }
+
+        if (!start.isNumber()) {
+            errorListener.reportBitSelectorNotANumber(ctx.expr(0))
+            return
+        }
+
+        val widthInt = try {
+            width.toBigInt().intValueExact()
+        } catch (e: ArithmeticException) {
+            errorListener.reportArraySizeTooBig(ctx.expr(1))
+            return
+        }
+
+        val startInt = try {
+            start.toBigInt().intValueExact()
+        } catch (e: ArithmeticException) {
+            errorListener.reportArraySizeTooBig(ctx.expr(0))
+            return
+        }
+
+        if (widthInt <= 0) {
+            errorListener.reportBitSelectorZeroWidth(ctx.expr(1))
+            return
+        }
+
+        val isUpTo = ctx.getChild(2).text == "+"
+
+        bounds[ctx] = if (isUpTo)
+            startInt until widthInt + startInt
+        else
+            (startInt - widthInt + 1)..startInt
+    }
+
+    override fun exitArray_index(ctx: Array_indexContext) {
+        if (ctx.expr() == null) return
+
+        val index = values[ctx.expr()] ?: return
+
+        if (index !is SimpleValue) {
+            errorListener.reportBitSelectionNotSimpleValue(ctx.expr())
+            return
+        }
+
+        if (!index.isNumber()) {
+            errorListener.reportBitSelectorNotANumber(ctx.expr())
+            return
+        }
+
+        val value = try {
+            index.toBigInt().intValueExact()
+        } catch (e: ArithmeticException) {
+            errorListener.reportArraySizeTooBig(ctx.expr())
+            return
+        }
+
+        bounds[ctx] = value..value
     }
 }

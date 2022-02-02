@@ -1,5 +1,6 @@
 package com.alchitry.labs.parsers.lucidv2.values
 
+import com.alchitry.labs.parsers.lucidv2.signals.StructType
 import java.math.BigInteger
 
 sealed class Value {
@@ -15,7 +16,7 @@ sealed class Value {
                 return this.bits.isNumber()
             }
             is StructValue -> {
-                this.forEach { (_, v) -> if (!v.isNumber()) return false }
+                this.values.forEach { if (!it.isNumber()) return false }
                 return true
             }
             is UndefinedValue -> {
@@ -27,7 +28,7 @@ sealed class Value {
     val signalWidth: SignalWidth
         get() {
             return when (this) {
-                is SimpleValue -> ArrayWidth(bits.size)
+                is SimpleValue -> SimpleWidth(bits.size)
                 is ArrayValue -> ArrayWidth(elements.size, elements[0].signalWidth)
                 is StructValue -> StructWidth(type)
                 is UndefinedValue -> width
@@ -164,9 +165,9 @@ sealed class Value {
             }
             is SimpleValue -> bits
             is StructValue -> MutableBitList().also { bits ->
-                type.forEach {
+                type.forEach { (key, value) ->
                     val elementBits =
-                        this[it]?.getBits() ?: MutableBitList(BitValue.Bx, it.width.getBitCount()) as List<BitValue>
+                        this[key]?.getBits() ?: MutableBitList(BitValue.Bx, value.width.getBitCount()) as List<BitValue>
                     bits.addAll(elementBits.asReversed())
                 }
             }
@@ -238,29 +239,23 @@ data class SimpleValue(
     infix fun isGreaterOrEqualTo(other: SimpleValue): SimpleValue {
         return (isGreaterThan(other).lsb or isEqualTo(other).lsb).toSimpleValue()
     }
+
+    fun toBoolean() = bits.isTrue() == BitValue.B1
 }
 
 data class StructValue(
     val type: StructType,
-    private val valueMap: MutableMap<StructMember, Value> = mutableMapOf()
-) : Value(), Map<StructMember, Value> by valueMap {
+    private val valueMap: MutableMap<String, Value> = mutableMapOf()
+) : Value(), Map<String, Value> by valueMap {
     init {
         valueMap.keys.removeIf { !type.contains(it) }
-        type.forEach {
+        type.keys.forEach {
             valueMap.putIfAbsent(it, UndefinedValue(it))
         }
     }
 
-    operator fun get(key: String): Value? {
-        return valueMap.entries.firstOrNull { it.key.name == key }?.value
-    }
-
-    operator fun set(key: String, value: Value): Value? {
-        return valueMap.entries.firstOrNull { it.key.name == key }?.setValue(value)
-    }
-
     fun isComplete(): Boolean {
-        return type.all { this[it] !is UndefinedValue }
+        return type.keys.all { this[it] !is UndefinedValue }
     }
 }
 
@@ -268,6 +263,4 @@ data class UndefinedValue(
     val expression: String,
     val width: SignalWidth = UndefinedSimpleWidth,
     override val signed: Boolean = false
-) : Value() {
-    constructor(structMember: StructMember) : this(structMember.name, structMember.width, structMember.signed)
-}
+) : Value()

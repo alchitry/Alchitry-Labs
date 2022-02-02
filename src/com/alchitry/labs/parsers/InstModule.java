@@ -1,13 +1,5 @@
 package com.alchitry.labs.parsers;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.apache.commons.lang3.StringUtils;
-
 import com.alchitry.labs.Named;
 import com.alchitry.labs.Util;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
@@ -18,6 +10,13 @@ import com.alchitry.labs.parsers.tools.lucid.WidthProvider;
 import com.alchitry.labs.parsers.types.Connection;
 import com.alchitry.labs.parsers.types.Dff;
 import com.alchitry.labs.parsers.types.Fsm;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class InstModule implements Named, Serializable {
 	private static final long serialVersionUID = 3100960916372359031L;
@@ -86,11 +85,11 @@ public class InstModule implements Named, Serializable {
 		sb.append("(");
 		if (width.size() > 0) {
 			boolean first = true;
-			for (int i = 0; i < width.size(); i++) {
+			for (String s : width) {
 				if (!first)
 					sb.append("*");
 				sb.append("(");
-				sb.append(width.get(i));
+				sb.append(s);
 				sb.append(")");
 				first = false;
 			}
@@ -238,7 +237,7 @@ public class InstModule implements Named, Serializable {
 		this.moduleWidth = moduleWidth;
 	}
 
-	transient private ConstProvider cp = new ConstProvider() {
+	final transient private ConstProvider cp = new ConstProvider() {
 		@Override
 		public ConstValue getValue(String s) {
 			Param p = Util.getByName(params, s);
@@ -248,7 +247,7 @@ public class InstModule implements Named, Serializable {
 		}
 	};
 
-	transient private WidthProvider wp = new WidthProvider() {
+	final transient private WidthProvider wp = new WidthProvider() {
 		@Override
 		public SignalWidth getWidth(String signal) {
 			Param p = Util.getByName(params, signal);

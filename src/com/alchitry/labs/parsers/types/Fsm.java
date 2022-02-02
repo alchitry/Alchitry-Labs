@@ -1,22 +1,22 @@
 package com.alchitry.labs.parsers.types;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 import com.alchitry.labs.Named;
 import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.HasWidth;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 import com.alchitry.labs.parsers.lucid.parser.LucidParser.ExprContext;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 public class Fsm implements SyncLogic, Named, HasWidth, Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -7967153282393432822L;
-	private String name;
-	private ArrayList<Constant> states;
+	private final String name;
+	private final ArrayList<Constant> states;
 	private Constant defState;
 	transient private ExprContext clk;
 	transient private ExprContext rst;
@@ -106,9 +106,7 @@ public class Fsm implements SyncLogic, Named, HasWidth, Serializable {
 		if (o.getClass() != Fsm.class)
 			return false;
 		Fsm f = (Fsm) o;
-		if (f.getName().equals(name))
-			return true;
-		return false;
+		return f.getName().equals(name);
 	}
 
 	@Override

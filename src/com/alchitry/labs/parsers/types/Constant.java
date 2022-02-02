@@ -1,15 +1,17 @@
 package com.alchitry.labs.parsers.types;
 
-import java.io.Serializable;
-
 import com.alchitry.labs.Named;
 import com.alchitry.labs.parsers.ConstValue;
 import com.alchitry.labs.parsers.lucid.SignalWidth;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 public class Constant implements Named, Serializable {
+	@Serial
 	private static final long serialVersionUID = 376452255402037480L;
-	private String name;
-	private ConstValue value;
+	private final String name;
+	private final ConstValue value;
 	private SignalWidth width;
 
 	public Constant(String name) {
@@ -49,9 +51,7 @@ public class Constant implements Named, Serializable {
 		if (o.getClass() != Constant.class)
 			return false;
 		Constant c = (Constant) o;
-		if (c.getName().equals(name))
-			return true;
-		return false;
+		return c.getName().equals(name);
 	}
 
 	@Override
