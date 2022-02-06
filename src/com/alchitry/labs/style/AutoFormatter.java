@@ -23,8 +23,8 @@ public class AutoFormatter {
 			int indent = indentProvider.getTabs(lineNum);
 			builder.append(appendSpaces(lines[lineNum], indent) + System.lineSeparator());
 		}
-		int seperatorLen = System.lineSeparator().length();
-		builder.delete(builder.length() - seperatorLen, builder.length());
+		int separatorLen = System.lineSeparator().length();
+		builder.delete(builder.length() - separatorLen, builder.length());
 		editor.replaceTextRange(0, editor.getCharCount(), builder.toString());
 	}
 

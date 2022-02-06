@@ -51,7 +51,7 @@ public class MojoLibUsbSerial extends UsbDevice implements SerialDevice {
 			if (DetachMode.AUTO_DETACH_SIO_MODULE.equals(detachMode)) {
 				if ((errno = LibUsb.detachKernelDriver(device, iface)) != LibUsb.SUCCESS)
 					detachErrno = errno;
-			} else if (DetachMode.AUTO_DETACH_REATACH_SIO_MODULE.equals(detachMode)) {
+			} else if (DetachMode.AUTO_DETACH_REATTACH_SIO_MODULE.equals(detachMode)) {
 				if ((errno = LibUsb.setAutoDetachKernelDriver(device, true)) != LibUsb.SUCCESS)
 					detachErrno = errno;
 			}

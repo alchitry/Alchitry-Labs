@@ -76,10 +76,10 @@ public class AuDebugger extends Debugger {
 		while (read[0] == 0) {
 			if (armed != null && !armed.get())
 				return false;
-			jtag.navitageToState(JtagState.SHIFT_DR);
+			jtag.navigateToState(JtagState.SHIFT_DR);
 			jtag.shiftData(1, write, read);
 		}
-		jtag.navitageToState(JtagState.RUN_TEST_IDLE);
+		jtag.navigateToState(JtagState.RUN_TEST_IDLE);
 		return true;
 	}
 

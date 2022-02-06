@@ -594,7 +594,7 @@ public class Waves extends Canvas {
 				}
 			}
 
-			b.y = toolbarSize + 2; // +2 for line thickness of toolbar seperator
+			b.y = toolbarSize + 2; // +2 for line thickness of toolbar separator
 			b.x = margin;
 			b.width = w - margin;
 			b.height = h - b.y;

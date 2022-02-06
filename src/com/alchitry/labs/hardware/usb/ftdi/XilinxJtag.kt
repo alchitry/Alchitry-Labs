@@ -66,7 +66,7 @@ class XilinxJtag(private val ftdi: Ftdi) {
         ftdi.usbPurgeBuffers()
         jtag.setFreq(30000000.0)
         jtag.resetState()
-        jtag.navitageToState(JtagState.RUN_TEST_IDLE)
+        jtag.navigateToState(JtagState.RUN_TEST_IDLE)
         setIR(Instruction.JPROGRAM)
         setIR(Instruction.ISC_NOOP)
         try {
@@ -83,13 +83,13 @@ class XilinxJtag(private val ftdi: Ftdi) {
         jtag.shiftDR(binData.size * 8, binData)
 
         // config/start
-        jtag.navitageToState(JtagState.RUN_TEST_IDLE)
+        jtag.navigateToState(JtagState.RUN_TEST_IDLE)
         jtag.sendClocks(10000)
         setIR(Instruction.JSTART)
-        jtag.navitageToState(JtagState.RUN_TEST_IDLE)
+        jtag.navigateToState(JtagState.RUN_TEST_IDLE)
         jtag.sendClocks(100)
         jtag.shiftIRWithCheck(6, "09", "31", "11")
-        jtag.navitageToState(JtagState.TEST_LOGIC_RESET)
+        jtag.navigateToState(JtagState.TEST_LOGIC_RESET)
     }
 
     @Throws(IOException::class)

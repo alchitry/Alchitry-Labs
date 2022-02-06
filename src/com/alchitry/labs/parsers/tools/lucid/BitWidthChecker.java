@@ -1178,7 +1178,7 @@ public class BitWidthChecker extends LucidBaseListener implements WidthProvider 
 					errorChecker.reportError(ctx.expr(0), ErrorStrings.ADD_MULTI_DIM);
 				if (op2.getDepth() != 1)
 					errorChecker.reportError(ctx.expr(1), ErrorStrings.ADD_MULTI_DIM);
-			} else { // subtact
+			} else { // subtract
 				if (op1.getDepth() != 1)
 					errorChecker.reportError(ctx.expr(0), ErrorStrings.SUB_MULTI_DIM);
 				if (op2.getDepth() != 1)
