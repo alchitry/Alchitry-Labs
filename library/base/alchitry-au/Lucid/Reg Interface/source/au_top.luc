@@ -1,0 +1,60 @@
+module au_top (
+    input clk,              // 100MHz clock
+    input rst_n,            // reset button (active low)
+    output led [8],         // 8 user controllable LEDs    
+    input usb_rx,           // USB->Serial input
+    output usb_tx           // USB->Serial output
+  ) {
+  
+  sig rst;                  // reset signal
+  
+  .clk(clk) {
+    // The reset conditioner is used to synchronize the reset signal to the FPGA
+    // clock. This ensures the entire FPGA comes out of reset at the same time.
+    reset_conditioner reset_cond;
+    
+    .rst(rst) {
+      #BAUD(1000000), #CLK_FREQ(100000000) {
+        uart_rx rx;
+        uart_tx tx;
+      }
+      
+      reg_interface reg;
+      dff leds[8];
+    }
+  }
+  
+  always {
+    reset_cond.in = ~rst_n; // input raw inverted reset signal
+    rst = reset_cond.out;   // conditioned reset
+    
+    rx.rx = usb_rx; // connect the input
+    usb_tx = tx.tx; // connect the output
+
+    // connect reg interface to usb interface
+    reg.rx_data = rx.data;
+    reg.new_rx_data = rx.new_data;
+    tx.data = reg.tx_data;
+    tx.new_data = reg.new_tx_data;
+    reg.tx_busy = tx.busy;
+    tx.block = 0;
+    
+    reg.regIn.drdy = 0;                   // default to not ready
+    reg.regIn.data = 32bx;                // don't care
+    
+    if (reg.regOut.new_cmd) {             // new command
+      if (reg.regOut.write) {             // if write
+        if (reg.regOut.address == 0) {    // if address is 0
+          leds.d = reg.regOut.data[7:0];  // write the LEDs
+        }
+      } else {                            // if read
+        if (reg.regOut.address == 0) {    // if address is 0
+          reg.regIn.data = leds.q;        // read the LEDs
+          reg.regIn.drdy = 1;             // signal data ready
+        }
+      }
+    }
+    
+    led = leds.q;                         // connect the dff
+  }
+}
