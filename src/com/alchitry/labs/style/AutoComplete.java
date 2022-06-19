@@ -107,7 +107,10 @@ public class AutoComplete {
         int start, end;
         end = Math.min(editor.getCaretOffset(), text.length());
         start = Math.max(end - 1, 0);
-        while (start > 0 && (Character.isLetterOrDigit(text.charAt(start)) || text.charAt(start) == '_'))
+        while (start > 0 && (Character.isLetterOrDigit(text.charAt(start))
+                || text.charAt(start) == '_'
+                || text.charAt(start) == '$')
+        )
             start--;
         start++;
         if (start > end)
