@@ -82,6 +82,12 @@ public final class BigFunctions
         if (x.signum() < 0) {
             throw new IllegalArgumentException("x < 0");
         }
+        if (index <= 0) {
+            throw new IllegalArgumentException("index <= 0");
+        }
+        if (x.signum() == 0) {
+            return BigDecimal.ZERO.setScale(scale);
+        }
 
         int        sp1 = scale + 1;
         BigDecimal n   = x;
